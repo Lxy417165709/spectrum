@@ -6,7 +6,7 @@ import (
 	"google.golang.org/grpc"
 	"log"
 	"net"
-	"test/pb"
+	"test/common/pb"
 )
 
 type Server struct {

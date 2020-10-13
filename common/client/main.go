@@ -4,8 +4,9 @@ import (
 	"context"
 	"google.golang.org/grpc"
 	"log"
-	"test/pb"
+	"test/common/pb"
 )
+
 
 func main() {
 	conn, err := grpc.Dial(":8080", grpc.WithInsecure(), grpc.WithBlock())

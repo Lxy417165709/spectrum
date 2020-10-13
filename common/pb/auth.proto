@@ -7,8 +7,7 @@ message LoginReq {
   string password = 2;
 }
 
-message LoginRes {
-}
+message LoginRes {}
 
 service Server {
   rpc Login (LoginReq) returns (LoginRes);
