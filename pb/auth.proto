@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package pb;
+
+message LoginReq {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginRes {
+}
+
+service Server {
+  rpc Login (LoginReq) returns (LoginRes);
+}
