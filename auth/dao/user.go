@@ -33,3 +33,23 @@ func (UserDao) GetByEmail(email string) (*model.User, error) {
 	}
 	return &user, nil
 }
+
+func (UserDao) Create(email, password string) error {
+	createTableWhenNotExist(&model.User{})
+	db := mainDB.Create(&model.User{
+		Email:    email,
+		Password: password,
+	})
+	if err := db.Error; err != nil {
+		logs.Error(err)
+		return err
+	}
+	return nil
+}
+
+func createTableWhenNotExist(table interface{}) {
+	if !mainDB.HasTable(table) {
+		mainDB.CreateTable(table)
+	}
+}
+

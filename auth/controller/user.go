@@ -22,6 +22,5 @@ func (Server) Login(ctx context.Context, req *pb.LoginReq) (*pb.LoginRes, error)
 	if user == nil{
 		return nil,errors.New("email or password error")
 	}
-
 	return &res, nil
 }

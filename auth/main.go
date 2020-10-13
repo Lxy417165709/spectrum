@@ -9,14 +9,20 @@ import (
 )
 
 func main() {
-	lis, err := net.Listen("tcp", ":8080")
+	logs.SetLogFuncCall(true)
+	logs.SetLogFuncCallDepth(3)
+
+	logs.Info("Server beginning.")
+	lis, err := net.Listen("tcp", ":8087")
 	if err != nil {
 		logs.Error(err)
 		return
 	}
 	grpcServer := grpc.NewServer()
 	pb.RegisterServerServer(grpcServer, &controller.Server{})
+	logs.Info("Server starting.")
 	if err := grpcServer.Serve(lis); err != nil {
 		logs.Error(err)
+		return
 	}
 }

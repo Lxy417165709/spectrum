@@ -9,14 +9,15 @@ import (
 var mainDB *gorm.DB
 
 func init() {
-	mainDB = NewDB(GenDSN("localhost:3306", "mysql"), 5)
+
+	mainDB = newDB(genDSN("root:123456@tcp(120.26.162.39:40000)", "mysql"), 5)
 }
 
-func GenDSN(host, db string) string {
+func genDSN(host, db string) string {
 	return fmt.Sprintf("%v/%v?charset=utf8mb4&collation=utf8mb4_unicode_ci&parseTime=True&loc=Local", host, db)
 }
 
-func NewDB(dsn string, maxCon int) *gorm.DB {
+func newDB(dsn string, maxCon int) *gorm.DB {
 	con, err := gorm.Open("mysql", dsn)
 	if err != nil {
 		panic(fmt.Sprintf("Got error when connecting database, the error is '%s'", err))
