@@ -37,10 +37,44 @@ message StopPlayBilliardReq {
 
 message StopPlayBilliardRes {}
 
+
+
+message AttachGood{
+  string name = 1;
+}
+
+message Good{
+  string name = 1;
+  repeated AttachGood attachGoods = 2;
+}
+
+message OrderReq{
+  repeated Good goods = 1;
+}
+
+message OrderRes{
+  int64 orderID = 1;
+}
+
+message GetOrderGoodsReq{
+  int64 orderID = 1;
+}
+
+message GetOrderGoodsRes{
+  repeated Good goods = 1;
+}
+
+
+
+
 service Mvp {
   rpc AddGood(AddGoodReq) returns (AddGoodRes);
   rpc AddBilliardDesk(AddBilliardDeskReq) returns (AddBilliardDeskRes);
   rpc SellGood(SellGoodReq) returns (SellGoodRes);
   rpc BeginPlayBilliard(BeginPlayBilliardReq) returns (BeginPlayBilliardRes);
   rpc StopPlayBilliard(StopPlayBilliardReq) returns (StopPlayBilliardRes);
+  rpc Order(OrderReq) returns (OrderRes);
+  rpc GetOrderGoods(GetOrderGoodsReq) returns (GetOrderGoodsRes);
 }
+
+

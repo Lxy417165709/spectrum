@@ -494,6 +494,296 @@ func (*StopPlayBilliardRes) Descriptor() ([]byte, []int) {
 	return file_common_pb_mvp_proto_rawDescGZIP(), []int{9}
 }
 
+type AttachGood struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+}
+
+func (x *AttachGood) Reset() {
+	*x = AttachGood{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_common_pb_mvp_proto_msgTypes[10]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *AttachGood) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AttachGood) ProtoMessage() {}
+
+func (x *AttachGood) ProtoReflect() protoreflect.Message {
+	mi := &file_common_pb_mvp_proto_msgTypes[10]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AttachGood.ProtoReflect.Descriptor instead.
+func (*AttachGood) Descriptor() ([]byte, []int) {
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *AttachGood) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+type Good struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Name        string        `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	AttachGoods []*AttachGood `protobuf:"bytes,2,rep,name=attachGoods,proto3" json:"attachGoods,omitempty"`
+}
+
+func (x *Good) Reset() {
+	*x = Good{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_common_pb_mvp_proto_msgTypes[11]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Good) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Good) ProtoMessage() {}
+
+func (x *Good) ProtoReflect() protoreflect.Message {
+	mi := &file_common_pb_mvp_proto_msgTypes[11]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Good.ProtoReflect.Descriptor instead.
+func (*Good) Descriptor() ([]byte, []int) {
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *Good) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *Good) GetAttachGoods() []*AttachGood {
+	if x != nil {
+		return x.AttachGoods
+	}
+	return nil
+}
+
+type OrderReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Goods []*Good `protobuf:"bytes,1,rep,name=goods,proto3" json:"goods,omitempty"`
+}
+
+func (x *OrderReq) Reset() {
+	*x = OrderReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_common_pb_mvp_proto_msgTypes[12]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *OrderReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrderReq) ProtoMessage() {}
+
+func (x *OrderReq) ProtoReflect() protoreflect.Message {
+	mi := &file_common_pb_mvp_proto_msgTypes[12]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrderReq.ProtoReflect.Descriptor instead.
+func (*OrderReq) Descriptor() ([]byte, []int) {
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *OrderReq) GetGoods() []*Good {
+	if x != nil {
+		return x.Goods
+	}
+	return nil
+}
+
+type OrderRes struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	OrderID int64 `protobuf:"varint,1,opt,name=orderID,proto3" json:"orderID,omitempty"`
+}
+
+func (x *OrderRes) Reset() {
+	*x = OrderRes{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_common_pb_mvp_proto_msgTypes[13]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *OrderRes) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrderRes) ProtoMessage() {}
+
+func (x *OrderRes) ProtoReflect() protoreflect.Message {
+	mi := &file_common_pb_mvp_proto_msgTypes[13]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrderRes.ProtoReflect.Descriptor instead.
+func (*OrderRes) Descriptor() ([]byte, []int) {
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *OrderRes) GetOrderID() int64 {
+	if x != nil {
+		return x.OrderID
+	}
+	return 0
+}
+
+type GetOrderGoodsReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	OrderID int64 `protobuf:"varint,1,opt,name=orderID,proto3" json:"orderID,omitempty"`
+}
+
+func (x *GetOrderGoodsReq) Reset() {
+	*x = GetOrderGoodsReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_common_pb_mvp_proto_msgTypes[14]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetOrderGoodsReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetOrderGoodsReq) ProtoMessage() {}
+
+func (x *GetOrderGoodsReq) ProtoReflect() protoreflect.Message {
+	mi := &file_common_pb_mvp_proto_msgTypes[14]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetOrderGoodsReq.ProtoReflect.Descriptor instead.
+func (*GetOrderGoodsReq) Descriptor() ([]byte, []int) {
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *GetOrderGoodsReq) GetOrderID() int64 {
+	if x != nil {
+		return x.OrderID
+	}
+	return 0
+}
+
+type GetOrderGoodsRes struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Goods []*Good `protobuf:"bytes,1,rep,name=goods,proto3" json:"goods,omitempty"`
+}
+
+func (x *GetOrderGoodsRes) Reset() {
+	*x = GetOrderGoodsRes{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_common_pb_mvp_proto_msgTypes[15]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetOrderGoodsRes) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetOrderGoodsRes) ProtoMessage() {}
+
+func (x *GetOrderGoodsRes) ProtoReflect() protoreflect.Message {
+	mi := &file_common_pb_mvp_proto_msgTypes[15]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetOrderGoodsRes.ProtoReflect.Descriptor instead.
+func (*GetOrderGoodsRes) Descriptor() ([]byte, []int) {
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *GetOrderGoodsRes) GetGoods() []*Good {
+	if x != nil {
+		return x.Goods
+	}
+	return nil
+}
+
 var File_common_pb_mvp_proto protoreflect.FileDescriptor
 
 var file_common_pb_mvp_proto_rawDesc = []byte{
@@ -534,27 +824,51 @@ var file_common_pb_mvp_proto_rawDesc = []byte{
 	0x6c, 0x61, 0x79, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x18, 0x03, 0x20, 0x01,
 	0x28, 0x03, 0x52, 0x11, 0x73, 0x74, 0x6f, 0x70, 0x50, 0x6c, 0x61, 0x79, 0x54, 0x69, 0x6d, 0x65,
 	0x73, 0x74, 0x61, 0x6d, 0x70, 0x22, 0x15, 0x0a, 0x13, 0x53, 0x74, 0x6f, 0x70, 0x50, 0x6c, 0x61,
-	0x79, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x52, 0x65, 0x73, 0x32, 0xb0, 0x02, 0x0a,
-	0x03, 0x4d, 0x76, 0x70, 0x12, 0x29, 0x0a, 0x07, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x12,
-	0x0e, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x71, 0x1a,
-	0x0e, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x73, 0x12,
-	0x41, 0x0a, 0x0f, 0x41, 0x64, 0x64, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x44, 0x65,
-	0x73, 0x6b, 0x12, 0x16, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x42, 0x69, 0x6c, 0x6c, 0x69,
-	0x61, 0x72, 0x64, 0x44, 0x65, 0x73, 0x6b, 0x52, 0x65, 0x71, 0x1a, 0x16, 0x2e, 0x70, 0x62, 0x2e,
-	0x41, 0x64, 0x64, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x44, 0x65, 0x73, 0x6b, 0x52,
-	0x65, 0x73, 0x12, 0x2c, 0x0a, 0x08, 0x53, 0x65, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x12, 0x0f,
-	0x2e, 0x70, 0x62, 0x2e, 0x53, 0x65, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x71, 0x1a,
-	0x0f, 0x2e, 0x70, 0x62, 0x2e, 0x53, 0x65, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x73,
-	0x12, 0x47, 0x0a, 0x11, 0x42, 0x65, 0x67, 0x69, 0x6e, 0x50, 0x6c, 0x61, 0x79, 0x42, 0x69, 0x6c,
-	0x6c, 0x69, 0x61, 0x72, 0x64, 0x12, 0x18, 0x2e, 0x70, 0x62, 0x2e, 0x42, 0x65, 0x67, 0x69, 0x6e,
-	0x50, 0x6c, 0x61, 0x79, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x52, 0x65, 0x71, 0x1a,
-	0x18, 0x2e, 0x70, 0x62, 0x2e, 0x42, 0x65, 0x67, 0x69, 0x6e, 0x50, 0x6c, 0x61, 0x79, 0x42, 0x69,
-	0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x52, 0x65, 0x73, 0x12, 0x44, 0x0a, 0x10, 0x53, 0x74, 0x6f,
-	0x70, 0x50, 0x6c, 0x61, 0x79, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x12, 0x17, 0x2e,
-	0x70, 0x62, 0x2e, 0x53, 0x74, 0x6f, 0x70, 0x50, 0x6c, 0x61, 0x79, 0x42, 0x69, 0x6c, 0x6c, 0x69,
-	0x61, 0x72, 0x64, 0x52, 0x65, 0x71, 0x1a, 0x17, 0x2e, 0x70, 0x62, 0x2e, 0x53, 0x74, 0x6f, 0x70,
-	0x50, 0x6c, 0x61, 0x79, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x52, 0x65, 0x73, 0x62,
-	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x79, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x52, 0x65, 0x73, 0x22, 0x20, 0x0a, 0x0a,
+	0x41, 0x74, 0x74, 0x61, 0x63, 0x68, 0x47, 0x6f, 0x6f, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61,
+	0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0x4c,
+	0x0a, 0x04, 0x47, 0x6f, 0x6f, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x30, 0x0a, 0x0b, 0x61, 0x74,
+	0x74, 0x61, 0x63, 0x68, 0x47, 0x6f, 0x6f, 0x64, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0b, 0x32,
+	0x0e, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x74, 0x74, 0x61, 0x63, 0x68, 0x47, 0x6f, 0x6f, 0x64, 0x52,
+	0x0b, 0x61, 0x74, 0x74, 0x61, 0x63, 0x68, 0x47, 0x6f, 0x6f, 0x64, 0x73, 0x22, 0x2a, 0x0a, 0x08,
+	0x4f, 0x72, 0x64, 0x65, 0x72, 0x52, 0x65, 0x71, 0x12, 0x1e, 0x0a, 0x05, 0x67, 0x6f, 0x6f, 0x64,
+	0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x08, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x6f, 0x6f,
+	0x64, 0x52, 0x05, 0x67, 0x6f, 0x6f, 0x64, 0x73, 0x22, 0x24, 0x0a, 0x08, 0x4f, 0x72, 0x64, 0x65,
+	0x72, 0x52, 0x65, 0x73, 0x12, 0x18, 0x0a, 0x07, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x49, 0x44, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x07, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x49, 0x44, 0x22, 0x2c,
+	0x0a, 0x10, 0x47, 0x65, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x47, 0x6f, 0x6f, 0x64, 0x73, 0x52,
+	0x65, 0x71, 0x12, 0x18, 0x0a, 0x07, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x49, 0x44, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x03, 0x52, 0x07, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x49, 0x44, 0x22, 0x32, 0x0a, 0x10,
+	0x47, 0x65, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x47, 0x6f, 0x6f, 0x64, 0x73, 0x52, 0x65, 0x73,
+	0x12, 0x1e, 0x0a, 0x05, 0x67, 0x6f, 0x6f, 0x64, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32,
+	0x08, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x05, 0x67, 0x6f, 0x6f, 0x64, 0x73,
+	0x32, 0x92, 0x03, 0x0a, 0x03, 0x4d, 0x76, 0x70, 0x12, 0x29, 0x0a, 0x07, 0x41, 0x64, 0x64, 0x47,
+	0x6f, 0x6f, 0x64, 0x12, 0x0e, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64,
+	0x52, 0x65, 0x71, 0x1a, 0x0e, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64,
+	0x52, 0x65, 0x73, 0x12, 0x41, 0x0a, 0x0f, 0x41, 0x64, 0x64, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x61,
+	0x72, 0x64, 0x44, 0x65, 0x73, 0x6b, 0x12, 0x16, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x42,
+	0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x44, 0x65, 0x73, 0x6b, 0x52, 0x65, 0x71, 0x1a, 0x16,
+	0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x44,
+	0x65, 0x73, 0x6b, 0x52, 0x65, 0x73, 0x12, 0x2c, 0x0a, 0x08, 0x53, 0x65, 0x6c, 0x6c, 0x47, 0x6f,
+	0x6f, 0x64, 0x12, 0x0f, 0x2e, 0x70, 0x62, 0x2e, 0x53, 0x65, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64,
+	0x52, 0x65, 0x71, 0x1a, 0x0f, 0x2e, 0x70, 0x62, 0x2e, 0x53, 0x65, 0x6c, 0x6c, 0x47, 0x6f, 0x6f,
+	0x64, 0x52, 0x65, 0x73, 0x12, 0x47, 0x0a, 0x11, 0x42, 0x65, 0x67, 0x69, 0x6e, 0x50, 0x6c, 0x61,
+	0x79, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x12, 0x18, 0x2e, 0x70, 0x62, 0x2e, 0x42,
+	0x65, 0x67, 0x69, 0x6e, 0x50, 0x6c, 0x61, 0x79, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64,
+	0x52, 0x65, 0x71, 0x1a, 0x18, 0x2e, 0x70, 0x62, 0x2e, 0x42, 0x65, 0x67, 0x69, 0x6e, 0x50, 0x6c,
+	0x61, 0x79, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x52, 0x65, 0x73, 0x12, 0x44, 0x0a,
+	0x10, 0x53, 0x74, 0x6f, 0x70, 0x50, 0x6c, 0x61, 0x79, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72,
+	0x64, 0x12, 0x17, 0x2e, 0x70, 0x62, 0x2e, 0x53, 0x74, 0x6f, 0x70, 0x50, 0x6c, 0x61, 0x79, 0x42,
+	0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x52, 0x65, 0x71, 0x1a, 0x17, 0x2e, 0x70, 0x62, 0x2e,
+	0x53, 0x74, 0x6f, 0x70, 0x50, 0x6c, 0x61, 0x79, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64,
+	0x52, 0x65, 0x73, 0x12, 0x23, 0x0a, 0x05, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x12, 0x0c, 0x2e, 0x70,
+	0x62, 0x2e, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x52, 0x65, 0x71, 0x1a, 0x0c, 0x2e, 0x70, 0x62, 0x2e,
+	0x4f, 0x72, 0x64, 0x65, 0x72, 0x52, 0x65, 0x73, 0x12, 0x3b, 0x0a, 0x0d, 0x47, 0x65, 0x74, 0x4f,
+	0x72, 0x64, 0x65, 0x72, 0x47, 0x6f, 0x6f, 0x64, 0x73, 0x12, 0x14, 0x2e, 0x70, 0x62, 0x2e, 0x47,
+	0x65, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x47, 0x6f, 0x6f, 0x64, 0x73, 0x52, 0x65, 0x71, 0x1a,
+	0x14, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x47, 0x6f, 0x6f,
+	0x64, 0x73, 0x52, 0x65, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -569,7 +883,7 @@ func file_common_pb_mvp_proto_rawDescGZIP() []byte {
 	return file_common_pb_mvp_proto_rawDescData
 }
 
-var file_common_pb_mvp_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_common_pb_mvp_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_common_pb_mvp_proto_goTypes = []interface{}{
 	(*AddGoodReq)(nil),           // 0: pb.AddGoodReq
 	(*AddGoodRes)(nil),           // 1: pb.AddGoodRes
@@ -581,23 +895,36 @@ var file_common_pb_mvp_proto_goTypes = []interface{}{
 	(*BeginPlayBilliardRes)(nil), // 7: pb.BeginPlayBilliardRes
 	(*StopPlayBilliardReq)(nil),  // 8: pb.StopPlayBilliardReq
 	(*StopPlayBilliardRes)(nil),  // 9: pb.StopPlayBilliardRes
+	(*AttachGood)(nil),           // 10: pb.AttachGood
+	(*Good)(nil),                 // 11: pb.Good
+	(*OrderReq)(nil),             // 12: pb.OrderReq
+	(*OrderRes)(nil),             // 13: pb.OrderRes
+	(*GetOrderGoodsReq)(nil),     // 14: pb.GetOrderGoodsReq
+	(*GetOrderGoodsRes)(nil),     // 15: pb.GetOrderGoodsRes
 }
 var file_common_pb_mvp_proto_depIdxs = []int32{
-	0, // 0: pb.Mvp.AddGood:input_type -> pb.AddGoodReq
-	4, // 1: pb.Mvp.AddBilliardDesk:input_type -> pb.AddBilliardDeskReq
-	2, // 2: pb.Mvp.SellGood:input_type -> pb.SellGoodReq
-	6, // 3: pb.Mvp.BeginPlayBilliard:input_type -> pb.BeginPlayBilliardReq
-	8, // 4: pb.Mvp.StopPlayBilliard:input_type -> pb.StopPlayBilliardReq
-	1, // 5: pb.Mvp.AddGood:output_type -> pb.AddGoodRes
-	5, // 6: pb.Mvp.AddBilliardDesk:output_type -> pb.AddBilliardDeskRes
-	3, // 7: pb.Mvp.SellGood:output_type -> pb.SellGoodRes
-	7, // 8: pb.Mvp.BeginPlayBilliard:output_type -> pb.BeginPlayBilliardRes
-	9, // 9: pb.Mvp.StopPlayBilliard:output_type -> pb.StopPlayBilliardRes
-	5, // [5:10] is the sub-list for method output_type
-	0, // [0:5] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	10, // 0: pb.Good.attachGoods:type_name -> pb.AttachGood
+	11, // 1: pb.OrderReq.goods:type_name -> pb.Good
+	11, // 2: pb.GetOrderGoodsRes.goods:type_name -> pb.Good
+	0,  // 3: pb.Mvp.AddGood:input_type -> pb.AddGoodReq
+	4,  // 4: pb.Mvp.AddBilliardDesk:input_type -> pb.AddBilliardDeskReq
+	2,  // 5: pb.Mvp.SellGood:input_type -> pb.SellGoodReq
+	6,  // 6: pb.Mvp.BeginPlayBilliard:input_type -> pb.BeginPlayBilliardReq
+	8,  // 7: pb.Mvp.StopPlayBilliard:input_type -> pb.StopPlayBilliardReq
+	12, // 8: pb.Mvp.Order:input_type -> pb.OrderReq
+	14, // 9: pb.Mvp.GetOrderGoods:input_type -> pb.GetOrderGoodsReq
+	1,  // 10: pb.Mvp.AddGood:output_type -> pb.AddGoodRes
+	5,  // 11: pb.Mvp.AddBilliardDesk:output_type -> pb.AddBilliardDeskRes
+	3,  // 12: pb.Mvp.SellGood:output_type -> pb.SellGoodRes
+	7,  // 13: pb.Mvp.BeginPlayBilliard:output_type -> pb.BeginPlayBilliardRes
+	9,  // 14: pb.Mvp.StopPlayBilliard:output_type -> pb.StopPlayBilliardRes
+	13, // 15: pb.Mvp.Order:output_type -> pb.OrderRes
+	15, // 16: pb.Mvp.GetOrderGoods:output_type -> pb.GetOrderGoodsRes
+	10, // [10:17] is the sub-list for method output_type
+	3,  // [3:10] is the sub-list for method input_type
+	3,  // [3:3] is the sub-list for extension type_name
+	3,  // [3:3] is the sub-list for extension extendee
+	0,  // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_common_pb_mvp_proto_init() }
@@ -726,6 +1053,78 @@ func file_common_pb_mvp_proto_init() {
 				return nil
 			}
 		}
+		file_common_pb_mvp_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AttachGood); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Good); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*OrderReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*OrderRes); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetOrderGoodsReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetOrderGoodsRes); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -733,7 +1132,7 @@ func file_common_pb_mvp_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_common_pb_mvp_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -764,6 +1163,8 @@ type MvpClient interface {
 	SellGood(ctx context.Context, in *SellGoodReq, opts ...grpc.CallOption) (*SellGoodRes, error)
 	BeginPlayBilliard(ctx context.Context, in *BeginPlayBilliardReq, opts ...grpc.CallOption) (*BeginPlayBilliardRes, error)
 	StopPlayBilliard(ctx context.Context, in *StopPlayBilliardReq, opts ...grpc.CallOption) (*StopPlayBilliardRes, error)
+	Order(ctx context.Context, in *OrderReq, opts ...grpc.CallOption) (*OrderRes, error)
+	GetOrderGoods(ctx context.Context, in *GetOrderGoodsReq, opts ...grpc.CallOption) (*GetOrderGoodsRes, error)
 }
 
 type mvpClient struct {
@@ -819,6 +1220,24 @@ func (c *mvpClient) StopPlayBilliard(ctx context.Context, in *StopPlayBilliardRe
 	return out, nil
 }
 
+func (c *mvpClient) Order(ctx context.Context, in *OrderReq, opts ...grpc.CallOption) (*OrderRes, error) {
+	out := new(OrderRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/Order", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *mvpClient) GetOrderGoods(ctx context.Context, in *GetOrderGoodsReq, opts ...grpc.CallOption) (*GetOrderGoodsRes, error) {
+	out := new(GetOrderGoodsRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/GetOrderGoods", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MvpServer is the server API for Mvp service.
 type MvpServer interface {
 	AddGood(context.Context, *AddGoodReq) (*AddGoodRes, error)
@@ -826,6 +1245,8 @@ type MvpServer interface {
 	SellGood(context.Context, *SellGoodReq) (*SellGoodRes, error)
 	BeginPlayBilliard(context.Context, *BeginPlayBilliardReq) (*BeginPlayBilliardRes, error)
 	StopPlayBilliard(context.Context, *StopPlayBilliardReq) (*StopPlayBilliardRes, error)
+	Order(context.Context, *OrderReq) (*OrderRes, error)
+	GetOrderGoods(context.Context, *GetOrderGoodsReq) (*GetOrderGoodsRes, error)
 }
 
 // UnimplementedMvpServer can be embedded to have forward compatible implementations.
@@ -846,6 +1267,12 @@ func (*UnimplementedMvpServer) BeginPlayBilliard(context.Context, *BeginPlayBill
 }
 func (*UnimplementedMvpServer) StopPlayBilliard(context.Context, *StopPlayBilliardReq) (*StopPlayBilliardRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method StopPlayBilliard not implemented")
+}
+func (*UnimplementedMvpServer) Order(context.Context, *OrderReq) (*OrderRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Order not implemented")
+}
+func (*UnimplementedMvpServer) GetOrderGoods(context.Context, *GetOrderGoodsReq) (*GetOrderGoodsRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOrderGoods not implemented")
 }
 
 func RegisterMvpServer(s *grpc.Server, srv MvpServer) {
@@ -942,6 +1369,42 @@ func _Mvp_StopPlayBilliard_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Mvp_Order_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OrderReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).Order(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/Order",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).Order(ctx, req.(*OrderReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Mvp_GetOrderGoods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrderGoodsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).GetOrderGoods(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/GetOrderGoods",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).GetOrderGoods(ctx, req.(*GetOrderGoodsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Mvp_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.Mvp",
 	HandlerType: (*MvpServer)(nil),
@@ -965,6 +1428,14 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "StopPlayBilliard",
 			Handler:    _Mvp_StopPlayBilliard_Handler,
+		},
+		{
+			MethodName: "Order",
+			Handler:    _Mvp_Order_Handler,
+		},
+		{
+			MethodName: "GetOrderGoods",
+			Handler:    _Mvp_GetOrderGoods_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
