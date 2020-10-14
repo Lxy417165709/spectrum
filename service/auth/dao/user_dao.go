@@ -57,9 +57,4 @@ func (userDao) Create(email, hashSaltyPassword, salt string) error {
 	return nil
 }
 
-func createTableWhenNotExist(table interface{}) {
-	if !mainDB.HasTable(table) {
-		mainDB.CreateTable(table)
-	}
-}
 

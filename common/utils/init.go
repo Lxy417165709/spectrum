@@ -33,6 +33,8 @@ func InitRpc(servePort int, server interface{}) {
 		pb.RegisterEmailServer(grpcServer, server.(pb.EmailServer))
 	case pb.AuthServer:
 		pb.RegisterAuthServer(grpcServer, server.(pb.AuthServer))
+	case pb.MvpServer:
+		pb.RegisterMvpServer(grpcServer,server.(pb.MvpServer))
 	default:
 		panic(fmt.Sprintf("Invalid rpc server(%+v).", server))
 	}
