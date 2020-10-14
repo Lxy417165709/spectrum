@@ -16,7 +16,31 @@ message SellGoodReq {
 
 message SellGoodRes {}
 
+message AddBilliardDeskReq {
+  string billiardDeskName = 1;
+}
+
+message AddBilliardDeskRes {}
+
+message BeginPlayBilliardReq {
+  string billiardDeskName = 1;
+  int64 beginPlayTimestamp = 2;
+}
+
+message BeginPlayBilliardRes {}
+
+message StopPlayBilliardReq {
+  string billiardDeskName = 1;
+  int64 beginPlayTimestamp = 2;
+  int64  stopPlayTimestamp = 3;
+}
+
+message StopPlayBilliardRes {}
+
 service Mvp {
   rpc AddGood(AddGoodReq) returns (AddGoodRes);
+  rpc AddBilliardDesk(AddBilliardDeskReq) returns (AddBilliardDeskRes);
   rpc SellGood(SellGoodReq) returns (SellGoodRes);
+  rpc BeginPlayBilliard(BeginPlayBilliardReq) returns (BeginPlayBilliardRes);
+  rpc StopPlayBilliard(StopPlayBilliardReq) returns (StopPlayBilliardRes);
 }

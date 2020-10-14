@@ -215,6 +215,285 @@ func (*SellGoodRes) Descriptor() ([]byte, []int) {
 	return file_common_pb_mvp_proto_rawDescGZIP(), []int{3}
 }
 
+type AddBilliardDeskReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	BilliardDeskName string `protobuf:"bytes,1,opt,name=billiardDeskName,proto3" json:"billiardDeskName,omitempty"`
+}
+
+func (x *AddBilliardDeskReq) Reset() {
+	*x = AddBilliardDeskReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_common_pb_mvp_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *AddBilliardDeskReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddBilliardDeskReq) ProtoMessage() {}
+
+func (x *AddBilliardDeskReq) ProtoReflect() protoreflect.Message {
+	mi := &file_common_pb_mvp_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddBilliardDeskReq.ProtoReflect.Descriptor instead.
+func (*AddBilliardDeskReq) Descriptor() ([]byte, []int) {
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *AddBilliardDeskReq) GetBilliardDeskName() string {
+	if x != nil {
+		return x.BilliardDeskName
+	}
+	return ""
+}
+
+type AddBilliardDeskRes struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *AddBilliardDeskRes) Reset() {
+	*x = AddBilliardDeskRes{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_common_pb_mvp_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *AddBilliardDeskRes) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddBilliardDeskRes) ProtoMessage() {}
+
+func (x *AddBilliardDeskRes) ProtoReflect() protoreflect.Message {
+	mi := &file_common_pb_mvp_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddBilliardDeskRes.ProtoReflect.Descriptor instead.
+func (*AddBilliardDeskRes) Descriptor() ([]byte, []int) {
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{5}
+}
+
+type BeginPlayBilliardReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	BilliardDeskName   string `protobuf:"bytes,1,opt,name=billiardDeskName,proto3" json:"billiardDeskName,omitempty"`
+	BeginPlayTimestamp int64  `protobuf:"varint,2,opt,name=beginPlayTimestamp,proto3" json:"beginPlayTimestamp,omitempty"`
+}
+
+func (x *BeginPlayBilliardReq) Reset() {
+	*x = BeginPlayBilliardReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_common_pb_mvp_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *BeginPlayBilliardReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BeginPlayBilliardReq) ProtoMessage() {}
+
+func (x *BeginPlayBilliardReq) ProtoReflect() protoreflect.Message {
+	mi := &file_common_pb_mvp_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BeginPlayBilliardReq.ProtoReflect.Descriptor instead.
+func (*BeginPlayBilliardReq) Descriptor() ([]byte, []int) {
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *BeginPlayBilliardReq) GetBilliardDeskName() string {
+	if x != nil {
+		return x.BilliardDeskName
+	}
+	return ""
+}
+
+func (x *BeginPlayBilliardReq) GetBeginPlayTimestamp() int64 {
+	if x != nil {
+		return x.BeginPlayTimestamp
+	}
+	return 0
+}
+
+type BeginPlayBilliardRes struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *BeginPlayBilliardRes) Reset() {
+	*x = BeginPlayBilliardRes{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_common_pb_mvp_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *BeginPlayBilliardRes) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BeginPlayBilliardRes) ProtoMessage() {}
+
+func (x *BeginPlayBilliardRes) ProtoReflect() protoreflect.Message {
+	mi := &file_common_pb_mvp_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BeginPlayBilliardRes.ProtoReflect.Descriptor instead.
+func (*BeginPlayBilliardRes) Descriptor() ([]byte, []int) {
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{7}
+}
+
+type StopPlayBilliardReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	BilliardDeskName   string `protobuf:"bytes,1,opt,name=billiardDeskName,proto3" json:"billiardDeskName,omitempty"`
+	BeginPlayTimestamp int64  `protobuf:"varint,2,opt,name=beginPlayTimestamp,proto3" json:"beginPlayTimestamp,omitempty"`
+	StopPlayTimestamp  int64  `protobuf:"varint,3,opt,name=stopPlayTimestamp,proto3" json:"stopPlayTimestamp,omitempty"`
+}
+
+func (x *StopPlayBilliardReq) Reset() {
+	*x = StopPlayBilliardReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_common_pb_mvp_proto_msgTypes[8]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *StopPlayBilliardReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StopPlayBilliardReq) ProtoMessage() {}
+
+func (x *StopPlayBilliardReq) ProtoReflect() protoreflect.Message {
+	mi := &file_common_pb_mvp_proto_msgTypes[8]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use StopPlayBilliardReq.ProtoReflect.Descriptor instead.
+func (*StopPlayBilliardReq) Descriptor() ([]byte, []int) {
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *StopPlayBilliardReq) GetBilliardDeskName() string {
+	if x != nil {
+		return x.BilliardDeskName
+	}
+	return ""
+}
+
+func (x *StopPlayBilliardReq) GetBeginPlayTimestamp() int64 {
+	if x != nil {
+		return x.BeginPlayTimestamp
+	}
+	return 0
+}
+
+func (x *StopPlayBilliardReq) GetStopPlayTimestamp() int64 {
+	if x != nil {
+		return x.StopPlayTimestamp
+	}
+	return 0
+}
+
+type StopPlayBilliardRes struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *StopPlayBilliardRes) Reset() {
+	*x = StopPlayBilliardRes{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_common_pb_mvp_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *StopPlayBilliardRes) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StopPlayBilliardRes) ProtoMessage() {}
+
+func (x *StopPlayBilliardRes) ProtoReflect() protoreflect.Message {
+	mi := &file_common_pb_mvp_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use StopPlayBilliardRes.ProtoReflect.Descriptor instead.
+func (*StopPlayBilliardRes) Descriptor() ([]byte, []int) {
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{9}
+}
+
 var File_common_pb_mvp_proto protoreflect.FileDescriptor
 
 var file_common_pb_mvp_proto_rawDesc = []byte{
@@ -229,13 +508,52 @@ var file_common_pb_mvp_proto_rawDesc = []byte{
 	0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x67, 0x6f, 0x6f, 0x64, 0x4e, 0x61,
 	0x6d, 0x65, 0x12, 0x1c, 0x0a, 0x09, 0x73, 0x65, 0x6c, 0x6c, 0x50, 0x72, 0x69, 0x63, 0x65, 0x18,
 	0x02, 0x20, 0x01, 0x28, 0x02, 0x52, 0x09, 0x73, 0x65, 0x6c, 0x6c, 0x50, 0x72, 0x69, 0x63, 0x65,
-	0x22, 0x0d, 0x0a, 0x0b, 0x53, 0x65, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x73, 0x32,
-	0x5e, 0x0a, 0x03, 0x4d, 0x76, 0x70, 0x12, 0x29, 0x0a, 0x07, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f,
-	0x64, 0x12, 0x0e, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65,
-	0x71, 0x1a, 0x0e, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65,
-	0x73, 0x12, 0x2c, 0x0a, 0x08, 0x53, 0x65, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x12, 0x0f, 0x2e,
-	0x70, 0x62, 0x2e, 0x53, 0x65, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x71, 0x1a, 0x0f,
-	0x2e, 0x70, 0x62, 0x2e, 0x53, 0x65, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x73, 0x62,
+	0x22, 0x0d, 0x0a, 0x0b, 0x53, 0x65, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x73, 0x22,
+	0x40, 0x0a, 0x12, 0x41, 0x64, 0x64, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x44, 0x65,
+	0x73, 0x6b, 0x52, 0x65, 0x71, 0x12, 0x2a, 0x0a, 0x10, 0x62, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72,
+	0x64, 0x44, 0x65, 0x73, 0x6b, 0x4e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x10, 0x62, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x44, 0x65, 0x73, 0x6b, 0x4e, 0x61, 0x6d,
+	0x65, 0x22, 0x14, 0x0a, 0x12, 0x41, 0x64, 0x64, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64,
+	0x44, 0x65, 0x73, 0x6b, 0x52, 0x65, 0x73, 0x22, 0x72, 0x0a, 0x14, 0x42, 0x65, 0x67, 0x69, 0x6e,
+	0x50, 0x6c, 0x61, 0x79, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x52, 0x65, 0x71, 0x12,
+	0x2a, 0x0a, 0x10, 0x62, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x44, 0x65, 0x73, 0x6b, 0x4e,
+	0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x10, 0x62, 0x69, 0x6c, 0x6c, 0x69,
+	0x61, 0x72, 0x64, 0x44, 0x65, 0x73, 0x6b, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x2e, 0x0a, 0x12, 0x62,
+	0x65, 0x67, 0x69, 0x6e, 0x50, 0x6c, 0x61, 0x79, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d,
+	0x70, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x12, 0x62, 0x65, 0x67, 0x69, 0x6e, 0x50, 0x6c,
+	0x61, 0x79, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x22, 0x16, 0x0a, 0x14, 0x42,
+	0x65, 0x67, 0x69, 0x6e, 0x50, 0x6c, 0x61, 0x79, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64,
+	0x52, 0x65, 0x73, 0x22, 0x9f, 0x01, 0x0a, 0x13, 0x53, 0x74, 0x6f, 0x70, 0x50, 0x6c, 0x61, 0x79,
+	0x42, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x52, 0x65, 0x71, 0x12, 0x2a, 0x0a, 0x10, 0x62,
+	0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x44, 0x65, 0x73, 0x6b, 0x4e, 0x61, 0x6d, 0x65, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x10, 0x62, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x44,
+	0x65, 0x73, 0x6b, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x2e, 0x0a, 0x12, 0x62, 0x65, 0x67, 0x69, 0x6e,
+	0x50, 0x6c, 0x61, 0x79, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x03, 0x52, 0x12, 0x62, 0x65, 0x67, 0x69, 0x6e, 0x50, 0x6c, 0x61, 0x79, 0x54, 0x69,
+	0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x12, 0x2c, 0x0a, 0x11, 0x73, 0x74, 0x6f, 0x70, 0x50,
+	0x6c, 0x61, 0x79, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x18, 0x03, 0x20, 0x01,
+	0x28, 0x03, 0x52, 0x11, 0x73, 0x74, 0x6f, 0x70, 0x50, 0x6c, 0x61, 0x79, 0x54, 0x69, 0x6d, 0x65,
+	0x73, 0x74, 0x61, 0x6d, 0x70, 0x22, 0x15, 0x0a, 0x13, 0x53, 0x74, 0x6f, 0x70, 0x50, 0x6c, 0x61,
+	0x79, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x52, 0x65, 0x73, 0x32, 0xb0, 0x02, 0x0a,
+	0x03, 0x4d, 0x76, 0x70, 0x12, 0x29, 0x0a, 0x07, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x12,
+	0x0e, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x71, 0x1a,
+	0x0e, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x73, 0x12,
+	0x41, 0x0a, 0x0f, 0x41, 0x64, 0x64, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x44, 0x65,
+	0x73, 0x6b, 0x12, 0x16, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x42, 0x69, 0x6c, 0x6c, 0x69,
+	0x61, 0x72, 0x64, 0x44, 0x65, 0x73, 0x6b, 0x52, 0x65, 0x71, 0x1a, 0x16, 0x2e, 0x70, 0x62, 0x2e,
+	0x41, 0x64, 0x64, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x44, 0x65, 0x73, 0x6b, 0x52,
+	0x65, 0x73, 0x12, 0x2c, 0x0a, 0x08, 0x53, 0x65, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x12, 0x0f,
+	0x2e, 0x70, 0x62, 0x2e, 0x53, 0x65, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x71, 0x1a,
+	0x0f, 0x2e, 0x70, 0x62, 0x2e, 0x53, 0x65, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x73,
+	0x12, 0x47, 0x0a, 0x11, 0x42, 0x65, 0x67, 0x69, 0x6e, 0x50, 0x6c, 0x61, 0x79, 0x42, 0x69, 0x6c,
+	0x6c, 0x69, 0x61, 0x72, 0x64, 0x12, 0x18, 0x2e, 0x70, 0x62, 0x2e, 0x42, 0x65, 0x67, 0x69, 0x6e,
+	0x50, 0x6c, 0x61, 0x79, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x52, 0x65, 0x71, 0x1a,
+	0x18, 0x2e, 0x70, 0x62, 0x2e, 0x42, 0x65, 0x67, 0x69, 0x6e, 0x50, 0x6c, 0x61, 0x79, 0x42, 0x69,
+	0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x52, 0x65, 0x73, 0x12, 0x44, 0x0a, 0x10, 0x53, 0x74, 0x6f,
+	0x70, 0x50, 0x6c, 0x61, 0x79, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x12, 0x17, 0x2e,
+	0x70, 0x62, 0x2e, 0x53, 0x74, 0x6f, 0x70, 0x50, 0x6c, 0x61, 0x79, 0x42, 0x69, 0x6c, 0x6c, 0x69,
+	0x61, 0x72, 0x64, 0x52, 0x65, 0x71, 0x1a, 0x17, 0x2e, 0x70, 0x62, 0x2e, 0x53, 0x74, 0x6f, 0x70,
+	0x50, 0x6c, 0x61, 0x79, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x61, 0x72, 0x64, 0x52, 0x65, 0x73, 0x62,
 	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
@@ -251,20 +569,32 @@ func file_common_pb_mvp_proto_rawDescGZIP() []byte {
 	return file_common_pb_mvp_proto_rawDescData
 }
 
-var file_common_pb_mvp_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_common_pb_mvp_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_common_pb_mvp_proto_goTypes = []interface{}{
-	(*AddGoodReq)(nil),  // 0: pb.AddGoodReq
-	(*AddGoodRes)(nil),  // 1: pb.AddGoodRes
-	(*SellGoodReq)(nil), // 2: pb.SellGoodReq
-	(*SellGoodRes)(nil), // 3: pb.SellGoodRes
+	(*AddGoodReq)(nil),           // 0: pb.AddGoodReq
+	(*AddGoodRes)(nil),           // 1: pb.AddGoodRes
+	(*SellGoodReq)(nil),          // 2: pb.SellGoodReq
+	(*SellGoodRes)(nil),          // 3: pb.SellGoodRes
+	(*AddBilliardDeskReq)(nil),   // 4: pb.AddBilliardDeskReq
+	(*AddBilliardDeskRes)(nil),   // 5: pb.AddBilliardDeskRes
+	(*BeginPlayBilliardReq)(nil), // 6: pb.BeginPlayBilliardReq
+	(*BeginPlayBilliardRes)(nil), // 7: pb.BeginPlayBilliardRes
+	(*StopPlayBilliardReq)(nil),  // 8: pb.StopPlayBilliardReq
+	(*StopPlayBilliardRes)(nil),  // 9: pb.StopPlayBilliardRes
 }
 var file_common_pb_mvp_proto_depIdxs = []int32{
 	0, // 0: pb.Mvp.AddGood:input_type -> pb.AddGoodReq
-	2, // 1: pb.Mvp.SellGood:input_type -> pb.SellGoodReq
-	1, // 2: pb.Mvp.AddGood:output_type -> pb.AddGoodRes
-	3, // 3: pb.Mvp.SellGood:output_type -> pb.SellGoodRes
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
+	4, // 1: pb.Mvp.AddBilliardDesk:input_type -> pb.AddBilliardDeskReq
+	2, // 2: pb.Mvp.SellGood:input_type -> pb.SellGoodReq
+	6, // 3: pb.Mvp.BeginPlayBilliard:input_type -> pb.BeginPlayBilliardReq
+	8, // 4: pb.Mvp.StopPlayBilliard:input_type -> pb.StopPlayBilliardReq
+	1, // 5: pb.Mvp.AddGood:output_type -> pb.AddGoodRes
+	5, // 6: pb.Mvp.AddBilliardDesk:output_type -> pb.AddBilliardDeskRes
+	3, // 7: pb.Mvp.SellGood:output_type -> pb.SellGoodRes
+	7, // 8: pb.Mvp.BeginPlayBilliard:output_type -> pb.BeginPlayBilliardRes
+	9, // 9: pb.Mvp.StopPlayBilliard:output_type -> pb.StopPlayBilliardRes
+	5, // [5:10] is the sub-list for method output_type
+	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -324,6 +654,78 @@ func file_common_pb_mvp_proto_init() {
 				return nil
 			}
 		}
+		file_common_pb_mvp_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AddBilliardDeskReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AddBilliardDeskRes); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*BeginPlayBilliardReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*BeginPlayBilliardRes); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*StopPlayBilliardReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*StopPlayBilliardRes); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -331,7 +733,7 @@ func file_common_pb_mvp_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_common_pb_mvp_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -358,7 +760,10 @@ const _ = grpc.SupportPackageIsVersion6
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MvpClient interface {
 	AddGood(ctx context.Context, in *AddGoodReq, opts ...grpc.CallOption) (*AddGoodRes, error)
+	AddBilliardDesk(ctx context.Context, in *AddBilliardDeskReq, opts ...grpc.CallOption) (*AddBilliardDeskRes, error)
 	SellGood(ctx context.Context, in *SellGoodReq, opts ...grpc.CallOption) (*SellGoodRes, error)
+	BeginPlayBilliard(ctx context.Context, in *BeginPlayBilliardReq, opts ...grpc.CallOption) (*BeginPlayBilliardRes, error)
+	StopPlayBilliard(ctx context.Context, in *StopPlayBilliardReq, opts ...grpc.CallOption) (*StopPlayBilliardRes, error)
 }
 
 type mvpClient struct {
@@ -378,6 +783,15 @@ func (c *mvpClient) AddGood(ctx context.Context, in *AddGoodReq, opts ...grpc.Ca
 	return out, nil
 }
 
+func (c *mvpClient) AddBilliardDesk(ctx context.Context, in *AddBilliardDeskReq, opts ...grpc.CallOption) (*AddBilliardDeskRes, error) {
+	out := new(AddBilliardDeskRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/AddBilliardDesk", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *mvpClient) SellGood(ctx context.Context, in *SellGoodReq, opts ...grpc.CallOption) (*SellGoodRes, error) {
 	out := new(SellGoodRes)
 	err := c.cc.Invoke(ctx, "/pb.Mvp/SellGood", in, out, opts...)
@@ -387,10 +801,31 @@ func (c *mvpClient) SellGood(ctx context.Context, in *SellGoodReq, opts ...grpc.
 	return out, nil
 }
 
+func (c *mvpClient) BeginPlayBilliard(ctx context.Context, in *BeginPlayBilliardReq, opts ...grpc.CallOption) (*BeginPlayBilliardRes, error) {
+	out := new(BeginPlayBilliardRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/BeginPlayBilliard", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *mvpClient) StopPlayBilliard(ctx context.Context, in *StopPlayBilliardReq, opts ...grpc.CallOption) (*StopPlayBilliardRes, error) {
+	out := new(StopPlayBilliardRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/StopPlayBilliard", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MvpServer is the server API for Mvp service.
 type MvpServer interface {
 	AddGood(context.Context, *AddGoodReq) (*AddGoodRes, error)
+	AddBilliardDesk(context.Context, *AddBilliardDeskReq) (*AddBilliardDeskRes, error)
 	SellGood(context.Context, *SellGoodReq) (*SellGoodRes, error)
+	BeginPlayBilliard(context.Context, *BeginPlayBilliardReq) (*BeginPlayBilliardRes, error)
+	StopPlayBilliard(context.Context, *StopPlayBilliardReq) (*StopPlayBilliardRes, error)
 }
 
 // UnimplementedMvpServer can be embedded to have forward compatible implementations.
@@ -400,8 +835,17 @@ type UnimplementedMvpServer struct {
 func (*UnimplementedMvpServer) AddGood(context.Context, *AddGoodReq) (*AddGoodRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddGood not implemented")
 }
+func (*UnimplementedMvpServer) AddBilliardDesk(context.Context, *AddBilliardDeskReq) (*AddBilliardDeskRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddBilliardDesk not implemented")
+}
 func (*UnimplementedMvpServer) SellGood(context.Context, *SellGoodReq) (*SellGoodRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SellGood not implemented")
+}
+func (*UnimplementedMvpServer) BeginPlayBilliard(context.Context, *BeginPlayBilliardReq) (*BeginPlayBilliardRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BeginPlayBilliard not implemented")
+}
+func (*UnimplementedMvpServer) StopPlayBilliard(context.Context, *StopPlayBilliardReq) (*StopPlayBilliardRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method StopPlayBilliard not implemented")
 }
 
 func RegisterMvpServer(s *grpc.Server, srv MvpServer) {
@@ -426,6 +870,24 @@ func _Mvp_AddGood_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Mvp_AddBilliardDesk_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddBilliardDeskReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).AddBilliardDesk(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/AddBilliardDesk",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).AddBilliardDesk(ctx, req.(*AddBilliardDeskReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Mvp_SellGood_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SellGoodReq)
 	if err := dec(in); err != nil {
@@ -444,6 +906,42 @@ func _Mvp_SellGood_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Mvp_BeginPlayBilliard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BeginPlayBilliardReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).BeginPlayBilliard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/BeginPlayBilliard",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).BeginPlayBilliard(ctx, req.(*BeginPlayBilliardReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Mvp_StopPlayBilliard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(StopPlayBilliardReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).StopPlayBilliard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/StopPlayBilliard",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).StopPlayBilliard(ctx, req.(*StopPlayBilliardReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Mvp_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.Mvp",
 	HandlerType: (*MvpServer)(nil),
@@ -453,8 +951,20 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Mvp_AddGood_Handler,
 		},
 		{
+			MethodName: "AddBilliardDesk",
+			Handler:    _Mvp_AddBilliardDesk_Handler,
+		},
+		{
 			MethodName: "SellGood",
 			Handler:    _Mvp_SellGood_Handler,
+		},
+		{
+			MethodName: "BeginPlayBilliard",
+			Handler:    _Mvp_BeginPlayBilliard_Handler,
+		},
+		{
+			MethodName: "StopPlayBilliard",
+			Handler:    _Mvp_StopPlayBilliard_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
