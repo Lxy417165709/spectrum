@@ -10,16 +10,9 @@ import (
 var Conf = &conf{}
 
 type conf struct {
-	//Mysql       Mysql       `json:"mysql"`
-	//Http        Http        `json:"http"`
 	EmailClient EmailClient `json:"email_client"`
-	Rpc Rpc `json:"rpc"`
-	//Cache       Cache       `json:"cache"`
-	//Vrc         Vrc         `json:"vrc"`
-	//Salt        Salt        `json:"salt"`
-	//Template    Template    `json:"template"`
-	//SecretKey   SecretKey   `json:"secret_key"`
-	//FileStorage FileStorage `json:"file_storage"`
+	MainDB      MainDB      `json:"main_db"`
+	Rpc         Rpc         `json:"rpc"`
 }
 
 func (c *conf) Load(pathOfConfFile string) error {

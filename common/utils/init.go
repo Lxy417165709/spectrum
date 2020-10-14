@@ -9,14 +9,12 @@ import (
 	"test/common/pb"
 )
 
-const confFilePath = "configure/alpha.json"
-
 func InitLogger() {
 	logs.SetLogFuncCall(true)
 	logs.SetLogFuncCallDepth(3)
 }
 
-func InitConfigure() {
+func InitConfigure(confFilePath string) {
 	if err := env.Conf.Load(confFilePath); err != nil {
 		panic(err)
 	}
