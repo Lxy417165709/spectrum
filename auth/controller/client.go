@@ -1,24 +1,18 @@
 package controller
 
 import (
+	"github.com/astaxie/beego/logs"
 	"google.golang.org/grpc"
-	"log"
 	"test/common/pb"
 )
 
 var serverClient pb.ServerClient
 
-func init() {
-	conn, err := grpc.Dial(":8080", grpc.WithInsecure(), grpc.WithBlock())
+func initServerClient() {
+	conn, err := grpc.Dial(":8087", grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
-		log.Fatal(err)
+		logs.Error(err)
 		return
 	}
-	defer func() {
-		if err := conn.Close(); err != nil {
-			log.Fatal(err)
-			return
-		}
-	}()
 	serverClient = pb.NewServerClient(conn)
 }

@@ -22,7 +22,7 @@ func (s *Server) Login(ctx context.Context, req *pb.LoginReq) (*pb.LoginRes, err
 }
 
 func main() {
-	lis, err := net.Listen("tcp", ":8080")
+	lis, err := net.Listen("tcp", ":8087")
 	if err != nil {
 		log.Fatal(err)
 		return

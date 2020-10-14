@@ -9,6 +9,8 @@ import (
 type UserDao struct{}
 
 func (UserDao) Get(userID int) (*model.User, error) {
+	createTableWhenNotExist(&model.User{})
+
 	var user model.User
 	db := mainDB.First(&user, "id = ?", userID)
 	if err := db.Error; err != nil {
@@ -22,6 +24,8 @@ func (UserDao) Get(userID int) (*model.User, error) {
 }
 
 func (UserDao) GetByEmail(email string) (*model.User, error) {
+	createTableWhenNotExist(&model.User{})
+
 	var user model.User
 	db := mainDB.First(&user, "email = ?", email)
 	if err := db.Error; err != nil {

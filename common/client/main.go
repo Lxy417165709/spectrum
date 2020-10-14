@@ -9,7 +9,7 @@ import (
 
 
 func main() {
-	conn, err := grpc.Dial(":8080", grpc.WithInsecure(), grpc.WithBlock())
+	conn, err := grpc.Dial(":8087", grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatal(err)
 		return

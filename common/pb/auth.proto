@@ -7,8 +7,16 @@ message LoginReq {
   string password = 2;
 }
 
+message RegisterReq {
+  string email = 1;
+  string password = 2;
+}
+
 message LoginRes {}
 
+message RegisterRes {}
+
 service Server {
+  rpc Register(RegisterReq) returns (RegisterRes);
   rpc Login (LoginReq) returns (LoginRes);
 }

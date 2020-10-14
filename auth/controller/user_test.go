@@ -2,19 +2,35 @@ package controller
 
 import (
 	"context"
-	"github.com/astaxie/beego/logs"
+	"log"
 	"test/common/pb"
 	"testing"
 )
 
 func TestServer_Login(t *testing.T) {
-	req := &pb.LoginReq{
+	initServerClient()
+
+	if _, err := serverClient.Login(context.Background(), &pb.LoginReq{
 		Email:    "417165709@qq.com",
 		Password: "123456",
+	}); err != nil {
+		log.Fatal(err)
+		return
 	}
-	res, err := serverClient.Login(context.Background(), req)
-	logs.Info(res, err)
-	if err != nil {
-		t.Fatal(err)
+
+	log.Println("Login successfully!")
+}
+
+func TestServer_Register(t *testing.T) {
+	initServerClient()
+
+	if _, err := serverClient.Register(context.Background(), &pb.RegisterReq{
+		Email:    "417165709@qq.com",
+		Password: "123456",
+	}); err != nil {
+		log.Fatal(err)
+		return
 	}
+
+	log.Println("Register successfully!")
 }

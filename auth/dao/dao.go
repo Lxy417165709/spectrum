@@ -9,8 +9,7 @@ import (
 var mainDB *gorm.DB
 
 func init() {
-
-	mainDB = newDB(genDSN("root:123456@tcp(120.26.162.39:40000)", "mysql"), 5)
+	mainDB = newDB(genDSN("root:123456@tcp(120.26.162.39:40000)", "lxy"), 5)
 }
 
 func genDSN(host, db string) string {
