@@ -11,10 +11,10 @@ func TestServer_Login(t *testing.T) {
 	initServerClient()
 
 	if _, err := serverClient.Login(context.Background(), &pb.LoginReq{
-		Email:    "417165709@qq.com",
+		Email:    "957903559@qq.com",
 		Password: "123456",
 	}); err != nil {
-		log.Fatal(err)
+		t.Fatal(err)
 		return
 	}
 
@@ -25,10 +25,10 @@ func TestServer_Register(t *testing.T) {
 	initServerClient()
 
 	if _, err := serverClient.Register(context.Background(), &pb.RegisterReq{
-		Email:    "417165709@qq.com",
+		Email:    "957903559@qq.com",
 		Password: "123456",
 	}); err != nil {
-		log.Fatal(err)
+		t.Fatal(err)
 		return
 	}
 

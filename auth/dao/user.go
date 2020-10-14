@@ -4,6 +4,7 @@ import (
 	"github.com/astaxie/beego/logs"
 	"github.com/jinzhu/gorm"
 	"test/auth/model"
+	"time"
 )
 
 type UserDao struct{}
@@ -38,11 +39,14 @@ func (UserDao) GetByEmail(email string) (*model.User, error) {
 	return &user, nil
 }
 
-func (UserDao) Create(email, password string) error {
+func (UserDao) Create(email, hashSaltyPassword, salt string) error {
 	createTableWhenNotExist(&model.User{})
 	db := mainDB.Create(&model.User{
-		Email:    email,
-		Password: password,
+		Email:             email,
+		HashSaltyPassword: hashSaltyPassword,
+		Salt:              salt,
+		LastLoginTime:     time.Now(),
+		Birthday:          time.Now(),
 	})
 	if err := db.Error; err != nil {
 		logs.Error(err)
