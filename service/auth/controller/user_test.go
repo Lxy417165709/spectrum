@@ -8,9 +8,9 @@ import (
 )
 
 func TestServer_Login(t *testing.T) {
-	initServerClient()
+	initAuthClient()
 
-	if _, err := serverClient.Login(context.Background(), &pb.LoginReq{
+	if _, err := authClient.Login(context.Background(), &pb.LoginReq{
 		Email:    "957903559@qq.com",
 		Password: "123456",
 	}); err != nil {
@@ -22,9 +22,9 @@ func TestServer_Login(t *testing.T) {
 }
 
 func TestServer_Register(t *testing.T) {
-	initServerClient()
+	initAuthClient()
 
-	if _, err := serverClient.Register(context.Background(), &pb.RegisterReq{
+	if _, err := authClient.Register(context.Background(), &pb.RegisterReq{
 		Email:    "957903559@qq.com",
 		Password: "123456",
 	}); err != nil {

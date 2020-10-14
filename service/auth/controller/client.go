@@ -6,13 +6,13 @@ import (
 	"test/common/pb"
 )
 
-var serverClient pb.ServerClient
+var authClient pb.AuthClient
 
-func initServerClient() {
+func initAuthClient() {
 	conn, err := grpc.Dial(":8087", grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		logs.Error(err)
 		return
 	}
-	serverClient = pb.NewServerClient(conn)
+	authClient = pb.NewAuthClient(conn)
 }

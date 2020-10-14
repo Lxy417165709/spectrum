@@ -6,18 +6,19 @@ import (
 	"github.com/astaxie/beego/logs"
 	"test/common/pb"
 	"test/common/utils"
+	"test/service/auth/dao"
 )
 
-type Server struct {
-	pb.UnimplementedServerServer
+type AuthServer struct {
+	pb.UnimplementedAuthServer
 }
 
-func (Server) Login(ctx context.Context, req *pb.LoginReq) (*pb.LoginRes, error) {
+func (AuthServer) Login(ctx context.Context, req *pb.LoginReq) (*pb.LoginRes, error) {
 	logs.Info("Login", ctx, req)
 	var res pb.LoginRes
 
 	// 1. 判断用户是否存在
-	user, err := userDao.GetByEmail(req.Email)
+	user, err := dao.UserDao.GetByEmail(req.Email)
 	if err != nil {
 		logs.Error(err)
 		return nil, errors.New("Fail to finish userDao.GetByEmail")
@@ -38,12 +39,12 @@ func (Server) Login(ctx context.Context, req *pb.LoginReq) (*pb.LoginRes, error)
 	return &res, nil
 }
 
-func (Server) Register(ctx context.Context, req *pb.RegisterReq) (*pb.RegisterRes, error) {
+func (AuthServer) Register(ctx context.Context, req *pb.RegisterReq) (*pb.RegisterRes, error) {
 	logs.Info("Register", ctx, req)
 	var res pb.RegisterRes
 
 	// 1. 判断注册邮箱是否存在
-	user, err := userDao.GetByEmail(req.Email)
+	user, err := dao.UserDao.GetByEmail(req.Email)
 	if err != nil {
 		logs.Error(err)
 		return nil, errors.New("Fail to finish userDao.GetByEmail")
@@ -59,7 +60,7 @@ func (Server) Register(ctx context.Context, req *pb.RegisterReq) (*pb.RegisterRe
 		return nil, errors.New("Fail to get hash salty password")
 	}
 
-	if err := userDao.Create(req.Email, hashSaltyPassword, salt); err != nil {
+	if err := dao.UserDao.Create(req.Email, hashSaltyPassword, salt); err != nil {
 		logs.Error(err)
 		return nil, errors.New("Fail to finish userDao.Create")
 	}

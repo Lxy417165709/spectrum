@@ -16,7 +16,7 @@ message LoginRes {}
 
 message RegisterRes {}
 
-service Server {
+service Auth {
   rpc Register(RegisterReq) returns (RegisterRes);
   rpc Login (LoginReq) returns (LoginRes);
 }

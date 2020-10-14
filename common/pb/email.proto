@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package pb;
+
+message SendEmailReq {
+  string to = 1;
+  string content = 2;
+  string subject = 3;
+}
+
+message SendEmailRes {}
+
+service Email {
+  rpc Send(SendEmailReq) returns (SendEmailRes);
+}

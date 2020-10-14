@@ -229,13 +229,13 @@ var file_common_pb_auth_proto_rawDesc = []byte{
 	0x08, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52,
 	0x08, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x22, 0x0a, 0x0a, 0x08, 0x4c, 0x6f, 0x67,
 	0x69, 0x6e, 0x52, 0x65, 0x73, 0x22, 0x0d, 0x0a, 0x0b, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65,
-	0x72, 0x52, 0x65, 0x73, 0x32, 0x5b, 0x0a, 0x06, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x12, 0x2c,
-	0x0a, 0x08, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x12, 0x0f, 0x2e, 0x70, 0x62, 0x2e,
-	0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x52, 0x65, 0x71, 0x1a, 0x0f, 0x2e, 0x70, 0x62,
-	0x2e, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x52, 0x65, 0x73, 0x12, 0x23, 0x0a, 0x05,
-	0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x12, 0x0c, 0x2e, 0x70, 0x62, 0x2e, 0x4c, 0x6f, 0x67, 0x69, 0x6e,
-	0x52, 0x65, 0x71, 0x1a, 0x0c, 0x2e, 0x70, 0x62, 0x2e, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x52, 0x65,
-	0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x72, 0x52, 0x65, 0x73, 0x32, 0x59, 0x0a, 0x04, 0x41, 0x75, 0x74, 0x68, 0x12, 0x2c, 0x0a, 0x08,
+	0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x12, 0x0f, 0x2e, 0x70, 0x62, 0x2e, 0x52, 0x65,
+	0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x52, 0x65, 0x71, 0x1a, 0x0f, 0x2e, 0x70, 0x62, 0x2e, 0x52,
+	0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x52, 0x65, 0x73, 0x12, 0x23, 0x0a, 0x05, 0x4c, 0x6f,
+	0x67, 0x69, 0x6e, 0x12, 0x0c, 0x2e, 0x70, 0x62, 0x2e, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x52, 0x65,
+	0x71, 0x1a, 0x0c, 0x2e, 0x70, 0x62, 0x2e, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x52, 0x65, 0x73, 0x62,
+	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -258,10 +258,10 @@ var file_common_pb_auth_proto_goTypes = []interface{}{
 	(*RegisterRes)(nil), // 3: pb.RegisterRes
 }
 var file_common_pb_auth_proto_depIdxs = []int32{
-	1, // 0: pb.Server.Register:input_type -> pb.RegisterReq
-	0, // 1: pb.Server.Login:input_type -> pb.LoginReq
-	3, // 2: pb.Server.Register:output_type -> pb.RegisterRes
-	2, // 3: pb.Server.Login:output_type -> pb.LoginRes
+	1, // 0: pb.Auth.Register:input_type -> pb.RegisterReq
+	0, // 1: pb.Auth.Login:input_type -> pb.LoginReq
+	3, // 2: pb.Auth.Register:output_type -> pb.RegisterRes
+	2, // 3: pb.Auth.Login:output_type -> pb.LoginRes
 	2, // [2:4] is the sub-list for method output_type
 	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -352,108 +352,108 @@ var _ grpc.ClientConnInterface
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion6
 
-// ServerClient is the client API for Server service.
+// AuthClient is the client API for Auth service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type ServerClient interface {
+type AuthClient interface {
 	Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterRes, error)
 	Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginRes, error)
 }
 
-type serverClient struct {
+type authClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewServerClient(cc grpc.ClientConnInterface) ServerClient {
-	return &serverClient{cc}
+func NewAuthClient(cc grpc.ClientConnInterface) AuthClient {
+	return &authClient{cc}
 }
 
-func (c *serverClient) Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterRes, error) {
+func (c *authClient) Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterRes, error) {
 	out := new(RegisterRes)
-	err := c.cc.Invoke(ctx, "/pb.Server/Register", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.Auth/Register", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *serverClient) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginRes, error) {
+func (c *authClient) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginRes, error) {
 	out := new(LoginRes)
-	err := c.cc.Invoke(ctx, "/pb.Server/Login", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.Auth/Login", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ServerServer is the server API for Server service.
-type ServerServer interface {
+// AuthServer is the server API for Auth service.
+type AuthServer interface {
 	Register(context.Context, *RegisterReq) (*RegisterRes, error)
 	Login(context.Context, *LoginReq) (*LoginRes, error)
 }
 
-// UnimplementedServerServer can be embedded to have forward compatible implementations.
-type UnimplementedServerServer struct {
+// UnimplementedAuthServer can be embedded to have forward compatible implementations.
+type UnimplementedAuthServer struct {
 }
 
-func (*UnimplementedServerServer) Register(context.Context, *RegisterReq) (*RegisterRes, error) {
+func (*UnimplementedAuthServer) Register(context.Context, *RegisterReq) (*RegisterRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
-func (*UnimplementedServerServer) Login(context.Context, *LoginReq) (*LoginRes, error) {
+func (*UnimplementedAuthServer) Login(context.Context, *LoginReq) (*LoginRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
 
-func RegisterServerServer(s *grpc.Server, srv ServerServer) {
-	s.RegisterService(&_Server_serviceDesc, srv)
+func RegisterAuthServer(s *grpc.Server, srv AuthServer) {
+	s.RegisterService(&_Auth_serviceDesc, srv)
 }
 
-func _Server_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Auth_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RegisterReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServerServer).Register(ctx, in)
+		return srv.(AuthServer).Register(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.Server/Register",
+		FullMethod: "/pb.Auth/Register",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServerServer).Register(ctx, req.(*RegisterReq))
+		return srv.(AuthServer).Register(ctx, req.(*RegisterReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Server_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Auth_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LoginReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServerServer).Login(ctx, in)
+		return srv.(AuthServer).Login(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.Server/Login",
+		FullMethod: "/pb.Auth/Login",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServerServer).Login(ctx, req.(*LoginReq))
+		return srv.(AuthServer).Login(ctx, req.(*LoginReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-var _Server_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "pb.Server",
-	HandlerType: (*ServerServer)(nil),
+var _Auth_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "pb.Auth",
+	HandlerType: (*AuthServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Register",
-			Handler:    _Server_Register_Handler,
+			Handler:    _Auth_Register_Handler,
 		},
 		{
 			MethodName: "Login",
-			Handler:    _Server_Login_Handler,
+			Handler:    _Auth_Login_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

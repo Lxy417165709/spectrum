@@ -3,13 +3,15 @@ package dao
 import (
 	"github.com/astaxie/beego/logs"
 	"github.com/jinzhu/gorm"
-	"test/auth/model"
+	"test/service/auth/model"
 	"time"
 )
 
-type UserDao struct{}
+var UserDao userDao
 
-func (UserDao) Get(userID int) (*model.User, error) {
+type userDao struct{}
+
+func (userDao) Get(userID int) (*model.User, error) {
 	createTableWhenNotExist(&model.User{})
 
 	var user model.User
@@ -24,7 +26,7 @@ func (UserDao) Get(userID int) (*model.User, error) {
 	return &user, nil
 }
 
-func (UserDao) GetByEmail(email string) (*model.User, error) {
+func (userDao) GetByEmail(email string) (*model.User, error) {
 	createTableWhenNotExist(&model.User{})
 
 	var user model.User
@@ -39,7 +41,7 @@ func (UserDao) GetByEmail(email string) (*model.User, error) {
 	return &user, nil
 }
 
-func (UserDao) Create(email, hashSaltyPassword, salt string) error {
+func (userDao) Create(email, hashSaltyPassword, salt string) error {
 	createTableWhenNotExist(&model.User{})
 	db := mainDB.Create(&model.User{
 		Email:             email,
