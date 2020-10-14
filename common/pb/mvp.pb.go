@@ -122,6 +122,99 @@ func (*AddGoodRes) Descriptor() ([]byte, []int) {
 	return file_common_pb_mvp_proto_rawDescGZIP(), []int{1}
 }
 
+type SellGoodReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	GoodName  string  `protobuf:"bytes,1,opt,name=goodName,proto3" json:"goodName,omitempty"`
+	SellPrice float32 `protobuf:"fixed32,2,opt,name=sellPrice,proto3" json:"sellPrice,omitempty"`
+}
+
+func (x *SellGoodReq) Reset() {
+	*x = SellGoodReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_common_pb_mvp_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SellGoodReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SellGoodReq) ProtoMessage() {}
+
+func (x *SellGoodReq) ProtoReflect() protoreflect.Message {
+	mi := &file_common_pb_mvp_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SellGoodReq.ProtoReflect.Descriptor instead.
+func (*SellGoodReq) Descriptor() ([]byte, []int) {
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *SellGoodReq) GetGoodName() string {
+	if x != nil {
+		return x.GoodName
+	}
+	return ""
+}
+
+func (x *SellGoodReq) GetSellPrice() float32 {
+	if x != nil {
+		return x.SellPrice
+	}
+	return 0
+}
+
+type SellGoodRes struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *SellGoodRes) Reset() {
+	*x = SellGoodRes{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_common_pb_mvp_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SellGoodRes) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SellGoodRes) ProtoMessage() {}
+
+func (x *SellGoodRes) ProtoReflect() protoreflect.Message {
+	mi := &file_common_pb_mvp_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SellGoodRes.ProtoReflect.Descriptor instead.
+func (*SellGoodRes) Descriptor() ([]byte, []int) {
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{3}
+}
+
 var File_common_pb_mvp_proto protoreflect.FileDescriptor
 
 var file_common_pb_mvp_proto_rawDesc = []byte{
@@ -131,11 +224,19 @@ var file_common_pb_mvp_proto_rawDesc = []byte{
 	0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x67, 0x6f, 0x6f, 0x64, 0x4e,
 	0x61, 0x6d, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x70, 0x72, 0x69, 0x63, 0x65, 0x18, 0x02, 0x20, 0x01,
 	0x28, 0x02, 0x52, 0x05, 0x70, 0x72, 0x69, 0x63, 0x65, 0x22, 0x0c, 0x0a, 0x0a, 0x41, 0x64, 0x64,
-	0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x73, 0x32, 0x30, 0x0a, 0x03, 0x4d, 0x76, 0x70, 0x12, 0x29,
-	0x0a, 0x07, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x12, 0x0e, 0x2e, 0x70, 0x62, 0x2e, 0x41,
-	0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x71, 0x1a, 0x0e, 0x2e, 0x70, 0x62, 0x2e, 0x41,
-	0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x33,
+	0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x73, 0x22, 0x47, 0x0a, 0x0b, 0x53, 0x65, 0x6c, 0x6c, 0x47,
+	0x6f, 0x6f, 0x64, 0x52, 0x65, 0x71, 0x12, 0x1a, 0x0a, 0x08, 0x67, 0x6f, 0x6f, 0x64, 0x4e, 0x61,
+	0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x67, 0x6f, 0x6f, 0x64, 0x4e, 0x61,
+	0x6d, 0x65, 0x12, 0x1c, 0x0a, 0x09, 0x73, 0x65, 0x6c, 0x6c, 0x50, 0x72, 0x69, 0x63, 0x65, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x02, 0x52, 0x09, 0x73, 0x65, 0x6c, 0x6c, 0x50, 0x72, 0x69, 0x63, 0x65,
+	0x22, 0x0d, 0x0a, 0x0b, 0x53, 0x65, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x73, 0x32,
+	0x5e, 0x0a, 0x03, 0x4d, 0x76, 0x70, 0x12, 0x29, 0x0a, 0x07, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f,
+	0x64, 0x12, 0x0e, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65,
+	0x71, 0x1a, 0x0e, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65,
+	0x73, 0x12, 0x2c, 0x0a, 0x08, 0x53, 0x65, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x12, 0x0f, 0x2e,
+	0x70, 0x62, 0x2e, 0x53, 0x65, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x71, 0x1a, 0x0f,
+	0x2e, 0x70, 0x62, 0x2e, 0x53, 0x65, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x73, 0x62,
+	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -150,16 +251,20 @@ func file_common_pb_mvp_proto_rawDescGZIP() []byte {
 	return file_common_pb_mvp_proto_rawDescData
 }
 
-var file_common_pb_mvp_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_common_pb_mvp_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_common_pb_mvp_proto_goTypes = []interface{}{
-	(*AddGoodReq)(nil), // 0: pb.AddGoodReq
-	(*AddGoodRes)(nil), // 1: pb.AddGoodRes
+	(*AddGoodReq)(nil),  // 0: pb.AddGoodReq
+	(*AddGoodRes)(nil),  // 1: pb.AddGoodRes
+	(*SellGoodReq)(nil), // 2: pb.SellGoodReq
+	(*SellGoodRes)(nil), // 3: pb.SellGoodRes
 }
 var file_common_pb_mvp_proto_depIdxs = []int32{
 	0, // 0: pb.Mvp.AddGood:input_type -> pb.AddGoodReq
-	1, // 1: pb.Mvp.AddGood:output_type -> pb.AddGoodRes
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	2, // 1: pb.Mvp.SellGood:input_type -> pb.SellGoodReq
+	1, // 2: pb.Mvp.AddGood:output_type -> pb.AddGoodRes
+	3, // 3: pb.Mvp.SellGood:output_type -> pb.SellGoodRes
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -195,6 +300,30 @@ func file_common_pb_mvp_proto_init() {
 				return nil
 			}
 		}
+		file_common_pb_mvp_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SellGoodReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SellGoodRes); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -202,7 +331,7 @@ func file_common_pb_mvp_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_common_pb_mvp_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -229,6 +358,7 @@ const _ = grpc.SupportPackageIsVersion6
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MvpClient interface {
 	AddGood(ctx context.Context, in *AddGoodReq, opts ...grpc.CallOption) (*AddGoodRes, error)
+	SellGood(ctx context.Context, in *SellGoodReq, opts ...grpc.CallOption) (*SellGoodRes, error)
 }
 
 type mvpClient struct {
@@ -248,9 +378,19 @@ func (c *mvpClient) AddGood(ctx context.Context, in *AddGoodReq, opts ...grpc.Ca
 	return out, nil
 }
 
+func (c *mvpClient) SellGood(ctx context.Context, in *SellGoodReq, opts ...grpc.CallOption) (*SellGoodRes, error) {
+	out := new(SellGoodRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/SellGood", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MvpServer is the server API for Mvp service.
 type MvpServer interface {
 	AddGood(context.Context, *AddGoodReq) (*AddGoodRes, error)
+	SellGood(context.Context, *SellGoodReq) (*SellGoodRes, error)
 }
 
 // UnimplementedMvpServer can be embedded to have forward compatible implementations.
@@ -259,6 +399,9 @@ type UnimplementedMvpServer struct {
 
 func (*UnimplementedMvpServer) AddGood(context.Context, *AddGoodReq) (*AddGoodRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddGood not implemented")
+}
+func (*UnimplementedMvpServer) SellGood(context.Context, *SellGoodReq) (*SellGoodRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SellGood not implemented")
 }
 
 func RegisterMvpServer(s *grpc.Server, srv MvpServer) {
@@ -283,6 +426,24 @@ func _Mvp_AddGood_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Mvp_SellGood_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SellGoodReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).SellGood(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/SellGood",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).SellGood(ctx, req.(*SellGoodReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Mvp_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.Mvp",
 	HandlerType: (*MvpServer)(nil),
@@ -290,6 +451,10 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddGood",
 			Handler:    _Mvp_AddGood_Handler,
+		},
+		{
+			MethodName: "SellGood",
+			Handler:    _Mvp_SellGood_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

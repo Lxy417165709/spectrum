@@ -9,6 +9,14 @@ message AddGoodReq {
 
 message AddGoodRes {}
 
+message SellGoodReq {
+  string goodName = 1;
+  float sellPrice = 2;
+}
+
+message SellGoodRes {}
+
 service Mvp {
   rpc AddGood(AddGoodReq) returns (AddGoodRes);
+  rpc SellGood(SellGoodReq) returns (SellGoodRes);
 }
