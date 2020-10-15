@@ -25,6 +25,7 @@ type MvpClient interface {
 	Order(ctx context.Context, in *OrderReq, opts ...grpc.CallOption) (*OrderRes, error)
 	GetOrderGoods(ctx context.Context, in *GetOrderGoodsReq, opts ...grpc.CallOption) (*GetOrderGoodsRes, error)
 	AddGoodType(ctx context.Context, in *AddGoodTypeReq, opts ...grpc.CallOption) (*AddGoodTypeRes, error)
+	Checkout(ctx context.Context, in *CheckoutReq, opts ...grpc.CallOption) (*CheckoutRes, error)
 }
 
 type mvpClient struct {
@@ -107,6 +108,15 @@ func (c *mvpClient) AddGoodType(ctx context.Context, in *AddGoodTypeReq, opts ..
 	return out, nil
 }
 
+func (c *mvpClient) Checkout(ctx context.Context, in *CheckoutReq, opts ...grpc.CallOption) (*CheckoutRes, error) {
+	out := new(CheckoutRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/Checkout", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MvpServer is the server API for Mvp service.
 // All implementations must embed UnimplementedMvpServer
 // for forward compatibility
@@ -119,6 +129,7 @@ type MvpServer interface {
 	Order(context.Context, *OrderReq) (*OrderRes, error)
 	GetOrderGoods(context.Context, *GetOrderGoodsReq) (*GetOrderGoodsRes, error)
 	AddGoodType(context.Context, *AddGoodTypeReq) (*AddGoodTypeRes, error)
+	Checkout(context.Context, *CheckoutReq) (*CheckoutRes, error)
 	mustEmbedUnimplementedMvpServer()
 }
 
@@ -149,6 +160,9 @@ func (UnimplementedMvpServer) GetOrderGoods(context.Context, *GetOrderGoodsReq) 
 }
 func (UnimplementedMvpServer) AddGoodType(context.Context, *AddGoodTypeReq) (*AddGoodTypeRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddGoodType not implemented")
+}
+func (UnimplementedMvpServer) Checkout(context.Context, *CheckoutReq) (*CheckoutRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Checkout not implemented")
 }
 func (UnimplementedMvpServer) mustEmbedUnimplementedMvpServer() {}
 
@@ -307,6 +321,24 @@ func _Mvp_AddGoodType_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Mvp_Checkout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CheckoutReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).Checkout(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/Checkout",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).Checkout(ctx, req.(*CheckoutReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Mvp_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.Mvp",
 	HandlerType: (*MvpServer)(nil),
@@ -342,6 +374,10 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddGoodType",
 			Handler:    _Mvp_AddGoodType_Handler,
+		},
+		{
+			MethodName: "Checkout",
+			Handler:    _Mvp_Checkout_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

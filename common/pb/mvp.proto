@@ -38,8 +38,6 @@ message StopPlayBilliardReq {
 
 message StopPlayBilliardRes {}
 
-
-
 message AttachGood{
   string name = 1;
 }
@@ -52,6 +50,7 @@ message Good{
 message AttachGoodArray {
   repeated AttachGood attachGoods = 1;
 }
+
 message OrderReq{
   repeated Good goods = 1;
 }
@@ -75,6 +74,14 @@ message AddGoodTypeReq {
 
 message AddGoodTypeRes {}
 
+message CheckoutReq {
+  int64 orderID = 1;
+}
+
+message CheckoutRes{
+  float price = 1;
+}
+
 service Mvp {
   rpc AddGood(AddGoodReq) returns (AddGoodRes);
   rpc AddBilliardDesk(AddBilliardDeskReq) returns (AddBilliardDeskRes);
@@ -84,6 +91,7 @@ service Mvp {
   rpc Order(OrderReq) returns (OrderRes);
   rpc GetOrderGoods(GetOrderGoodsReq) returns (GetOrderGoodsRes);
   rpc AddGoodType(AddGoodTypeReq) returns (AddGoodTypeRes);
+  rpc Checkout(CheckoutReq) returns (CheckoutRes);
 }
 
 

@@ -296,3 +296,47 @@ func (MvpServer) AddGoodType(ctx context.Context, req *pb.AddGoodTypeReq) (*pb.A
 
 	return &res, nil
 }
+
+func (MvpServer) Checkout(ctx context.Context, req *pb.CheckoutReq) (*pb.CheckoutRes, error) {
+	logs.Info("Checkout", ctx, req)
+	var res pb.CheckoutRes
+
+	// 1. 判断订单是否存在
+	orderRecords, err := dao.OrderRecordDao.GetByOrderID(int(req.OrderID))
+	if err != nil {
+		logs.Error(err)
+		return nil, errors.New("Fail to finish OrderRecordDao.GetByOrderID")
+	}
+	if orderRecords == nil {
+		logs.Error("Order Record not Exist")
+		return nil, errors.New("Order Record not Exist")
+	}
+
+	// 2. 获取未结账货物记录
+	notCheckoutOrderRecords, err := dao.OrderRecordDao.GetNotCheckoutGoods(int(req.OrderID))
+	if err != nil {
+		logs.Error(err)
+		return nil, errors.New("Fail to finish OrderRecordDao.GetNotCheckoutGoods")
+	}
+
+	// 3. 计算价格 (先不考虑打折、满减等情况)
+	var wholePrice float64
+	for _, notCheckoutOrderRecord := range notCheckoutOrderRecords {
+		// 3.1 判断商品是否存在
+		good, err := dao.GoodDao.Get(notCheckoutOrderRecord.GoodID)
+		if err != nil {
+			logs.Error(err)
+			return nil, errors.New("Fail to finish GoodDao.GetByName")
+		}
+		if good == nil {
+			return nil, errors.New("Good not exist")
+		}
+
+		// 3.2 结账该商品
+		wholePrice += good.Price
+	}
+
+	// 4. 返回结账金额
+	res.Price = float32(wholePrice)
+	return &res, nil
+}

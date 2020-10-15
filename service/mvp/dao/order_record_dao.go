@@ -34,3 +34,14 @@ func (orderRecordDao) GetByOrderID(orderID int) ([]*model.OrderRecord, error) {
 	}
 	return orderRecords, nil
 }
+
+func (orderRecordDao) GetNotCheckoutGoods(orderID int) ([]*model.OrderRecord, error) {
+	createTableWhenNotExist(&model.OrderRecord{})
+	var orderRecords []*model.OrderRecord
+	db := mainDB.Find(&orderRecords, "order_id = ? and has_checked_out = ?", orderID,model.FlagOfNotCheckout)
+	if err := db.Error; err != nil {
+		logs.Error(err)
+		return orderRecords, err
+	}
+	return orderRecords, nil
+}

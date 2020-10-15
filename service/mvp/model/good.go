@@ -8,24 +8,24 @@ import (
 const (
 	FlagOfNotAttachGood = 0
 	FlagOfAttachGood    = 1
+	FlagOfNotCheckout   = 0
+	FlagOfHasCheckedOut = 1
 )
 
-
-type GoodType struct{
+type GoodType struct {
 	gorm.Model
 	Name string `json:"name"`
 }
 
-func (GoodType ) TableName() string {
+func (GoodType) TableName() string {
 	return "good_type"
 }
-
 
 type Good struct {
 	gorm.Model
 	Name  string  `json:"name"`
 	Price float64 `json:"price"`
-	Type int64 `json:"type"`
+	Type  int64   `json:"type"`
 }
 
 func (Good) TableName() string {
