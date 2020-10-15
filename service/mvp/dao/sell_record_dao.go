@@ -2,7 +2,7 @@ package dao
 
 import (
 	"github.com/astaxie/beego/logs"
-	"test/service/mvp/model"
+	"spectrum/service/mvp/model"
 )
 
 var SellRecordDao sellRecordDao

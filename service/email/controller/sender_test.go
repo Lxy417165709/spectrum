@@ -3,7 +3,7 @@ package controller
 import (
 	"context"
 	"github.com/astaxie/beego/logs"
-	"test/common/pb"
+	"spectrum/common/pb"
 	"testing"
 )
 

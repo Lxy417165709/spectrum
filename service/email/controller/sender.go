@@ -3,9 +3,9 @@ package controller
 import (
 	"context"
 	"github.com/astaxie/beego/logs"
-	"test/common/env"
-	"test/common/pb"
-	"test/service/email/model"
+	"spectrum/common/env"
+	"spectrum/common/pb"
+	"spectrum/service/email/model"
 )
 
 type EmailServer struct {

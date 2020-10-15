@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 	"github.com/astaxie/beego/logs"
-	"test/common/pb"
-	"test/common/utils"
-	"test/service/auth/dao"
+	"spectrum/common/pb"
+	"spectrum/common/utils"
+	"spectrum/service/auth/dao"
 )
 
 type AuthServer struct {

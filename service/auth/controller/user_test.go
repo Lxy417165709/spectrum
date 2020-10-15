@@ -3,7 +3,7 @@ package controller
 import (
 	"context"
 	"log"
-	"test/common/pb"
+	"spectrum/common/pb"
 	"testing"
 )
 

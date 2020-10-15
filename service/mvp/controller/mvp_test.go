@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/astaxie/beego/logs"
 	"log"
-	"test/common/pb"
+	"spectrum/common/pb"
 	"testing"
 	"time"
 )

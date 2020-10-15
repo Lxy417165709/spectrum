@@ -1,9 +1,9 @@
 package main
 
 import (
-	"test/common/env"
-	"test/common/utils"
-	"test/service/email/controller"
+	"spectrum/common/env"
+	"spectrum/common/utils"
+	"spectrum/service/email/controller"
 )
 
 const confFilePath = "configure/alpha.json"

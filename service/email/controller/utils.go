@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/astaxie/beego/logs"
 	"net/smtp"
-	"test/common/env"
-	"test/service/email/model"
+	"spectrum/common/env"
+	"spectrum/service/email/model"
 )
 
 func send(emailContext *model.EmailContext) error {

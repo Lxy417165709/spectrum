@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 	"github.com/astaxie/beego/logs"
-	"test/common/pb"
-	"test/service/mvp/dao"
-	"test/service/mvp/model"
+	"spectrum/common/pb"
+	"spectrum/service/mvp/dao"
+	"spectrum/service/mvp/model"
 	"time"
 )
 

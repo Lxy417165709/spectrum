@@ -3,7 +3,7 @@ package dao
 import (
 	"github.com/astaxie/beego/logs"
 	"github.com/jinzhu/gorm"
-	"test/service/mvp/model"
+	"spectrum/service/mvp/model"
 	"time"
 )
 

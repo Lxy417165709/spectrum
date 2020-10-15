@@ -3,7 +3,7 @@ package controller
 import (
 	"github.com/astaxie/beego/logs"
 	"google.golang.org/grpc"
-	"test/common/pb"
+	"spectrum/common/pb"
 )
 
 var mvpClient pb.MvpClient

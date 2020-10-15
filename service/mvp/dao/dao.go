@@ -3,8 +3,8 @@ package dao
 import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"test/common/env"
-	"test/common/utils"
+	"spectrum/common/env"
+	"spectrum/common/utils"
 )
 
 var mainDB *gorm.DB

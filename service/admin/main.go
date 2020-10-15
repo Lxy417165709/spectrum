@@ -5,7 +5,7 @@ import (
 	"github.com/astaxie/beego/logs"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"test/service/admin/model"
+	"spectrum/service/admin/model"
 )
 
 func Test(c *gin.Context) {

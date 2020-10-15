@@ -1,10 +1,10 @@
 package main
 
 import (
-	"test/common/env"
-	"test/common/utils"
-	"test/service/mvp/controller"
-	"test/service/mvp/dao"
+	"spectrum/common/env"
+	"spectrum/common/utils"
+	"spectrum/service/mvp/controller"
+	"spectrum/service/mvp/dao"
 )
 
 const confFilePath = "configure/alpha.json"
