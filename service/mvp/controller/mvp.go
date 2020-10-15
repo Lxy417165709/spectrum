@@ -30,7 +30,7 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 	}
 
 	// 2. 创建商品
-	if err := dao.GoodDao.Create(req.GoodName, float64(req.Price)); err != nil {
+	if err := dao.GoodDao.Create(req.GoodName, float64(req.Price), req.Type); err != nil {
 		logs.Error(err)
 		return nil, err
 	}
@@ -171,30 +171,32 @@ func (MvpServer) Order(ctx context.Context, req *pb.OrderReq) (*pb.OrderRes, err
 
 		thingID := getThingID()
 		// 1.3 判断附属商品是否存在
-		for _, pbAttachGood := range pbGood.AttachGoods {
-			// 1.3.1 判断附属商品是否存在
-			good, err := dao.GoodDao.GetByName(pbAttachGood.Name)
-			if err != nil {
-				logs.Error(err)
-				return nil, errors.New("Fail to finish GoodDao.GetByName")
-			}
-			if good == nil {
-				logs.Error("Good not existed")
-				return nil, errors.New("Good not existed")
-			}
-			// 1.3.2 插入附属记录
-			if err := dao.AttachRecordDao.Create(orderID, thingID, int(sGood.ID), int(good.ID)); err != nil {
-				logs.Error(err)
-				return nil, errors.New("Fail to finish AttachRecordDao.Create")
-			}
+		for _, attachGoodArray := range pbGood.AttachGoods {
+			for _, pbAttachGood := range attachGoodArray.AttachGoods {
+				// 1.3.1 判断附属商品是否存在
+				good, err := dao.GoodDao.GetByName(pbAttachGood.Name)
+				if err != nil {
+					logs.Error(err)
+					return nil, errors.New("Fail to finish GoodDao.GetByName")
+				}
+				if good == nil {
+					logs.Error("Good not existed")
+					return nil, errors.New("Good not existed")
+				}
+				// 1.3.2 插入附属记录
+				if err := dao.AttachRecordDao.Create(orderID, thingID, int(sGood.ID), int(good.ID)); err != nil {
+					logs.Error(err)
+					return nil, errors.New("Fail to finish AttachRecordDao.Create")
+				}
 
-			// 1.3.3 插入订单记录
-			if err := dao.OrderRecordDao.Create(orderID, int(good.ID), model.FlagOfAttachGood); err != nil {
-				return nil, errors.New("Fail to finish OrderRecordDao.Create")
-			}
+				// 1.3.3 插入订单记录
+				if err := dao.OrderRecordDao.Create(orderID, int(good.ID), model.FlagOfAttachGood); err != nil {
+					return nil, errors.New("Fail to finish OrderRecordDao.Create")
+				}
 
-			// 1.3.4 形成下一个物品号
-			nextThingID()
+				// 1.3.4 形成下一个物品号
+				nextThingID()
+			}
 		}
 
 	}
@@ -257,8 +259,8 @@ func (MvpServer) GetOrderGoods(ctx context.Context, req *pb.GetOrderGoodsReq) (*
 			}
 
 			// 2.5 形成附属显示商品
-			pbGoods[len(pbGoods)-1].AttachGoods = append(
-				pbGoods[len(pbGoods)-1].AttachGoods,
+			pbGoods[len(pbGoods)-1].AttachGoods[good.Type].AttachGoods = append(
+				pbGoods[len(pbGoods)-1].AttachGoods[good.Type].AttachGoods,
 				&pb.AttachGood{
 					Name: good.Name,
 				},
@@ -271,22 +273,26 @@ func (MvpServer) GetOrderGoods(ctx context.Context, req *pb.GetOrderGoodsReq) (*
 	return &res, nil
 }
 
-var curOrderID int // 这里不考虑高并发
+func (MvpServer) AddGoodType(ctx context.Context, req *pb.AddGoodTypeReq) (*pb.AddGoodTypeRes, error) {
+	logs.Info("AddGoodType", ctx, req)
+	var res pb.AddGoodTypeRes
 
-func getOrderID() int {
-	return curOrderID
-}
+	// 1. 判断商品类型名是否存在
+	goodType, err := dao.GoodTypeDao.GetByName(req.TypeName)
+	if err != nil {
+		logs.Error(err)
+		return nil, errors.New("Fail to finish GoodTypeDao.GetByName")
+	}
+	if goodType != nil {
+		logs.Error("Good Type Has Exist")
+		return nil, errors.New("Good Type Has Exist")
+	}
 
-func nextOrderID() {
-	curOrderID++
-}
+	// 2. 创建商品类型
+	if err := dao.GoodTypeDao.Create(req.TypeName); err != nil {
+		logs.Error(err)
+		return nil, errors.New("Fail to finish GoodTypeDao.Create")
+	}
 
-var curThingID int // 这里不考虑高并发
-
-func getThingID() int {
-	return curThingID
-}
-
-func nextThingID() {
-	curThingID++
+	return &res, nil
 }

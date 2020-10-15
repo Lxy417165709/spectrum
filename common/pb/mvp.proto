@@ -5,6 +5,7 @@ package pb;
 message AddGoodReq {
   string goodName = 1;
   float price = 2;
+  int64 type = 3;
 }
 
 message AddGoodRes {}
@@ -45,9 +46,12 @@ message AttachGood{
 
 message Good{
   string name = 1;
-  repeated AttachGood attachGoods = 2;
+  map<int64, AttachGoodArray> attachGoods = 2;
 }
 
+message AttachGoodArray {
+  repeated AttachGood attachGoods = 1;
+}
 message OrderReq{
   repeated Good goods = 1;
 }
@@ -65,7 +69,11 @@ message GetOrderGoodsRes{
 }
 
 
+message AddGoodTypeReq {
+  string typeName = 1;
+}
 
+message AddGoodTypeRes {}
 
 service Mvp {
   rpc AddGood(AddGoodReq) returns (AddGoodRes);
@@ -75,6 +83,7 @@ service Mvp {
   rpc StopPlayBilliard(StopPlayBilliardReq) returns (StopPlayBilliardRes);
   rpc Order(OrderReq) returns (OrderRes);
   rpc GetOrderGoods(GetOrderGoodsReq) returns (GetOrderGoodsRes);
+  rpc AddGoodType(AddGoodTypeReq) returns (AddGoodTypeRes);
 }
 
 
