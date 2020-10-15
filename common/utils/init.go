@@ -5,8 +5,8 @@ import (
 	"github.com/astaxie/beego/logs"
 	"google.golang.org/grpc"
 	"net"
-	"test/common/env"
-	"test/common/pb"
+	"spectrum/common/env"
+	"spectrum/common/pb"
 )
 
 func InitLogger() {
