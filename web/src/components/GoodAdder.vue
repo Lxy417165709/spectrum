@@ -46,7 +46,7 @@
     <!--    </el-form-item>-->
     <el-form-item>
       <el-button type="primary" @click="onSubmit">立即创建</el-button>
-      <el-button>取消</el-button>
+      <el-button @click="getAllOptionClasses">取消</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -78,17 +78,30 @@ export default {
   methods: {
     onSubmit() {
       let data = {
-        object:"yes",
-        function : "test",
-        parameters : {
-          "msg":"吃饭没～"
-        }
+        object:"mvp",
+        function : "AddGood",
+        parameters : this.form
       }
       axios.post("/api/distributor",data).then(res => {
         console.log(res)
       })
     },
-
+    getAllOptionClasses() {
+      let data = {
+        object:"mvp",
+        function : "GetAllOptionClasses",
+        parameters : {}
+      }
+      axios.post("/api/distributor", data).then(res => {
+        let returnResult = res.data
+        if (returnResult.err === "" || returnResult.err === undefined || returnResult.err === null) {
+          this.form.goodOptions = returnResult.data.optionClassNames
+          console.log("Get data success",returnResult.data.optionClassNames)
+        }else{
+          console.error(returnResult.err)
+        }
+      })
+    },
     addOption() {
       this.form.selectOptions.push(this.form.selectOption)
       this.form.goodOptions = this.removeElement(this.form.goodOptions,this.form.selectOption)

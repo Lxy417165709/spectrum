@@ -40,13 +40,17 @@ export default {
     },
     addOptionClass() {
       let data = {
-        object: "option",
-        function: "add",
+        object: "mvp",
+        function: "AddOptionClass",
         parameters: this.form
       }
-      console.log(data)
       axios.post("/api/distributor", data).then(res => {
-        console.log(res)
+        let returnResult = res.data
+        if (returnResult.err === "" || returnResult.err === undefined || returnResult.err === null) {
+          console.log("Get data success")
+        }else{
+          console.error(returnResult.err)
+        }
       })
     },
   }

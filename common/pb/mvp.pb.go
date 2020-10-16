@@ -1107,6 +1107,91 @@ func (*AddOptionClassRes) Descriptor() ([]byte, []int) {
 	return file_common_pb_mvp_proto_rawDescGZIP(), []int{22}
 }
 
+type GetAllOptionClassesReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *GetAllOptionClassesReq) Reset() {
+	*x = GetAllOptionClassesReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_common_pb_mvp_proto_msgTypes[23]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetAllOptionClassesReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAllOptionClassesReq) ProtoMessage() {}
+
+func (x *GetAllOptionClassesReq) ProtoReflect() protoreflect.Message {
+	mi := &file_common_pb_mvp_proto_msgTypes[23]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAllOptionClassesReq.ProtoReflect.Descriptor instead.
+func (*GetAllOptionClassesReq) Descriptor() ([]byte, []int) {
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{23}
+}
+
+type GetAllOptionClassesRes struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	OptionClassNames []string `protobuf:"bytes,1,rep,name=optionClassNames,proto3" json:"optionClassNames,omitempty"`
+}
+
+func (x *GetAllOptionClassesRes) Reset() {
+	*x = GetAllOptionClassesRes{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_common_pb_mvp_proto_msgTypes[24]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetAllOptionClassesRes) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAllOptionClassesRes) ProtoMessage() {}
+
+func (x *GetAllOptionClassesRes) ProtoReflect() protoreflect.Message {
+	mi := &file_common_pb_mvp_proto_msgTypes[24]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAllOptionClassesRes.ProtoReflect.Descriptor instead.
+func (*GetAllOptionClassesRes) Descriptor() ([]byte, []int) {
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{24}
+}
+
+func (x *GetAllOptionClassesRes) GetOptionClassNames() []string {
+	if x != nil {
+		return x.OptionClassNames
+	}
+	return nil
+}
+
 var File_common_pb_mvp_proto protoreflect.FileDescriptor
 
 var file_common_pb_mvp_proto_rawDesc = []byte{
@@ -1193,7 +1278,13 @@ var file_common_pb_mvp_proto_rawDesc = []byte{
 	0x61, 0x73, 0x73, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x6f, 0x70, 0x74, 0x69, 0x6f,
 	0x6e, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x09, 0x52, 0x07, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e,
 	0x73, 0x22, 0x13, 0x0a, 0x11, 0x41, 0x64, 0x64, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x6c,
-	0x61, 0x73, 0x73, 0x52, 0x65, 0x73, 0x32, 0xb7, 0x04, 0x0a, 0x03, 0x4d, 0x76, 0x70, 0x12, 0x29,
+	0x61, 0x73, 0x73, 0x52, 0x65, 0x73, 0x22, 0x18, 0x0a, 0x16, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c,
+	0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x65, 0x73, 0x52, 0x65, 0x71,
+	0x22, 0x44, 0x0a, 0x16, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e,
+	0x43, 0x6c, 0x61, 0x73, 0x73, 0x65, 0x73, 0x52, 0x65, 0x73, 0x12, 0x2a, 0x0a, 0x10, 0x6f, 0x70,
+	0x74, 0x69, 0x6f, 0x6e, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x4e, 0x61, 0x6d, 0x65, 0x73, 0x18, 0x01,
+	0x20, 0x03, 0x28, 0x09, 0x52, 0x10, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x6c, 0x61, 0x73,
+	0x73, 0x4e, 0x61, 0x6d, 0x65, 0x73, 0x32, 0x86, 0x05, 0x0a, 0x03, 0x4d, 0x76, 0x70, 0x12, 0x29,
 	0x0a, 0x07, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x12, 0x0e, 0x2e, 0x70, 0x62, 0x2e, 0x41,
 	0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x71, 0x1a, 0x0e, 0x2e, 0x70, 0x62, 0x2e, 0x41,
 	0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x73, 0x12, 0x41, 0x0a, 0x0f, 0x41, 0x64, 0x64,
@@ -1229,7 +1320,12 @@ var file_common_pb_mvp_proto_rawDesc = []byte{
 	0x73, 0x73, 0x12, 0x15, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x4f, 0x70, 0x74, 0x69, 0x6f,
 	0x6e, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x52, 0x65, 0x71, 0x1a, 0x15, 0x2e, 0x70, 0x62, 0x2e, 0x41,
 	0x64, 0x64, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x52, 0x65, 0x73,
-	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x12, 0x4d, 0x0a, 0x13, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e,
+	0x43, 0x6c, 0x61, 0x73, 0x73, 0x65, 0x73, 0x12, 0x1a, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74,
+	0x41, 0x6c, 0x6c, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x65, 0x73,
+	0x52, 0x65, 0x71, 0x1a, 0x1a, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x4f,
+	0x70, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x65, 0x73, 0x52, 0x65, 0x73, 0x62,
+	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1244,35 +1340,37 @@ func file_common_pb_mvp_proto_rawDescGZIP() []byte {
 	return file_common_pb_mvp_proto_rawDescData
 }
 
-var file_common_pb_mvp_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
+var file_common_pb_mvp_proto_msgTypes = make([]protoimpl.MessageInfo, 26)
 var file_common_pb_mvp_proto_goTypes = []interface{}{
-	(*AddGoodReq)(nil),           // 0: pb.AddGoodReq
-	(*AddGoodRes)(nil),           // 1: pb.AddGoodRes
-	(*SellGoodReq)(nil),          // 2: pb.SellGoodReq
-	(*SellGoodRes)(nil),          // 3: pb.SellGoodRes
-	(*AddBilliardDeskReq)(nil),   // 4: pb.AddBilliardDeskReq
-	(*AddBilliardDeskRes)(nil),   // 5: pb.AddBilliardDeskRes
-	(*BeginPlayBilliardReq)(nil), // 6: pb.BeginPlayBilliardReq
-	(*BeginPlayBilliardRes)(nil), // 7: pb.BeginPlayBilliardRes
-	(*StopPlayBilliardReq)(nil),  // 8: pb.StopPlayBilliardReq
-	(*StopPlayBilliardRes)(nil),  // 9: pb.StopPlayBilliardRes
-	(*AttachGood)(nil),           // 10: pb.AttachGood
-	(*Good)(nil),                 // 11: pb.Good
-	(*AttachGoodArray)(nil),      // 12: pb.AttachGoodArray
-	(*OrderReq)(nil),             // 13: pb.OrderReq
-	(*OrderRes)(nil),             // 14: pb.OrderRes
-	(*GetOrderGoodsReq)(nil),     // 15: pb.GetOrderGoodsReq
-	(*GetOrderGoodsRes)(nil),     // 16: pb.GetOrderGoodsRes
-	(*AddGoodTypeReq)(nil),       // 17: pb.AddGoodTypeReq
-	(*AddGoodTypeRes)(nil),       // 18: pb.AddGoodTypeRes
-	(*CheckoutReq)(nil),          // 19: pb.CheckoutReq
-	(*CheckoutRes)(nil),          // 20: pb.CheckoutRes
-	(*AddOptionClassReq)(nil),    // 21: pb.AddOptionClassReq
-	(*AddOptionClassRes)(nil),    // 22: pb.AddOptionClassRes
-	nil,                          // 23: pb.Good.AttachGoodsEntry
+	(*AddGoodReq)(nil),             // 0: pb.AddGoodReq
+	(*AddGoodRes)(nil),             // 1: pb.AddGoodRes
+	(*SellGoodReq)(nil),            // 2: pb.SellGoodReq
+	(*SellGoodRes)(nil),            // 3: pb.SellGoodRes
+	(*AddBilliardDeskReq)(nil),     // 4: pb.AddBilliardDeskReq
+	(*AddBilliardDeskRes)(nil),     // 5: pb.AddBilliardDeskRes
+	(*BeginPlayBilliardReq)(nil),   // 6: pb.BeginPlayBilliardReq
+	(*BeginPlayBilliardRes)(nil),   // 7: pb.BeginPlayBilliardRes
+	(*StopPlayBilliardReq)(nil),    // 8: pb.StopPlayBilliardReq
+	(*StopPlayBilliardRes)(nil),    // 9: pb.StopPlayBilliardRes
+	(*AttachGood)(nil),             // 10: pb.AttachGood
+	(*Good)(nil),                   // 11: pb.Good
+	(*AttachGoodArray)(nil),        // 12: pb.AttachGoodArray
+	(*OrderReq)(nil),               // 13: pb.OrderReq
+	(*OrderRes)(nil),               // 14: pb.OrderRes
+	(*GetOrderGoodsReq)(nil),       // 15: pb.GetOrderGoodsReq
+	(*GetOrderGoodsRes)(nil),       // 16: pb.GetOrderGoodsRes
+	(*AddGoodTypeReq)(nil),         // 17: pb.AddGoodTypeReq
+	(*AddGoodTypeRes)(nil),         // 18: pb.AddGoodTypeRes
+	(*CheckoutReq)(nil),            // 19: pb.CheckoutReq
+	(*CheckoutRes)(nil),            // 20: pb.CheckoutRes
+	(*AddOptionClassReq)(nil),      // 21: pb.AddOptionClassReq
+	(*AddOptionClassRes)(nil),      // 22: pb.AddOptionClassRes
+	(*GetAllOptionClassesReq)(nil), // 23: pb.GetAllOptionClassesReq
+	(*GetAllOptionClassesRes)(nil), // 24: pb.GetAllOptionClassesRes
+	nil,                            // 25: pb.Good.AttachGoodsEntry
 }
 var file_common_pb_mvp_proto_depIdxs = []int32{
-	23, // 0: pb.Good.attachGoods:type_name -> pb.Good.AttachGoodsEntry
+	25, // 0: pb.Good.attachGoods:type_name -> pb.Good.AttachGoodsEntry
 	10, // 1: pb.AttachGoodArray.attachGoods:type_name -> pb.AttachGood
 	11, // 2: pb.OrderReq.goods:type_name -> pb.Good
 	11, // 3: pb.GetOrderGoodsRes.goods:type_name -> pb.Good
@@ -1287,18 +1385,20 @@ var file_common_pb_mvp_proto_depIdxs = []int32{
 	17, // 12: pb.Mvp.AddGoodType:input_type -> pb.AddGoodTypeReq
 	19, // 13: pb.Mvp.Checkout:input_type -> pb.CheckoutReq
 	21, // 14: pb.Mvp.AddOptionClass:input_type -> pb.AddOptionClassReq
-	1,  // 15: pb.Mvp.AddGood:output_type -> pb.AddGoodRes
-	5,  // 16: pb.Mvp.AddBilliardDesk:output_type -> pb.AddBilliardDeskRes
-	3,  // 17: pb.Mvp.SellGood:output_type -> pb.SellGoodRes
-	7,  // 18: pb.Mvp.BeginPlayBilliard:output_type -> pb.BeginPlayBilliardRes
-	9,  // 19: pb.Mvp.StopPlayBilliard:output_type -> pb.StopPlayBilliardRes
-	14, // 20: pb.Mvp.Order:output_type -> pb.OrderRes
-	16, // 21: pb.Mvp.GetOrderGoods:output_type -> pb.GetOrderGoodsRes
-	18, // 22: pb.Mvp.AddGoodType:output_type -> pb.AddGoodTypeRes
-	20, // 23: pb.Mvp.Checkout:output_type -> pb.CheckoutRes
-	22, // 24: pb.Mvp.AddOptionClass:output_type -> pb.AddOptionClassRes
-	15, // [15:25] is the sub-list for method output_type
-	5,  // [5:15] is the sub-list for method input_type
+	23, // 15: pb.Mvp.GetAllOptionClasses:input_type -> pb.GetAllOptionClassesReq
+	1,  // 16: pb.Mvp.AddGood:output_type -> pb.AddGoodRes
+	5,  // 17: pb.Mvp.AddBilliardDesk:output_type -> pb.AddBilliardDeskRes
+	3,  // 18: pb.Mvp.SellGood:output_type -> pb.SellGoodRes
+	7,  // 19: pb.Mvp.BeginPlayBilliard:output_type -> pb.BeginPlayBilliardRes
+	9,  // 20: pb.Mvp.StopPlayBilliard:output_type -> pb.StopPlayBilliardRes
+	14, // 21: pb.Mvp.Order:output_type -> pb.OrderRes
+	16, // 22: pb.Mvp.GetOrderGoods:output_type -> pb.GetOrderGoodsRes
+	18, // 23: pb.Mvp.AddGoodType:output_type -> pb.AddGoodTypeRes
+	20, // 24: pb.Mvp.Checkout:output_type -> pb.CheckoutRes
+	22, // 25: pb.Mvp.AddOptionClass:output_type -> pb.AddOptionClassRes
+	24, // 26: pb.Mvp.GetAllOptionClasses:output_type -> pb.GetAllOptionClassesRes
+	16, // [16:27] is the sub-list for method output_type
+	5,  // [5:16] is the sub-list for method input_type
 	5,  // [5:5] is the sub-list for extension type_name
 	5,  // [5:5] is the sub-list for extension extendee
 	0,  // [0:5] is the sub-list for field type_name
@@ -1586,6 +1686,30 @@ func file_common_pb_mvp_proto_init() {
 				return nil
 			}
 		}
+		file_common_pb_mvp_proto_msgTypes[23].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetAllOptionClassesReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[24].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetAllOptionClassesRes); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -1593,7 +1717,7 @@ func file_common_pb_mvp_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_common_pb_mvp_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   24,
+			NumMessages:   26,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -382,6 +382,26 @@ func (MvpServer) AddOptionClass(ctx context.Context, req *pb.AddOptionClassReq) 
 			return nil, err
 		}
 	}
+	return &res, nil
+}
+
+func (MvpServer) GetAllOptionClasses(ctx context.Context, req *pb.GetAllOptionClassesReq) (*pb.GetAllOptionClassesRes, error) {
+	logs.Info(" GetAllOptionClasses", ctx, req)
+	var res pb.GetAllOptionClassesRes
+
+	// 1. 获取
+	optionClasses, err := dao.OptionClassDao.GetAll()
+	if err != nil {
+		logger.Error("Fail to get all option class",
+			zap.Any("req", req),
+			zap.Error(err))
+		return nil, err
+	}
+
+	// 2. 转换
+	for _, optionClass := range optionClasses {
+		res.OptionClassNames = append(res.OptionClassNames, optionClass.Name)
+	}
 
 	return &res, nil
 }
