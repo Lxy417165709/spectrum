@@ -58,6 +58,14 @@ func DistributeRequest(c *gin.Context) {
 		})
 		return
 	}
+	if objectMap[request.Object] == nil{
+		logger.Error("Fail to get object",
+			zap.Any("requestObjectName", request.Object))
+		c.JSON(http.StatusBadRequest, model.Response{
+			Err: "无法获得 RPC 对象",
+		})
+		return
+	}
 	object := reflect.ValueOf(objectMap[request.Object])
 	method := object.MethodByName(request.Function)
 	returnValues := method.Call([]reflect.Value{
@@ -89,7 +97,7 @@ func DistributeRequest(c *gin.Context) {
 
 	// 4. 返回结果
 	if returnErr != nil{
-		c.JSON(http.StatusBadRequest, model.Response{
+		c.JSON(http.StatusOK, model.Response{
 			Msg:  "Fail to request ;(",
 			Err:  returnErr.Error(),
 		})

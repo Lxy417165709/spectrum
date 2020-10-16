@@ -7,7 +7,7 @@ import (
 	"spectrum/service/mvp/dao"
 )
 
-const confFilePath = "/Users/a123/Desktop/lxy_test/go/grpc/spectrum/configure/alpha.json"
+const confFilePath = "configure/alpha.json"
 
 func main() {
 	utils.InitLogger()

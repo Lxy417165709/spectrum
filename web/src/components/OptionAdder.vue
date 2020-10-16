@@ -47,9 +47,9 @@ export default {
       axios.post("/api/distributor", data).then(res => {
         let returnResult = res.data
         if (returnResult.err === "" || returnResult.err === undefined || returnResult.err === null) {
-          console.log("Get data success")
+          this.$message.success(returnResult.msg)
         }else{
-          console.error(returnResult.err)
+          this.$message.error(returnResult.err)
         }
       })
     },

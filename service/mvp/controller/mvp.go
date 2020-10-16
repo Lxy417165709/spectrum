@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/astaxie/beego/logs"
 	"go.uber.org/zap"
+	"spectrum/common/ers"
 	"spectrum/common/logger"
 	"spectrum/common/pb"
 	"spectrum/service/mvp/dao"
@@ -346,6 +347,20 @@ func (MvpServer) Checkout(ctx context.Context, req *pb.CheckoutReq) (*pb.Checkou
 func (MvpServer) AddOptionClass(ctx context.Context, req *pb.AddOptionClassReq) (*pb.AddOptionClassRes, error) {
 	logs.Info("AddOptionClass", ctx, req)
 	var res pb.AddOptionClassRes
+
+	// 0. 判断请求数据是否合法
+	if req.OptionClassName == ""{
+		return nil, ers.InvalidName
+	}
+	if len(req.Options) == 0 {
+		return nil, ers.InvalidName
+	}
+	for _,optionName := range req.Options{
+		if optionName == "" {
+			return nil, ers.InvalidName
+		}
+	}
+
 
 	// 1. 判断选项类是否存在
 	optionClass, err := dao.OptionClassDao.Get(req.OptionClassName)
