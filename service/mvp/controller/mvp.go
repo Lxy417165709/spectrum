@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"github.com/astaxie/beego/logs"
+	"go.uber.org/zap"
+	"spectrum/common/logger"
 	"spectrum/common/pb"
 	"spectrum/service/mvp/dao"
 	"spectrum/service/mvp/model"
@@ -338,5 +340,48 @@ func (MvpServer) Checkout(ctx context.Context, req *pb.CheckoutReq) (*pb.Checkou
 
 	// 4. 返回结账金额
 	res.Price = float32(wholePrice)
+	return &res, nil
+}
+
+func (MvpServer) AddOptionClass(ctx context.Context, req *pb.AddOptionClassReq) (*pb.AddOptionClassRes, error) {
+	logs.Info("AddOptionClass", ctx, req)
+	var res pb.AddOptionClassRes
+
+	// 1. 判断选项类是否存在
+	optionClass, err := dao.OptionClassDao.Get(req.OptionClassName)
+	if err != nil {
+		logger.Error("Fail to get option class",
+			zap.Any("optionClassName", req.OptionClassName),
+			zap.Any("req", req),
+			zap.Error(err))
+		return nil, err
+	}
+
+	// 2. 如果选项类不存在，则创建
+	if optionClass == nil {
+		if err := dao.OptionClassDao.Create(req.OptionClassName); err != nil {
+			logger.Error("Fail to create option class",
+				zap.Any("optionClassName", req.OptionClassName),
+				zap.Any("req", req),
+				zap.Error(err))
+			return nil, err
+		}
+	}
+
+	// 3. 创建选项类
+	optionClass, _ = dao.OptionClassDao.Get(req.OptionClassName)
+
+	// 4. 创建选项
+	for _, optionName := range req.Options {
+		if err := dao.OptionDao.Create(int(optionClass.ID), optionName); err != nil {
+			logger.Error("Fail to create option",
+				zap.Any("optionClassID", optionClass.ID),
+				zap.Any("optionName", optionName),
+				zap.Any("req", req),
+				zap.Error(err))
+			return nil, err
+		}
+	}
+
 	return &res, nil
 }

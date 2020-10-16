@@ -5,3 +5,9 @@ type Response struct {
 	Msg  string      `json:"msg"`  // 一般消息，如登录成功
 	Data interface{} `json:"data"` // 响应数据
 }
+
+type Request struct {
+	Object     string                 `json:"object"`
+	Function   string                 `json:"function"`
+	Parameters map[string]interface{} `json:"parameters"`
+}

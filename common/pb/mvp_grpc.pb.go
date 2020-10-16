@@ -26,6 +26,7 @@ type MvpClient interface {
 	GetOrderGoods(ctx context.Context, in *GetOrderGoodsReq, opts ...grpc.CallOption) (*GetOrderGoodsRes, error)
 	AddGoodType(ctx context.Context, in *AddGoodTypeReq, opts ...grpc.CallOption) (*AddGoodTypeRes, error)
 	Checkout(ctx context.Context, in *CheckoutReq, opts ...grpc.CallOption) (*CheckoutRes, error)
+	AddOptionClass(ctx context.Context, in *AddOptionClassReq, opts ...grpc.CallOption) (*AddOptionClassRes, error)
 }
 
 type mvpClient struct {
@@ -117,6 +118,15 @@ func (c *mvpClient) Checkout(ctx context.Context, in *CheckoutReq, opts ...grpc.
 	return out, nil
 }
 
+func (c *mvpClient) AddOptionClass(ctx context.Context, in *AddOptionClassReq, opts ...grpc.CallOption) (*AddOptionClassRes, error) {
+	out := new(AddOptionClassRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/AddOptionClass", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MvpServer is the server API for Mvp service.
 // All implementations must embed UnimplementedMvpServer
 // for forward compatibility
@@ -130,6 +140,7 @@ type MvpServer interface {
 	GetOrderGoods(context.Context, *GetOrderGoodsReq) (*GetOrderGoodsRes, error)
 	AddGoodType(context.Context, *AddGoodTypeReq) (*AddGoodTypeRes, error)
 	Checkout(context.Context, *CheckoutReq) (*CheckoutRes, error)
+	AddOptionClass(context.Context, *AddOptionClassReq) (*AddOptionClassRes, error)
 	mustEmbedUnimplementedMvpServer()
 }
 
@@ -163,6 +174,9 @@ func (UnimplementedMvpServer) AddGoodType(context.Context, *AddGoodTypeReq) (*Ad
 }
 func (UnimplementedMvpServer) Checkout(context.Context, *CheckoutReq) (*CheckoutRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Checkout not implemented")
+}
+func (UnimplementedMvpServer) AddOptionClass(context.Context, *AddOptionClassReq) (*AddOptionClassRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddOptionClass not implemented")
 }
 func (UnimplementedMvpServer) mustEmbedUnimplementedMvpServer() {}
 
@@ -339,6 +353,24 @@ func _Mvp_Checkout_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Mvp_AddOptionClass_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddOptionClassReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).AddOptionClass(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/AddOptionClass",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).AddOptionClass(ctx, req.(*AddOptionClassReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Mvp_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.Mvp",
 	HandlerType: (*MvpServer)(nil),
@@ -378,6 +410,10 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Checkout",
 			Handler:    _Mvp_Checkout_Handler,
+		},
+		{
+			MethodName: "AddOptionClass",
+			Handler:    _Mvp_AddOptionClass_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

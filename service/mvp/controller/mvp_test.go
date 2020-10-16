@@ -83,30 +83,30 @@ func TestMvpServer_Order(t *testing.T) {
 	initMvpClient()
 
 	res, err := mvpClient.Order(context.Background(), &pb.OrderReq{
-		Goods: []*pb.Good{
-			{
-				Name: "波霸奶茶",
-				AttachGoods: []*pb.AttachGood{
-					{
-						Name: "椰果",
-					},
-					{
-						Name: "少冰",
-					},
-				},
-			},
-			{
-				Name: "波霸奶茶",
-				AttachGoods: []*pb.AttachGood{
-					{
-						Name: "椰果",
-					},
-				},
-			},
-			{
-				Name: "超神水果茶",
-			},
-		},
+		//Goods: []*pb.Good{
+		//	{
+		//		Name: "波霸奶茶",
+		//		AttachGoods: []*pb.AttachGood{
+		//			{
+		//				Name: "椰果",
+		//			},
+		//			{
+		//				Name: "少冰",
+		//			},
+		//		},
+		//	},
+		//	{
+		//		Name: "波霸奶茶",
+		//		AttachGoods: []*pb.AttachGood{
+		//			{
+		//				Name: "椰果",
+		//			},
+		//		},
+		//	},
+		//	{
+		//		Name: "超神水果茶",
+		//	},
+		//},
 	})
 	logs.Info(res, err)
 	if err != nil {

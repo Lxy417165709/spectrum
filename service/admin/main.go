@@ -2,23 +2,22 @@ package main
 
 import (
 	"fmt"
-	"github.com/astaxie/beego/logs"
 	"github.com/gin-gonic/gin"
-	"net/http"
-	"spectrum/service/admin/model"
+	"go.uber.org/zap"
+	"spectrum/common/logger"
+	"spectrum/service/admin/access"
 )
 
-func Test(c *gin.Context) {
-	c.JSON(http.StatusOK, model.Response{
-		Msg:"Running go http server success. :)",
-	})
-}
-
 func main() {
+	var port = 9000
 	r := gin.Default()
-	r.GET("/test", Test)
-	if err := r.Run(fmt.Sprintf(":%d", 9000)); err != nil {
-		logs.Error("Running go http server failed. :|")
+	r.GET("/test", access.Test)
+	r.POST("/distributor", access.DistributeRequest)
+	logger.Info("Ready to run go http server", zap.Any("port", port))
+	if err := r.Run(fmt.Sprintf(":%d", port)); err != nil {
+		logger.Error("Fail to run go http server",
+			zap.Any("port", port),
+			zap.Error(err))
 		return
 	}
 }

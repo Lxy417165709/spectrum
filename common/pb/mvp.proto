@@ -82,6 +82,13 @@ message CheckoutRes{
   float price = 1;
 }
 
+message AddOptionClassReq{
+  string optionClassName = 1;
+  repeated string options = 2;
+}
+
+message AddOptionClassRes{}
+
 service Mvp {
   rpc AddGood(AddGoodReq) returns (AddGoodRes);
   rpc AddBilliardDesk(AddBilliardDeskReq) returns (AddBilliardDeskRes);
@@ -92,6 +99,7 @@ service Mvp {
   rpc GetOrderGoods(GetOrderGoodsReq) returns (GetOrderGoodsRes);
   rpc AddGoodType(AddGoodTypeReq) returns (AddGoodTypeRes);
   rpc Checkout(CheckoutReq) returns (CheckoutRes);
+  rpc AddOptionClass(AddOptionClassReq) returns (AddOptionClassRes);
 }
 
 
