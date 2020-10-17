@@ -1,11 +1,14 @@
 <!--eslint-disable-->
+
+
 <template>
   <el-form ref="form" :model="form" label-width="80px">
     <el-form-item label="照片">
       <el-upload
         :on-preview="handlePictureCardPreview"
         :on-remove="handleRemove"
-        action="https://jsonplaceholder.typicode.com/posts/"
+        :on-success="handleSuccess"
+        action="/api/upload"
         list-type="picture-card">
         <i class="el-icon-plus"></i>
       </el-upload>
@@ -16,7 +19,10 @@
     <el-form-item label="价格">
       <el-input v-model="form.price"></el-input>
     </el-form-item>
-    <el-form-item v-show="optionClassNames.length > 0" label="附属选项">
+    <el-form-item label="单卖品">
+      <el-switch v-model="form.type"></el-switch>
+    </el-form-item>
+    <el-form-item v-show="form.type && optionClassNames.length > 0" label="附属选项">
       <el-select v-model="form.selectOptionClass" placeholder="请选择附属选项">
         <template v-for="gp in optionClassNames">
           <el-option :label="gp" :value="gp"></el-option>
@@ -24,13 +30,13 @@
       </el-select>
       <el-button type="primary" @click="addOption">添加</el-button>
     </el-form-item>
-    <el-form-item v-show="form.selectOptionClasses.length > 0" label="已选选项">
-        <el-tag v-for="soc in form.selectOptionClasses" closable type="success" @close="delSelectOption(soc)">
-          {{ soc }}
-        </el-tag>
+    <el-form-item v-show="form.type && form.selectOptionClasses.length > 0" label="已选选项">
+      <el-tag v-for="soc in form.selectOptionClasses" closable type="success" @close="delSelectOption(soc)">
+        {{ soc }}
+      </el-tag>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="onSubmit">立即创建</el-button>
+      <el-button type="primary" @click="addGood">立即创建</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -46,7 +52,7 @@ export default {
   name: 'GoodAdder',
   async mounted() {
     await init.globalOptionClasses()
-    for (let i = 0;i<global.optionClasses.length;i++) {
+    for (let i = 0; i < global.optionClasses.length; i++) {
       this.optionClassNames.push(global.optionClasses[i].className)
     }
     this.setDefaultSelectOption()
@@ -59,6 +65,7 @@ export default {
         selectOptionClasses: [],
         price: '',
         name: '',
+        type: true,
       },
       dialogImageUrl: '',
       dialogVisible: false,
@@ -73,26 +80,40 @@ export default {
         this.form.selectOptionClass = ""
       }
     },
-    delSelectOption(optionName){
-      this.form.selectOptionClasses = utils.removeElement(this.form.selectOptionClasses,optionName)
+    delSelectOption(optionName) {
+      this.form.selectOptionClasses = utils.removeElement(this.form.selectOptionClasses, optionName)
       this.optionClassNames.push(optionName)
       this.setDefaultSelectOption()
     },
     handleRemove(file, fileList) {
       console.log(file, fileList);
     },
+    handleSuccess(res) {
+      if (!utils.hasRequestSuccess(res)) {
+        this.$message.error(res.err)
+        return
+      }
+      this.$message.success(res.msg)
+      console.log(res.data.fileStorePath)
+    },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     },
-    onSubmit() {
-      let data = {
-        object: "mvp",
-        function: "AddGood",
-        parameters: this.form
-      }
-      axios.post("/api/distributor", data).then(res => {
-        console.log(res)
+    addGood() {
+      let model = utils.getRequestModel("mvp", "AddGood", {
+        name: this.form.name,
+        price: parseFloat(this.form.price),
+        type: this.type ? 0 : 1,
+        pictureStorePath:"test",
+        optionClassNames: this.form.selectOptionClasses,
+      })
+      utils.sendRequestModel(model).then(res => {
+        if (!utils.hasRequestSuccess(res)) {
+          this.$message.error(res.data.err)
+          return
+        }
+        this.$message.success(res.data.msg)
       })
     },
     addOption() {

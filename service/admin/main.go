@@ -13,6 +13,7 @@ func main() {
 	r := gin.Default()
 	r.GET("/test", access.Test)
 	r.POST("/distributor", access.DistributeRequest)
+	r.POST("/upload", access.Upload)
 	logger.Info("Ready to run go http server", zap.Any("port", port))
 	if err := r.Run(fmt.Sprintf(":%d", port)); err != nil {
 		logger.Error("Fail to run go http server",

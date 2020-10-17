@@ -7,7 +7,9 @@ import (
 	"github.com/mitchellh/mapstructure"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/status"
+	"io"
 	"net/http"
+	"os"
 	"reflect"
 	"spectrum/common/ers"
 	"spectrum/common/logger"
@@ -161,5 +163,49 @@ func DistributeRequest(c *gin.Context) {
 func Test(c *gin.Context) {
 	c.JSON(http.StatusOK, model.Response{
 		Msg: "Running go http server success. :)",
+	})
+}
+
+func Upload(c *gin.Context) {
+	var staticDirectory = "static/upload/"
+
+	// 1. 从请求中获取图片
+	file, header, err := c.Request.FormFile("file")
+	if err != nil {
+		logger.Error("Fail to get request's file", zap.Error(err))
+		c.JSON(http.StatusBadRequest, model.Response{
+			Err: err.Error(),
+		})
+		return
+	}
+
+	// 2. 存储图片
+	fileStorePath := staticDirectory + header.Filename
+	out, err := os.Create(fileStorePath)
+	if err != nil {
+		logger.Error("Fail to create file",
+			zap.Any("fileStorePath", fileStorePath),
+			zap.Error(err))
+		c.JSON(http.StatusBadRequest, model.Response{
+			Err: err.Error(),
+		})
+		return
+	}
+	if _,err = io.Copy(out, file); err != nil {
+		logger.Error("Fail to copy file",
+			zap.Any("fileStorePath", fileStorePath),
+			zap.Error(err))
+		c.JSON(http.StatusBadRequest, model.Response{
+			Err: err.Error(),
+		})
+		return
+	}
+
+	// 3. 响应
+	c.JSON(http.StatusOK, model.Response{
+		Msg: "图片上传成功",
+		Data: map[string]interface{}{
+			"fileStorePath": fileStorePath,
+		},
 	})
 }

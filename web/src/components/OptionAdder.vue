@@ -40,7 +40,6 @@ export default {
     },
     addOptionClass() {
       let model = utils.getRequestModel("mvp", "AddOptionClass", this.form)
-      console.log(this.form)
       utils.sendRequestModel(model).then(res => {
         if (!utils.hasRequestSuccess(res)) {
           this.$message.error(res.data.err)

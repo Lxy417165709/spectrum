@@ -23,19 +23,62 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 	var res pb.AddGoodRes
 
 	// 1. 判断商品是否存在
-	good, err := dao.GoodDao.GetByName(req.GoodName)
+	good, err := dao.GoodDao.GetByName(req.Name)
 	if err != nil {
 		logs.Error(err)
 		return nil, errors.New("Fail to finish GoodDao.GetByName")
 	}
 	if good != nil {
-		return nil, errors.New("Good has existed")
+		logs.Error(err)
+		return nil, ers.New(0, "商品(%s)已存在",good.Name)
 	}
 
 	// 2. 创建商品
-	if err := dao.GoodDao.Create(req.GoodName, float64(req.Price), req.Type); err != nil {
+	if err := dao.GoodDao.Create(
+		req.Name,
+		float64(req.Price),
+		int(req.Type),
+		req.PictureStorePath,
+	); err != nil {
 		logs.Error(err)
 		return nil, err
+	}
+
+	// 3. 获得商品
+	good, err = dao.GoodDao.GetByName(req.Name)
+	if err != nil {
+		logs.Error(err)
+		return nil, errors.New("Fail to finish GoodDao.GetByName")
+	}
+
+	// 4. 为商品添加附属选项
+	for _, optionClassName := range req.OptionClassNames {
+
+		// 4.1 获得附属选项类
+		optionClass, err := dao.OptionClassDao.Get(optionClassName)
+		if err != nil {
+			logger.Error("Fail to get option class",
+				zap.Any("optionClassName", optionClassName),
+				zap.Any("req", req),
+				zap.Error(err))
+			return nil, ers.MysqlError
+		}
+		if optionClass == nil {
+			logger.Error("Option class not exist",
+				zap.Any("optionClassName", optionClassName),
+				zap.Any("req", req),
+				zap.Error(err))
+			return nil, err
+		}
+
+		// 4.2 执行添加操作
+		if err := dao.GoodOptionClassRecordDao.Create(int(good.ID), int(optionClass.ID)); err != nil {
+			logger.Error("Fail to finish GoodOptionClassRecordDao.Create",
+				zap.Any("goodID", good.ID),
+				zap.Any("optionClassID", optionClass.ID),
+				zap.Error(err))
+			return nil, err
+		}
 	}
 	return &res, nil
 }
@@ -211,70 +254,70 @@ func (MvpServer) Order(ctx context.Context, req *pb.OrderReq) (*pb.OrderRes, err
 	return &res, nil
 }
 
-func (MvpServer) GetOrderGoods(ctx context.Context, req *pb.GetOrderGoodsReq) (*pb.GetOrderGoodsRes, error) {
-	logs.Info("GetOrderGoods", ctx, req)
-
-	var res pb.GetOrderGoodsRes
-
-	// 1. 获取订单的商品
-	orderRecords, err := dao.OrderRecordDao.GetByOrderID(int(req.OrderID))
-	if err != nil {
-		logs.Error(err)
-		return nil, errors.New("Fail to finish OrderRecordDao.GetByOrderID")
-	}
-
-	// 2. 形成显示商品
-	var pbGoods []*pb.Good
-	for _, orderRecord := range orderRecords {
-		if orderRecord.IsAttachGood == model.FlagOfNotAttachGood {
-			// 2.1 获得商品名
-			good, err := dao.GoodDao.Get(orderRecord.GoodID)
-			if err != nil {
-				logs.Error(err)
-				return nil, errors.New("Fail to finish GoodDao.Get")
-			}
-			if good == nil {
-				logs.Error("Good not existed")
-				return nil, errors.New("Good not existed")
-			}
-
-			// 2.2 形成顶层显示商品
-			pbGoods = append(pbGoods, &pb.Good{
-				Name: good.Name,
-			})
-		} else {
-
-			// 2.3 判断商品记录是否正确
-			if len(pbGoods) == 0 {
-				logs.Error("Order record error")
-				return nil, errors.New("Order record error")
-			}
-
-			// 2.4 获得附属商品名
-			good, err := dao.GoodDao.Get(orderRecord.GoodID)
-			if err != nil {
-				logs.Error(err)
-				return nil, errors.New("Fail to finish GoodDao.Get")
-			}
-			if good == nil {
-				logs.Error("Good not existed")
-				return nil, errors.New("Good not existed")
-			}
-
-			// 2.5 形成附属显示商品
-			pbGoods[len(pbGoods)-1].AttachGoods[good.Type].AttachGoods = append(
-				pbGoods[len(pbGoods)-1].AttachGoods[good.Type].AttachGoods,
-				&pb.AttachGood{
-					Name: good.Name,
-				},
-			)
-		}
-	}
-
-	// 3. 返回
-	res.Goods = pbGoods
-	return &res, nil
-}
+//func (MvpServer) GetOrderGoods(ctx context.Context, req *pb.GetOrderGoodsReq) (*pb.GetOrderGoodsRes, error) {
+//	logs.Info("GetOrderGoods", ctx, req)
+//
+//	var res pb.GetOrderGoodsRes
+//
+//	// 1. 获取订单的商品
+//	orderRecords, err := dao.OrderRecordDao.GetByOrderID(int(req.OrderID))
+//	if err != nil {
+//		logs.Error(err)
+//		return nil, errors.New("Fail to finish OrderRecordDao.GetByOrderID")
+//	}
+//
+//	// 2. 形成显示商品
+//	var pbGoods []*pb.Good
+//	for _, orderRecord := range orderRecords {
+//		if orderRecord.IsAttachGood == model.FlagOfNotAttachGood {
+//			// 2.1 获得商品名
+//			good, err := dao.GoodDao.Get(orderRecord.GoodID)
+//			if err != nil {
+//				logs.Error(err)
+//				return nil, errors.New("Fail to finish GoodDao.Get")
+//			}
+//			if good == nil {
+//				logs.Error("Good not existed")
+//				return nil, errors.New("Good not existed")
+//			}
+//
+//			// 2.2 形成顶层显示商品
+//			pbGoods = append(pbGoods, &pb.Good{
+//				Name: good.Name,
+//			})
+//		} else {
+//
+//			// 2.3 判断商品记录是否正确
+//			if len(pbGoods) == 0 {
+//				logs.Error("Order record error")
+//				return nil, errors.New("Order record error")
+//			}
+//
+//			// 2.4 获得附属商品名
+//			good, err := dao.GoodDao.Get(orderRecord.GoodID)
+//			if err != nil {
+//				logs.Error(err)
+//				return nil, errors.New("Fail to finish GoodDao.Get")
+//			}
+//			if good == nil {
+//				logs.Error("Good not existed")
+//				return nil, errors.New("Good not existed")
+//			}
+//
+//			// 2.5 形成附属显示商品
+//			pbGoods[len(pbGoods)-1].AttachGoods[good.Type].AttachGoods = append(
+//				pbGoods[len(pbGoods)-1].AttachGoods[good.Type].AttachGoods,
+//				&pb.AttachGood{
+//					Name: good.Name,
+//				},
+//			)
+//		}
+//	}
+//
+//	// 3. 返回
+//	res.Goods = pbGoods
+//	return &res, nil
+//}
 
 func (MvpServer) AddGoodType(ctx context.Context, req *pb.AddGoodTypeReq) (*pb.AddGoodTypeRes, error) {
 	logs.Info("AddGoodType", ctx, req)
