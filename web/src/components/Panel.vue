@@ -7,7 +7,9 @@
     <el-tab-pane label="选项类添加" name="second">
       <OptionAdder/>
     </el-tab-pane>
-    <el-tab-pane label="角色管理" name="third">角色管理</el-tab-pane>
+    <el-tab-pane label="选项类管理" name="third">
+      <OptionClassManager/>
+    </el-tab-pane>
     <el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane>
   </el-tabs>
 </template>
@@ -17,9 +19,10 @@
 
 import GoodAdder from "../components/GoodAdder";
 import OptionAdder from "../components/OptionAdder";
+import OptionClassManager from "../components/OptionClassManager";
 export default {
   name: "panel",
-  components: {GoodAdder,OptionAdder},
+  components: {GoodAdder,OptionAdder,OptionClassManager},
   data() {
     return {
       activeName: 'second'

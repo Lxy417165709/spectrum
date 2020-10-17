@@ -92,8 +92,22 @@ message AddOptionClassRes{}
 message GetAllOptionClassesReq{}
 
 message GetAllOptionClassesRes{
-  repeated string optionClassNames = 1;
+  repeated optionClass optionClasses = 1;
 }
+
+message optionClass {
+  string className = 1;
+  repeated string optionNames = 2;
+}
+
+message DelOptionReq {
+  string className = 1;
+  string optionName = 2;
+}
+
+message DelOptionRes {
+}
+
 service Mvp {
   rpc AddGood(AddGoodReq) returns (AddGoodRes);
   rpc AddBilliardDesk(AddBilliardDeskReq) returns (AddBilliardDeskRes);
@@ -106,6 +120,7 @@ service Mvp {
   rpc Checkout(CheckoutReq) returns (CheckoutRes);
   rpc AddOptionClass(AddOptionClassReq) returns (AddOptionClassRes);
   rpc GetAllOptionClasses(GetAllOptionClassesReq) returns (GetAllOptionClassesRes);
+  rpc DelOption(DelOptionReq) returns (DelOptionRes);
 }
 
 

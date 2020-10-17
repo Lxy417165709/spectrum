@@ -28,6 +28,7 @@ type MvpClient interface {
 	Checkout(ctx context.Context, in *CheckoutReq, opts ...grpc.CallOption) (*CheckoutRes, error)
 	AddOptionClass(ctx context.Context, in *AddOptionClassReq, opts ...grpc.CallOption) (*AddOptionClassRes, error)
 	GetAllOptionClasses(ctx context.Context, in *GetAllOptionClassesReq, opts ...grpc.CallOption) (*GetAllOptionClassesRes, error)
+	DelOption(ctx context.Context, in *DelOptionReq, opts ...grpc.CallOption) (*DelOptionRes, error)
 }
 
 type mvpClient struct {
@@ -137,6 +138,15 @@ func (c *mvpClient) GetAllOptionClasses(ctx context.Context, in *GetAllOptionCla
 	return out, nil
 }
 
+func (c *mvpClient) DelOption(ctx context.Context, in *DelOptionReq, opts ...grpc.CallOption) (*DelOptionRes, error) {
+	out := new(DelOptionRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/DelOption", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MvpServer is the server API for Mvp service.
 // All implementations must embed UnimplementedMvpServer
 // for forward compatibility
@@ -152,6 +162,7 @@ type MvpServer interface {
 	Checkout(context.Context, *CheckoutReq) (*CheckoutRes, error)
 	AddOptionClass(context.Context, *AddOptionClassReq) (*AddOptionClassRes, error)
 	GetAllOptionClasses(context.Context, *GetAllOptionClassesReq) (*GetAllOptionClassesRes, error)
+	DelOption(context.Context, *DelOptionReq) (*DelOptionRes, error)
 	mustEmbedUnimplementedMvpServer()
 }
 
@@ -191,6 +202,9 @@ func (UnimplementedMvpServer) AddOptionClass(context.Context, *AddOptionClassReq
 }
 func (UnimplementedMvpServer) GetAllOptionClasses(context.Context, *GetAllOptionClassesReq) (*GetAllOptionClassesRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllOptionClasses not implemented")
+}
+func (UnimplementedMvpServer) DelOption(context.Context, *DelOptionReq) (*DelOptionRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DelOption not implemented")
 }
 func (UnimplementedMvpServer) mustEmbedUnimplementedMvpServer() {}
 
@@ -403,6 +417,24 @@ func _Mvp_GetAllOptionClasses_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Mvp_DelOption_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DelOptionReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).DelOption(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/DelOption",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).DelOption(ctx, req.(*DelOptionReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Mvp_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.Mvp",
 	HandlerType: (*MvpServer)(nil),
@@ -450,6 +482,10 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAllOptionClasses",
 			Handler:    _Mvp_GetAllOptionClasses_Handler,
+		},
+		{
+			MethodName: "DelOption",
+			Handler:    _Mvp_DelOption_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -3,10 +3,10 @@
   <el-form ref="form" :model="form" label-width="80px">
     <el-form-item label="照片">
       <el-upload
-        action="https://jsonplaceholder.typicode.com/posts/"
-        list-type="picture-card"
         :on-preview="handlePictureCardPreview"
-        :on-remove="handleRemove">
+        :on-remove="handleRemove"
+        action="https://jsonplaceholder.typicode.com/posts/"
+        list-type="picture-card">
         <i class="el-icon-plus"></i>
       </el-upload>
     </el-form-item>
@@ -16,21 +16,18 @@
     <el-form-item label="价格">
       <el-input v-model="form.price"></el-input>
     </el-form-item>
-    <el-form-item v-show="form.goodOptionClasses.length > 0" label="附属选项">
+    <el-form-item v-show="optionClassNames.length > 0" label="附属选项">
       <el-select v-model="form.selectOptionClass" placeholder="请选择附属选项">
-        <template v-for="gp in form.goodOptionClasses">
+        <template v-for="gp in optionClassNames">
           <el-option :label="gp" :value="gp"></el-option>
         </template>
       </el-select>
       <el-button type="primary" @click="addOption">添加</el-button>
     </el-form-item>
     <el-form-item v-show="form.selectOptionClasses.length > 0" label="已选选项">
-      <el-row :gutter="10" type="flex">
-        <template v-for="gp in form.selectOptionClasses">
-          <el-col :span="3"  size="mini"><div class="grid-content bg-purple-dark">{{gp}}</div></el-col>
-        </template>
-      </el-row>
-
+        <el-tag v-for="soc in form.selectOptionClasses" closable type="success" @close="delSelectOption(soc)">
+          {{ soc }}
+        </el-tag>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onSubmit">立即创建</el-button>
@@ -41,11 +38,18 @@
 <script>
 /* eslint-disable */
 import axios from 'axios';
+import utils from '../common/utils'
+import global from "../common/global_object/global"
+import init from "../common/global_object/init";
 
 export default {
   name: 'GoodAdder',
-  mounted() {
-    this.initAllOptionClasses()
+  async mounted() {
+    await init.globalOptionClasses()
+    for (let i = 0;i<global.optionClasses.length;i++) {
+      this.optionClassNames.push(global.optionClasses[i].className)
+    }
+    this.setDefaultSelectOption()
   },
   data() {
     return {
@@ -57,10 +61,23 @@ export default {
         name: '',
       },
       dialogImageUrl: '',
-      dialogVisible: false
+      dialogVisible: false,
+      optionClassNames: []
     }
   },
   methods: {
+    setDefaultSelectOption() {
+      if (this.optionClassNames.length !== 0) {
+        this.form.selectOptionClass = this.optionClassNames[0]
+      } else {
+        this.form.selectOptionClass = ""
+      }
+    },
+    delSelectOption(optionName){
+      this.form.selectOptionClasses = utils.removeElement(this.form.selectOptionClasses,optionName)
+      this.optionClassNames.push(optionName)
+      this.setDefaultSelectOption()
+    },
     handleRemove(file, fileList) {
       console.log(file, fileList);
     },
@@ -70,48 +87,19 @@ export default {
     },
     onSubmit() {
       let data = {
-        object:"mvp",
-        function : "AddGood",
-        parameters : this.form
-      }
-      axios.post("/api/distributor",data).then(res => {
-        console.log(res)
-      })
-    },
-    initAllOptionClasses() {
-      let data = {
-        object:"mvp",
-        function : "GetAllOptionClasses",
-        parameters : {}
+        object: "mvp",
+        function: "AddGood",
+        parameters: this.form
       }
       axios.post("/api/distributor", data).then(res => {
-        let returnResult = res.data
-        if (returnResult.err === "" || returnResult.err === undefined || returnResult.err === null) {
-          this.form.goodOptionClasses = returnResult.data.optionClassNames
-          this.$message.success('选项类获取成功!')
-        }else{
-          this.$message.error(returnResult.err)
-        }
+        console.log(res)
       })
     },
     addOption() {
       this.form.selectOptionClasses.push(this.form.selectOptionClass)
-      this.form.goodOptionClasses = this.removeElement(this.form.goodOptionClasses,this.form.selectOptionClass)
-      if (this.form.goodOptionClasses.length !== 0) {
-        this.form.selectOptionClass = this.form.goodOptionClasses[0]
-      } else {
-        this.form.selectOptionClass = ""
-      }
+      this.optionClassNames = utils.removeElement(this.optionClassNames, this.form.selectOptionClass)
+      this.setDefaultSelectOption()
     },
-    removeElement(array,element) {
-      let result = [];
-      for (let i = 0;i<array.length;i++){
-        if (array[i]!==element){
-          result.push(array[i])
-        }
-      }
-      return result
-    }
   }
 }
 </script>
@@ -124,7 +112,7 @@ export default {
 .grid-content {
   border-radius: 4px;
   color: white;
-  text-align: center;/*让文字水平居中*/
+  text-align: center; /*让文字水平居中*/
 }
 
 </style>

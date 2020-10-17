@@ -349,18 +349,17 @@ func (MvpServer) AddOptionClass(ctx context.Context, req *pb.AddOptionClassReq) 
 	var res pb.AddOptionClassRes
 
 	// 0. 判断请求数据是否合法
-	if req.OptionClassName == ""{
-		return nil, ers.InvalidName
+	if req.OptionClassName == "" {
+		return nil, ers.New(ers.CodeOfBlankOptionClassName, "选项类名为空")
 	}
 	if len(req.Options) == 0 {
-		return nil, ers.InvalidName
+		return nil, ers.New(ers.CodeOfEmptyOption, "选项类中没有选项")
 	}
-	for _,optionName := range req.Options{
+	for index, optionName := range req.Options {
 		if optionName == "" {
-			return nil, ers.InvalidName
+			return nil, ers.New(ers.CodeOfBlankOptionName, "第 %v 个选项名不能为空", index+1)
 		}
 	}
-
 
 	// 1. 判断选项类是否存在
 	optionClass, err := dao.OptionClassDao.Get(req.OptionClassName)
@@ -369,7 +368,7 @@ func (MvpServer) AddOptionClass(ctx context.Context, req *pb.AddOptionClassReq) 
 			zap.Any("optionClassName", req.OptionClassName),
 			zap.Any("req", req),
 			zap.Error(err))
-		return nil, err
+		return nil, ers.MysqlError
 	}
 
 	// 2. 如果选项类不存在，则创建
@@ -379,12 +378,19 @@ func (MvpServer) AddOptionClass(ctx context.Context, req *pb.AddOptionClassReq) 
 				zap.Any("optionClassName", req.OptionClassName),
 				zap.Any("req", req),
 				zap.Error(err))
-			return nil, err
+			return nil, ers.MysqlError
 		}
 	}
 
 	// 3. 创建选项类
-	optionClass, _ = dao.OptionClassDao.Get(req.OptionClassName)
+	optionClass, err = dao.OptionClassDao.Get(req.OptionClassName)
+	if err != nil {
+		logger.Error("Fail to get option class",
+			zap.Any("optionClassName", req.OptionClassName),
+			zap.Any("req", req),
+			zap.Error(err))
+		return nil, ers.MysqlError
+	}
 
 	// 4. 创建选项
 	for _, optionName := range req.Options {
@@ -394,29 +400,71 @@ func (MvpServer) AddOptionClass(ctx context.Context, req *pb.AddOptionClassReq) 
 				zap.Any("optionName", optionName),
 				zap.Any("req", req),
 				zap.Error(err))
-			return nil, err
+			return nil, ers.MysqlError
 		}
 	}
 	return &res, nil
 }
 
 func (MvpServer) GetAllOptionClasses(ctx context.Context, req *pb.GetAllOptionClassesReq) (*pb.GetAllOptionClassesRes, error) {
-	logs.Info(" GetAllOptionClasses", ctx, req)
+	logs.Info("GetAllOptionClasses", ctx, req)
 	var res pb.GetAllOptionClassesRes
 
-	// 1. 获取
+	// 1. 获取所有选项类名
 	optionClasses, err := dao.OptionClassDao.GetAll()
 	if err != nil {
-		logger.Error("Fail to get all option class",
+		logger.Error("Fail to get all option classes",
 			zap.Any("req", req),
 			zap.Error(err))
 		return nil, err
 	}
 
-	// 2. 转换
+	// 2. 形成结构
 	for _, optionClass := range optionClasses {
-		res.OptionClassNames = append(res.OptionClassNames, optionClass.Name)
+		options, err := dao.OptionDao.GetByOptionClassID(int(optionClass.ID))
+		if err != nil {
+			logger.Error("Fail to get all options",
+				zap.Any("req", req),
+				zap.Error(err))
+			return nil, err
+		}
+		var optionNames []string
+		for _, option := range options {
+			optionNames = append(optionNames, option.Name)
+		}
+		res.OptionClasses = append(res.OptionClasses, &pb.OptionClass{
+			ClassName:   optionClass.Name,
+			OptionNames: optionNames,
+		})
+	}
+	return &res, nil
+}
+
+func (MvpServer) DelOption(ctx context.Context, req *pb.DelOptionReq) (*pb.DelOptionRes, error) {
+	logs.Info("DelOption", ctx, req)
+	var res pb.DelOptionRes
+
+	// 1. 获得选项类, 判断是否需要删除
+	optionClass, err := dao.OptionClassDao.Get(req.ClassName)
+	if err != nil {
+		logger.Error("Fail to get all option classes",
+			zap.Any("className", req.ClassName),
+			zap.Any("req", req),
+			zap.Error(err))
+		return nil, err
+	}
+	if optionClass == nil {
+		return &res, nil
 	}
 
+	// 2. 删除选项类
+	if err := dao.OptionDao.Del(int(optionClass.ID), req.OptionName); err != nil {
+		logger.Error("Fail to del option",
+			zap.Any("optionClassID", optionClass.ID),
+			zap.Any("optionName", req.OptionName),
+			zap.Any("req", req),
+			zap.Error(err))
+		return nil, err
+	}
 	return &res, nil
 }

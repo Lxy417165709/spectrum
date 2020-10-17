@@ -5,14 +5,14 @@
       <el-input v-model="form.optionClassName"></el-input>
     </el-form-item>
     <el-form-item label="选项">
-
       <template v-for="i in form.options.length">
         <el-row type="flex">
           <el-input v-model="form.options[i-1]"></el-input>
-          <el-button type="danger" plain icon="el-icon-circle-close" @click="delOption(i-1)">删除选项</el-button>
+          <el-button icon="el-icon-circle-close" plain type="danger" @click="delOption(i-1)">删除选项</el-button>
         </el-row>
       </template>
-      <el-button icon="el-icon-circle-plus" plain size="mini" type="primary" @click='form.options.push("")'>添加选项</el-button>
+      <el-button icon="el-icon-circle-plus" plain size="mini" type="primary" @click='form.options.push("")'>添加选项
+      </el-button>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="addOptionClass">添加选项类</el-button>
@@ -22,7 +22,7 @@
 
 <script>
 /* eslint-disable */
-import axios from 'axios';
+import utils from '../common/utils.js'
 
 export default {
   name: 'GoodAdder',
@@ -30,27 +30,23 @@ export default {
     return {
       form: {
         optionClassName: "",
-        options: [""]
+        options: []
       }
     }
   },
   methods: {
     delOption(i) {
-      this.form.options = this.form.options.slice(0,i).concat(this.form.options.slice(i+1))
+      this.form.options = this.form.options.slice(0, i).concat(this.form.options.slice(i + 1))
     },
     addOptionClass() {
-      let data = {
-        object: "mvp",
-        function: "AddOptionClass",
-        parameters: this.form
-      }
-      axios.post("/api/distributor", data).then(res => {
-        let returnResult = res.data
-        if (returnResult.err === "" || returnResult.err === undefined || returnResult.err === null) {
-          this.$message.success(returnResult.msg)
-        }else{
-          this.$message.error(returnResult.err)
+      let model = utils.getRequestModel("mvp", "AddOptionClass", this.form)
+      console.log(this.form)
+      utils.sendRequestModel(model).then(res => {
+        if (!utils.hasRequestSuccess(res)) {
+          this.$message.error(res.data.err)
+          return
         }
+        this.$message.success(res.data.msg)
       })
     },
   }
