@@ -55,3 +55,18 @@ func (goodDao) Create(name string, price float64, goodType int,pictureStorePath 
 	}
 	return nil
 }
+
+func (goodDao) GetAll() ([]*model.Good, error) {
+	createTableWhenNotExist(&model.Good{})
+
+	var goods []*model.Good
+	db := mainDB.Find(&goods)
+	if err := db.Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return nil, nil
+		}
+		logs.Error(err)
+		return nil, err
+	}
+	return goods, nil
+}

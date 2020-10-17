@@ -46,7 +46,9 @@ message AttachGood{
 
 message Good{
   string name = 1;
-  map<int64, AttachGoodArray> attachGoods = 2;
+  string pictureStorePath = 2;
+  int64 type = 3;
+  repeated optionClass optionClasses = 4;
 }
 
 message AttachGoodArray {
@@ -110,6 +112,13 @@ message DelOptionReq {
 message DelOptionRes {
 }
 
+
+message GetAllGoodsReq{}
+
+message GetAllGoodsRes{
+  repeated Good goods = 1;
+}
+
 service Mvp {
   rpc AddGood(AddGoodReq) returns (AddGoodRes);
   rpc AddBilliardDesk(AddBilliardDeskReq) returns (AddBilliardDeskRes);
@@ -123,6 +132,7 @@ service Mvp {
   rpc AddOptionClass(AddOptionClassReq) returns (AddOptionClassRes);
   rpc GetAllOptionClasses(GetAllOptionClassesReq) returns (GetAllOptionClassesRes);
   rpc DelOption(DelOptionReq) returns (DelOptionRes);
+  rpc GetAllGoods(GetAllGoodsReq) returns (GetAllGoodsRes);
 }
 
 

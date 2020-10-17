@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"github.com/jinzhu/gorm"
 	"go.uber.org/zap"
 	"spectrum/common/logger"
 	"spectrum/service/mvp/model"
@@ -24,4 +25,22 @@ func (goodOptionClassRecordDao) Create(goodID, optionClassID int) error {
 		return err
 	}
 	return nil
+}
+
+
+func (goodOptionClassRecordDao) GetByGoodID(goodID int) ([]*model.GoodOptionClassRecord,error){
+	createTableWhenNotExist(&model.GoodOptionClassRecord{})
+
+	var goodOptionClassRecords []*model.GoodOptionClassRecord
+	db := mainDB.Find(&goodOptionClassRecords,"good_id = ?",goodID)
+	if err := db.Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return nil, nil
+		}
+		logger.Error("Fail to finish mainDB.Find",
+			zap.Any("goodID",goodID),
+			zap.Error(err))
+		return nil, err
+	}
+	return goodOptionClassRecords, nil
 }
