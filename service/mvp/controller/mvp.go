@@ -461,23 +461,17 @@ func (MvpServer) GetAllOptionClasses(ctx context.Context, req *pb.GetAllOptionCl
 		return nil, err
 	}
 
-	// 2. 形成结构
+	// 2. 转换
 	for _, optionClass := range optionClasses {
-		options, err := dao.OptionDao.GetByOptionClassID(int(optionClass.ID))
+		pbOptionClass, err := formPbOptionClass(optionClass)
 		if err != nil {
-			logger.Error("Fail to get all options",
+			logger.Error("Fail to form pb option class",
+				zap.Any("tableOptionClass", optionClass),
 				zap.Any("req", req),
 				zap.Error(err))
 			return nil, err
 		}
-		var optionNames []string
-		for _, option := range options {
-			optionNames = append(optionNames, option.Name)
-		}
-		res.OptionClasses = append(res.OptionClasses, &pb.OptionClass{
-			ClassName:   optionClass.Name,
-			OptionNames: optionNames,
-		})
+		res.OptionClasses = append(res.OptionClasses, pbOptionClass)
 	}
 	return &res, nil
 }
@@ -526,52 +520,12 @@ func (MvpServer) GetAllGoods(ctx context.Context, req *pb.GetAllGoodsReq) (*pb.G
 
 	// 2. 转化
 	for _, good := range goods {
-		// 2.1 获得选项类记录
-		goodOptionClassRecords, err := dao.GoodOptionClassRecordDao.GetByGoodID(int(good.ID))
+		pbGood, err := formPbGood(good)
 		if err != nil {
-			logger.Error("Fail to get all good option class records",
-				zap.Any("goodID", good.ID),
+			logger.Error("Fail to form pb.good",
+				zap.Any("tableGood", good),
 				zap.Any("req", req),
 				zap.Error(err))
-			return nil, err
-		}
-
-		// 2.1.1 获得类名
-		pbGood := &pb.Good{
-			Name:             good.Name,
-			Type:             int64(good.Type),
-			PictureStorePath: good.PictureStorePath,
-		}
-		for _, record := range goodOptionClassRecords {
-
-			// 2.1.1.1 获得选项名
-			options, err := dao.OptionDao.GetByOptionClassID(record.OptionClassID)
-			if err != nil {
-				logger.Error("Fail to get all options",
-					zap.Any("optionClassID", record.OptionClassID),
-					zap.Any("req", req),
-					zap.Error(err))
-				return nil, err
-			}
-			var optionNames []string
-			for _, option := range options {
-				optionNames = append(optionNames, option.Name)
-			}
-
-			// 2.1.1.2 获得选项类名
-			optionClass, err := dao.OptionClassDao.GetByID(record.OptionClassID)
-			if err != nil {
-				logger.Error("Fail to get option class",
-					zap.Any("optionClassID", record.OptionClassID),
-					zap.Any("req", req),
-					zap.Error(err))
-				return nil, err
-			}
-
-			pbGood.OptionClasses = append(pbGood.OptionClasses, &pb.OptionClass{
-				ClassName:   optionClass.Name,
-				OptionNames: optionNames,
-			})
 		}
 		res.Goods = append(res.Goods, pbGood)
 	}

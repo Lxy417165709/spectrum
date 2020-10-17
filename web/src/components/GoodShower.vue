@@ -1,7 +1,7 @@
 
 <template>
   <div>
-    <el-carousel :interval="4000" type="card" height="500px">
+    <el-carousel :interval="4000" type="card" height="560px">
       <el-carousel-item v-for="good in goods">
         <h3 class="medium">{{ good.name }}</h3>
         <el-image
@@ -9,6 +9,9 @@
           fit="scale-down"></el-image>
         <template v-for="optionClass in good.optionClasses">
           <p>{{optionClass.className}}</p>
+          <el-radio-group v-model="selectOptionIndex[optionClass]" v-for="(optionName,index) in optionClass.optionNames">
+            <el-radio :label="index">{{optionName}}</el-radio>
+          </el-radio-group>
         </template>
       </el-carousel-item>
     </el-carousel>
@@ -30,7 +33,10 @@ export default {
         'api/file/static/upload/bg.jpg',
         'api/file/static/upload/bg.jpg',
         'api/file/static/upload/bg.jpg'],
-      goods: []
+      goods: [],
+      selectOptionIndex: {
+
+      }
     }
   },
   methods :{
@@ -42,7 +48,14 @@ export default {
           return
         }
         this.goods = res.data.data.goods
-        console.log(this.goods)
+        for (let good in this.goods) {
+          for(let optionClass in good.optionClasses){
+            this.selectOptionIndex[optionClass] = 0
+
+          }
+        }
+        console.log(this.selectOptionIndex)
+        // console.log(this.goods)
         this.$message.success(res.data.msg)
       })
     }
