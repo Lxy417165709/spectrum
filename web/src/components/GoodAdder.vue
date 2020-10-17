@@ -69,7 +69,8 @@ export default {
       },
       dialogImageUrl: '',
       dialogVisible: false,
-      optionClassNames: []
+      optionClassNames: [],
+      pictureStorePath:'',
     }
   },
   methods: {
@@ -94,7 +95,8 @@ export default {
         return
       }
       this.$message.success(res.msg)
-      console.log(res.data.fileStorePath)
+      this.form.pictureStorePath = res.data.fileStorePath;
+      console.log(this.form.pictureStorePath)
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
@@ -105,7 +107,7 @@ export default {
         name: this.form.name,
         price: parseFloat(this.form.price),
         type: this.form.type === true? 0 : 1,
-        pictureStorePath:"test",
+        pictureStorePath:this.form.pictureStorePath,
         optionClassNames: this.form.selectOptionClasses,
       })
       utils.sendRequestModel(model).then(res => {
