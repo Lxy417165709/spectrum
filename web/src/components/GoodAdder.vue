@@ -104,7 +104,7 @@ export default {
       let model = utils.getRequestModel("mvp", "AddGood", {
         name: this.form.name,
         price: parseFloat(this.form.price),
-        type: this.type ? 0 : 1,
+        type: this.form.type === true? 0 : 1,
         pictureStorePath:"test",
         optionClassNames: this.form.selectOptionClasses,
       })
