@@ -6,7 +6,8 @@
       :data="optionClasses"
       style="width: 100%"
       tooltip-effect="dark"
-      type="index">
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column
         type="selection"
         width="55">
@@ -26,7 +27,7 @@
       </el-table-column>
     </el-table>
     <div style="margin-top: 20px">
-      <el-button>切换第二、第三行的选中状态</el-button>
+      <el-button @click="delOptionClasses">删除选项类</el-button>
       <el-button>取消选择</el-button>
     </div>
   </div>
@@ -47,6 +48,7 @@ export default {
   data() {
     return {
       optionClasses: [],
+      selections : [],
     }
   },
   async mounted() {
@@ -55,6 +57,28 @@ export default {
     this.optionClasses = global.optionClasses
   },
   methods: {
+    handleSelectionChange(val){
+      this.selections = val
+    },
+    delOptionClasses() {
+      let optionClassNames = []
+      for (let i = 0;i<this.selections.length;i++) {
+        optionClassNames.push(this.selections[i].className)
+      }
+      global.optionClasses[0].className
+      let model = utils.getRequestModel("mvp","DelOptionClass",{
+        "optionClassNames":optionClassNames
+      })
+      utils.sendRequestModel(model).then(async res => {
+        if (!utils.hasRequestSuccess(res)) {
+          this.$message.error(res.data.err)
+          return
+        }
+        await init.globalOptionClasses()
+        this.$message.success(res.data.msg)
+        this.optionClasses = global.optionClasses
+      })
+    },
     delOption(optionClassIndex, optionName) {
       let model = utils.getRequestModel("mvp", "DelOption", {
         "className": global.optionClasses[optionClassIndex].className,

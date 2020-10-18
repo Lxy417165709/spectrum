@@ -531,5 +531,19 @@ func (MvpServer) GetAllGoods(ctx context.Context, req *pb.GetAllGoodsReq) (*pb.G
 	}
 
 	return &res, nil
+}
 
+func (MvpServer) DelOptionClass(ctx context.Context, req *pb.DelOptionClassReq) (*pb.DelOptionClassRes, error) {
+	logs.Info("DelOptionClass", ctx, req)
+	var res pb.DelOptionClassRes
+
+	// 1. 删除
+	if err := dao.OptionClassDao.DeleteByNames(req.OptionClassNames); err != nil {
+		logger.Error("Fail to finish OptionClassDao.DeleteByName",
+			zap.Any("optionClassNames", req.OptionClassNames),
+			zap.Any("req", req),
+			zap.Error(err))
+		return nil, err
+	}
+	return &res, nil
 }

@@ -72,3 +72,16 @@ func (optionClassDao) GetAll() ([]*model.OptionClass, error) {
 	}
 	return optionClasses, nil
 }
+
+func (optionClassDao) DeleteByNames(classNames []string) error {
+	createTableWhenNotExist(&model.OptionClass{})
+
+	db := mainDB.Delete(&model.OptionClass{}, "name in (?)", classNames)
+	if err := db.Error; err != nil {
+		logger.Error("Fail to delete option class",
+			zap.Any("classNames", classNames),
+			zap.Error(err))
+		return err
+	}
+	return nil
+}

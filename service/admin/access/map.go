@@ -62,5 +62,15 @@ var objectFunctionToRpcUnit = map[string]map[string]*model.RpcUnit{
 			SuccessMsg: "获取所有商品成功",
 			FailMsg:    "获取所有商品失败",
 		},
+		"DelOptionClass":{
+			ReqFunc: func() interface{} {
+				return &pb.DelOptionClassReq{}
+			},
+			ResFunc: func() interface{} {
+				return &pb.DelOptionClassRes{}
+			},
+			SuccessMsg: "删除选项类成功",
+			FailMsg:    "删除选项类失败",
+		},
 	},
 }

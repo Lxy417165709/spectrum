@@ -119,6 +119,12 @@ message GetAllGoodsRes{
   repeated Good goods = 1;
 }
 
+message DelOptionClassReq{
+  repeated string optionClassNames = 1;
+}
+
+message DelOptionClassRes{}
+
 service Mvp {
   rpc AddGood(AddGoodReq) returns (AddGoodRes);
   rpc AddBilliardDesk(AddBilliardDeskReq) returns (AddBilliardDeskRes);
@@ -133,6 +139,7 @@ service Mvp {
   rpc GetAllOptionClasses(GetAllOptionClassesReq) returns (GetAllOptionClassesRes);
   rpc DelOption(DelOptionReq) returns (DelOptionRes);
   rpc GetAllGoods(GetAllGoodsReq) returns (GetAllGoodsRes);
+  rpc DelOptionClass(DelOptionClassReq) returns (DelOptionClassRes);
 }
 
 
