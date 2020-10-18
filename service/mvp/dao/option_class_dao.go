@@ -27,21 +27,22 @@ func (optionClassDao) Get(className string) (*model.OptionClass, error) {
 	return &optionClass, nil
 }
 
-func (optionClassDao) GetByID(id int) (*model.OptionClass, error) {
+func (optionClassDao) GetByIDs(ids []int) ([]*model.OptionClass, error) {
 	createTableWhenNotExist(&model.OptionClass{})
-	var optionClass model.OptionClass
-	db := mainDB.First(&optionClass, "id = ?", id)
+	var optionClasses []*model.OptionClass
+	db := mainDB.Find(&optionClasses, "id in (?)", ids)
 	if err := db.Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, nil
 		}
 		logger.Error("Fail to get option class",
-			zap.Any("id", id),
+			zap.Any("ids", ids),
 			zap.Error(err))
 		return nil, err
 	}
-	return &optionClass, nil
+	return optionClasses, nil
 }
+
 
 func (optionClassDao) Create(className string) error {
 	createTableWhenNotExist(&model.OptionClass{})

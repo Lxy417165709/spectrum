@@ -31,6 +31,10 @@ func nextThingID() {
 
 // ------------------------------------- 转换相关 -------------------------------------
 func formPbGood(good *model.Good) (*pb.Good, error) {
+	if good == nil{
+		return nil,nil
+	}
+
 	// 1. 形成初始字段
 	pbGood := &pb.Good{
 		Name:             good.Name,
@@ -46,17 +50,20 @@ func formPbGood(good *model.Good) (*pb.Good, error) {
 			zap.Error(err))
 		return nil, err
 	}
-	for _, record := range goodOptionClassRecords {
-		// 2.1 获得选项类名
-		optionClass, err := dao.OptionClassDao.GetByID(record.OptionClassID)
-		if err != nil {
-			logger.Error("Fail to get option class",
-				zap.Any("optionClassID", record.OptionClassID),
-				zap.Error(err))
-			return nil, err
-		}
 
-		// 2.2 转换
+	optionClassIDs := make([]int,0)
+	for _,record := range goodOptionClassRecords{
+		optionClassIDs = append(optionClassIDs,record.OptionClassID)
+	}
+	optionClasses, err := dao.OptionClassDao.GetByIDs(optionClassIDs)
+	if err!=nil{
+		logger.Error("Fail to get option class",
+			zap.Any("optionClassIDs", optionClassIDs),
+			zap.Error(err))
+		return nil, err
+	}
+
+	for _,optionClass :=range optionClasses {
 		pbOptionClass, err := formPbOptionClass(optionClass)
 		if err != nil {
 			logger.Error("Fail to form pb.OptionClass",
@@ -64,14 +71,16 @@ func formPbGood(good *model.Good) (*pb.Good, error) {
 				zap.Error(err))
 			return nil, err
 		}
-
-		// 2.3 更新 pbGood
 		pbGood.OptionClasses = append(pbGood.OptionClasses, pbOptionClass)
 	}
 	return pbGood, nil
 }
 
 func formPbOptionClass(optionClass *model.OptionClass) (*pb.OptionClass, error) {
+	if optionClass == nil{
+		return nil,nil
+	}
+
 	// 0. 初始化 pb.OptionClass
 	pbOptionClass := &pb.OptionClass{
 		ClassName: optionClass.Name,

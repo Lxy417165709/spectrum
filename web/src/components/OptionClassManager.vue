@@ -27,8 +27,7 @@
       </el-table-column>
     </el-table>
     <div style="margin-top: 20px">
-      <el-button @click="delOptionClasses">删除选项类</el-button>
-      <el-button>取消选择</el-button>
+      <el-button @click="delOptionClasses" type="danger" plain>删除选项类</el-button>
     </div>
   </div>
 </template>
