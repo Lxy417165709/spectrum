@@ -13,6 +13,9 @@
     <el-tab-pane label="商品展示" name="fourth">
       <GoodShower/>
     </el-tab-pane>
+    <el-tab-pane label="商品选择" >
+      <GoodSelector/>
+    </el-tab-pane>
     <el-tab-pane label="商品点单" >
       <GoodOrder/>
     </el-tab-pane>
@@ -21,16 +24,16 @@
 <script>
 
 /* eslint-disable */
-
 import GoodAdder from "../components/GoodAdder";
 import OptionAdder from "../components/OptionAdder";
 import OptionClassManager from "../components/OptionClassManager";
 import GoodShower from "./GoodShower";
+import GoodSelector from "./GoodSelector";
 import GoodOrder from "./GoodOrder";
 
 export default {
   name: "panel",
-  components: {GoodShower, GoodAdder,OptionAdder,OptionClassManager,GoodOrder},
+  components: {GoodSelector, GoodShower, GoodAdder,OptionAdder,OptionClassManager,GoodOrder},
   data() {
     return {
       activeName: 'second'

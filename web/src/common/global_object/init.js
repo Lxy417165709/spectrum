@@ -12,4 +12,15 @@ export default{
       global.optionClasses = res.data.data.optionClasses
     })
   },
+  async globalGoods() {
+    let model = utils.getRequestModel("mvp", "GetAllGoods", {})
+    utils.sendRequestModel(model).then(res => {
+      if (!utils.hasRequestSuccess(res)) {
+        console.log(res.data.err)
+        return
+      }
+      global.goods = res.data.data.goods
+      console.log("glg",global.goods)
+    })
+  }
 }

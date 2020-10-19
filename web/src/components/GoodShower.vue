@@ -1,4 +1,4 @@
-
+<!--eslint-disable-->
 <template>
   <div>
     <el-carousel :interval="4000" type="card" height="560px">
@@ -20,10 +20,10 @@
 
 </template>
 
-
-
 <script>
-import utils from "../common/utils";
+/* eslint-disable */
+import global from "../common/global_object/global"
+import init from "../common/global_object/init"
 
 export default {
   name:"GoodShower",
@@ -34,35 +34,25 @@ export default {
         'api/file/static/upload/bg.jpg',
         'api/file/static/upload/bg.jpg'],
       goods: [],
-      selectOptionIndex: {
-
-      }
+      selectOptionIndex: {}
     }
   },
   methods :{
-    getAllGoods() {
-      let model = utils.getRequestModel("mvp", "GetAllGoods", {})
-      utils.sendRequestModel(model).then(res => {
-        if (!utils.hasRequestSuccess(res)) {
-          this.$message.error(res.data.err)
-          return
-        }
-        this.goods = res.data.data.goods
-        for (let good in this.goods) {
-          for(let optionClass in good.optionClasses){
-            this.selectOptionIndex[optionClass] = 0
-
-          }
-        }
-        console.log(this.selectOptionIndex)
-        // console.log(this.goods)
-        this.$message.success(res.data.msg)
-      })
+    async getAllGoods() {
+      // await init.globalGoods()
+      // this.goods = global.goods;
+      // for (let good in this.goods) {
+      //   console.log("www",good.optionClasses)
+      //   for(let optionClass in good.optionClasses){
+      //     this.selectOptionIndex[optionClass] = 0
+      //   }
+      // }
     }
   }
 }
 </script>
 
+<!--eslint-disable-->
 <style>
 .el-carousel__item{
   text-align: center;
