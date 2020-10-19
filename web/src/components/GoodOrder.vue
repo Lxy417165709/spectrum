@@ -14,8 +14,7 @@
     </el-form-item>
     <template v-for="optionClass in good.optionClasses">
       <el-form-item :label="optionClass.className">
-        {{optionClass.defaultSelectOptionIndex}}
-          <el-radio-group v-model="optionClass.defaultSelectOptionIndex" v-for="(optionName,index) in optionClass.optionNames">
+          <el-radio-group v-model="optionClass.defaultSelectOptionIndex-1" v-for="(optionName,index) in optionClass.optionNames">
             <el-radio :label="index" style="padding-right:10px;">{{ optionName}}</el-radio>
           </el-radio-group>
       </el-form-item>
@@ -30,11 +29,6 @@
 export default {
   name: "GoodOrder",
   async mounted() {
-    if (this.good.optionClasses!== undefined){
-      for(let i=0;i<this.good.optionClasses.length;i++){
-        this.$set(this.selectOptionIndex,this.good.optionClasses[i].className,0)  // 涉及 vue 响应原理..
-      }
-    }
   },
   props: {
     good: {
@@ -43,23 +37,6 @@ export default {
   },
   data() {
     return {
-      // good:{
-      //   type: true,
-      //   name:"波霸奶茶",
-      //   price:50,
-      //   pictureStorePath:"static/upload/bg.jpg",
-      //   optionClasses:[
-      //     {
-      //       className:"冰量",
-      //       optionNames:["正常冰","少冰","多冰"]
-      //     },
-      //     {
-      //       className:"温度",
-      //       optionNames:["常温","冷饮","热饮"]
-      //     }
-      //   ]
-      // },
-      selectOptionIndex: {},
     }
   },
   methods: {}

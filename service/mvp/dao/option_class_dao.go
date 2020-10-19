@@ -48,6 +48,7 @@ func (optionClassDao) Create(className string) error {
 	createTableWhenNotExist(&model.OptionClass{})
 	db := mainDB.Create(&model.OptionClass{
 		Name: className,
+		DefaultSelectOptionIndex: 1,
 	})
 	if err := db.Error; err != nil {
 		logger.Error("Fail to create option class",
