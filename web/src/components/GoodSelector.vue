@@ -1,84 +1,62 @@
 <template>
-
-  <div>
-    <el-row>
-      <el-col :offset="4" :span="20">
+  <el-container style="height: 800px; border: 1px solid #eee">
+    <el-aside width="200px">
+      <el-menu>
+        已点商品
+        <el-submenu v-for="good in goods" :index="good.name">
+          <template slot="title"><i class="el-icon-message" @click="addTab(good)"></i>{{good.name}}</template>
+        </el-submenu>
+      </el-menu>
+    </el-aside>
+    <el-main>
         <el-tabs>
-          <template v-for="name in panelNames">
-            <el-tab-pane :label="name" ></el-tab-pane>
-          </template>
+            <el-tab-pane  v-for="unit in units" :label="unit.good.name">
+              <component :is="unit.component" :good="unit.good"></component>
+            </el-tab-pane>
         </el-tabs>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="4">
-        <el-menu
-          default-active="2"
-          class="el-menu-vertical-demo"
-          @open="handleOpen"
-          @close="handleClose"
-          background-color="#545c64"
-          text-color="#fff"
-          active-text-color="#ffd04b">
-          <el-submenu index="1">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>导航一</span>
-            </template>
-            <el-menu-item-group>
-              <template slot="title">分组一</template>
-              <el-menu-item index="1-1">选项1</el-menu-item>
-              <el-menu-item index="1-2">选项2</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group title="分组2">
-              <el-menu-item index="1-3">选项3</el-menu-item>
-            </el-menu-item-group>
-            <el-submenu index="1-4">
-              <template slot="title">选项4</template>
-              <el-menu-item index="1-4-1">选项1</el-menu-item>
-            </el-submenu>
-          </el-submenu>
-          <el-menu-item index="2">
-            <i class="el-icon-menu"></i>
-            <span slot="title">导航二</span>
-          </el-menu-item>
-          <el-menu-item index="3" disabled>
-            <i class="el-icon-document"></i>
-            <span slot="title">导航三</span>
-          </el-menu-item>
-          <el-menu-item index="4">
-            <i class="el-icon-setting"></i>
-            <span slot="title">导航四</span>
-          </el-menu-item>
-        </el-menu>
-      </el-col>
-    </el-row>
-
-  </div>
-
+    </el-main>
+  </el-container>
 
 </template>
 
 
-
-
-
 <script>
+
+import init from "../common/global_object/init"
+import global from "../common/global_object/global"
+import GoodOrder from "./GoodOrder";
+
+
 export default {
   name: "GoodSelector",
+  async created() {
+    await init.globalGoods()
+    this.goods = global.goods;
+    console.log(this.goods)
+  },
   data() {
     return {
-      panelNames : ['A','B','C','D']
+      goods : [],
+      goodMap : {},
+      units : [],
+      activeName:""
     }
   },
   methods: {
+    addTab(good){
+      let unit = {
+        component: GoodOrder,
+        good: good
+      }
+      this.units.push(unit)
+      // this.activeName = tabName
+    },
     handleOpen(key, keyPath) {
-      this.panelNames.push(key)
       console.log(key, keyPath);
     },
     handleClose(key, keyPath) {
       console.log(key, keyPath);
-    }
+    },
   }
 }
 </script>

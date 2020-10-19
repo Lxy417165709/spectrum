@@ -14,13 +14,13 @@ export default{
   },
   async globalGoods() {
     let model = utils.getRequestModel("mvp", "GetAllGoods", {})
-    utils.sendRequestModel(model).then(res => {
+    await utils.sendRequestModel(model).then(res => {
       if (!utils.hasRequestSuccess(res)) {
         console.log(res.data.err)
         return
       }
       global.goods = res.data.data.goods
-      console.log("glg",global.goods)
+      console.log("global_goods",global.goods)
     })
   }
 }

@@ -31,14 +31,15 @@ func nextThingID() {
 
 // ------------------------------------- 转换相关 -------------------------------------
 func formPbGood(good *model.Good) (*pb.Good, error) {
-	if good == nil{
-		return nil,nil
+	if good == nil {
+		return nil, nil
 	}
 
 	// 1. 形成初始字段
 	pbGood := &pb.Good{
 		Name:             good.Name,
 		Type:             int64(good.Type),
+		Price:            float32(good.Price),
 		PictureStorePath: good.PictureStorePath,
 	}
 
@@ -51,19 +52,19 @@ func formPbGood(good *model.Good) (*pb.Good, error) {
 		return nil, err
 	}
 
-	optionClassIDs := make([]int,0)
-	for _,record := range goodOptionClassRecords{
-		optionClassIDs = append(optionClassIDs,record.OptionClassID)
+	optionClassIDs := make([]int, 0)
+	for _, record := range goodOptionClassRecords {
+		optionClassIDs = append(optionClassIDs, record.OptionClassID)
 	}
 	optionClasses, err := dao.OptionClassDao.GetByIDs(optionClassIDs)
-	if err!=nil{
+	if err != nil {
 		logger.Error("Fail to get option class",
 			zap.Any("optionClassIDs", optionClassIDs),
 			zap.Error(err))
 		return nil, err
 	}
 
-	for _,optionClass :=range optionClasses {
+	for _, optionClass := range optionClasses {
 		pbOptionClass, err := formPbOptionClass(optionClass)
 		if err != nil {
 			logger.Error("Fail to form pb.OptionClass",
@@ -77,13 +78,14 @@ func formPbGood(good *model.Good) (*pb.Good, error) {
 }
 
 func formPbOptionClass(optionClass *model.OptionClass) (*pb.OptionClass, error) {
-	if optionClass == nil{
-		return nil,nil
+	if optionClass == nil {
+		return nil, nil
 	}
 
 	// 0. 初始化 pb.OptionClass
 	pbOptionClass := &pb.OptionClass{
-		ClassName: optionClass.Name,
+		ClassName:                optionClass.Name,
+		DefaultSelectOptionIndex: int32(optionClass.DefaultSelectOptionIndex),
 	}
 
 	// 1. 获得选项
@@ -102,6 +104,5 @@ func formPbOptionClass(optionClass *model.OptionClass) (*pb.OptionClass, error) 
 
 	// 3. 更新 pb.OptionClass
 	pbOptionClass.OptionNames = optionNames
-
 	return pbOptionClass, nil
 }

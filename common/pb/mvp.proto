@@ -47,8 +47,9 @@ message AttachGood{
 message Good{
   string name = 1;
   string pictureStorePath = 2;
-  int64 type = 3;
-  repeated optionClass optionClasses = 4;
+  float price = 3;
+  int64 type = 4;
+  repeated optionClass optionClasses = 5;
 }
 
 message AttachGoodArray {
@@ -101,7 +102,8 @@ message GetAllOptionClassesRes{
 
 message optionClass {
   string className = 1;
-  repeated string optionNames = 2;
+  int32 defaultSelectOptionIndex = 2;
+  repeated string optionNames = 3;
 }
 
 message DelOptionReq {

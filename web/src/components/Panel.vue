@@ -16,9 +16,6 @@
     <el-tab-pane label="商品选择" >
       <GoodSelector/>
     </el-tab-pane>
-    <el-tab-pane label="商品点单" >
-      <GoodOrder/>
-    </el-tab-pane>
   </el-tabs>
 </template>
 <script>
