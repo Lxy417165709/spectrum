@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import utils from "../utils";
 import global from "./global";
 

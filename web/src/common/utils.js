@@ -1,6 +1,6 @@
 /* eslint-disable */
-import axios from "axios";
 
+import axios from "axios";
 export default {
   getRequestModel(obj, fun, par) {
     return {

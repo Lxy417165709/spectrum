@@ -21,7 +21,7 @@
       :direction="direction">
 <!--      <el-collapse v-model="activeNames" @change="handleChange" accordion>-->
       <el-collapse accordion>
-        <el-collapse-item v-for="(good,index) in orderGoods" :title=" (index+1) + '. ' + good.name" style="padding-left: 10px">
+        <el-collapse-item v-for="(good,index) in orderGoods" :title=" (index+1) + '. ' + good.name" style="padding-left: 10px" :key="good.name">
           <el-collapse accordion>
             <el-collapse-item title="商品详情" name="1" style="padding-left: 20px;">
               <el-form ref="form" label-width="80px">
