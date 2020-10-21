@@ -25,6 +25,15 @@ export default {
     }
     return result
   },
+  removeElementByField(array, filed,value) {
+    let result = [];
+    for (let i = 0; i < array.length; i++) {
+      if (array[i][filed] !== value) {
+        result.push(array[i])
+      }
+    }
+    return result
+  },
   removeIndex(array,index) {
     return array.slice(0, index).concat(array.slice(index + 1))
   },

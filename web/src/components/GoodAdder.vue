@@ -21,7 +21,7 @@
     </el-form-item>
 
     <el-form-item label="类别">
-      <el-select autocomplete="on" v-model="form.goodClassName" :filter-method="test" filterable placeholder="请选择">
+      <el-select autocomplete="on" v-model="form.goodClassName" filterable placeholder="请选择">
         <el-option
           v-for="(goodClass,index) in this.goodClasses"
           :key="index"
@@ -93,19 +93,16 @@ export default {
     }
   },
   methods: {
-    test(val) {
-      console.log(val,this.goodClasses[this.goodClasses.length-1].name)
-    },
     setDefaultSelectOption() {
-      if (this.optionClassNames.length !== 0) {
-        this.form.selectOptionClass = this.optionClassNames[0]
+      if (this.optionClasses.length !== 0) {
+        this.selectOptionClassName = this.optionClasses[0].name
       } else {
-        this.form.selectOptionClass = ""
+        this.selectOptionClassName = {name: ""}
       }
     },
-    delSelectOption(optionName) {
-      this.form.selectOptionClasses = utils.removeElement(this.form.selectOptionClasses, optionName)
-      this.optionClassNames.push(optionName)
+    delSelectOption(index) {
+      this.optionClasses.push(this.selectOptionClasses[index])
+      this.selectOptionClasses = utils.removeIndex(this.selectOptionClasses,index)
       this.setDefaultSelectOption()
     },
     handleRemove(file, fileList) {
@@ -126,11 +123,14 @@ export default {
     },
     addGood() {
       let model = utils.getRequestModel("mvp", "AddGood", {
-        name: this.form.name,
-        price: parseFloat(this.form.price),
-        type: this.form.type === true ? 0 : 1,
-        pictureStorePath: this.form.pictureStorePath,
-        optionClassNames: this.form.selectOptionClasses,
+        good:{
+          name: this.form.name,
+          price: parseFloat(this.form.price),
+          pictureStorePath: this.form.pictureStorePath,
+          optionClasses: this.selectOptionClasses,
+          attachGoodClasses:[],
+        },
+        goodClassName: this.form.goodClassName,
       })
       utils.sendRequestModel(model).then(res => {
         if (!utils.hasRequestSuccess(res)) {
@@ -142,10 +142,10 @@ export default {
     },
     addOptionClass() {
       this.selectOptionClasses.push({
-        name:this.selectOptionClassName,
+        name: this.selectOptionClassName,
       })
-      // this.optionClasses = utils.removeElement(this.optionClasses,this.selectOptionClass)
-      // this.setDefaultSelectOption()
+      this.optionClasses = utils.removeElementByField(this.optionClasses, "name", this.selectOptionClassName)
+      this.setDefaultSelectOption()
     },
   }
 }

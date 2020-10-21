@@ -4,6 +4,7 @@ package pb;
 
 message AddGoodReq {
   Good good = 1;
+  string goodClassName = 2;
 }
 
 message AddGoodRes {}

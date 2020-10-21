@@ -33,12 +33,24 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 		return nil, ers.New(0, "商品(%s)已存在", good.Name)
 	}
 
+	// 2. 获得商品类ID
+	goodClass, err := dao.GoodClassDao.Get(req.GoodClassName)
+	if err != nil {
+		logger.Error("Fail to finish GoodClassDao.Get",
+			zap.Any("goodClassName", req.GoodClassName),
+			zap.Any("req", req),
+			zap.Error(err))
+		return nil, err
+	}
+
+
 	// 2. 创建商品
 	if err := dao.GoodDao.Create(
 		req.Good.Name,
 		float64(req.Good.Price),
 		model.FlagOfNotAttachGood,
 		req.Good.PictureStorePath,
+		int(goodClass.ID),
 	); err != nil {
 		logs.Error(err)
 		return nil, err

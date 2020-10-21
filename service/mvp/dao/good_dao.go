@@ -42,7 +42,7 @@ func (goodDao) GetByName(goodName string) (*model.Good, error) {
 	return &good, nil
 }
 
-func (goodDao) Create(name string, price float64, goodType int, pictureStorePath string) error {
+func (goodDao) Create(name string, price float64, goodType int, pictureStorePath string,classID int) error {
 	createTableWhenNotExist(&model.Good{})
 
 	db := mainDB.Create(&model.Good{
@@ -50,6 +50,7 @@ func (goodDao) Create(name string, price float64, goodType int, pictureStorePath
 		Price:            price,
 		Type:             goodType,
 		PictureStorePath: pictureStorePath,
+		ClassID:  classID,
 	})
 	if err := db.Error; err != nil {
 		logs.Error(err)
