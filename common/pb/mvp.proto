@@ -101,6 +101,13 @@ message DelOptionClassReq{
 
 message DelOptionClassRes{}
 
+message DelGoodClassReq{
+  repeated GoodClass goodClasses = 1;
+}
+
+message DelGoodClassRes{}
+
+
 message GetAllGoodClassesReq{}
 
 message GetAllGoodClassesRes{
@@ -130,6 +137,7 @@ service Mvp {
   rpc DelOptionClass(DelOptionClassReq) returns (DelOptionClassRes);
   rpc GetAllGoodClasses(GetAllGoodClassesReq) returns (GetAllGoodClassesRes);
   rpc AddGoodClass(AddGoodClassReq) returns (AddGoodClassRes);
+  rpc DelGoodClass(DelGoodClassReq) returns (DelGoodClassRes);
 }
 
 enum Discount {

@@ -56,3 +56,16 @@ func (goodClassDao) Create(className string) error {
 	}
 	return nil
 }
+
+func (goodClassDao) DeleteByNames(classNames []string) error {
+	createTableWhenNotExist(&model.GoodClass{})
+
+	db := mainDB.Delete(&model.GoodClass{}, "name in (?)", classNames)
+	if err := db.Error; err != nil {
+		logger.Error("Fail to delete good class",
+			zap.Any("classNames", classNames),
+			zap.Error(err))
+		return err
+	}
+	return nil
+}

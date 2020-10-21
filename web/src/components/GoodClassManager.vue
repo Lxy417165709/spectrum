@@ -37,7 +37,7 @@
       </el-table-column>
     </el-table>
     <div style="padding-top: 20px">
-      <el-button v-if="selectOptionClasses.length === 0" plain type="primary" @click="createGoodClass">添加商品类</el-button>
+      <el-button v-if="selectGoodClasses.length === 0" plain type="primary" @click="createGoodClass">添加商品类</el-button>
       <el-button v-else plain type="danger" @click="delGoodClasses">删除商品类</el-button>
     </div>
   </div>
@@ -54,7 +54,7 @@ export default {
   data() {
     return {
       goodClasses: [],
-      selectOptionClasses: [],
+      selectGoodClasses: [],
     }
   },
   async mounted() {
@@ -65,8 +65,8 @@ export default {
     }
   },
   methods: {
-    handleElTableSelectionChange(selectOptionClasses) {
-      this.selectOptionClasses = selectOptionClasses;
+    handleElTableSelectionChange(classes) {
+      this.selectGoodClasses = classes;
     },
     createGood(index) {
       this.goodClasses[index].goods.push({
@@ -101,18 +101,18 @@ export default {
         this.goodClasses[index].editing = false
       })
     },
-    delOptionClasses() {
-      let model = utils.getRequestModel("mvp", "DelOptionClass", {
-        "optionClasses": this.selectOptionClasses
+    delGoodClasses() {
+      let model = utils.getRequestModel("mvp", "DelGoodClass", {
+        "goodClasses": this.selectGoodClasses
       })
       utils.sendRequestModel(model).then(async res => {
         if (!utils.hasRequestSuccess(res)) {
           this.$message.error(res.data.err)
           return
         }
-        await init.globalOptionClasses()
+        await init.globalGoodClasses()
         this.$message.success(res.data.msg)
-        this.optionClasses = global.optionClasses
+        this.goodClasses = global.goodClasses
       })
     },
     delOption(editing, optionClassIndex, optionIndex) {

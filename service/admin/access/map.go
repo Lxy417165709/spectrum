@@ -92,5 +92,15 @@ var objectFunctionToRpcUnit = map[string]map[string]*model.RpcUnit{
 			SuccessMsg: "添加商品类成功",
 			FailMsg:    "添加商品类失败",
 		},
+		"DelGoodClass":{
+			ReqFunc: func() interface{} {
+				return &pb.DelGoodClassReq{}
+			},
+			ResFunc: func() interface{} {
+				return &pb.DelGoodClassRes{}
+			},
+			SuccessMsg: "删除商品类成功",
+			FailMsg:    "删除商品类失败",
+		},
 	},
 }

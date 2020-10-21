@@ -44,7 +44,7 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 	}
 
 
-	// 2. 创建商品
+	// 3. 创建商品
 	if err := dao.GoodDao.Create(
 		req.Good.Name,
 		float64(req.Good.Price),
@@ -56,17 +56,17 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 		return nil, err
 	}
 
-	// 3. 获得商品
+	// 4. 获得商品
 	good, err = dao.GoodDao.GetByName(req.Good.Name)
 	if err != nil {
 		logs.Error(err)
 		return nil, errors.New("Fail to finish GoodDao.GetByName")
 	}
 
-	// 4. 为商品添加附属选项
+	// 5. 为商品添加附属选项
 	for _, optionClass := range req.Good.OptionClasses {
 
-		// 4.1 获得附属选项类
+		// 5.1 获得附属选项类
 		tbOptionClass, err := dao.OptionClassDao.Get(optionClass.Name)
 		if err != nil {
 			logger.Error("Fail to get option class",
@@ -83,7 +83,7 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 			return nil, err
 		}
 
-		// 4.2 执行添加操作
+		// 5.2 执行添加操作
 		if err := dao.GoodOptionClassRecordDao.Create(int(good.ID), int(tbOptionClass.ID)); err != nil {
 			logger.Error("Fail to finish GoodOptionClassRecordDao.Create",
 				zap.Any("goodID", good.ID),
@@ -639,6 +639,28 @@ func (MvpServer) AddGoodClass(ctx context.Context, req *pb.AddGoodClassReq) (*pb
 				zap.Error(err))
 			return nil, err
 		}
+	}
+	return &res, nil
+}
+
+
+func (MvpServer) DelGoodClass(ctx context.Context, req *pb.DelGoodClassReq) (*pb.DelGoodClassRes, error) {
+	logs.Info("DelGoodClass", ctx, req)
+	var res pb.DelGoodClassRes
+
+	// 1. 获取商品类名
+	goodClassNames := make([]string, 0)
+	for _, goodClass := range req.GoodClasses {
+		goodClassNames = append(goodClassNames, goodClass.Name)
+	}
+
+	// 2. 删除
+	if err := dao.GoodClassDao.DeleteByNames(goodClassNames); err != nil {
+		logger.Error("Fail to finish GoodClassDao.DeleteByNames",
+			zap.Any("optionClassNames", goodClassNames),
+			zap.Any("req", req),
+			zap.Error(err))
+		return nil, err
 	}
 	return &res, nil
 }
