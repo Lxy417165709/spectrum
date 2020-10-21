@@ -15,6 +15,10 @@ func Error(msg string, fields ...zap.Field) {
 	logger.Error(msg, fields...)
 }
 
+func Warn(msg string, fields ...zap.Field) {
+	logger.Warn(msg, fields...)
+}
+
 func init() {
 	var err error
 	logger, err = getConfig().Build()

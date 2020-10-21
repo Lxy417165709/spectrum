@@ -19,7 +19,6 @@
       title="订单"
       :visible.sync="drawer"
       :direction="direction">
-<!--      <el-collapse v-model="activeNames" @change="handleChange" accordion>-->
       <el-collapse accordion>
         <el-collapse-item v-for="(good,index) in orderGoods" :title=" (index+1) + '. ' + good.name" style="padding-left: 10px" :key="good.name">
           <el-collapse accordion>
@@ -53,19 +52,12 @@
               <div>页面反馈：操作后，通过页面元素的变化清晰地展现当前状态。</div>
             </el-collapse-item>
           </el-collapse>
-
-
-
-
-
         </el-collapse-item>
       </el-collapse>
     </el-drawer>
     <el-button style="position:absolute;bottom:100px;left:50px" type="primary" @click="drawer=true">打开订单</el-button>
   </el-container>
-
 </template>
-
 
 
 <script>
@@ -73,6 +65,7 @@
 import init from "../common/global_object/init"
 import global from "../common/global_object/global"
 import GoodOrder from "./GoodOrder";
+import utils from "../common/utils";
 
 
 export default {
@@ -94,12 +87,12 @@ export default {
   },
   methods: {
     receiveChildGood(good){
-      this.orderGoods.push(JSON.parse(JSON.stringify(good)))  // 深拷贝
+      this.orderGoods.push(utils.deepCopy(good))  // 深拷贝
     },
     addTab(good){
       let unit = {
         component: GoodOrder,
-        good: JSON.parse(JSON.stringify(good))  // 深拷贝
+        good: utils.deepCopy(good)  // 深拷贝
       }
       this.units.push(unit)
     },

@@ -3,4 +3,5 @@
 export default {
   optionClasses: [],
   goods: [],
+  goodClasses: [],
 }

@@ -3,11 +3,7 @@ syntax = "proto3";
 package pb;
 
 message AddGoodReq {
-  string name = 1;
-  float price = 2;
-  int64 type = 3;
-  string pictureStorePath = 4;
-  repeated string optionClassNames = 5;
+  Good good = 1;
 }
 
 message AddGoodRes {}
@@ -40,21 +36,6 @@ message StopPlayBilliardReq {
 
 message StopPlayBilliardRes {}
 
-message AttachGood{
-  string name = 1;
-}
-
-message Good{
-  string name = 1;
-  string pictureStorePath = 2;
-  float price = 3;
-  int64 type = 4;
-  repeated optionClass optionClasses = 5;
-}
-
-message AttachGoodArray {
-  repeated AttachGood attachGoods = 1;
-}
 
 message OrderReq{
   repeated Good goods = 1;
@@ -88,8 +69,7 @@ message CheckoutRes{
 }
 
 message AddOptionClassReq{
-  string optionClassName = 1;
-  repeated string options = 2;
+  OptionClass optionClass = 1;
 }
 
 message AddOptionClassRes{}
@@ -97,13 +77,7 @@ message AddOptionClassRes{}
 message GetAllOptionClassesReq{}
 
 message GetAllOptionClassesRes{
-  repeated optionClass optionClasses = 1;
-}
-
-message optionClass {
-  string className = 1;
-  int32 defaultSelectOptionIndex = 2;
-  repeated string optionNames = 3;
+  repeated OptionClass optionClasses = 1;
 }
 
 message DelOptionReq {
@@ -111,8 +85,7 @@ message DelOptionReq {
   string optionName = 2;
 }
 
-message DelOptionRes {
-}
+message DelOptionRes {}
 
 
 message GetAllGoodsReq{}
@@ -122,10 +95,22 @@ message GetAllGoodsRes{
 }
 
 message DelOptionClassReq{
-  repeated string optionClassNames = 1;
+  repeated OptionClass OptionClasses = 1;
 }
 
 message DelOptionClassRes{}
+
+message GetAllGoodClassesReq{}
+
+message GetAllGoodClassesRes{
+  repeated GoodClass goodClasses = 1;
+}
+
+message AddGoodClassReq{
+  GoodClass goodClass = 1;
+}
+
+message AddGoodClassRes{}
 
 service Mvp {
   rpc AddGood(AddGoodReq) returns (AddGoodRes);
@@ -142,6 +127,60 @@ service Mvp {
   rpc DelOption(DelOptionReq) returns (DelOptionRes);
   rpc GetAllGoods(GetAllGoodsReq) returns (GetAllGoodsRes);
   rpc DelOptionClass(DelOptionClassReq) returns (DelOptionClassRes);
+  rpc GetAllGoodClasses(GetAllGoodClassesReq) returns (GetAllGoodClassesRes);
+  rpc AddGoodClass(AddGoodClassReq) returns (AddGoodClassRes);
+}
+
+enum Discount {
+  NONE = 0;           // 无
+  REBATE = 1;         // 打折
+  FULL_REDUCTION = 2; // 满减
+}
+
+message DiscountArray{
+  repeated Discount discounts = 1;
+}
+
+
+message Order {
+  repeated Good goods = 1;
+  int64 createdTime = 2;
+  map<int64, DiscountArray> DiscountsMap = 3;   // 用 0 表示整单折扣，大于 0 则是单品折扣
+}
+
+message GoodClass{
+  string name = 1;
+  repeated Good goods = 2;
+}
+
+message Good{
+  string name = 1;
+  string pictureStorePath = 2;
+  float price = 3;
+  repeated OptionClass optionClasses = 4;
+  repeated AttachGoodClass attachGoodClasses = 5;
+}
+
+message AttachGoodClass{
+  string name = 1;
+  repeated AttachGood attachGoods = 2;
+  repeated int32 selectOptionIndex = 3;
+}
+
+message AttachGood{
+  string name = 1;
+  string pictureStorePath = 2;
+  float price = 3;
+}
+
+message OptionClass {
+  string name = 1;
+  int32 selectOptionIndex = 2;
+  repeated Option options = 3;
+}
+
+message Option {
+  string name = 1;
 }
 
 

@@ -25,4 +25,10 @@ export default {
     }
     return result
   },
+  removeIndex(array,index) {
+    return array.slice(0, index).concat(array.slice(index + 1))
+  },
+  deepCopy(obj) {
+    return JSON.parse(JSON.stringify(obj))
+  }
 }

@@ -1,0 +1,1 @@
+go run ./service/mvp/main.go

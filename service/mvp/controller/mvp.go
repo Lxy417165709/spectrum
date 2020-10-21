@@ -9,6 +9,7 @@ import (
 	"spectrum/common/logger"
 	"spectrum/common/pb"
 	"spectrum/service/mvp/dao"
+	"spectrum/service/mvp/model"
 	"time"
 )
 
@@ -22,59 +23,59 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 	var res pb.AddGoodRes
 
 	// 1. 判断商品是否存在
-	good, err := dao.GoodDao.GetByName(req.Name)
+	good, err := dao.GoodDao.GetByName(req.Good.Name)
 	if err != nil {
 		logs.Error(err)
 		return nil, errors.New("Fail to finish GoodDao.GetByName")
 	}
 	if good != nil {
 		logs.Error(err)
-		return nil, ers.New(0, "商品(%s)已存在",good.Name)
+		return nil, ers.New(0, "商品(%s)已存在", good.Name)
 	}
 
 	// 2. 创建商品
 	if err := dao.GoodDao.Create(
-		req.Name,
-		float64(req.Price),
-		int(req.Type),
-		req.PictureStorePath,
+		req.Good.Name,
+		float64(req.Good.Price),
+		model.FlagOfNotAttachGood,
+		req.Good.PictureStorePath,
 	); err != nil {
 		logs.Error(err)
 		return nil, err
 	}
 
 	// 3. 获得商品
-	good, err = dao.GoodDao.GetByName(req.Name)
+	good, err = dao.GoodDao.GetByName(req.Good.Name)
 	if err != nil {
 		logs.Error(err)
 		return nil, errors.New("Fail to finish GoodDao.GetByName")
 	}
 
 	// 4. 为商品添加附属选项
-	for _, optionClassName := range req.OptionClassNames {
+	for _, optionClass := range req.Good.OptionClasses {
 
 		// 4.1 获得附属选项类
-		optionClass, err := dao.OptionClassDao.Get(optionClassName)
+		tbOptionClass, err := dao.OptionClassDao.Get(optionClass.Name)
 		if err != nil {
 			logger.Error("Fail to get option class",
-				zap.Any("optionClassName", optionClassName),
+				zap.Any("optionClassName", optionClass.Name),
 				zap.Any("req", req),
 				zap.Error(err))
 			return nil, ers.MysqlError
 		}
-		if optionClass == nil {
+		if tbOptionClass == nil {
 			logger.Error("Option class not exist",
-				zap.Any("optionClassName", optionClassName),
+				zap.Any("optionClassName", optionClass.Name),
 				zap.Any("req", req),
 				zap.Error(err))
 			return nil, err
 		}
 
 		// 4.2 执行添加操作
-		if err := dao.GoodOptionClassRecordDao.Create(int(good.ID), int(optionClass.ID)); err != nil {
+		if err := dao.GoodOptionClassRecordDao.Create(int(good.ID), int(tbOptionClass.ID)); err != nil {
 			logger.Error("Fail to finish GoodOptionClassRecordDao.Create",
 				zap.Any("goodID", good.ID),
-				zap.Any("optionClassID", optionClass.ID),
+				zap.Any("optionClassID", tbOptionClass.ID),
 				zap.Error(err))
 			return nil, err
 		}
@@ -391,23 +392,26 @@ func (MvpServer) AddOptionClass(ctx context.Context, req *pb.AddOptionClassReq) 
 	var res pb.AddOptionClassRes
 
 	// 0. 判断请求数据是否合法
-	if req.OptionClassName == "" {
+	if req.OptionClass == nil {
+		return nil, ers.New(0, "选项类为空")
+	}
+	if req.OptionClass.Name == "" {
 		return nil, ers.New(ers.CodeOfBlankOptionClassName, "选项类名为空")
 	}
-	if len(req.Options) == 0 {
+	if len(req.OptionClass.Options) == 0 {
 		return nil, ers.New(ers.CodeOfEmptyOption, "选项类中没有选项")
 	}
-	for index, optionName := range req.Options {
-		if optionName == "" {
+	for index, option := range req.OptionClass.Options {
+		if option.Name == "" {
 			return nil, ers.New(ers.CodeOfBlankOptionName, "第 %v 个选项名不能为空", index+1)
 		}
 	}
 
 	// 1. 判断选项类是否存在
-	optionClass, err := dao.OptionClassDao.Get(req.OptionClassName)
+	optionClass, err := dao.OptionClassDao.Get(req.OptionClass.Name)
 	if err != nil {
 		logger.Error("Fail to get option class",
-			zap.Any("optionClassName", req.OptionClassName),
+			zap.Any("optionClassName", req.OptionClass.Name),
 			zap.Any("req", req),
 			zap.Error(err))
 		return nil, ers.MysqlError
@@ -415,31 +419,29 @@ func (MvpServer) AddOptionClass(ctx context.Context, req *pb.AddOptionClassReq) 
 
 	// 2. 如果选项类不存在，则创建
 	if optionClass == nil {
-		if err := dao.OptionClassDao.Create(req.OptionClassName); err != nil {
+		if err := dao.OptionClassDao.Create(req.OptionClass.Name); err != nil {
 			logger.Error("Fail to create option class",
-				zap.Any("optionClassName", req.OptionClassName),
+				zap.Any("optionClassName", req.OptionClass.Name),
 				zap.Any("req", req),
 				zap.Error(err))
 			return nil, ers.MysqlError
 		}
 	}
-
-	// 3. 创建选项类
-	optionClass, err = dao.OptionClassDao.Get(req.OptionClassName)
+	optionClass, err = dao.OptionClassDao.Get(req.OptionClass.Name)
 	if err != nil {
 		logger.Error("Fail to get option class",
-			zap.Any("optionClassName", req.OptionClassName),
+			zap.Any("optionClassName", req.OptionClass.Name),
 			zap.Any("req", req),
 			zap.Error(err))
 		return nil, ers.MysqlError
 	}
 
 	// 4. 创建选项
-	for _, optionName := range req.Options {
-		if err := dao.OptionDao.Create(int(optionClass.ID), optionName); err != nil {
+	for _, option := range req.OptionClass.Options {
+		if err := dao.OptionDao.Create(int(optionClass.ID), option.Name); err != nil {
 			logger.Error("Fail to create option",
 				zap.Any("optionClassID", optionClass.ID),
-				zap.Any("optionName", optionName),
+				zap.Any("optionName", option.Name),
 				zap.Any("req", req),
 				zap.Error(err))
 			return nil, ers.MysqlError
@@ -526,6 +528,7 @@ func (MvpServer) GetAllGoods(ctx context.Context, req *pb.GetAllGoodsReq) (*pb.G
 				zap.Any("tableGood", good),
 				zap.Any("req", req),
 				zap.Error(err))
+			return nil, err
 		}
 		res.Goods = append(res.Goods, pbGood)
 	}
@@ -537,13 +540,93 @@ func (MvpServer) DelOptionClass(ctx context.Context, req *pb.DelOptionClassReq) 
 	logs.Info("DelOptionClass", ctx, req)
 	var res pb.DelOptionClassRes
 
-	// 1. 删除
-	if err := dao.OptionClassDao.DeleteByNames(req.OptionClassNames); err != nil {
+	// 1. 获取选项类名
+	optionClassNames := make([]string, 0)
+	for _, optionClass := range req.OptionClasses {
+		optionClassNames = append(optionClassNames, optionClass.Name)
+	}
+
+	// 2. 删除
+	if err := dao.OptionClassDao.DeleteByNames(optionClassNames); err != nil {
 		logger.Error("Fail to finish OptionClassDao.DeleteByName",
-			zap.Any("optionClassNames", req.OptionClassNames),
+			zap.Any("optionClassNames", optionClassNames),
 			zap.Any("req", req),
 			zap.Error(err))
 		return nil, err
+	}
+	return &res, nil
+}
+
+func (MvpServer) GetAllGoodClasses(ctx context.Context, req *pb.GetAllGoodClassesReq) (*pb.GetAllGoodClassesRes, error) {
+	logs.Info("GetAllGoodClasses", ctx, req)
+	var res pb.GetAllGoodClassesRes
+
+	// 1. 获得所有商品类
+	goodClasses, err := dao.GoodClassDao.GetAll()
+	if err != nil {
+		logger.Error("Fail to get all good classes",
+			zap.Any("req", req),
+			zap.Error(err))
+		return nil, err
+	}
+
+	// 2. 转化
+	for _, goodClass := range goodClasses {
+		pbGoodClass, err := formPbGoodClass(goodClass)
+		if err != nil {
+			logger.Error("Fail to form pb.goodClass",
+				zap.Any("tableGoodClass", goodClass),
+				zap.Any("req", req),
+				zap.Error(err))
+			return nil, err
+		}
+		res.GoodClasses = append(res.GoodClasses, pbGoodClass)
+	}
+
+	return &res, nil
+}
+
+func (MvpServer) AddGoodClass(ctx context.Context, req *pb.AddGoodClassReq) (*pb.AddGoodClassRes, error) {
+	logs.Info("AddGoodClass", ctx, req)
+
+	var res pb.AddGoodClassRes
+
+	// 1. 创建商品类
+	if err := dao.GoodClassDao.Create(req.GoodClass.Name); err != nil {
+		logger.Error("Fail to finish GoodClassDao.Create",
+			zap.Any("goodClassName", req.GoodClass.Name),
+			zap.Any("req", req),
+			zap.Error(err))
+		return nil, err
+	}
+
+	// 2. 获得商品类
+	goodClass, err := dao.GoodClassDao.Get(req.GoodClass.Name)
+	if err != nil {
+		logger.Error("Fail to finish GoodClassDao.Get",
+			zap.Any("goodClassName", req.GoodClass.Name),
+			zap.Any("req", req),
+			zap.Error(err))
+		return nil, err
+	}
+	if goodClass == nil {
+		logger.Warn("Fail to create good class",
+			zap.Any("goodClassName", req.GoodClass.Name),
+			zap.Any("req", req),
+			zap.Error(err))
+		return nil, nil
+	}
+
+	// 3. 更新商品
+	for _, good := range req.GoodClass.Goods {
+		if err := dao.GoodDao.UpdateGoodClassID(good.Name, int(goodClass.ID)); err != nil {
+			logger.Error("Fail to finish GoodDao.UpdateGoodClassID",
+				zap.String("goodClassName", req.GoodClass.Name),
+				zap.Uint("goodClassID", goodClass.ID),
+				zap.Any("req", req),
+				zap.Error(err))
+			return nil, err
+		}
 	}
 	return &res, nil
 }

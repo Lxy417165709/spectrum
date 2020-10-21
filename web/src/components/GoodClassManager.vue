@@ -2,43 +2,43 @@
 <template>
   <div>
     <el-table
-        ref="multipleTable"
-        :data="optionClasses"
-        style="width: 100%"
-        tooltip-effect="dark"
-        @selection-change="handleElTableSelectionChange"
+      ref="multipleTable"
+      :data="goodClasses"
+      style="width: 100%"
+      tooltip-effect="dark"
+      @selection-change="handleElTableSelectionChange"
     >
       <el-table-column
-          type="selection"
-          width="55">
+        type="selection"
+        width="55">
       </el-table-column>
-      <el-table-column label="选项类名" prop="className" show-overflow-tooltip>
+      <el-table-column label="商品类名"  show-overflow-tooltip>
         <template slot-scope="props">
           <el-input v-if="props.row.editing === true" v-model="props.row.name" size="mini"></el-input>
           <template v-else>{{ props.row.name }}</template>
         </template>
       </el-table-column>
-      <el-table-column label="选项名">
+      <el-table-column label="商品名">
         <template slot-scope="props">
-          <el-tag v-for="(option, optionIndex) in props.row.options" :key="optionIndex" closable
+          <el-tag v-for="(good, goodIndex) in props.row.goods" :key="goodIndex" closable
                   style="margin-right:2px" type="success"
-                  @close="delOption(props.row.editing,props.$index,optionIndex)">
+                  @close="delOption(props.row.editing,props.$index,goodIndex)">
             <template v-if="props.row.editing === true">
-              <el-input v-model="option.name" placeholder="请输入选项" size="mini">
+              <el-input v-model="good.name" placeholder="请输入选项" size="mini">
               </el-input>
             </template>
-            <template v-else>{{ option.name }}</template>
+            <template v-else>{{ good.name }}</template>
           </el-tag>
           <template v-if="props.row.editing === true">
-            <el-button circle icon="el-icon-plus" type="primary" @click="createOption(props.$index)"></el-button>
-            <el-button circle icon="el-icon-check" type="success" @click="addOption(props.$index)"></el-button>
+            <el-button circle icon="el-icon-plus" type="primary" @click="createGood(props.$index)"></el-button>
+            <el-button circle icon="el-icon-check" type="success" @click="addGood(props.$index)"></el-button>
           </template>
         </template>
       </el-table-column>
     </el-table>
     <div style="padding-top: 20px">
-      <el-button v-if="selectOptionClasses.length === 0" plain type="primary" @click="createOptionClass">添加选项类</el-button>
-      <el-button v-else plain type="danger" @click="delOptionClasses">删除选项类</el-button>
+      <el-button v-if="selectOptionClasses.length === 0" plain type="primary" @click="createGoodClass">添加商品类</el-button>
+      <el-button v-else plain type="danger" @click="delGoodClasses">删除商品类</el-button>
     </div>
   </div>
 </template>
@@ -53,44 +53,44 @@ export default {
   name: "OptionClassManager",
   data() {
     return {
-      optionClasses: [],
+      goodClasses: [],
       selectOptionClasses: [],
     }
   },
   async mounted() {
-    await init.globalOptionClasses()
-    this.optionClasses = global.optionClasses
-    for (let i = 0; i < this.optionClasses.length; i++) {
-      this.optionClasses[i].edit = false
+    await init.globalGoodClasses()
+    this.goodClasses = global.goodClasses
+    for (let i = 0; i < this.goodClasses.length; i++) {
+      this.goodClasses[i].edit = false
     }
   },
   methods: {
     handleElTableSelectionChange(selectOptionClasses) {
       this.selectOptionClasses = selectOptionClasses;
     },
-    createOption(index) {
-      this.optionClasses[index].options.push({
+    createGood(index) {
+      this.goodClasses[index].goods.push({
         name: ""
       })
     },
     handleSelectionChange(val) {
       this.selections = val
     },
-    createOptionClass() {
-      this.optionClasses.push({
+    createGoodClass() {
+      this.goodClasses.push({
         name: "",
-        options: [],
+        goods: [],
         editing: true,
       })
     },
-    addOption(index) {
+    addGood(index) {
       console.log(
-          "addOption_parameters",
-          "index:", index,
-          "optionClass:", this.optionClasses[index]
+        "addGood_parameters",
+        "index:", index,
+        "goodClass:", this.goodClasses[index]
       )
-      let model = utils.getRequestModel("mvp", "AddOptionClass", {
-        optionClass: this.optionClasses[index]
+      let model = utils.getRequestModel("mvp", "AddGoodClass", {
+        goodClass: this.goodClasses[index]
       })
       utils.sendRequestModel(model).then(res => {
         if (!utils.hasRequestSuccess(res)) {
@@ -98,7 +98,7 @@ export default {
           return
         }
         this.$message.success(res.data.msg)
-        this.optionClasses[index].editing = false
+        this.goodClasses[index].editing = false
       })
     },
     delOptionClasses() {
@@ -117,15 +117,15 @@ export default {
     },
     delOption(editing, optionClassIndex, optionIndex) {
       console.log(
-          "delOption_parameters",
-          "editing:", editing,
-          "optionClassIndex:", optionClassIndex,
-          "optionIndex:", optionIndex
+        "delOption_parameters",
+        "editing:", editing,
+        "optionClassIndex:", optionClassIndex,
+        "optionIndex:", optionIndex
       )
       if (editing === true) {
         this.optionClasses[optionClassIndex].options = utils.removeIndex(
-            this.optionClasses[optionClassIndex].options,
-            optionIndex
+          this.optionClasses[optionClassIndex].options,
+          optionIndex
         )
         return
       }
@@ -141,8 +141,8 @@ export default {
         this.$message.success(res.data.msg)
         await init.globalOptionClasses()
         this.optionClasses[optionClassIndex].options = utils.removeIndex(
-            this.optionClasses[optionClassIndex].options,
-            optionIndex
+          this.optionClasses[optionClassIndex].options,
+          optionIndex
         )
       })
     },

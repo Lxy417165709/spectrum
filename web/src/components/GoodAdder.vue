@@ -19,20 +19,30 @@
     <el-form-item label="价格">
       <el-input v-model="form.price"></el-input>
     </el-form-item>
-    <el-form-item label="单卖品">
-      <el-switch v-model="form.type"></el-switch>
-    </el-form-item>
-    <el-form-item v-show="form.type && optionClassNames.length > 0" label="附属选项">
-      <el-select v-model="form.selectOptionClass" placeholder="请选择附属选项">
-        <template v-for="gp in optionClassNames">
-          <el-option :label="gp" :value="gp"></el-option>
-        </template>
+
+    <el-form-item label="类别">
+      <el-select autocomplete="on" v-model="form.goodClassName" :filter-method="test" filterable placeholder="请选择">
+        <el-option
+          v-for="(goodClass,index) in this.goodClasses"
+          :key="index"
+          :label="goodClass.name"
+          :value="goodClass.name">
+        </el-option>
       </el-select>
-      <el-button type="primary" @click="addOption">添加</el-button>
     </el-form-item>
-    <el-form-item v-show="form.type && form.selectOptionClasses.length > 0" label="已选选项">
-      <el-tag v-for="soc in form.selectOptionClasses" closable type="success" @close="delSelectOption(soc)">
-        {{ soc }}
+
+<!--    <el-form-item label="单卖品">-->
+<!--      <el-switch v-model="form.type"></el-switch>-->
+<!--    </el-form-item>-->
+    <el-form-item v-show="form.type && optionClasses.length > 0" label="附属选项">
+      <el-select v-model="selectOptionClassName" placeholder="请选择附属选项">
+          <el-option :label="optionClass.name" :value="optionClass.name" v-for="(optionClass,index) in optionClasses"></el-option>
+      </el-select>
+      <el-button type="primary" @click="addOptionClass">添加</el-button>
+    </el-form-item>
+    <el-form-item v-show="form.type && selectOptionClasses.length > 0" label="已选选项">
+      <el-tag v-for="(selectOptionClass,index) in selectOptionClasses" closable type="success" @close="delSelectOption(index)" :key="index">
+        {{ selectOptionClass.name }}
       </el-tag>
     </el-form-item>
     <el-form-item>
@@ -52,28 +62,40 @@ export default {
   name: 'GoodAdder',
   async mounted() {
     await init.globalOptionClasses()
-    for (let i = 0; i < global.optionClasses.length; i++) {
-      this.optionClassNames.push(global.optionClasses[i].className)
-    }
-    this.setDefaultSelectOption()
+    await init.globalGoodClasses()
+    // for (let i = 0; i < global.optionClasses.length; i++) {
+    //   this.optionClassNames.push(global.optionClasses[i].className)
+    // }
+    // this.setDefaultSelectOption()
+    this.optionClasses = global.optionClasses
+    this.goodClasses = global.goodClasses
   },
   data() {
     return {
       form: {
-        selectOptionClass: '',
-        goodOptionClasses: [],
-        selectOptionClasses: [],
         price: '',
         name: '',
         type: true,
+        goodClassName: ""
       },
       dialogImageUrl: '',
       dialogVisible: false,
-      optionClassNames: [],
-      pictureStorePath:'',
+
+      pictureStorePath: '',
+
+
+
+
+      optionClasses: [],
+      goodClasses: [],
+      selectOptionClasses: [],
+      selectOptionClassName: "",
     }
   },
   methods: {
+    test(val) {
+      console.log(val,this.goodClasses[this.goodClasses.length-1].name)
+    },
     setDefaultSelectOption() {
       if (this.optionClassNames.length !== 0) {
         this.form.selectOptionClass = this.optionClassNames[0]
@@ -106,8 +128,8 @@ export default {
       let model = utils.getRequestModel("mvp", "AddGood", {
         name: this.form.name,
         price: parseFloat(this.form.price),
-        type: this.form.type === true? 0 : 1,
-        pictureStorePath:this.form.pictureStorePath,
+        type: this.form.type === true ? 0 : 1,
+        pictureStorePath: this.form.pictureStorePath,
         optionClassNames: this.form.selectOptionClasses,
       })
       utils.sendRequestModel(model).then(res => {
@@ -118,10 +140,12 @@ export default {
         this.$message.success(res.data.msg)
       })
     },
-    addOption() {
-      this.form.selectOptionClasses.push(this.form.selectOptionClass)
-      this.optionClassNames = utils.removeElement(this.optionClassNames, this.form.selectOptionClass)
-      this.setDefaultSelectOption()
+    addOptionClass() {
+      this.selectOptionClasses.push({
+        name:this.selectOptionClassName,
+      })
+      // this.optionClasses = utils.removeElement(this.optionClasses,this.selectOptionClass)
+      // this.setDefaultSelectOption()
     },
   }
 }

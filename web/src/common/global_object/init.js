@@ -24,5 +24,18 @@ export default{
       global.goods = res.data.data.goods
       console.log("global_goods",global.goods)
     })
+  },
+  async globalGoodClasses() {
+    let model = utils.getRequestModel("mvp", "GetAllGoodClasses", {})
+    await utils.sendRequestModel(model).then(res => {
+      if (!utils.hasRequestSuccess(res)) {
+        console.log(res.data.err)
+        return
+      }
+
+      global.goodClasses = res.data.data.goodClasses
+      console.log("global_good_classes",global.goodClasses)
+    })
   }
+
 }

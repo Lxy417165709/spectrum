@@ -31,6 +31,8 @@ type MvpClient interface {
 	DelOption(ctx context.Context, in *DelOptionReq, opts ...grpc.CallOption) (*DelOptionRes, error)
 	GetAllGoods(ctx context.Context, in *GetAllGoodsReq, opts ...grpc.CallOption) (*GetAllGoodsRes, error)
 	DelOptionClass(ctx context.Context, in *DelOptionClassReq, opts ...grpc.CallOption) (*DelOptionClassRes, error)
+	GetAllGoodClasses(ctx context.Context, in *GetAllGoodClassesReq, opts ...grpc.CallOption) (*GetAllGoodClassesRes, error)
+	AddGoodClass(ctx context.Context, in *AddGoodClassReq, opts ...grpc.CallOption) (*AddGoodClassRes, error)
 }
 
 type mvpClient struct {
@@ -167,6 +169,24 @@ func (c *mvpClient) DelOptionClass(ctx context.Context, in *DelOptionClassReq, o
 	return out, nil
 }
 
+func (c *mvpClient) GetAllGoodClasses(ctx context.Context, in *GetAllGoodClassesReq, opts ...grpc.CallOption) (*GetAllGoodClassesRes, error) {
+	out := new(GetAllGoodClassesRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/GetAllGoodClasses", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *mvpClient) AddGoodClass(ctx context.Context, in *AddGoodClassReq, opts ...grpc.CallOption) (*AddGoodClassRes, error) {
+	out := new(AddGoodClassRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/AddGoodClass", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MvpServer is the server API for Mvp service.
 // All implementations must embed UnimplementedMvpServer
 // for forward compatibility
@@ -185,6 +205,8 @@ type MvpServer interface {
 	DelOption(context.Context, *DelOptionReq) (*DelOptionRes, error)
 	GetAllGoods(context.Context, *GetAllGoodsReq) (*GetAllGoodsRes, error)
 	DelOptionClass(context.Context, *DelOptionClassReq) (*DelOptionClassRes, error)
+	GetAllGoodClasses(context.Context, *GetAllGoodClassesReq) (*GetAllGoodClassesRes, error)
+	AddGoodClass(context.Context, *AddGoodClassReq) (*AddGoodClassRes, error)
 	mustEmbedUnimplementedMvpServer()
 }
 
@@ -233,6 +255,12 @@ func (UnimplementedMvpServer) GetAllGoods(context.Context, *GetAllGoodsReq) (*Ge
 }
 func (UnimplementedMvpServer) DelOptionClass(context.Context, *DelOptionClassReq) (*DelOptionClassRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DelOptionClass not implemented")
+}
+func (UnimplementedMvpServer) GetAllGoodClasses(context.Context, *GetAllGoodClassesReq) (*GetAllGoodClassesRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllGoodClasses not implemented")
+}
+func (UnimplementedMvpServer) AddGoodClass(context.Context, *AddGoodClassReq) (*AddGoodClassRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddGoodClass not implemented")
 }
 func (UnimplementedMvpServer) mustEmbedUnimplementedMvpServer() {}
 
@@ -499,6 +527,42 @@ func _Mvp_DelOptionClass_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Mvp_GetAllGoodClasses_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllGoodClassesReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).GetAllGoodClasses(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/GetAllGoodClasses",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).GetAllGoodClasses(ctx, req.(*GetAllGoodClassesReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Mvp_AddGoodClass_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddGoodClassReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).AddGoodClass(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/AddGoodClass",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).AddGoodClass(ctx, req.(*AddGoodClassReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Mvp_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.Mvp",
 	HandlerType: (*MvpServer)(nil),
@@ -558,6 +622,14 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DelOptionClass",
 			Handler:    _Mvp_DelOptionClass_Handler,
+		},
+		{
+			MethodName: "GetAllGoodClasses",
+			Handler:    _Mvp_GetAllGoodClasses_Handler,
+		},
+		{
+			MethodName: "AddGoodClass",
+			Handler:    _Mvp_AddGoodClass_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

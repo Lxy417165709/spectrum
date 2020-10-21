@@ -30,6 +30,40 @@ func nextThingID() {
 }
 
 // ------------------------------------- 转换相关 -------------------------------------
+func formPbGoodClass(goodClass *model.GoodClass) (*pb.GoodClass, error) {
+	if goodClass == nil {
+		return nil, nil
+	}
+
+	// 1. 形成初始字段
+	pbGoodClass := &pb.GoodClass{
+		Name: goodClass.Name,
+	}
+
+	// 2. 获得该类的商品
+	goods, err := dao.GoodDao.GetByGoodClassID(int(goodClass.ID))
+	if err != nil {
+		logger.Error("Fail to finish GoodDao.GetByGoodClassID",
+			zap.Any("goodID", goodClass.ID),
+			zap.Error(err))
+		return nil, err
+	}
+
+	// 3. 转换
+	for _, good := range goods {
+		pbGood, err := formPbGood(good)
+		if err != nil {
+			logger.Error("Fail to form pb.Good",
+				zap.Any("tableGood", good),
+				zap.Error(err))
+			return nil, err
+		}
+		pbGoodClass.Goods = append(pbGoodClass.Goods, pbGood)
+	}
+
+	return pbGoodClass, nil
+}
+
 func formPbGood(good *model.Good) (*pb.Good, error) {
 	if good == nil {
 		return nil, nil
@@ -38,7 +72,6 @@ func formPbGood(good *model.Good) (*pb.Good, error) {
 	// 1. 形成初始字段
 	pbGood := &pb.Good{
 		Name:             good.Name,
-		Type:             int64(good.Type),
 		Price:            float32(good.Price),
 		PictureStorePath: good.PictureStorePath,
 	}
@@ -82,13 +115,13 @@ func formPbOptionClass(optionClass *model.OptionClass) (*pb.OptionClass, error) 
 		return nil, nil
 	}
 
-	// 0. 初始化 pb.OptionClass
+	// 1. 初始化
 	pbOptionClass := &pb.OptionClass{
-		ClassName:                optionClass.Name,
-		DefaultSelectOptionIndex: int32(optionClass.DefaultSelectOptionIndex),
+		Name:              optionClass.Name,
+		SelectOptionIndex: int32(optionClass.DefaultSelectOptionIndex),
 	}
 
-	// 1. 获得选项
+	// 2. 形成选项类
 	options, err := dao.OptionDao.GetByOptionClassID(int(optionClass.ID))
 	if err != nil {
 		logger.Error("Fail to get all options",
@@ -96,13 +129,13 @@ func formPbOptionClass(optionClass *model.OptionClass) (*pb.OptionClass, error) 
 		return nil, err
 	}
 
-	// 2. 获得选项名
+	// 3. 形成选项
 	var optionNames []string
 	for _, option := range options {
+		pbOptionClass.Options = append(pbOptionClass.Options, &pb.Option{
+			Name: option.Name,
+		})
 		optionNames = append(optionNames, option.Name)
 	}
-
-	// 3. 更新 pb.OptionClass
-	pbOptionClass.OptionNames = optionNames
 	return pbOptionClass, nil
 }

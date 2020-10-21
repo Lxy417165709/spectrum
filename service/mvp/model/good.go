@@ -26,6 +26,7 @@ type Good struct {
 	Price            float64 `json:"price"`
 	Type             int     `json:"type"`
 	PictureStorePath string  `json:"picture_store_path"`
+	ClassID          int     `json:"class_id"`
 }
 
 func (Good) TableName() string {
@@ -49,4 +50,13 @@ type GoodOptionClassRecord struct {
 
 func (GoodOptionClassRecord) TableName() string {
 	return "good_option_class_record"
+}
+
+type GoodClass struct {
+	gorm.Model
+	Name string `json:"name"`
+}
+
+func (GoodClass) TableName() string {
+	return "good_class"
 }
