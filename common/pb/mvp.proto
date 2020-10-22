@@ -6,50 +6,52 @@ message AddGoodReq {
   Good good = 1;
   string goodClassName = 2;
 }
-
 message AddGoodRes {}
+
+
 
 message SellGoodReq {
   string goodName = 1;
   float sellPrice = 2;
 }
-
 message SellGoodRes {}
+
+
 
 message AddBilliardDeskReq {
   string billiardDeskName = 1;
 }
-
 message AddBilliardDeskRes {}
+
+
 
 message BeginPlayBilliardReq {
   string billiardDeskName = 1;
   int64 beginPlayTimestamp = 2;
 }
-
 message BeginPlayBilliardRes {}
+
+
 
 message StopPlayBilliardReq {
   string billiardDeskName = 1;
   int64 beginPlayTimestamp = 2;
   int64  stopPlayTimestamp = 3;
 }
-
 message StopPlayBilliardRes {}
 
 
 message OrderReq{
   Order order = 1;
 }
-
 message OrderRes{
   int64 orderID = 1;
 }
 
+
 message GetOrderGoodsReq{
   int64 orderID = 1;
 }
-
 message GetOrderGoodsRes{
   repeated Good goods = 1;
 }
@@ -58,66 +60,63 @@ message GetOrderGoodsRes{
 message AddGoodTypeReq {
   string typeName = 1;
 }
-
 message AddGoodTypeRes {}
+
 
 message CheckoutReq {
   int64 orderID = 1;
 }
-
 message CheckoutRes{
   float price = 1;
 }
 
+
 message AddOptionClassReq{
   OptionClass optionClass = 1;
 }
-
 message AddOptionClassRes{}
 
-message GetAllOptionClassesReq{}
 
+message GetAllOptionClassesReq{}
 message GetAllOptionClassesRes{
   repeated OptionClass optionClasses = 1;
 }
+
 
 message DelOptionReq {
   string className = 1;
   string optionName = 2;
 }
-
 message DelOptionRes {}
 
 
 message GetAllGoodsReq{}
-
 message GetAllGoodsRes{
   repeated Good goods = 1;
 }
 
+
 message DelOptionClassReq{
   repeated OptionClass OptionClasses = 1;
 }
-
 message DelOptionClassRes{}
+
 
 message DelGoodClassReq{
   repeated GoodClass goodClasses = 1;
 }
-
 message DelGoodClassRes{}
 
 
 message GetAllGoodClassesReq{}
-
 message GetAllGoodClassesRes{
   repeated GoodClass goodClasses = 1;
 }
 
+
 message AddGoodClassReq{
   GoodClass goodClass = 1;
 }
-
 message AddGoodClassRes{}
 
 service Mvp {
@@ -140,6 +139,8 @@ service Mvp {
   rpc DelGoodClass(DelGoodClassReq) returns (DelGoodClassRes);
 }
 
+
+// ------------------------- 枚举 -------------------------
 enum Discount {
   NONE = 0;           // 无
   REBATE = 1;         // 打折
@@ -152,35 +153,6 @@ enum ClassType {
   Attach = 1; // 附属品类
 }
 
-message DiscountArray{
-  repeated Discount discounts = 1;
-}
-
-message Order {
-  repeated Good goods = 1;
-  int64 createdTime = 2;
-  //  map<string, DiscountArray> discountsMap = 3;   // 用 0 表示整单折扣，大于 0 则是单品折扣
-}
-
-
-message Good{
-  string name = 1;
-  string pictureStorePath = 2;
-  float price = 3;
-  repeated OptionClass optionClasses = 4;
-  repeated GoodClass attachGoodClasses = 5;
-}
-
-message Option {
-  string name = 1;
-}
-
-
-message AttachGood{
-  string name = 1;
-  string pictureStorePath = 2;
-  float price = 3;
-}
 
 // ---------------------- class 相关 ----------------------
 message OptionClass {
@@ -195,4 +167,35 @@ message GoodClass{
   ClassType classType = 2;
   repeated Good goods = 3;
   repeated string selectGoodNames = 4;
+}
+
+
+// ---------------------- instance 相关 ----------------------
+message Order {
+  repeated Good goods = 1;
+  int64 createdTime = 2;
+  //  map<string, DiscountArray> discountsMap = 3;   // 用 0 表示整单折扣，大于 0 则是单品折扣
+}
+
+message Good{
+  string name = 1;
+  string pictureStorePath = 2;
+  float price = 3;
+  repeated OptionClass optionClasses = 4;
+  repeated GoodClass attachGoodClasses = 5;
+}
+
+message AttachGood{
+  string name = 1;
+  string pictureStorePath = 2;
+  float price = 3;
+}
+
+message Option {
+  string name = 1;
+}
+
+// --------------------------- 其他 -------------------------
+message DiscountArray{
+  repeated Discount discounts = 1;
 }
