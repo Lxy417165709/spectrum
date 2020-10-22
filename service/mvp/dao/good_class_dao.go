@@ -43,14 +43,16 @@ func (goodClassDao) GetAll() ([]*model.GoodClass, error) {
 	return goodClasses, nil
 }
 
-func (goodClassDao) Create(className string) error {
+func (goodClassDao) Create(className string,classType int) error {
 	createTableWhenNotExist(&model.GoodClass{})
 	db := mainDB.Create(&model.GoodClass{
 		Name: className,
+		ClassType : classType,
 	})
 	if err := db.Error; err != nil {
 		logger.Error("Fail to create good class",
 			zap.Any("className", className),
+			zap.Any("classType", classType),
 			zap.Error(err))
 		return err
 	}

@@ -12,10 +12,21 @@
         type="selection"
         width="55">
       </el-table-column>
-      <el-table-column label="商品类名"  show-overflow-tooltip>
+      <el-table-column label="商品类名" show-overflow-tooltip>
         <template slot-scope="props">
           <el-input v-if="props.row.editing === true" v-model="props.row.name" size="mini"></el-input>
           <template v-else>{{ props.row.name }}</template>
+        </template>
+      </el-table-column>
+      <el-table-column label="类型" show-overflow-tooltip>
+        <template slot-scope="props">
+          <template v-if="props.row.editing === true">
+            <el-select v-model="props.row.classType" size="mini">
+              <el-option v-for="(goodClassType,index) in goodClassTypes" :key="index"
+                         :label="goodClassType.name" :value="goodClassType.flag"></el-option>
+            </el-select>
+          </template>
+          <template v-else>{{ getGoodClassName(props.row.classType) }}</template>
         </template>
       </el-table-column>
       <el-table-column label="商品名">
@@ -55,6 +66,7 @@ export default {
     return {
       goodClasses: [],
       selectGoodClasses: [],
+      goodClassTypes: [],
     }
   },
   async mounted() {
@@ -63,8 +75,12 @@ export default {
     for (let i = 0; i < this.goodClasses.length; i++) {
       this.goodClasses[i].edit = false
     }
+    this.goodClassTypes = global.goodClassTypes
   },
   methods: {
+    getGoodClassName(classType) {
+      return utils.getGoodClassName(classType)
+    },
     handleElTableSelectionChange(classes) {
       this.selectGoodClasses = classes;
     },
@@ -81,6 +97,7 @@ export default {
         name: "",
         goods: [],
         editing: true,
+        classType: 0,
       })
     },
     addGood(index) {

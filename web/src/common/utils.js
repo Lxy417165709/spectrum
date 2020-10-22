@@ -39,5 +39,16 @@ export default {
   },
   deepCopy(obj) {
     return JSON.parse(JSON.stringify(obj))
+  },
+  getGoodClassName(classType) {
+    switch (classType){
+      case undefined:
+        return "单品"
+      case 0:
+        return "单品"
+      case 1:
+        return "附属品"
+    }
+    return "未定义"
   }
 }

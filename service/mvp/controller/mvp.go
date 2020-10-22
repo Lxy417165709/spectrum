@@ -9,7 +9,6 @@ import (
 	"spectrum/common/logger"
 	"spectrum/common/pb"
 	"spectrum/service/mvp/dao"
-	"spectrum/service/mvp/model"
 	"time"
 )
 
@@ -43,12 +42,10 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 		return nil, err
 	}
 
-
 	// 3. 创建商品
 	if err := dao.GoodDao.Create(
 		req.Good.Name,
 		float64(req.Good.Price),
-		model.FlagOfNotAttachGood,
 		req.Good.PictureStorePath,
 		int(goodClass.ID),
 	); err != nil {
@@ -65,7 +62,6 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 
 	// 5. 为商品添加附属选项
 	for _, optionClass := range req.Good.OptionClasses {
-
 		// 5.1 获得附属选项类
 		tbOptionClass, err := dao.OptionClassDao.Get(optionClass.Name)
 		if err != nil {
@@ -88,6 +84,36 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 			logger.Error("Fail to finish GoodOptionClassRecordDao.Create",
 				zap.Any("goodID", good.ID),
 				zap.Any("optionClassID", tbOptionClass.ID),
+				zap.Error(err))
+			return nil, err
+		}
+	}
+
+	// 6. 为商品添加附属商品类
+	for _, attachGoodClass := range req.Good.AttachGoodClasses {
+		// 6.1 获得附属附属商品类
+		tbAttachGoodClass, err := dao.GoodClassDao.Get(attachGoodClass.Name)
+		if err != nil {
+			logger.Error("Fail to finish GoodClassDao.Get",
+				zap.Any("attachGoodClassName", attachGoodClass.Name),
+				zap.Any("req", req),
+				zap.Error(err))
+			return nil, ers.MysqlError
+		}
+		if tbAttachGoodClass == nil {
+			logger.Error("Attach good class not exist",
+				zap.Any("attachGoodClassName", attachGoodClass.Name),
+				zap.Any("req", req),
+				zap.Error(err))
+			return nil, err
+		}
+
+		// 6.2 执行添加操作
+		if err := dao.GoodAttachClassRecordDao.Create(int(good.ID), int(tbAttachGoodClass.ID)); err != nil {
+			logger.Error("Fail to finish GoodOptionClassRecordDao.Create",
+				zap.Any("goodID", good.ID),
+				zap.Any("attachGoodClassName", attachGoodClass.Name),
+				zap.Any("req", req),
 				zap.Error(err))
 			return nil, err
 		}
@@ -604,9 +630,10 @@ func (MvpServer) AddGoodClass(ctx context.Context, req *pb.AddGoodClassReq) (*pb
 	var res pb.AddGoodClassRes
 
 	// 1. 创建商品类
-	if err := dao.GoodClassDao.Create(req.GoodClass.Name); err != nil {
+	if err := dao.GoodClassDao.Create(req.GoodClass.Name, int(req.GoodClass.ClassType)); err != nil {
 		logger.Error("Fail to finish GoodClassDao.Create",
-			zap.Any("goodClassName", req.GoodClass.Name),
+			zap.String("goodClassName", req.GoodClass.Name),
+			zap.Any("goodClassType", req.GoodClass.ClassType),
 			zap.Any("req", req),
 			zap.Error(err))
 		return nil, err
@@ -642,7 +669,6 @@ func (MvpServer) AddGoodClass(ctx context.Context, req *pb.AddGoodClassReq) (*pb
 	}
 	return &res, nil
 }
-
 
 func (MvpServer) DelGoodClass(ctx context.Context, req *pb.DelGoodClassReq) (*pb.DelGoodClassRes, error) {
 	logs.Info("DelGoodClass", ctx, req)

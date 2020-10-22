@@ -14,19 +14,18 @@
         {{ good.price }}
       </el-form-item>
       <template v-for="optionClass in good.optionClasses">
-        <el-form-item :label="optionClass.className">
-          <el-radio-group v-model="optionClass.defaultSelectOptionIndex" v-for="(optionName,index) in optionClass.optionNames">
-            <el-radio :label="index+1" style="padding-right:10px;">{{ optionName}}</el-radio>
+        <el-form-item :label="optionClass.name">
+          <el-radio-group v-for="(option,index) in optionClass.options" v-model="optionClass.selectOptionIndex" :key="index">
+            <el-radio :label="index+1" style="padding-right:10px;">{{ option.name }}</el-radio>
           </el-radio-group>
         </el-form-item>
       </template>
-      <el-form-item >
+      <el-form-item>
         <el-button type="primary" @click="order">点单</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
-
 <script>
 /* eslint-disable */
 
@@ -38,14 +37,12 @@ export default {
     good: Object
   },
   data() {
-    return {
-    }
+    return {}
   },
   methods: {
     order() {
-      this.$emit("passGoodToParent",this.good)
+      this.$emit("passGoodToParent", this.good)
       this.$message.success("点单成功")
-      // console.log(this.good.optionClasses[0].defaultSelectOptionIndex)
     }
   }
 }

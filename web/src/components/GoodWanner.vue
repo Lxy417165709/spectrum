@@ -1,7 +1,8 @@
+<!-- eslint-disable -->
 <template>
   <el-container style="height: 800px; border: 1px solid #eee">
     <el-aside width="200px">
-      <el-menu @click="handleClick">
+      <el-menu>
         <el-submenu v-for="(goodClass,goodClassIndex) in goodClasses" :key="goodClassIndex" :index="goodClass.name">
           <template slot="title"><i class="el-icon-message"></i><span
             @click="addTab(goodClass)">{{ goodClass.name }}</span></template>
@@ -10,21 +11,57 @@
     </el-aside>
     <el-main>
       <el-tabs>
-        <el-tab-pane v-for="unit in units" :label="unit.goodClassName">
-          <component :is="unit.component" :goods="unit.goods"></component>
+        <el-tab-pane v-for="(unit,index) in units" :label="unit.goodClassName" :key="index">
+          <component :is="unit.component" :goods="unit.goods" @passGoodToParent="receiveChildGood"></component>
         </el-tab-pane>
       </el-tabs>
     </el-main>
+    <el-drawer
+      :visible.sync="drawer"
+      direction="rtl"
+      title="当前订单">
+      <div style="width: 100%; border:none;max-height: 400px;overflow:scroll; padding: 0">
+        <el-collapse accordion>
+          <el-collapse-item v-for="(orderGoodUnit,index) in orderGoodUnits"
+                            :key="index" style="padding-left: 10px;position: relative">
+            <template slot="title">
+              <span>{{(index+1) + '. ' + orderGoodUnit.good.name}}</span>
+              <el-button @click.stop="delGood(index)" size="mini" circle icon="el-icon-close" type="danger" style="position: absolute;right: 35px"></el-button>
+            </template>
+
+            <el-collapse accordion>
+              <el-collapse-item name="1" style="padding-left: 20px;" title="商品详情">
+                <component :is="orderGoodUnit.detailComponent" :good="orderGoodUnit.good"></component>
+              </el-collapse-item>
+              <el-collapse-item name="2" style="padding-left: 20px;" title="折扣处理">
+                <Discounter></Discounter>
+              </el-collapse-item>
+            </el-collapse>
+          </el-collapse-item>
+        </el-collapse>
+      </div>
+      <el-form label-width="80px" style="width: 100%; margin-top:20px">
+        <Discounter></Discounter>
+        <el-form-item>
+          <el-button>确定</el-button>
+        </el-form-item>
+      </el-form>
+
+    </el-drawer>
+    <el-button style="position:absolute;bottom:100px;left:50px" type="primary" @click="drawer=true">打开当前订单</el-button>
   </el-container>
 </template>
 <script>
-
+/* eslint-disable */
 import GoodShower from "./GoodShower";
 import utils from "../common/utils";
 import init from "../common/global_object/init";
 import global from "../common/global_object/global";
+import GoodEditor from "./GoodEditor";
+import Discounter from "./Discounter";
 
 export default {
+  components: {Discounter},
   async mounted() {
     await init.globalGoodClasses()
     this.goodClasses = global.goodClasses
@@ -33,28 +70,40 @@ export default {
     return {
       isCollapse: true,
       goodClasses: [],
-      units: []
+      units: [],
+      goodEditorUnits: [],
+      orderGoodUnits: [],
+      drawer: false,
     };
   },
   methods: {
-    addTab(goodClass) {
-      this.units.push(
-        {
-          goodClassName: goodClass.name,
-          component: GoodShower,
-          goods: utils.deepCopy(goodClass.goods)
+    receiveChildGood(good) {
+      this.orderGoodUnits.push({
+        detailComponent: GoodEditor,
+        good: utils.deepCopy(good)// 深拷贝
+      })
+    },
+    delGood(index) {
+      for (let i=0;i<this.units.length;i++){
+        for (let t=0;t<this.units[i].goods.length;t++){
+          if (this.units[i].goods[t].name === this.orderGoodUnits[index].good.name){
+            this.units[i].goods[t].count--
+            break
+          }
         }
-      )
+      }
+      this.orderGoodUnits = utils.removeIndex(this.orderGoodUnits,index)
     },
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath);
+    addTab(goodClass) {
+      for (let i = 0; i < goodClass.goods.length; i++) {
+        goodClass.goods[i].count = 0 // 添加 count 字段，这样子组件才能根据 count 进行响应
+      }
+      this.units.push({
+        goodClassName: goodClass.name,
+        component: GoodShower,
+        goods: utils.deepCopy(goodClass.goods)
+      })
     },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
-    },
-    handleClick() {
-      console.log(111)
-    }
   }
 }
 </script>

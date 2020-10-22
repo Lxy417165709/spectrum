@@ -38,6 +38,7 @@ func formPbGoodClass(goodClass *model.GoodClass) (*pb.GoodClass, error) {
 	// 1. 形成初始字段
 	pbGoodClass := &pb.GoodClass{
 		Name: goodClass.Name,
+		ClassType: pb.ClassType(goodClass.ClassType),
 	}
 
 	// 2. 获得该类的商品

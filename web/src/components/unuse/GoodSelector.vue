@@ -62,10 +62,10 @@
 
 <script>
 
-import init from "../common/global_object/init"
-import global from "../common/global_object/global"
+import init from "../../common/global_object/init"
+import global from "../../common/global_object/global"
 import GoodOrder from "./GoodOrder";
-import utils from "../common/utils";
+import utils from "../../common/utils";
 
 
 export default {

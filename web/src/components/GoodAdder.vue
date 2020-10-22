@@ -2,7 +2,7 @@
 
 
 <template>
-  <el-form ref="form" :model="form" label-width="80px">
+  <el-form ref="form" :model="form" label-width="120px">
     <el-form-item label="照片">
       <el-upload
         :on-preview="handlePictureCardPreview"
@@ -20,31 +20,58 @@
       <el-input v-model="form.price"></el-input>
     </el-form-item>
 
-    <el-form-item label="类别">
-      <el-select autocomplete="on" v-model="form.goodClassName" filterable placeholder="请选择">
-        <el-option
-          v-for="(goodClass,index) in this.goodClasses"
-          :key="index"
-          :label="goodClass.name"
-          :value="goodClass.name">
-        </el-option>
-      </el-select>
+
+
+    <el-form-item label="附属品">
+      <el-switch v-model="isAttachGood"></el-switch>
     </el-form-item>
 
-<!--    <el-form-item label="单卖品">-->
-<!--      <el-switch v-model="form.type"></el-switch>-->
-<!--    </el-form-item>-->
-    <el-form-item v-show="form.type && optionClasses.length > 0" label="附属选项">
-      <el-select v-model="selectOptionClassName" placeholder="请选择附属选项">
-          <el-option :label="optionClass.name" :value="optionClass.name" v-for="(optionClass,index) in optionClasses"></el-option>
+    <el-form-item label="类别">
+      <el-select autocomplete="on" v-model="form.goodClassName" filterable placeholder="请选择">
+        <template v-if="isAttachGood === false">
+          <el-option
+            v-for="(goodClass,index) in this.goodClasses"
+            :key="index"
+            :label="goodClass.name"
+            :value="goodClass.name">
+          </el-option>
+        </template>
+        <template v-else>
+          <el-option
+            v-for="(goodClass,index) in this.attachGoodClasses"
+            :key="index"
+            :label="goodClass.name"
+            :value="goodClass.name">
+          </el-option>
+        </template>
       </el-select>
-      <el-button type="primary" @click="addOptionClass">添加</el-button>
     </el-form-item>
-    <el-form-item v-show="form.type && selectOptionClasses.length > 0" label="已选选项">
-      <el-tag v-for="(selectOptionClass,index) in selectOptionClasses" closable type="success" @close="delSelectOption(index)" :key="index">
-        {{ selectOptionClass.name }}
-      </el-tag>
-    </el-form-item>
+    <template v-if="isAttachGood === false">
+      <el-form-item v-show="optionClasses.length > 0" label="附属选项类">
+        <el-select v-model="selectOptionClassName" placeholder="请选择附属选项类">
+          <el-option :label="optionClass.name" :value="optionClass.name" v-for="(optionClass,index) in optionClasses" :key="index"></el-option>
+        </el-select>
+        <el-button type="primary" @click="addOptionClass">添加</el-button>
+      </el-form-item>
+      <el-form-item v-show="selectOptionClasses.length > 0" label="已选选项类">
+        <el-tag v-for="(selectOptionClass,index) in selectOptionClasses" closable type="success" @close="delSelectOption(index)" :key="index">
+          {{ selectOptionClass.name }}
+        </el-tag>
+      </el-form-item>
+
+      <el-form-item v-show="attachGoodClasses.length > 0" label="附属产品类">
+        <el-select v-model="selectAttachGoodClassName" placeholder="附属产品类选项">
+          <el-option :label="attachGoodClass.name" :value="attachGoodClass.name" v-for="(attachGoodClass,index) in attachGoodClasses" :key="index"></el-option>
+        </el-select>
+        <el-button type="primary" @click="addAttachGoodClass">添加</el-button>
+      </el-form-item>
+      <el-form-item v-show="selectAttachGoodClasses.length > 0" label="已选附属产品类">
+        <el-tag v-for="(selectAttachGoodClass,index) in selectAttachGoodClasses" closable type="success" @close="delSelectGoodClass(index)" :key="index">
+          {{ selectAttachGoodClass.name }}
+        </el-tag>
+      </el-form-item>
+    </template>
+
     <el-form-item>
       <el-button type="primary" @click="addGood">立即创建</el-button>
     </el-form-item>
@@ -63,26 +90,27 @@ export default {
   async mounted() {
     await init.globalOptionClasses()
     await init.globalGoodClasses()
-    // for (let i = 0; i < global.optionClasses.length; i++) {
-    //   this.optionClassNames.push(global.optionClasses[i].className)
-    // }
-    // this.setDefaultSelectOption()
     this.optionClasses = global.optionClasses
-    this.goodClasses = global.goodClasses
+    for (let i=0;i<global.goodClasses.length;i++){
+      if (global.goodClasses[i].classType===undefined || global.goodClasses[i].classType === 0) {
+        this.goodClasses.push(global.goodClasses[i])
+      }else{
+        this.attachGoodClasses.push(global.goodClasses[i])
+      }
+    }
   },
   data() {
     return {
       form: {
         price: '',
         name: '',
-        type: true,
         goodClassName: ""
       },
       dialogImageUrl: '',
       dialogVisible: false,
-
+      isAttachGood:false,
       pictureStorePath: '',
-
+      attachGoodClasses: [],
 
 
 
@@ -90,6 +118,8 @@ export default {
       goodClasses: [],
       selectOptionClasses: [],
       selectOptionClassName: "",
+      selectAttachGoodClassName:"",
+      selectAttachGoodClasses: [],
     }
   },
   methods: {
@@ -99,6 +129,11 @@ export default {
       } else {
         this.selectOptionClassName = {name: ""}
       }
+    },
+    delSelectGoodClass(index) {
+      this.attachGoodClasses.push(this.selectAttachGoodClasses[index])
+      this.selectAttachGoodClasses = utils.removeIndex(this.selectAttachGoodClasses,index)
+      // this.setDefaultSelectOption()
     },
     delSelectOption(index) {
       this.optionClasses.push(this.selectOptionClasses[index])
@@ -147,6 +182,12 @@ export default {
       this.optionClasses = utils.removeElementByField(this.optionClasses, "name", this.selectOptionClassName)
       this.setDefaultSelectOption()
     },
+    addAttachGoodClass() {
+      this.selectAttachGoodClasses.push({
+        name: this.selectAttachGoodClassName,
+      })
+      this.attachGoodClasses = utils.removeElementByField(this.attachGoodClasses, "name", this.selectAttachGoodClassName)
+    }
   }
 }
 </script>

@@ -39,7 +39,7 @@ message StopPlayBilliardRes {}
 
 
 message OrderReq{
-  repeated Good goods = 1;
+  Order order = 1;
 }
 
 message OrderRes{
@@ -144,12 +144,17 @@ enum Discount {
   NONE = 0;           // 无
   REBATE = 1;         // 打折
   FULL_REDUCTION = 2; // 满减
+  FREE = 3;           // 免单
+}
+
+enum ClassType {
+  Single = 0; // 单品类
+  Attach = 1; // 附属品类
 }
 
 message DiscountArray{
   repeated Discount discounts = 1;
 }
-
 
 message Order {
   repeated Good goods = 1;
@@ -159,7 +164,8 @@ message Order {
 
 message GoodClass{
   string name = 1;
-  repeated Good goods = 2;
+  ClassType classType = 2;
+  repeated Good goods = 3;
 }
 
 message Good{
