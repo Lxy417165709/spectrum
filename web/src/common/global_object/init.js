@@ -26,6 +26,13 @@ export default{
     })
   },
   async globalGoodClasses() {
+    // localStorage.clear()
+    let localGlobalGoodClasses = JSON.parse(localStorage.getItem("global_good_classes")).classes
+    if (localGlobalGoodClasses !== undefined && localGlobalGoodClasses !== null) {
+      console.log("global_good_classes using cache")
+      global.goodClasses = localGlobalGoodClasses
+      return
+    }
     let model = utils.getRequestModel("mvp", "GetAllGoodClasses", {})
     await utils.sendRequestModel(model).then(res => {
       if (!utils.hasRequestSuccess(res)) {
@@ -35,6 +42,9 @@ export default{
 
       global.goodClasses = res.data.data.goodClasses
       console.log("global_good_classes",global.goodClasses)
+      localStorage.setItem("global_good_classes",JSON.stringify({
+        classes:global.goodClasses
+      }))
     })
   }
 

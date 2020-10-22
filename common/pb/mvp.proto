@@ -162,12 +162,6 @@ message Order {
   //  map<string, DiscountArray> discountsMap = 3;   // 用 0 表示整单折扣，大于 0 则是单品折扣
 }
 
-message GoodClass{
-  string name = 1;
-  ClassType classType = 2;
-  repeated Good goods = 3;
-  repeated string selectGoodNames = 4;
-}
 
 message Good{
   string name = 1;
@@ -177,20 +171,28 @@ message Good{
   repeated GoodClass attachGoodClasses = 5;
 }
 
+message Option {
+  string name = 1;
+}
+
+
 message AttachGood{
   string name = 1;
   string pictureStorePath = 2;
   float price = 3;
 }
 
+// ---------------------- class 相关 ----------------------
 message OptionClass {
   string name = 1;
   int32 selectOptionIndex = 2;
   repeated Option options = 3;
 }
 
-message Option {
+
+message GoodClass{
   string name = 1;
+  ClassType classType = 2;
+  repeated Good goods = 3;
+  repeated string selectGoodNames = 4;
 }
-
-
