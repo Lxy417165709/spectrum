@@ -18,12 +18,12 @@
 <script>
 
 /* eslint-disable */
-import GoodAdder from "../components/GoodAdder";
-import OptionClassManager from "../components/OptionClassManager";
+import GoodAdder from "./good/GoodAdder";
+import OptionClassManager from "./option/OptionClassManager";
 import GoodOrder from "./unuse/GoodOrder";
-import GoodWanner from "./GoodWanner";
-import GoodClassManager from "./GoodClassManager";
-import Discounter from "./Discounter";
+import GoodWanner from "./good/GoodWanner";
+import GoodClassManager from "./good/GoodClassManager";
+import Discounter from "./discount/Discounter";
 export default {
   name: "panel",
   components: {

@@ -45,9 +45,9 @@
 
 <script>
 /* eslint-disable */
-import utils from "../common/utils"
-import global from "../common/global_object/global"
-import init from "../common/global_object/init"
+import utils from "../../common/utils";
+import global from "../../common/global_object/global"
+import init from "../../common/global_object/init"
 
 export default {
   name: "OptionClassManager",

@@ -20,7 +20,7 @@
       </el-form-item>
     </template>
     <el-form-item v-for="(attachGoodClass,classIndex) in good.attachGoodClasses" :key="classIndex" :label="attachGoodClass.name">
-      <el-checkbox-group v-model="attachGoodClass.selectGoodIndexes">
+      <el-checkbox-group v-model="attachGoodClass.selectGoodNames">
         <el-checkbox v-for="(attachGood,goodIndex) in attachGoodClass.goods" :key="goodIndex" :label="attachGood.name"></el-checkbox>
       </el-checkbox-group>
     </el-form-item>

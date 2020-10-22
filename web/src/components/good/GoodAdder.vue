@@ -81,9 +81,9 @@
 <script>
 /* eslint-disable */
 import axios from 'axios';
-import utils from '../common/utils'
-import global from "../common/global_object/global"
-import init from "../common/global_object/init";
+import utils from '../../common/utils'
+import global from "../../common/global_object/global"
+import init from "../../common/global_object/init";
 
 export default {
   name: 'GoodAdder',

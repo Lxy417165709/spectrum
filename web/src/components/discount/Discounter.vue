@@ -11,7 +11,7 @@
       </el-form-item>
       <template v-if="discountTypeName === '打折'">
         <el-form-item  label="折扣">
-          <el-col span="5">
+          <el-col :span="5">
             <el-input v-model="rebate" type="primary"></el-input>
           </el-col>
         </el-form-item>
@@ -19,13 +19,13 @@
       <template v-if="discountTypeName === '满减'">
 
         <el-form-item label="满">
-          <el-col span="5">
+          <el-col :span="5">
             <el-input v-model="full" type="primary" ></el-input>
           </el-col>
 
         </el-form-item>
         <el-form-item label="减">
-          <el-col span="5">
+          <el-col :span="5">
             <el-input v-model="reduction" type="primary" ></el-input>
           </el-col>
         </el-form-item>
@@ -37,7 +37,7 @@
 
 <script>
 /* eslint-disable */
-import global from "../common/global_object/global";
+import global from "../../common/global_object/global";
 
 export default {
   name: "Discounter",

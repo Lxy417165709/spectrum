@@ -11,7 +11,7 @@
     </el-aside>
     <el-main>
       <el-tabs>
-        <el-tab-pane v-for="(unit,index) in units" :label="unit.goodClassName" :key="index">
+        <el-tab-pane v-for="(unit,index) in units" :key="index" :label="unit.goodClassName">
           <component :is="unit.component" :goods="unit.goods" @passGoodToParent="receiveChildGood"></component>
         </el-tab-pane>
       </el-tabs>
@@ -25,8 +25,9 @@
           <el-collapse-item v-for="(orderGoodUnit,index) in orderGoodUnits"
                             :key="index" style="padding-left: 10px;position: relative">
             <template slot="title">
-              <span>{{(index+1) + '. ' + orderGoodUnit.good.name}}</span>
-              <el-button @click.stop="delGood(index)" size="mini" circle icon="el-icon-close" type="danger" style="position: absolute;right: 35px"></el-button>
+              <span>{{ (index + 1) + '. ' + orderGoodUnit.good.name }}</span>
+              <el-button circle icon="el-icon-close" size="mini" style="position: absolute;right: 35px" type="danger"
+                         @click.stop="delGood(index)"></el-button>
             </template>
 
             <el-collapse accordion>
@@ -43,7 +44,7 @@
       <el-form label-width="80px" style="width: 100%; margin-top:20px">
         <Discounter></Discounter>
         <el-form-item>
-          <el-button>确定</el-button>
+          <el-button @click="sendOrder()">确定</el-button>
         </el-form-item>
       </el-form>
 
@@ -54,11 +55,11 @@
 <script>
 /* eslint-disable */
 import GoodShower from "./GoodShower";
-import utils from "../common/utils";
-import init from "../common/global_object/init";
-import global from "../common/global_object/global";
+import utils from "../../common/utils";
+import init from "../../common/global_object/init";
+import global from "../../common/global_object/global";
 import GoodEditor from "./GoodEditor";
-import Discounter from "./Discounter";
+import Discounter from "../discount/Discounter";
 
 export default {
   components: {Discounter},
@@ -77,10 +78,31 @@ export default {
     };
   },
   methods: {
+    sendOrder() {
+      let goods = []
+      for (let i = 0; i < this.orderGoodUnits.length; i++) {
+        goods.push(this.orderGoodUnits[i].good)
+      }
+
+      let order = {
+        goods: goods,
+        createdTime: new Date().getTime(),
+        // discountsMap: {
+        //   0: []   // 先不使用折扣
+        // }
+      }
+      let model = utils.getRequestModel("mvp", "Order", {
+        order: order,
+      })
+      console.log("order", order)
+      utils.sendRequestModel(model).then(async res => {
+        console.log(res)
+      })
+    },
     receiveChildGood(good) {
       let newGood = utils.deepCopy(good) // 深拷贝
-      for (let i=0;newGood.attachGoodClasses !== undefined && i<newGood.attachGoodClasses.length;i++) {
-        newGood.attachGoodClasses[i].selectGoodIndexes = []
+      for (let i = 0; newGood.attachGoodClasses !== undefined && i < newGood.attachGoodClasses.length; i++) {
+        newGood.attachGoodClasses[i].selectGoodNames = [] // 添加 selectGoodIndexes 字段，这样子组件才能根据 selectGoodIndexes 进行响应
       }
       this.orderGoodUnits.push({
         detailComponent: GoodEditor,
@@ -88,15 +110,15 @@ export default {
       })
     },
     delGood(index) {
-      for (let i=0;i<this.units.length;i++){
-        for (let t=0;t<this.units[i].goods.length;t++){
-          if (this.units[i].goods[t].name === this.orderGoodUnits[index].good.name){
+      for (let i = 0; i < this.units.length; i++) {
+        for (let t = 0; t < this.units[i].goods.length; t++) {
+          if (this.units[i].goods[t].name === this.orderGoodUnits[index].good.name) {
             this.units[i].goods[t].count--
             break
           }
         }
       }
-      this.orderGoodUnits = utils.removeIndex(this.orderGoodUnits,index)
+      this.orderGoodUnits = utils.removeIndex(this.orderGoodUnits, index)
     },
     addTab(goodClass) {
       for (let i = 0; i < goodClass.goods.length; i++) {

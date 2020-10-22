@@ -159,14 +159,14 @@ message DiscountArray{
 message Order {
   repeated Good goods = 1;
   int64 createdTime = 2;
-  map<int64, DiscountArray> DiscountsMap = 3;   // 用 0 表示整单折扣，大于 0 则是单品折扣
+//  map<string, DiscountArray> discountsMap = 3;   // 用 0 表示整单折扣，大于 0 则是单品折扣
 }
 
 message GoodClass{
   string name = 1;
   ClassType classType = 2;
   repeated Good goods = 3;
-  repeated int32 selectGoodIndexes = 4;
+  repeated string selectGoodNames = 4;
 }
 
 message Good{

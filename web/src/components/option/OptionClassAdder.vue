@@ -22,7 +22,7 @@
 
 <script>
 /* eslint-disable */
-import utils from '../common/utils.js'
+import utils from "../../common/utils";
 
 export default {
   name: 'GoodAdder',

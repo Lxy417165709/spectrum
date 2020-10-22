@@ -39,7 +39,7 @@ func formPbGoodClass(goodClass *model.GoodClass) (*pb.GoodClass, error) {
 	pbGoodClass := &pb.GoodClass{
 		Name:      goodClass.Name,
 		ClassType: pb.ClassType(goodClass.ClassType),
-		SelectGoodIndexes: []int32{},
+		SelectGoodNames: []string{},
 	}
 
 	// 2. 获得该类的商品
