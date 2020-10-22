@@ -23,8 +23,6 @@
 
 <script>
 /* eslint-disable */
-import global from "../../common/global_object/global"
-import init from "../../common/global_object/init"
 
 export default {
   name: "GoodRecommender",

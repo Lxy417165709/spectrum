@@ -24,7 +24,12 @@ import GoodOrder from "./unuse/GoodOrder";
 import GoodWanner from "./good/GoodWanner";
 import GoodClassManager from "./good/GoodClassManager";
 import Discounter from "./discount/Discounter";
+import init from "../common/global_object/init";
+
+
+
 export default {
+
   name: "panel",
   components: {
     GoodAdder,

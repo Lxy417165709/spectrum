@@ -17,19 +17,18 @@
       </el-tabs>
     </el-main>
     <el-drawer
-      :visible.sync="drawer"
+      :visible.sync="isShowingDrawer"
       direction="rtl"
       title="当前订单">
       <div style="width: 100%; border:none;max-height: 400px;overflow:scroll; padding: 0">
         <el-collapse accordion>
-          <el-collapse-item v-for="(orderGoodUnit,index) in orderGoodUnits"
-                            :key="index" style="padding-left: 10px;position: relative">
+          <el-collapse-item v-for="(orderGoodUnit,index) in orderGoodUnits" :key="index"
+                            style="padding-left: 10px;position: relative">
             <template slot="title">
               <span>{{ (index + 1) + '. ' + orderGoodUnit.good.name }}</span>
               <el-button circle icon="el-icon-close" size="mini" style="position: absolute;right: 35px" type="danger"
                          @click.stop="delGood(index)"></el-button>
             </template>
-
             <el-collapse accordion>
               <el-collapse-item name="1" style="padding-left: 20px;" title="商品详情">
                 <component :is="orderGoodUnit.detailComponent" :good="orderGoodUnit.good"></component>
@@ -47,9 +46,9 @@
           <el-button @click="sendOrder()">确定</el-button>
         </el-form-item>
       </el-form>
-
     </el-drawer>
-    <el-button style="position:absolute;bottom:100px;left:50px" type="primary" @click="drawer=true">打开当前订单</el-button>
+    <el-button style="position:absolute;bottom:100px;left:50px" type="primary" @click="isShowingDrawer=true">打开当前订单
+    </el-button>
   </el-container>
 </template>
 <script>
@@ -69,12 +68,11 @@ export default {
   },
   data() {
     return {
-      isCollapse: true,
       goodClasses: [],
       units: [],
       goodEditorUnits: [],
       orderGoodUnits: [],
-      drawer: false,
+      isShowingDrawer: false,
     };
   },
   methods: {
@@ -94,7 +92,6 @@ export default {
       let model = utils.getRequestModel("mvp", "Order", {
         order: order,
       })
-      console.log("order", order)
       utils.sendRequestModel(model).then(async res => {
         console.log(res)
       })

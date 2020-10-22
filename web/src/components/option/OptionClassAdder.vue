@@ -25,7 +25,6 @@
 import utils from "../../common/utils";
 
 export default {
-  name: 'GoodAdder',
   data() {
     return {
       form: {

@@ -9,7 +9,7 @@
           style="height:200px;width:200px">
         <div style="width: 200px;height: 30px;position:relative;padding: 0;margin: 0">
           <span style="position:absolute; left:5px">{{ good.name }}</span>
-          <time style="color: #dd6161; position:absolute; right:5px">{{ good.price }}</time>
+          <time style="color: #dd6161; position:absolute; right:10px">{{ good.price }}</time>
         </div>
         <div style="
           display:flex;
@@ -36,7 +36,6 @@
 <script>
 /* eslint-disable */
 export default {
-  name: "GoodShower",
   props: {
     goods: Array,
   },

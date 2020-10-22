@@ -10,23 +10,21 @@
         </el-select>
       </el-form-item>
       <template v-if="discountTypeName === '打折'">
-        <el-form-item  label="折扣">
+        <el-form-item label="折扣">
           <el-col :span="5">
             <el-input v-model="rebate" type="primary"></el-input>
           </el-col>
         </el-form-item>
       </template>
       <template v-if="discountTypeName === '满减'">
-
         <el-form-item label="满">
           <el-col :span="5">
-            <el-input v-model="full" type="primary" ></el-input>
+            <el-input v-model="full" type="primary"></el-input>
           </el-col>
-
         </el-form-item>
         <el-form-item label="减">
           <el-col :span="5">
-            <el-input v-model="reduction" type="primary" ></el-input>
+            <el-input v-model="reduction" type="primary"></el-input>
           </el-col>
         </el-form-item>
       </template>
@@ -58,9 +56,9 @@ export default {
           name: global.discountType.FREE
         }
       ],
-      rebate:10,
-      full:10000,
-      reduction:10,
+      rebate: 10,
+      full: 10000,
+      reduction: 10,
     }
   }
 }
