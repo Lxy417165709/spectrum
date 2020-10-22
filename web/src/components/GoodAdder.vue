@@ -163,7 +163,7 @@ export default {
           price: parseFloat(this.form.price),
           pictureStorePath: this.form.pictureStorePath,
           optionClasses: this.selectOptionClasses,
-          attachGoodClasses:[],
+          attachGoodClasses:this.selectAttachGoodClasses,
         },
         goodClassName: this.form.goodClassName,
       })

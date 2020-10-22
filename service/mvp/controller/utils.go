@@ -37,8 +37,9 @@ func formPbGoodClass(goodClass *model.GoodClass) (*pb.GoodClass, error) {
 
 	// 1. 形成初始字段
 	pbGoodClass := &pb.GoodClass{
-		Name: goodClass.Name,
+		Name:      goodClass.Name,
 		ClassType: pb.ClassType(goodClass.ClassType),
+		SelectGoodIndexes: []int32{},
 	}
 
 	// 2. 获得该类的商品
@@ -108,6 +109,37 @@ func formPbGood(good *model.Good) (*pb.Good, error) {
 		}
 		pbGood.OptionClasses = append(pbGood.OptionClasses, pbOptionClass)
 	}
+
+	// 3. 获得附属产品类记录
+	goodAttachClassRecords, err := dao.GoodAttachClassRecordDao.GetByGoodID(int(good.ID))
+	if err != nil {
+		logger.Error("Fail to get all good attach class records",
+			zap.Any("goodID", good.ID),
+			zap.Error(err))
+		return nil, err
+	}
+	attachGoodClassIDs := make([]int, 0)
+	for _, record := range goodAttachClassRecords {
+		attachGoodClassIDs = append(attachGoodClassIDs, record.AttachGoodClassID)
+	}
+	attachGoodClasses, err := dao.GoodClassDao.GetByIDs(attachGoodClassIDs)
+	if err != nil {
+		logger.Error("Fail to get attach good class",
+			zap.Any("attachGoodClassIDs", attachGoodClassIDs),
+			zap.Error(err))
+		return nil, err
+	}
+	for _, attachGoodClass := range attachGoodClasses {
+		pbAttachGoodClass, err := formPbGoodClass(attachGoodClass)
+		if err != nil {
+			logger.Error("Fail to form pb.PbGoodClass",
+				zap.Any("tableAttachGoodClass", attachGoodClass),
+				zap.Error(err))
+			return nil, err
+		}
+		pbGood.AttachGoodClasses = append(pbGood.AttachGoodClasses, pbAttachGoodClass)
+	}
+
 	return pbGood, nil
 }
 

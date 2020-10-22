@@ -166,6 +166,7 @@ message GoodClass{
   string name = 1;
   ClassType classType = 2;
   repeated Good goods = 3;
+  repeated int32 selectGoodIndexes = 4;
 }
 
 message Good{
@@ -173,13 +174,7 @@ message Good{
   string pictureStorePath = 2;
   float price = 3;
   repeated OptionClass optionClasses = 4;
-  repeated AttachGoodClass attachGoodClasses = 5;
-}
-
-message AttachGoodClass{
-  string name = 1;
-  repeated AttachGood attachGoods = 2;
-  repeated int32 selectOptionIndex = 3;
+  repeated GoodClass attachGoodClasses = 5;
 }
 
 message AttachGood{

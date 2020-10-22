@@ -78,9 +78,13 @@ export default {
   },
   methods: {
     receiveChildGood(good) {
+      let newGood = utils.deepCopy(good) // 深拷贝
+      for (let i=0;newGood.attachGoodClasses !== undefined && i<newGood.attachGoodClasses.length;i++) {
+        newGood.attachGoodClasses[i].selectGoodIndexes = []
+      }
       this.orderGoodUnits.push({
         detailComponent: GoodEditor,
-        good: utils.deepCopy(good)// 深拷贝
+        good: newGood
       })
     },
     delGood(index) {

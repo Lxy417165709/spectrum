@@ -71,3 +71,20 @@ func (goodClassDao) DeleteByNames(classNames []string) error {
 	}
 	return nil
 }
+
+
+func (goodClassDao) GetByIDs(ids []int) ([]*model.GoodClass, error) {
+	createTableWhenNotExist(&model.GoodClass{})
+	var classes []*model.GoodClass
+	db := mainDB.Find(&classes, "id in (?)", ids)
+	if err := db.Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return nil, nil
+		}
+		logger.Error("Fail to get good class",
+			zap.Any("ids", ids),
+			zap.Error(err))
+		return nil, err
+	}
+	return classes, nil
+}
