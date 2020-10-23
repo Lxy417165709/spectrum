@@ -24,7 +24,6 @@ type OrderRecord struct {
 	IsAttachGood  int `json:"is_attach_good"`  // 0: 否    1: 是
 }
 
-
 func (OrderRecord) TableName() string {
 	return "order_record"
 }
@@ -51,27 +50,25 @@ func (SellRecord) TableName() string {
 	return "sell_record"
 }
 
-
-
-
-
-type NewOrderRecord struct {
-	gorm.Model
-	OrderID       int `json:"order_id"`
-	Price         float64
-	HasCheckedOut int `json:"has_checked_out"` // 0: 未结账 1: 已结账
+type Thing struct {
+	gorm.Model // ID需额外生成
+	Price      float64
+	GoodID     int
 }
+
+type Order struct {
+	gorm.Model    // ID需额外生成
+	Price         float64
+	HasCheckedOut int `json:"has_checked_out"`
+}
+
+
+
 
 type OrderThingRecord struct {
 	gorm.Model
-	OrderID int // 这个用 redis 生成
-	ThingID int // 这个用 redis 生成
-}
-
-type ThingGoodRecord struct {
-	gorm.Model
+	OrderID int
 	ThingID int
-	GoodID  int
 }
 
 type ThingOptionRecord struct {
@@ -85,5 +82,3 @@ type ThingAttachGoodRecord struct {
 	ThingID      int
 	AttachGoodID int
 }
-
-

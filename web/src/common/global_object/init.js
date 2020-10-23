@@ -27,10 +27,10 @@ export default{
   },
   async globalGoodClasses() {
     // localStorage.clear()
-    let localGlobalGoodClasses = JSON.parse(localStorage.getItem("global_good_classes")).classes
-    if (localGlobalGoodClasses !== undefined && localGlobalGoodClasses !== null) {
+    let localGlobalGoodClassesObj = JSON.parse(localStorage.getItem("global_good_classes"));
+    if (localGlobalGoodClassesObj !== undefined && localGlobalGoodClassesObj !== null) {
       console.log("global_good_classes using cache")
-      global.goodClasses = localGlobalGoodClasses
+      global.goodClasses = localGlobalGoodClassesObj.classes
       return
     }
     let model = utils.getRequestModel("mvp", "GetAllGoodClasses", {})
@@ -39,12 +39,11 @@ export default{
         console.log(res.data.err)
         return
       }
-
       global.goodClasses = res.data.data.goodClasses
-      console.log("global_good_classes",global.goodClasses)
       localStorage.setItem("global_good_classes",JSON.stringify({
         classes:global.goodClasses
       }))
+      console.log("global_good_classes",global.goodClasses)
     })
   }
 

@@ -9,24 +9,18 @@ import (
 )
 
 // ------------------------------------- 自增相关 -------------------------------------
-var curOrderID int // 这里不考虑高并发
+var curOrderID = 1 // 这里不考虑高并发
 
-func getOrderID() int {
-	return curOrderID
-}
-
-func nextOrderID() {
+func getSetOrderID() int {
 	curOrderID++
+	return curOrderID - 1
 }
 
-var curThingID int // 这里不考虑高并发
+var curThingID = 1 // 这里不考虑高并发
 
-func getThingID() int {
-	return curThingID
-}
-
-func nextThingID() {
+func getSetThingID() int {
 	curThingID++
+	return curThingID - 1
 }
 
 // ------------------------------------- 转换相关 -------------------------------------
@@ -37,8 +31,8 @@ func formPbGoodClass(goodClass *model.GoodClass) (*pb.GoodClass, error) {
 
 	// 1. 形成初始字段
 	pbGoodClass := &pb.GoodClass{
-		Name:      goodClass.Name,
-		ClassType: pb.ClassType(goodClass.ClassType),
+		Name:            goodClass.Name,
+		ClassType:       pb.ClassType(goodClass.ClassType),
 		SelectGoodNames: []string{},
 	}
 

@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"github.com/jinzhu/gorm"
 	"go.uber.org/zap"
 	"spectrum/common/logger"
 	"spectrum/service/mvp/model"
@@ -50,4 +51,20 @@ func (optionDao) Del(optionClassID int, optionName string) error {
 		return err
 	}
 	return nil
+}
+
+func (optionDao) GetByName(name string) (*model.Option, error) {
+	var obj model.Option
+	createTableWhenNotExist(&obj)
+	db := mainDB.First(&obj, "name = ?", name)
+	if err := db.Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return nil, nil
+		}
+		logger.Error("Fail to finish mainDB.First",
+			zap.Any("name", name),
+			zap.Error(err))
+		return nil, err
+	}
+	return &obj, nil
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/astaxie/beego/logs"
+	"github.com/jinzhu/gorm"
 	"go.uber.org/zap"
 	"spectrum/common/ers"
 	"spectrum/common/logger"
@@ -235,8 +236,8 @@ func (MvpServer) Order(ctx context.Context, req *pb.OrderReq) (*pb.OrderRes, err
 	logs.Info("Order", ctx, req)
 
 	var res pb.OrderRes
-	orderID := getOrderID()
-
+	orderID := getSetOrderID()
+	tbThings := make([]*model.Thing, 0)
 	// 1. 处理原商品
 	for _, pbGood := range req.Order.Goods {
 		// 1.1 判断原商品是否存在
@@ -249,16 +250,36 @@ func (MvpServer) Order(ctx context.Context, req *pb.OrderReq) (*pb.OrderRes, err
 			return nil, errors.New("Good not existed")
 		}
 
-		// 1.2 插入订单记录
-		if err := dao.OrderRecordDao.Create(orderID, int(tbGood.ID), model.FlagOfNotAttachGood); err != nil {
-			return nil, errors.New("Fail to finish OrderRecordDao.Create")
+		// 1.2 形成物品号
+		thingID := getSetThingID()
+
+		// 1.4 处理附属选项
+		for _, class := range pbGood.OptionClasses {
+			// 1.4.1 判断附属选项是否存在
+			tbOption, err := dao.OptionDao.GetByName(class.Options[class.SelectOptionIndex].Name)
+			if err != nil {
+				logs.Error(err)
+				return nil, errors.New("Fail to finish OptionDao.GetByName")
+			}
+			if tbOption == nil {
+				logs.Error("Option not existed")
+				return nil, errors.New("Option not existed")
+			}
+			// 1.4.2 插入附属选项记录
+			if err := dao.ThingOptionRecordDao.Create(&model.ThingOptionRecord{
+				ThingID:  thingID,
+				OptionID: int(tbOption.ID),
+			}); err != nil {
+				logs.Error(err)
+				return nil, errors.New("Fail to finish ThingOptionRecordDao.Create")
+			}
 		}
 
-		thingID := getThingID()
-		// 1.3 判断附属商品是否存在
-		for _, attachGoodClass:= range pbGood.AttachGoodClasses {
+		// 1.5 处理附属商品
+		var tbAttachGoods []*model.Good
+		for _, attachGoodClass := range pbGood.AttachGoodClasses {
 			for _, selectGoodName := range attachGoodClass.SelectGoodNames {
-				// 1.3.1 判断附属商品是否存在
+				// 1.5.1 判断附属商品是否存在
 				tbAttachGood, err := dao.GoodDao.GetByName(selectGoodName)
 				if err != nil {
 					logs.Error(err)
@@ -268,29 +289,78 @@ func (MvpServer) Order(ctx context.Context, req *pb.OrderReq) (*pb.OrderRes, err
 					logs.Error("Good not existed")
 					return nil, errors.New("Good not existed")
 				}
-				// 1.3.2 插入附属记录
-				if err := dao.AttachRecordDao.Create(orderID, thingID, int(tbGood.ID), int(tbAttachGood.ID)); err != nil {
+				// 1.5.2 插入附属商品记录
+				if err := dao.ThingAttachGoodRecordDao.Create(&model.ThingAttachGoodRecord{
+					ThingID:      thingID,
+					AttachGoodID: int(tbAttachGood.ID),
+				}); err != nil {
 					logs.Error(err)
 					return nil, errors.New("Fail to finish AttachRecordDao.Create")
 				}
 
-				// 1.3.3 插入订单记录
-				if err := dao.OrderRecordDao.Create(orderID, int(tbAttachGood.ID), model.FlagOfAttachGood); err != nil {
-					return nil, errors.New("Fail to finish OrderRecordDao.Create")
-				}
-
-				// 1.3.4 形成下一个物品号
-				nextThingID()
+				tbAttachGoods = append(tbAttachGoods, tbAttachGood)
 			}
 		}
 
+		// 1.3 插入订单记录、插入物品记录
+		if err := dao.OrderThingRecordDao.Create(&model.OrderThingRecord{
+			OrderID: orderID,
+			ThingID: thingID,
+		}); err != nil {
+			return nil, errors.New("Fail to finish OrderRecordDao.Create")
+		}
+
+		tbThings = append(tbThings, &model.Thing{
+			Model: gorm.Model{
+				ID: uint(thingID),
+			},
+			GoodID: int(tbGood.ID),
+			Price:  getThingPrice(tbGood, tbAttachGoods),
+		})
 	}
 
-	// 2. 形成下一个订单号
-	nextOrderID()
+	for _, tbThing := range tbThings {
+		if err := dao.ThingDao.Create(tbThing); err != nil {
+			logger.Error("Fail to finish ThingDao.Create",
+				zap.Any("tbThing", tbThing),
+				zap.Any("req", req),
+				zap.Error(err))
+			return nil, err
+		}
+	}
 
+	tbOrder := &model.Order{
+		Model: gorm.Model{
+			ID: uint(orderID),
+		},
+		HasCheckedOut: model.NotCheckedOut,
+		Price:         getOrderPrice(tbThings),
+	}
+	if err := dao.OrderDao.Create(tbOrder); err != nil {
+		logger.Error("Fail to finish OrderDao.Create",
+			zap.Any("tbOrder", tbOrder),
+			zap.Any("req", req),
+			zap.Error(err))
+		return nil, err
+	}
 	res.OrderID = int64(orderID)
 	return &res, nil
+}
+
+func getOrderPrice(things []*model.Thing) float64 {
+	price := 0.0
+	for _, thing := range things {
+		price += thing.Price
+	}
+	return price
+}
+
+func getThingPrice(good *model.Good, attachGoods []*model.Good) float64 {
+	price := good.Price
+	for _, attachGood := range attachGoods {
+		price += attachGood.Price
+	}
+	return price
 }
 
 //func (MvpServer) GetOrderGoods(ctx context.Context, req *pb.GetOrderGoodsReq) (*pb.GetOrderGoodsRes, error) {
