@@ -62,7 +62,7 @@ var objectFunctionToRpcUnit = map[string]map[string]*model.RpcUnit{
 			SuccessMsg: "获取所有商品成功",
 			FailMsg:    "获取所有商品失败",
 		},
-		"DelOptionClass":{
+		"DelOptionClass": {
 			ReqFunc: func() interface{} {
 				return &pb.DelOptionClassReq{}
 			},
@@ -72,7 +72,7 @@ var objectFunctionToRpcUnit = map[string]map[string]*model.RpcUnit{
 			SuccessMsg: "删除选项类成功",
 			FailMsg:    "删除选项类失败",
 		},
-		"GetAllGoodClasses":{
+		"GetAllGoodClasses": {
 			ReqFunc: func() interface{} {
 				return &pb.GetAllGoodClassesReq{}
 			},
@@ -82,7 +82,7 @@ var objectFunctionToRpcUnit = map[string]map[string]*model.RpcUnit{
 			SuccessMsg: "获得所有商品类成功",
 			FailMsg:    "获得所有商品类失败",
 		},
-		"AddGoodClass":{
+		"AddGoodClass": {
 			ReqFunc: func() interface{} {
 				return &pb.AddGoodClassReq{}
 			},
@@ -92,7 +92,7 @@ var objectFunctionToRpcUnit = map[string]map[string]*model.RpcUnit{
 			SuccessMsg: "添加商品类成功",
 			FailMsg:    "添加商品类失败",
 		},
-		"DelGoodClass":{
+		"DelGoodClass": {
 			ReqFunc: func() interface{} {
 				return &pb.DelGoodClassReq{}
 			},
@@ -102,7 +102,7 @@ var objectFunctionToRpcUnit = map[string]map[string]*model.RpcUnit{
 			SuccessMsg: "删除商品类成功",
 			FailMsg:    "删除商品类失败",
 		},
-		"Order":{
+		"Order": {
 			ReqFunc: func() interface{} {
 				return &pb.OrderReq{}
 			},
@@ -111,6 +111,16 @@ var objectFunctionToRpcUnit = map[string]map[string]*model.RpcUnit{
 			},
 			SuccessMsg: "订单创建成功",
 			FailMsg:    "订单创建失败",
+		},
+		"GetOrderLog": {
+			ReqFunc: func() interface{} {
+				return &pb.GetOrderLogReq{}
+			},
+			ResFunc: func() interface{} {
+				return &pb.GetOrderLogRes{}
+			},
+			SuccessMsg: "获取订单信息成功",
+			FailMsg:    "获取订单信息失败",
 		},
 	},
 }

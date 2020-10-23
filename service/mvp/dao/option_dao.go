@@ -68,3 +68,18 @@ func (optionDao) GetByName(name string) (*model.Option, error) {
 	}
 	return &obj, nil
 }
+
+func (optionDao) Get(id int) (*model.Option, error) {
+	createTableWhenNotExist(&model.Option{})
+
+	var obj model.Option
+	db := mainDB.First(&obj, "id = ?", id)
+	if err := db.Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return nil, nil
+		}
+		logger.Error("Fail to finish mainDB.first", zap.Int("id", id), zap.Error(err))
+		return nil, err
+	}
+	return &obj, nil
+}

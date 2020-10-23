@@ -34,6 +34,7 @@ type MvpClient interface {
 	GetAllGoodClasses(ctx context.Context, in *GetAllGoodClassesReq, opts ...grpc.CallOption) (*GetAllGoodClassesRes, error)
 	AddGoodClass(ctx context.Context, in *AddGoodClassReq, opts ...grpc.CallOption) (*AddGoodClassRes, error)
 	DelGoodClass(ctx context.Context, in *DelGoodClassReq, opts ...grpc.CallOption) (*DelGoodClassRes, error)
+	GetOrderLog(ctx context.Context, in *GetOrderLogReq, opts ...grpc.CallOption) (*GetOrderLogRes, error)
 }
 
 type mvpClient struct {
@@ -197,6 +198,15 @@ func (c *mvpClient) DelGoodClass(ctx context.Context, in *DelGoodClassReq, opts 
 	return out, nil
 }
 
+func (c *mvpClient) GetOrderLog(ctx context.Context, in *GetOrderLogReq, opts ...grpc.CallOption) (*GetOrderLogRes, error) {
+	out := new(GetOrderLogRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/GetOrderLog", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MvpServer is the server API for Mvp service.
 // All implementations must embed UnimplementedMvpServer
 // for forward compatibility
@@ -218,6 +228,7 @@ type MvpServer interface {
 	GetAllGoodClasses(context.Context, *GetAllGoodClassesReq) (*GetAllGoodClassesRes, error)
 	AddGoodClass(context.Context, *AddGoodClassReq) (*AddGoodClassRes, error)
 	DelGoodClass(context.Context, *DelGoodClassReq) (*DelGoodClassRes, error)
+	GetOrderLog(context.Context, *GetOrderLogReq) (*GetOrderLogRes, error)
 	mustEmbedUnimplementedMvpServer()
 }
 
@@ -275,6 +286,9 @@ func (UnimplementedMvpServer) AddGoodClass(context.Context, *AddGoodClassReq) (*
 }
 func (UnimplementedMvpServer) DelGoodClass(context.Context, *DelGoodClassReq) (*DelGoodClassRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DelGoodClass not implemented")
+}
+func (UnimplementedMvpServer) GetOrderLog(context.Context, *GetOrderLogReq) (*GetOrderLogRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOrderLog not implemented")
 }
 func (UnimplementedMvpServer) mustEmbedUnimplementedMvpServer() {}
 
@@ -595,6 +609,24 @@ func _Mvp_DelGoodClass_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Mvp_GetOrderLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrderLogReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).GetOrderLog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/GetOrderLog",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).GetOrderLog(ctx, req.(*GetOrderLogReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Mvp_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.Mvp",
 	HandlerType: (*MvpServer)(nil),
@@ -666,6 +698,10 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DelGoodClass",
 			Handler:    _Mvp_DelGoodClass_Handler,
+		},
+		{
+			MethodName: "GetOrderLog",
+			Handler:    _Mvp_GetOrderLog_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

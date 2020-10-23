@@ -119,6 +119,15 @@ message AddGoodClassReq{
 }
 message AddGoodClassRes{}
 
+
+message GetOrderLogReq{
+  int64 orderID = 1;
+}
+
+message GetOrderLogRes{
+  OrderLog orderLog = 1;
+}
+
 service Mvp {
   rpc AddGood(AddGoodReq) returns (AddGoodRes);
   rpc AddBilliardDesk(AddBilliardDeskReq) returns (AddBilliardDeskRes);
@@ -137,6 +146,7 @@ service Mvp {
   rpc GetAllGoodClasses(GetAllGoodClassesReq) returns (GetAllGoodClassesRes);
   rpc AddGoodClass(AddGoodClassReq) returns (AddGoodClassRes);
   rpc DelGoodClass(DelGoodClassReq) returns (DelGoodClassRes);
+  rpc GetOrderLog(GetOrderLogReq) returns (GetOrderLogRes);
 }
 
 
@@ -185,14 +195,41 @@ message Good{
   repeated GoodClass attachGoodClasses = 5;
 }
 
-message AttachGood{
-  string name = 1;
-  string pictureStorePath = 2;
-  float price = 3;
-}
-
 message Option {
   string name = 1;
+}
+
+
+message OrderLog {
+  repeated GoodLog goodLogs = 1;
+  float price = 2;
+  bool hasCheckedOut = 3;
+}
+
+message GoodLog {
+  float price = 1;
+  string name = 2;
+  repeated OptionClassLog optionClassLogs = 3;
+  repeated AttachGoodClassLog attachGoodClassLogs = 4;
+}
+
+message OptionClassLog{
+  string name = 1;
+  OptionLog optionLog = 2;
+}
+
+message AttachGoodClassLog{
+  string name = 1;
+  repeated AttachGoodLog attachGoodLogs = 2;
+}
+
+message OptionLog {
+  string name = 1;
+}
+
+message AttachGoodLog {
+  string name = 1;
+  float price = 2;
 }
 
 // --------------------------- 其他 -------------------------

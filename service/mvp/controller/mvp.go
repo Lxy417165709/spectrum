@@ -35,7 +35,7 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 	}
 
 	// 2. 获得商品类ID
-	goodClass, err := dao.GoodClassDao.Get(req.GoodClassName)
+	goodClass, err := dao.GoodClassDao.GetByName(req.GoodClassName)
 	if err != nil {
 		logger.Error("Fail to finish GoodClassDao.Get",
 			zap.Any("goodClassName", req.GoodClassName),
@@ -65,7 +65,7 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 	// 5. 为商品添加附属选项
 	for _, optionClass := range req.Good.OptionClasses {
 		// 5.1 获得附属选项类
-		tbOptionClass, err := dao.OptionClassDao.Get(optionClass.Name)
+		tbOptionClass, err := dao.OptionClassDao.GetByName(optionClass.Name)
 		if err != nil {
 			logger.Error("Fail to get option class",
 				zap.Any("optionClassName", optionClass.Name),
@@ -94,7 +94,7 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 	// 6. 为商品添加附属商品类
 	for _, attachGoodClass := range req.Good.AttachGoodClasses {
 		// 6.1 获得附属附属商品类
-		tbAttachGoodClass, err := dao.GoodClassDao.Get(attachGoodClass.Name)
+		tbAttachGoodClass, err := dao.GoodClassDao.GetByName(attachGoodClass.Name)
 		if err != nil {
 			logger.Error("Fail to finish GoodClassDao.Get",
 				zap.Any("attachGoodClassName", attachGoodClass.Name),
@@ -256,7 +256,7 @@ func (MvpServer) Order(ctx context.Context, req *pb.OrderReq) (*pb.OrderRes, err
 		// 1.4 处理附属选项
 		for _, class := range pbGood.OptionClasses {
 			// 1.4.1 判断附属选项是否存在
-			tbOption, err := dao.OptionDao.GetByName(class.Options[class.SelectOptionIndex].Name)
+			tbOption, err := dao.OptionDao.GetByName(class.Options[class.SelectOptionIndex-1].Name) // todo: 要简化
 			if err != nil {
 				logs.Error(err)
 				return nil, errors.New("Fail to finish OptionDao.GetByName")
@@ -347,87 +347,6 @@ func (MvpServer) Order(ctx context.Context, req *pb.OrderReq) (*pb.OrderRes, err
 	return &res, nil
 }
 
-func getOrderPrice(things []*model.Thing) float64 {
-	price := 0.0
-	for _, thing := range things {
-		price += thing.Price
-	}
-	return price
-}
-
-func getThingPrice(good *model.Good, attachGoods []*model.Good) float64 {
-	price := good.Price
-	for _, attachGood := range attachGoods {
-		price += attachGood.Price
-	}
-	return price
-}
-
-//func (MvpServer) GetOrderGoods(ctx context.Context, req *pb.GetOrderGoodsReq) (*pb.GetOrderGoodsRes, error) {
-//	logs.Info("GetOrderGoods", ctx, req)
-//
-//	var res pb.GetOrderGoodsRes
-//
-//	// 1. 获取订单的商品
-//	orderRecords, err := dao.OrderRecordDao.GetByOrderID(int(req.OrderID))
-//	if err != nil {
-//		logs.Error(err)
-//		return nil, errors.New("Fail to finish OrderRecordDao.GetByOrderID")
-//	}
-//
-//	// 2. 形成显示商品
-//	var pbGoods []*pb.Good
-//	for _, orderRecord := range orderRecords {
-//		if orderRecord.IsAttachGood == model.FlagOfNotAttachGood {
-//			// 2.1 获得商品名
-//			good, err := dao.GoodDao.Get(orderRecord.GoodID)
-//			if err != nil {
-//				logs.Error(err)
-//				return nil, errors.New("Fail to finish GoodDao.Get")
-//			}
-//			if good == nil {
-//				logs.Error("Good not existed")
-//				return nil, errors.New("Good not existed")
-//			}
-//
-//			// 2.2 形成顶层显示商品
-//			pbGoods = append(pbGoods, &pb.Good{
-//				Name: good.Name,
-//			})
-//		} else {
-//
-//			// 2.3 判断商品记录是否正确
-//			if len(pbGoods) == 0 {
-//				logs.Error("Order record error")
-//				return nil, errors.New("Order record error")
-//			}
-//
-//			// 2.4 获得附属商品名
-//			good, err := dao.GoodDao.Get(orderRecord.GoodID)
-//			if err != nil {
-//				logs.Error(err)
-//				return nil, errors.New("Fail to finish GoodDao.Get")
-//			}
-//			if good == nil {
-//				logs.Error("Good not existed")
-//				return nil, errors.New("Good not existed")
-//			}
-//
-//			// 2.5 形成附属显示商品
-//			pbGoods[len(pbGoods)-1].AttachGoods[good.Type].AttachGoods = append(
-//				pbGoods[len(pbGoods)-1].AttachGoods[good.Type].AttachGoods,
-//				&pb.AttachGood{
-//					Name: good.Name,
-//				},
-//			)
-//		}
-//	}
-//
-//	// 3. 返回
-//	res.Goods = pbGoods
-//	return &res, nil
-//}
-
 func (MvpServer) AddGoodType(ctx context.Context, req *pb.AddGoodTypeReq) (*pb.AddGoodTypeRes, error) {
 	logs.Info("AddGoodType", ctx, req)
 	var res pb.AddGoodTypeRes
@@ -452,49 +371,49 @@ func (MvpServer) AddGoodType(ctx context.Context, req *pb.AddGoodTypeReq) (*pb.A
 	return &res, nil
 }
 
-func (MvpServer) Checkout(ctx context.Context, req *pb.CheckoutReq) (*pb.CheckoutRes, error) {
-	logs.Info("Checkout", ctx, req)
-	var res pb.CheckoutRes
-
-	// 1. 判断订单是否存在
-	orderRecords, err := dao.OrderRecordDao.GetByOrderID(int(req.OrderID))
-	if err != nil {
-		logs.Error(err)
-		return nil, errors.New("Fail to finish OrderRecordDao.GetByOrderID")
-	}
-	if orderRecords == nil {
-		logs.Error("Order Record not Exist")
-		return nil, errors.New("Order Record not Exist")
-	}
-
-	// 2. 获取未结账货物记录
-	notCheckoutOrderRecords, err := dao.OrderRecordDao.GetNotCheckoutGoods(int(req.OrderID))
-	if err != nil {
-		logs.Error(err)
-		return nil, errors.New("Fail to finish OrderRecordDao.GetNotCheckoutGoods")
-	}
-
-	// 3. 计算价格 (先不考虑打折、满减等情况)
-	var wholePrice float64
-	for _, notCheckoutOrderRecord := range notCheckoutOrderRecords {
-		// 3.1 判断商品是否存在
-		good, err := dao.GoodDao.Get(notCheckoutOrderRecord.GoodID)
-		if err != nil {
-			logs.Error(err)
-			return nil, errors.New("Fail to finish GoodDao.GetByName")
-		}
-		if good == nil {
-			return nil, errors.New("Good not exist")
-		}
-
-		// 3.2 结账该商品
-		wholePrice += good.Price
-	}
-
-	// 4. 返回结账金额
-	res.Price = float32(wholePrice)
-	return &res, nil
-}
+//func (MvpServer) Checkout(ctx context.Context, req *pb.CheckoutReq) (*pb.CheckoutRes, error) {
+//	logs.Info("Checkout", ctx, req)
+//	var res pb.CheckoutRes
+//
+//	// 1. 判断订单是否存在
+//	orderRecords, err := dao.OrderRecordDao.GetByOrderID(int(req.OrderID))
+//	if err != nil {
+//		logs.Error(err)
+//		return nil, errors.New("Fail to finish OrderRecordDao.GetByOrderID")
+//	}
+//	if orderRecords == nil {
+//		logs.Error("Order Record not Exist")
+//		return nil, errors.New("Order Record not Exist")
+//	}
+//
+//	// 2. 获取未结账货物记录
+//	notCheckoutOrderRecords, err := dao.OrderRecordDao.GetNotCheckoutGoods(int(req.OrderID))
+//	if err != nil {
+//		logs.Error(err)
+//		return nil, errors.New("Fail to finish OrderRecordDao.GetNotCheckoutGoods")
+//	}
+//
+//	// 3. 计算价格 (先不考虑打折、满减等情况)
+//	var wholePrice float64
+//	for _, notCheckoutOrderRecord := range notCheckoutOrderRecords {
+//		// 3.1 判断商品是否存在
+//		good, err := dao.GoodDao.Get(notCheckoutOrderRecord.GoodID)
+//		if err != nil {
+//			logs.Error(err)
+//			return nil, errors.New("Fail to finish GoodDao.GetByName")
+//		}
+//		if good == nil {
+//			return nil, errors.New("Good not exist")
+//		}
+//
+//		// 3.2 结账该商品
+//		wholePrice += good.Price
+//	}
+//
+//	// 4. 返回结账金额
+//	res.Price = float32(wholePrice)
+//	return &res, nil
+//}
 
 func (MvpServer) AddOptionClass(ctx context.Context, req *pb.AddOptionClassReq) (*pb.AddOptionClassRes, error) {
 	logs.Info("AddOptionClass", ctx, req)
@@ -517,7 +436,7 @@ func (MvpServer) AddOptionClass(ctx context.Context, req *pb.AddOptionClassReq) 
 	}
 
 	// 1. 判断选项类是否存在
-	optionClass, err := dao.OptionClassDao.Get(req.OptionClass.Name)
+	optionClass, err := dao.OptionClassDao.GetByName(req.OptionClass.Name)
 	if err != nil {
 		logger.Error("Fail to get option class",
 			zap.Any("optionClassName", req.OptionClass.Name),
@@ -536,7 +455,7 @@ func (MvpServer) AddOptionClass(ctx context.Context, req *pb.AddOptionClassReq) 
 			return nil, ers.MysqlError
 		}
 	}
-	optionClass, err = dao.OptionClassDao.Get(req.OptionClass.Name)
+	optionClass, err = dao.OptionClassDao.GetByName(req.OptionClass.Name)
 	if err != nil {
 		logger.Error("Fail to get option class",
 			zap.Any("optionClassName", req.OptionClass.Name),
@@ -592,7 +511,7 @@ func (MvpServer) DelOption(ctx context.Context, req *pb.DelOptionReq) (*pb.DelOp
 	var res pb.DelOptionRes
 
 	// 1. 获得选项类, 判断是否需要删除
-	optionClass, err := dao.OptionClassDao.Get(req.ClassName)
+	optionClass, err := dao.OptionClassDao.GetByName(req.ClassName)
 	if err != nil {
 		logger.Error("Fail to get all option classes",
 			zap.Any("className", req.ClassName),
@@ -711,7 +630,7 @@ func (MvpServer) AddGoodClass(ctx context.Context, req *pb.AddGoodClassReq) (*pb
 	}
 
 	// 2. 获得商品类
-	goodClass, err := dao.GoodClassDao.Get(req.GoodClass.Name)
+	goodClass, err := dao.GoodClassDao.GetByName(req.GoodClass.Name)
 	if err != nil {
 		logger.Error("Fail to finish GoodClassDao.Get",
 			zap.Any("goodClassName", req.GoodClass.Name),
@@ -759,5 +678,170 @@ func (MvpServer) DelGoodClass(ctx context.Context, req *pb.DelGoodClassReq) (*pb
 			zap.Error(err))
 		return nil, err
 	}
+	return &res, nil
+}
+
+func (MvpServer) GetOrderLog(ctx context.Context, req *pb.GetOrderLogReq) (*pb.GetOrderLogRes, error) {
+	logger.Info("GetOrderLog", zap.Any("ctx", ctx), zap.Any("req", req))
+
+	var res pb.GetOrderLogRes
+
+	var orderLog pb.OrderLog
+
+	// 0. 获得订单
+	order, err := dao.OrderDao.Get(int(req.OrderID))
+	if err != nil {
+		logger.Error("Fail to finish OrderDao.Get",
+			zap.Any("orderID", req.OrderID),
+			zap.Any("req", req),
+			zap.Error(err))
+		return nil, err
+	}
+	if order == nil {
+		logger.Warn("Order not exist", zap.Any("orderID", req.OrderID),
+			zap.Any("req", req),
+			zap.Error(err))
+		return nil, err
+	}
+	orderLog.Price = float32(order.Price)
+	orderLog.HasCheckedOut = order.HasCheckedOut == model.HasCheckedOut
+
+	// 1. 获得订单-物品记录
+	orderThingRecords, err := dao.OrderThingRecordDao.GetByOrderID(int(req.OrderID))
+	if err != nil {
+		logger.Error("Fail to finish OrderThingRecordDao.GetByOrderID",
+			zap.Any("req", req),
+			zap.Error(err))
+		return nil, err
+	}
+
+	// 2. 分物品处理
+	for _, orderThingRecord := range orderThingRecords {
+
+		var goodLog pb.GoodLog
+		// ---------------- thing ----------------
+		thing, err := dao.ThingDao.Get(orderThingRecord.ThingID)
+		if err != nil {
+			logger.Error("Fail to finish ThingDao.Get",
+				zap.Any("thingID", orderThingRecord.ThingID),
+				zap.Any("req", req),
+				zap.Error(err))
+			return nil, err
+		}
+
+		// ---------------- thing-option ----------------
+		thingOptionRecords, err := dao.ThingOptionRecordDao.GetByThingID(int(thing.ID))
+		if err != nil {
+			logger.Error("Fail to finish ThingOptionRecordDao.GetByThingID",
+				zap.Any("thingID", thing.ID),
+				zap.Any("req", req),
+				zap.Error(err))
+			return nil, err
+		}
+
+		optionClassNameToOptionLogs := make(map[string][]*pb.OptionLog)
+		for _, thingOptionRecord := range thingOptionRecords {
+			option, err := dao.OptionDao.Get(thingOptionRecord.OptionID)
+			if err != nil {
+				logger.Error("Fail to finish OptionDao.Get",
+					zap.Any("optionID", thingOptionRecord.OptionID),
+					zap.Any("req", req),
+					zap.Error(err))
+				return nil, err
+			}
+
+			optionClass, err := dao.OptionClassDao.Get(option.OptionClassID)
+			if err != nil {
+				logger.Error("Fail to finish OptionClassDao.Get",
+					zap.Any("optionClassID", option.OptionClassID),
+					zap.Any("req", req),
+					zap.Error(err))
+				return nil, err
+			}
+			if optionClass != nil {
+				optionClassNameToOptionLogs[optionClass.Name] = append(
+					optionClassNameToOptionLogs[optionClass.Name],
+					&pb.OptionLog{Name: option.Name},
+				)
+			}
+		}
+
+		// ---------------- thing-attachGood ----------------
+		thingAttachGoodRecords, err := dao.ThingAttachGoodRecordDao.GetByThingID(int(thing.ID))
+		if err != nil {
+			logger.Error("Fail to finish ThingAttachGoodRecordDao.GetByThingID",
+				zap.Any("thingID", thing.ID),
+				zap.Any("req", req),
+				zap.Error(err))
+			return nil, err
+		}
+
+		attachGoodClassNameToGoodLogs := make(map[string][]*pb.AttachGoodLog)
+		for _, thingAttachGoodRecord := range thingAttachGoodRecords {
+			attachGood, err := dao.GoodDao.Get(thingAttachGoodRecord.AttachGoodID)
+			if err != nil {
+				logger.Error("Fail to finish OptionDao.Get",
+					zap.Any("attachGoodID", thingAttachGoodRecord.AttachGoodID),
+					zap.Any("req", req),
+					zap.Error(err))
+				return nil, err
+			}
+
+			attachGoodClass, err := dao.GoodClassDao.Get(attachGood.ClassID)
+			if err != nil {
+				logger.Error("Fail to finish GoodClassDao.Get",
+					zap.Any("attachGoodClassID", attachGood.ClassID),
+					zap.Any("req", req),
+					zap.Error(err))
+				return nil, err
+			}
+			if attachGoodClass != nil {
+				attachGoodClassNameToGoodLogs[attachGoodClass.Name] = append(
+					attachGoodClassNameToGoodLogs[attachGoodClass.Name],
+					&pb.AttachGoodLog{
+						Name:  attachGood.Name,
+						Price: float32(attachGood.Price),
+					},
+				)
+			}
+		}
+
+		// ---------------- goodLog ----------------
+		good, err := dao.GoodDao.Get(thing.GoodID)
+		if err != nil {
+			logger.Error("Fail to finish GoodDao.Get",
+				zap.Any("goodID", thing.GoodID),
+				zap.Any("req", req),
+				zap.Error(err))
+			return nil, err
+		}
+		goodLog.Price = float32(thing.Price)
+		goodLog.Name = good.Name
+
+		for optionClassName, optionLogs := range optionClassNameToOptionLogs {
+			if len(optionLogs) == 0 {
+				goodLog.OptionClassLogs = append(goodLog.OptionClassLogs, &pb.OptionClassLog{
+					Name: optionClassName,
+				})
+				continue
+			}
+			goodLog.OptionClassLogs = append(goodLog.OptionClassLogs, &pb.OptionClassLog{
+				Name:      optionClassName,
+				OptionLog: optionLogs[0],
+			})
+		}
+		for attachGoodClassName, attachGoods := range attachGoodClassNameToGoodLogs {
+			goodLog.AttachGoodClassLogs = append(goodLog.AttachGoodClassLogs, &pb.AttachGoodClassLog{
+				Name:           attachGoodClassName,
+				AttachGoodLogs: attachGoods,
+			})
+		}
+
+		// ---------------- 贡献 orderLog ----------------
+		orderLog.GoodLogs = append(orderLog.GoodLogs, &goodLog)
+	}
+
+	res.OrderLog = &orderLog
+
 	return &res, nil
 }

@@ -44,6 +44,7 @@
         <Discounter></Discounter>
         <el-form-item>
           <el-button @click="sendOrder()">确定</el-button>
+          <el-button @click="getOrder()">获取</el-button>
         </el-form-item>
       </el-form>
     </el-drawer>
@@ -91,6 +92,14 @@ export default {
       }
       let model = utils.getRequestModel("mvp", "Order", {
         order: order,
+      })
+      utils.sendRequestModel(model).then(async res => {
+        console.log(res)
+      })
+    },
+    getOrder() {
+      let model = utils.getRequestModel("mvp", "GetOrderLog", {
+        orderID: 1,
       })
       utils.sendRequestModel(model).then(async res => {
         console.log(res)

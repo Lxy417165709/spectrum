@@ -166,3 +166,20 @@ func formPbOptionClass(optionClass *model.OptionClass) (*pb.OptionClass, error) 
 	}
 	return pbOptionClass, nil
 }
+
+func getOrderPrice(things []*model.Thing) float64 {
+	price := 0.0
+	for _, thing := range things {
+		price += thing.Price
+	}
+	return price
+}
+
+func getThingPrice(good *model.Good, attachGoods []*model.Good) float64 {
+	price := good.Price
+	for _, attachGood := range attachGoods {
+		price += attachGood.Price
+	}
+	return price
+}
+

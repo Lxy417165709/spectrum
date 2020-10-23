@@ -56,12 +56,19 @@ type Thing struct {
 	GoodID     int
 }
 
+func (Thing ) TableName() string {
+	return "thing"
+}
+
 type Order struct {
 	gorm.Model    // ID需额外生成
 	Price         float64
 	HasCheckedOut int `json:"has_checked_out"`
 }
 
+func (Order) TableName() string {
+	return "order"
+}
 
 
 
@@ -70,6 +77,9 @@ type OrderThingRecord struct {
 	OrderID int
 	ThingID int
 }
+func (OrderThingRecord) TableName() string {
+	return "order_thing_record"
+}
 
 type ThingOptionRecord struct {
 	gorm.Model
@@ -77,8 +87,16 @@ type ThingOptionRecord struct {
 	OptionID int
 }
 
+func (ThingOptionRecord) TableName() string {
+	return "thing_option_record"
+}
+
 type ThingAttachGoodRecord struct {
 	gorm.Model
 	ThingID      int
 	AttachGoodID int
+}
+
+func (ThingAttachGoodRecord) TableName() string {
+	return "thing_attach_good_record"
 }

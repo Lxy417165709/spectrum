@@ -11,7 +11,18 @@ var GoodClassDao goodClassDao
 
 type goodClassDao struct{}
 
-func (goodClassDao) Get(goodClassName string) (*model.GoodClass, error) {
+func (goodClassDao) Get(id int) (*model.GoodClass, error) {
+	obj, err := universalGet(id, &model.GoodClass{})
+	if err != nil {
+		logger.Error("Fail to finish universalGet",
+			zap.Any("id", id),
+			zap.Error(err))
+		return nil, err
+	}
+	return obj.(*model.GoodClass), nil
+}
+
+func (goodClassDao) GetByName(goodClassName string) (*model.GoodClass, error) {
 	createTableWhenNotExist(&model.GoodClass{})
 	var goodClass model.GoodClass
 	db := mainDB.First(&goodClass, "name = ?", goodClassName)
@@ -43,11 +54,11 @@ func (goodClassDao) GetAll() ([]*model.GoodClass, error) {
 	return goodClasses, nil
 }
 
-func (goodClassDao) Create(className string,classType int) error {
+func (goodClassDao) Create(className string, classType int) error {
 	createTableWhenNotExist(&model.GoodClass{})
 	db := mainDB.Create(&model.GoodClass{
-		Name: className,
-		ClassType : classType,
+		Name:      className,
+		ClassType: classType,
 	})
 	if err := db.Error; err != nil {
 		logger.Error("Fail to create good class",
@@ -71,7 +82,6 @@ func (goodClassDao) DeleteByNames(classNames []string) error {
 	}
 	return nil
 }
-
 
 func (goodClassDao) GetByIDs(ids []int) ([]*model.GoodClass, error) {
 	createTableWhenNotExist(&model.GoodClass{})

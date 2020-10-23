@@ -11,7 +11,21 @@ var OptionClassDao optionClassDao
 
 type optionClassDao struct{}
 
-func (optionClassDao) Get(className string) (*model.OptionClass, error) {
+func (optionClassDao) Get(id int) (*model.OptionClass, error) {
+	obj, err := universalGet(id, &model.OptionClass{})
+	if err != nil {
+		logger.Error("Fail to finish universalGet",
+			zap.Any("id", id),
+			zap.Error(err))
+		return nil, err
+	}
+	if obj == nil{
+		return nil,nil
+	}
+	return obj.(*model.OptionClass), nil
+}
+
+func (optionClassDao) GetByName(className string) (*model.OptionClass, error) {
 	createTableWhenNotExist(&model.OptionClass{})
 	var optionClass model.OptionClass
 	db := mainDB.First(&optionClass, "name = ?", className)
@@ -43,11 +57,10 @@ func (optionClassDao) GetByIDs(ids []int) ([]*model.OptionClass, error) {
 	return optionClasses, nil
 }
 
-
 func (optionClassDao) Create(className string) error {
 	createTableWhenNotExist(&model.OptionClass{})
 	db := mainDB.Create(&model.OptionClass{
-		Name: className,
+		Name:                     className,
 		DefaultSelectOptionIndex: 1,
 	})
 	if err := db.Error; err != nil {
