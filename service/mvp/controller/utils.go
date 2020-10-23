@@ -183,3 +183,158 @@ func getThingPrice(good *model.Good, attachGoods []*model.Good) float64 {
 	return price
 }
 
+func getOrderLog(orderID int) (*pb.OrderLog, error) {
+	var orderLog pb.OrderLog
+
+	// 0. 获得订单
+	order, err := dao.OrderDao.Get(orderID)
+	if err != nil {
+		logger.Error("Fail to finish OrderDao.Get",
+			zap.Any("orderID", orderID),
+			zap.Error(err))
+		return nil, err
+	}
+	if order == nil {
+		logger.Warn("Order not exist", zap.Any("orderID", orderID),
+			zap.Error(err))
+		return nil, err
+	}
+	orderLog.Price = float32(order.Price)
+	orderLog.HasCheckedOut = order.HasCheckedOut == model.HasCheckedOut
+
+	// 1. 获得订单-物品记录
+	orderThingRecords, err := dao.OrderThingRecordDao.GetByOrderID(int(orderID))
+	if err != nil {
+		logger.Error("Fail to finish OrderThingRecordDao.GetByOrderID",
+			zap.Error(err))
+		return nil, err
+	}
+
+	// 2. 分物品处理
+	for _, orderThingRecord := range orderThingRecords {
+		goodLog, err := getGoodLog(orderThingRecord.ThingID)
+		if err != nil {
+			logger.Error("Fail to finish getGoodLog",
+				zap.Int("thingID", orderThingRecord.ThingID),
+				zap.Error(err))
+			return nil, err
+		}
+		// ---------------- 贡献 orderLog ----------------
+		orderLog.GoodLogs = append(orderLog.GoodLogs, goodLog)
+	}
+	return &orderLog, nil
+}
+
+func getGoodLog(thingID int) (*pb.GoodLog, error) {
+	var goodLog pb.GoodLog
+	// ---------------- thing ----------------
+	thing, err := dao.ThingDao.Get(thingID)
+	if err != nil {
+		logger.Error("Fail to finish ThingDao.Get",
+			zap.Any("thingID", thingID),
+			zap.Error(err))
+		return nil, err
+	}
+
+	// ---------------- thing-option ----------------
+	thingOptionRecords, err := dao.ThingOptionRecordDao.GetByThingID(int(thing.ID))
+	if err != nil {
+		logger.Error("Fail to finish ThingOptionRecordDao.GetByThingID",
+			zap.Any("thingID", thingID),
+			zap.Error(err))
+		return nil, err
+	}
+
+	optionClassNameToOptionLogs := make(map[string][]*pb.OptionLog)
+	for _, thingOptionRecord := range thingOptionRecords {
+		option, err := dao.OptionDao.Get(thingOptionRecord.OptionID)
+		if err != nil {
+			logger.Error("Fail to finish OptionDao.Get",
+				zap.Any("optionID", thingOptionRecord.OptionID),
+				zap.Error(err))
+			return nil, err
+		}
+
+		optionClass, err := dao.OptionClassDao.Get(option.OptionClassID)
+		if err != nil {
+			logger.Error("Fail to finish OptionClassDao.Get",
+				zap.Any("optionClassID", option.OptionClassID),
+				zap.Error(err))
+			return nil, err
+		}
+		if optionClass != nil {
+			optionClassNameToOptionLogs[optionClass.Name] = append(
+				optionClassNameToOptionLogs[optionClass.Name],
+				&pb.OptionLog{Name: option.Name},
+			)
+		}
+	}
+
+	// ---------------- thing-attachGood ----------------
+	thingAttachGoodRecords, err := dao.ThingAttachGoodRecordDao.GetByThingID(int(thing.ID))
+	if err != nil {
+		logger.Error("Fail to finish ThingAttachGoodRecordDao.GetByThingID",
+			zap.Any("thingID", thingID),
+			zap.Error(err))
+		return nil, err
+	}
+
+	attachGoodClassNameToGoodLogs := make(map[string][]*pb.AttachGoodLog)
+	for _, thingAttachGoodRecord := range thingAttachGoodRecords {
+		attachGood, err := dao.GoodDao.Get(thingAttachGoodRecord.AttachGoodID)
+		if err != nil {
+			logger.Error("Fail to finish OptionDao.Get",
+				zap.Any("attachGoodID", thingAttachGoodRecord.AttachGoodID),
+				zap.Error(err))
+			return nil, err
+		}
+
+		attachGoodClass, err := dao.GoodClassDao.Get(attachGood.ClassID)
+		if err != nil {
+			logger.Error("Fail to finish GoodClassDao.Get",
+				zap.Any("attachGoodClassID", attachGood.ClassID),
+				zap.Error(err))
+			return nil, err
+		}
+		if attachGoodClass != nil {
+			attachGoodClassNameToGoodLogs[attachGoodClass.Name] = append(
+				attachGoodClassNameToGoodLogs[attachGoodClass.Name],
+				&pb.AttachGoodLog{
+					Name:  attachGood.Name,
+					Price: float32(attachGood.Price),
+				},
+			)
+		}
+	}
+
+	// ---------------- goodLog ----------------
+	good, err := dao.GoodDao.Get(thing.GoodID)
+	if err != nil {
+		logger.Error("Fail to finish GoodDao.Get",
+			zap.Any("goodID", thing.GoodID),
+			zap.Error(err))
+		return nil, err
+	}
+	goodLog.Price = float32(thing.Price)
+	goodLog.Name = good.Name
+
+	for optionClassName, optionLogs := range optionClassNameToOptionLogs {
+		if len(optionLogs) == 0 {
+			goodLog.OptionClassLogs = append(goodLog.OptionClassLogs, &pb.OptionClassLog{
+				Name: optionClassName,
+			})
+			continue
+		}
+		goodLog.OptionClassLogs = append(goodLog.OptionClassLogs, &pb.OptionClassLog{
+			Name:      optionClassName,
+			OptionLog: optionLogs[0],
+		})
+	}
+	for attachGoodClassName, attachGoods := range attachGoodClassNameToGoodLogs {
+		goodLog.AttachGoodClassLogs = append(goodLog.AttachGoodClassLogs, &pb.AttachGoodClassLog{
+			Name:           attachGoodClassName,
+			AttachGoodLogs: attachGoods,
+		})
+	}
+	return &goodLog, nil
+}

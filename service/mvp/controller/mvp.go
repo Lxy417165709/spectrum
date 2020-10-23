@@ -11,7 +11,6 @@ import (
 	"spectrum/common/pb"
 	"spectrum/service/mvp/dao"
 	"spectrum/service/mvp/model"
-	"time"
 )
 
 type MvpServer struct {
@@ -123,114 +122,114 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 	return &res, nil
 }
 
-func (MvpServer) SellGood(ctx context.Context, req *pb.SellGoodReq) (*pb.SellGoodRes, error) {
-	logs.Info("SellGood", ctx, req)
-
-	var res pb.SellGoodRes
-
-	// 1. 判断商品是否存在
-	good, err := dao.GoodDao.GetByName(req.GoodName)
-	if err != nil {
-		logs.Error(err)
-		return nil, errors.New("Fail to finish GoodDao.GetByName")
-	}
-	if good == nil {
-		return nil, errors.New("Good not existed")
-	}
-
-	// 2. 创建销售记录
-	if err := dao.SellRecordDao.Create(int(good.ID), float64(req.SellPrice)); err != nil {
-		logs.Error(err)
-		return nil, err
-	}
-	return &res, nil
-}
-
-func (MvpServer) AddBilliardDesk(ctx context.Context, req *pb.AddBilliardDeskReq) (*pb.AddBilliardDeskRes, error) {
-	logs.Info("AddBilliardDesk", ctx, req)
-
-	var res pb.AddBilliardDeskRes
-
-	// 1. 判断桌名是否重复
-	desk, err := dao.BilliardDeskDao.GetByName(req.BilliardDeskName)
-	if err != nil {
-		logs.Error(err)
-		return nil, errors.New("Fail to finish BilliardDeskDao.GetByName")
-	}
-	if desk != nil {
-		return nil, errors.New("Desk name dumplicate")
-	}
-
-	// 2. 创建台球桌
-	if err := dao.BilliardDeskDao.Create(req.BilliardDeskName); err != nil {
-		logs.Error(err)
-		return nil, err
-	}
-	return &res, nil
-}
-
-func (MvpServer) BeginPlayBilliard(ctx context.Context, req *pb.BeginPlayBilliardReq) (*pb.BeginPlayBilliardRes, error) {
-	logs.Info("BeginPlayBilliard", ctx, req)
-
-	var res pb.BeginPlayBilliardRes
-
-	// 1. 判断桌名是否存在
-	desk, err := dao.BilliardDeskDao.GetByName(req.BilliardDeskName)
-	if err != nil {
-		logs.Error(err)
-		return nil, errors.New("Fail to finish BilliardDeskDao.GetByName")
-	}
-	if desk == nil {
-		return nil, errors.New("Desk not exist")
-	}
-
-	// 2. 判断记录是否存在
-	record, err := dao.PlayRecordDao.Get(int(desk.ID), time.Unix(req.BeginPlayTimestamp, 0))
-	if err != nil {
-		logs.Error(err)
-		return nil, errors.New("Fail to finish PlayRecordDao.Get")
-	}
-	if record != nil {
-		return nil, errors.New("Record has exist")
-	}
-
-	// 3. 创建玩台球的记录
-	if err := dao.PlayRecordDao.Create(
-		int(desk.ID),
-		time.Unix(req.BeginPlayTimestamp, 0),
-	); err != nil {
-		logs.Error(err)
-		return nil, err
-	}
-	return &res, nil
-}
-
-func (MvpServer) StopPlayBilliard(ctx context.Context, req *pb.StopPlayBilliardReq) (*pb.StopPlayBilliardRes, error) {
-	logs.Info("StopPlayBilliard", ctx, req)
-
-	var res pb.StopPlayBilliardRes
-
-	// 1. 判断桌名是否存在
-	desk, err := dao.BilliardDeskDao.GetByName(req.BilliardDeskName)
-	if err != nil {
-		logs.Error(err)
-		return nil, errors.New("Fail to finish BilliardDeskDao.GetByName")
-	}
-	if desk == nil {
-		return nil, errors.New("Desk not exist")
-	}
-
-	// 2. 更新玩台球的记录
-	if err := dao.PlayRecordDao.UpdateStopPlayTime(
-		int(desk.ID),
-		time.Unix(req.BeginPlayTimestamp, 0),
-		time.Unix(req.StopPlayTimestamp, 0),
-	); err != nil {
-		logs.Error(err)
-		return nil, err
-	}
-	return &res, nil
-}
+//func (MvpServer) SellGood(ctx context.Context, req *pb.SellGoodReq) (*pb.SellGoodRes, error) {
+//	logs.Info("SellGood", ctx, req)
+//
+//	var res pb.SellGoodRes
+//
+//	// 1. 判断商品是否存在
+//	good, err := dao.GoodDao.GetByName(req.GoodName)
+//	if err != nil {
+//		logs.Error(err)
+//		return nil, errors.New("Fail to finish GoodDao.GetByName")
+//	}
+//	if good == nil {
+//		return nil, errors.New("Good not existed")
+//	}
+//
+//	// 2. 创建销售记录
+//	if err := unuse.SellRecordDao.Create(int(good.ID), float64(req.SellPrice)); err != nil {
+//		logs.Error(err)
+//		return nil, err
+//	}
+//	return &res, nil
+//}
+//
+//func (MvpServer) AddBilliardDesk(ctx context.Context, req *pb.AddBilliardDeskReq) (*pb.AddBilliardDeskRes, error) {
+//	logs.Info("AddBilliardDesk", ctx, req)
+//
+//	var res pb.AddBilliardDeskRes
+//
+//	// 1. 判断桌名是否重复
+//	desk, err := unuse.BilliardDeskDao.GetByName(req.BilliardDeskName)
+//	if err != nil {
+//		logs.Error(err)
+//		return nil, errors.New("Fail to finish BilliardDeskDao.GetByName")
+//	}
+//	if desk != nil {
+//		return nil, errors.New("Desk name dumplicate")
+//	}
+//
+//	// 2. 创建台球桌
+//	if err := unuse.BilliardDeskDao.Create(req.BilliardDeskName); err != nil {
+//		logs.Error(err)
+//		return nil, err
+//	}
+//	return &res, nil
+//}
+//
+//func (MvpServer) BeginPlayBilliard(ctx context.Context, req *pb.BeginPlayBilliardReq) (*pb.BeginPlayBilliardRes, error) {
+//	logs.Info("BeginPlayBilliard", ctx, req)
+//
+//	var res pb.BeginPlayBilliardRes
+//
+//	// 1. 判断桌名是否存在
+//	desk, err := unuse.BilliardDeskDao.GetByName(req.BilliardDeskName)
+//	if err != nil {
+//		logs.Error(err)
+//		return nil, errors.New("Fail to finish BilliardDeskDao.GetByName")
+//	}
+//	if desk == nil {
+//		return nil, errors.New("Desk not exist")
+//	}
+//
+//	// 2. 判断记录是否存在
+//	record, err := unuse.PlayRecordDao.Get(int(desk.ID), time.Unix(req.BeginPlayTimestamp, 0))
+//	if err != nil {
+//		logs.Error(err)
+//		return nil, errors.New("Fail to finish PlayRecordDao.Get")
+//	}
+//	if record != nil {
+//		return nil, errors.New("Record has exist")
+//	}
+//
+//	// 3. 创建玩台球的记录
+//	if err := unuse.PlayRecordDao.Create(
+//		int(desk.ID),
+//		time.Unix(req.BeginPlayTimestamp, 0),
+//	); err != nil {
+//		logs.Error(err)
+//		return nil, err
+//	}
+//	return &res, nil
+//}
+//
+//func (MvpServer) StopPlayBilliard(ctx context.Context, req *pb.StopPlayBilliardReq) (*pb.StopPlayBilliardRes, error) {
+//	logs.Info("StopPlayBilliard", ctx, req)
+//
+//	var res pb.StopPlayBilliardRes
+//
+//	// 1. 判断桌名是否存在
+//	desk, err := unuse.BilliardDeskDao.GetByName(req.BilliardDeskName)
+//	if err != nil {
+//		logs.Error(err)
+//		return nil, errors.New("Fail to finish BilliardDeskDao.GetByName")
+//	}
+//	if desk == nil {
+//		return nil, errors.New("Desk not exist")
+//	}
+//
+//	// 2. 更新玩台球的记录
+//	if err := unuse.PlayRecordDao.UpdateStopPlayTime(
+//		int(desk.ID),
+//		time.Unix(req.BeginPlayTimestamp, 0),
+//		time.Unix(req.StopPlayTimestamp, 0),
+//	); err != nil {
+//		logs.Error(err)
+//		return nil, err
+//	}
+//	return &res, nil
+//}
 
 func (MvpServer) Order(ctx context.Context, req *pb.OrderReq) (*pb.OrderRes, error) {
 	logs.Info("Order", ctx, req)
@@ -620,7 +619,10 @@ func (MvpServer) AddGoodClass(ctx context.Context, req *pb.AddGoodClassReq) (*pb
 	var res pb.AddGoodClassRes
 
 	// 1. 创建商品类
-	if err := dao.GoodClassDao.Create(req.GoodClass.Name, int(req.GoodClass.ClassType)); err != nil {
+	if err := dao.GoodClassDao.Create(&model.GoodClass{
+		Name:      req.GoodClass.Name,
+		ClassType: int(req.GoodClass.ClassType),
+	}); err != nil {
 		logger.Error("Fail to finish GoodClassDao.Create",
 			zap.String("goodClassName", req.GoodClass.Name),
 			zap.Any("goodClassType", req.GoodClass.ClassType),
@@ -686,162 +688,15 @@ func (MvpServer) GetOrderLog(ctx context.Context, req *pb.GetOrderLogReq) (*pb.G
 
 	var res pb.GetOrderLogRes
 
-	var orderLog pb.OrderLog
-
-	// 0. 获得订单
-	order, err := dao.OrderDao.Get(int(req.OrderID))
+	orderLog, err := getOrderLog(int(req.OrderID))
 	if err != nil {
-		logger.Error("Fail to finish OrderDao.Get",
-			zap.Any("orderID", req.OrderID),
+		logger.Error("Fail to finish getOrderLog",
+			zap.Int64("orderID", req.OrderID),
 			zap.Any("req", req),
 			zap.Error(err))
 		return nil, err
 	}
-	if order == nil {
-		logger.Warn("Order not exist", zap.Any("orderID", req.OrderID),
-			zap.Any("req", req),
-			zap.Error(err))
-		return nil, err
-	}
-	orderLog.Price = float32(order.Price)
-	orderLog.HasCheckedOut = order.HasCheckedOut == model.HasCheckedOut
-
-	// 1. 获得订单-物品记录
-	orderThingRecords, err := dao.OrderThingRecordDao.GetByOrderID(int(req.OrderID))
-	if err != nil {
-		logger.Error("Fail to finish OrderThingRecordDao.GetByOrderID",
-			zap.Any("req", req),
-			zap.Error(err))
-		return nil, err
-	}
-
-	// 2. 分物品处理
-	for _, orderThingRecord := range orderThingRecords {
-
-		var goodLog pb.GoodLog
-		// ---------------- thing ----------------
-		thing, err := dao.ThingDao.Get(orderThingRecord.ThingID)
-		if err != nil {
-			logger.Error("Fail to finish ThingDao.Get",
-				zap.Any("thingID", orderThingRecord.ThingID),
-				zap.Any("req", req),
-				zap.Error(err))
-			return nil, err
-		}
-
-		// ---------------- thing-option ----------------
-		thingOptionRecords, err := dao.ThingOptionRecordDao.GetByThingID(int(thing.ID))
-		if err != nil {
-			logger.Error("Fail to finish ThingOptionRecordDao.GetByThingID",
-				zap.Any("thingID", thing.ID),
-				zap.Any("req", req),
-				zap.Error(err))
-			return nil, err
-		}
-
-		optionClassNameToOptionLogs := make(map[string][]*pb.OptionLog)
-		for _, thingOptionRecord := range thingOptionRecords {
-			option, err := dao.OptionDao.Get(thingOptionRecord.OptionID)
-			if err != nil {
-				logger.Error("Fail to finish OptionDao.Get",
-					zap.Any("optionID", thingOptionRecord.OptionID),
-					zap.Any("req", req),
-					zap.Error(err))
-				return nil, err
-			}
-
-			optionClass, err := dao.OptionClassDao.Get(option.OptionClassID)
-			if err != nil {
-				logger.Error("Fail to finish OptionClassDao.Get",
-					zap.Any("optionClassID", option.OptionClassID),
-					zap.Any("req", req),
-					zap.Error(err))
-				return nil, err
-			}
-			if optionClass != nil {
-				optionClassNameToOptionLogs[optionClass.Name] = append(
-					optionClassNameToOptionLogs[optionClass.Name],
-					&pb.OptionLog{Name: option.Name},
-				)
-			}
-		}
-
-		// ---------------- thing-attachGood ----------------
-		thingAttachGoodRecords, err := dao.ThingAttachGoodRecordDao.GetByThingID(int(thing.ID))
-		if err != nil {
-			logger.Error("Fail to finish ThingAttachGoodRecordDao.GetByThingID",
-				zap.Any("thingID", thing.ID),
-				zap.Any("req", req),
-				zap.Error(err))
-			return nil, err
-		}
-
-		attachGoodClassNameToGoodLogs := make(map[string][]*pb.AttachGoodLog)
-		for _, thingAttachGoodRecord := range thingAttachGoodRecords {
-			attachGood, err := dao.GoodDao.Get(thingAttachGoodRecord.AttachGoodID)
-			if err != nil {
-				logger.Error("Fail to finish OptionDao.Get",
-					zap.Any("attachGoodID", thingAttachGoodRecord.AttachGoodID),
-					zap.Any("req", req),
-					zap.Error(err))
-				return nil, err
-			}
-
-			attachGoodClass, err := dao.GoodClassDao.Get(attachGood.ClassID)
-			if err != nil {
-				logger.Error("Fail to finish GoodClassDao.Get",
-					zap.Any("attachGoodClassID", attachGood.ClassID),
-					zap.Any("req", req),
-					zap.Error(err))
-				return nil, err
-			}
-			if attachGoodClass != nil {
-				attachGoodClassNameToGoodLogs[attachGoodClass.Name] = append(
-					attachGoodClassNameToGoodLogs[attachGoodClass.Name],
-					&pb.AttachGoodLog{
-						Name:  attachGood.Name,
-						Price: float32(attachGood.Price),
-					},
-				)
-			}
-		}
-
-		// ---------------- goodLog ----------------
-		good, err := dao.GoodDao.Get(thing.GoodID)
-		if err != nil {
-			logger.Error("Fail to finish GoodDao.Get",
-				zap.Any("goodID", thing.GoodID),
-				zap.Any("req", req),
-				zap.Error(err))
-			return nil, err
-		}
-		goodLog.Price = float32(thing.Price)
-		goodLog.Name = good.Name
-
-		for optionClassName, optionLogs := range optionClassNameToOptionLogs {
-			if len(optionLogs) == 0 {
-				goodLog.OptionClassLogs = append(goodLog.OptionClassLogs, &pb.OptionClassLog{
-					Name: optionClassName,
-				})
-				continue
-			}
-			goodLog.OptionClassLogs = append(goodLog.OptionClassLogs, &pb.OptionClassLog{
-				Name:      optionClassName,
-				OptionLog: optionLogs[0],
-			})
-		}
-		for attachGoodClassName, attachGoods := range attachGoodClassNameToGoodLogs {
-			goodLog.AttachGoodClassLogs = append(goodLog.AttachGoodClassLogs, &pb.AttachGoodClassLog{
-				Name:           attachGoodClassName,
-				AttachGoodLogs: attachGoods,
-			})
-		}
-
-		// ---------------- 贡献 orderLog ----------------
-		orderLog.GoodLogs = append(orderLog.GoodLogs, &goodLog)
-	}
-
-	res.OrderLog = &orderLog
-
+	res.OrderLog = orderLog
 	return &res, nil
 }
+

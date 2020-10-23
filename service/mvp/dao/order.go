@@ -17,6 +17,7 @@ func (orderDao) Create(value *model.Order) error {
 	}
 	return nil
 }
+
 func (orderDao) Get(id int) (*model.Order, error) {
 	obj, err := universalGet(id, &model.Order{})
 	if err != nil {
@@ -25,9 +26,8 @@ func (orderDao) Get(id int) (*model.Order, error) {
 			zap.Error(err))
 		return nil, err
 	}
-	if obj == nil{
-		return nil,nil
+	if obj == nil {
+		return nil, nil
 	}
 	return obj.(*model.Order), nil
 }
-

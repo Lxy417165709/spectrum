@@ -1,8 +1,9 @@
-package dao
+package unuse
 
 import (
 	"github.com/astaxie/beego/logs"
 	"github.com/jinzhu/gorm"
+	"spectrum/service/mvp/dao"
 	"spectrum/service/mvp/model"
 	"time"
 )
@@ -12,9 +13,9 @@ var PlayRecordDao playRecordDao
 type playRecordDao struct{}
 
 func (playRecordDao) Create(deskID int, beginPlayTime time.Time) error {
-	createTableWhenNotExist(&model.PlayRecord{})
+	dao.createTableWhenNotExist(&model.PlayRecord{})
 
-	db := mainDB.Create(&model.PlayRecord{
+	db := dao.mainDB.Create(&model.PlayRecord{
 		BilliardDeskID: deskID,
 		BeginPlayTime:  beginPlayTime,
 		StopPlayTime:   beginPlayTime,
@@ -27,10 +28,10 @@ func (playRecordDao) Create(deskID int, beginPlayTime time.Time) error {
 }
 
 func (playRecordDao) Get(deskID int, beginPlayTime time.Time) (*model.PlayRecord, error) {
-	createTableWhenNotExist(&model.PlayRecord{})
+	dao.createTableWhenNotExist(&model.PlayRecord{})
 
 	var record model.PlayRecord
-	db := mainDB.First(&record, "billiard_desk_id = ? and begin_play_time = ?", deskID, beginPlayTime)
+	db := dao.mainDB.First(&record, "billiard_desk_id = ? and begin_play_time = ?", deskID, beginPlayTime)
 	if err := db.Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, nil
@@ -42,8 +43,8 @@ func (playRecordDao) Get(deskID int, beginPlayTime time.Time) (*model.PlayRecord
 }
 
 func (playRecordDao) UpdateBeginPlayTime(deskID int, beginPlayTime time.Time) error {
-	createTableWhenNotExist(&model.PlayRecord{})
-	db := mainDB.Table(model.PlayRecord{}.TableName())
+	dao.createTableWhenNotExist(&model.PlayRecord{})
+	db := dao.mainDB.Table(model.PlayRecord{}.TableName())
 	db = db.Where("billiard_desk_id = ? and begin_play_time = ?", deskID, beginPlayTime).Update(&model.PlayRecord{
 		BeginPlayTime: beginPlayTime,
 	})
@@ -55,9 +56,9 @@ func (playRecordDao) UpdateBeginPlayTime(deskID int, beginPlayTime time.Time) er
 }
 
 func (playRecordDao) UpdateStopPlayTime(deskID int, beginPlayTime time.Time, stopPlayTime time.Time) error {
-	createTableWhenNotExist(&model.PlayRecord{})
+	dao.createTableWhenNotExist(&model.PlayRecord{})
 
-	db := mainDB.Table(model.PlayRecord{}.TableName())
+	db := dao.mainDB.Table(model.PlayRecord{}.TableName())
 	db = db.Where("billiard_desk_id = ? and begin_play_time = ?", deskID, beginPlayTime).Update(&model.PlayRecord{
 		StopPlayTime: stopPlayTime,
 	})

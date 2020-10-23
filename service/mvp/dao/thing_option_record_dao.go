@@ -18,7 +18,7 @@ func (thingOptionRecordDao) Create(value *model.ThingOptionRecord) error {
 	return nil
 }
 
-func (thingOptionRecordDao)GetByThingID(thingID int) ([]*model.ThingOptionRecord,error) {
+func (thingOptionRecordDao) GetByThingID(thingID int) ([]*model.ThingOptionRecord, error) {
 	createTableWhenNotExist(&model.ThingOptionRecord{})
 
 	var thingOptionRecords []*model.ThingOptionRecord

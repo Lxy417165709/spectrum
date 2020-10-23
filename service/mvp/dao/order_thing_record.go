@@ -11,7 +11,11 @@ var OrderThingRecordDao orderThingRecordDao
 type orderThingRecordDao struct{}
 
 func (orderThingRecordDao) Create(value *model.OrderThingRecord) error {
-	return universalCreate(value)
+	if err := universalCreate(value); err != nil {
+		logger.Error("Fail to finish universalCreate", zap.Any("value", value), zap.Error(err))
+		return err
+	}
+	return nil
 }
 
 func (orderThingRecordDao) GetByOrderID(orderID int) ([]*model.OrderThingRecord, error) {

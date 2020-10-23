@@ -11,6 +11,20 @@ var OptionDao optionDao
 
 type optionDao struct{}
 
+func (optionDao) Get(id int) (*model.Option, error) {
+	obj, err := universalGet(id, &model.Option{})
+	if err != nil {
+		logger.Error("Fail to finish universalGet",
+			zap.Any("id", id),
+			zap.Error(err))
+		return nil, err
+	}
+	if obj == nil {
+		return nil, nil
+	}
+	return obj.(*model.Option), nil
+}
+
 func (optionDao) Create(optionClassID int, optionName string) error {
 	createTableWhenNotExist(&model.Option{})
 	db := mainDB.Create(&model.Option{
@@ -64,21 +78,6 @@ func (optionDao) GetByName(name string) (*model.Option, error) {
 		logger.Error("Fail to finish mainDB.First",
 			zap.Any("name", name),
 			zap.Error(err))
-		return nil, err
-	}
-	return &obj, nil
-}
-
-func (optionDao) Get(id int) (*model.Option, error) {
-	createTableWhenNotExist(&model.Option{})
-
-	var obj model.Option
-	db := mainDB.First(&obj, "id = ?", id)
-	if err := db.Error; err != nil {
-		if gorm.IsRecordNotFoundError(err) {
-			return nil, nil
-		}
-		logger.Error("Fail to finish mainDB.first", zap.Int("id", id), zap.Error(err))
 		return nil, err
 	}
 	return &obj, nil

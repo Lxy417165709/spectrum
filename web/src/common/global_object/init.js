@@ -46,5 +46,4 @@ export default{
       console.log("global_good_classes",global.goodClasses)
     })
   }
-
 }

@@ -21,7 +21,6 @@ func (thingDao) Create(value *model.Thing) error {
 
 func (thingDao) Get(id int) (*model.Thing, error) {
 	createTableWhenNotExist(&model.Thing{})
-
 	var thing model.Thing
 	db := mainDB.First(&thing, "id = ?", id)
 	if err := db.Error; err != nil {

@@ -26,6 +26,7 @@ func createTableWhenNotExist(table interface{}) {
 		mainDB.CreateTable(emptyTable)
 	}
 }
+
 func universalCreate(value interface{}) error {
 	createTableWhenNotExist(value)
 	db := mainDB.Create(value)
@@ -37,7 +38,6 @@ func universalCreate(value interface{}) error {
 	}
 	return nil
 }
-
 
 func universalGet(id int, obj interface{}) (interface{}, error) {
 	createTableWhenNotExist(obj)
