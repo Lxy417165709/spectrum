@@ -50,5 +50,8 @@ export default {
         return "附属品"
     }
     return "未定义"
+  },
+  hasData(obj) {
+    return obj!==undefined && obj!==null
   }
 }

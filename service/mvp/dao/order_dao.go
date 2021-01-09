@@ -6,12 +6,12 @@ import (
 	"spectrum/service/mvp/model"
 )
 
-var GoodDao goodDao
+var OrderDao orderDao
 
-type goodDao struct{}
+type orderDao struct{}
 
-func (goodDao) Create(obj *model.Good) error {
-	var table model.Good
+func (orderDao) Create(obj *model.Order) error {
+	var table model.Order
 	createTableWhenNotExist(&table)
 
 	if err := mainDB.Create(&obj).Error; err != nil {

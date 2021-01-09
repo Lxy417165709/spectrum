@@ -18,23 +18,14 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MvpClient interface {
 	AddGood(ctx context.Context, in *AddGoodReq, opts ...grpc.CallOption) (*AddGoodRes, error)
-	AddBilliardDesk(ctx context.Context, in *AddBilliardDeskReq, opts ...grpc.CallOption) (*AddBilliardDeskRes, error)
-	SellGood(ctx context.Context, in *SellGoodReq, opts ...grpc.CallOption) (*SellGoodRes, error)
-	BeginPlayBilliard(ctx context.Context, in *BeginPlayBilliardReq, opts ...grpc.CallOption) (*BeginPlayBilliardRes, error)
-	StopPlayBilliard(ctx context.Context, in *StopPlayBilliardReq, opts ...grpc.CallOption) (*StopPlayBilliardRes, error)
-	Order(ctx context.Context, in *OrderReq, opts ...grpc.CallOption) (*OrderRes, error)
-	GetOrderGoods(ctx context.Context, in *GetOrderGoodsReq, opts ...grpc.CallOption) (*GetOrderGoodsRes, error)
-	AddGoodType(ctx context.Context, in *AddGoodTypeReq, opts ...grpc.CallOption) (*AddGoodTypeRes, error)
-	Checkout(ctx context.Context, in *CheckoutReq, opts ...grpc.CallOption) (*CheckoutRes, error)
-	AddOptionClass(ctx context.Context, in *AddOptionClassReq, opts ...grpc.CallOption) (*AddOptionClassRes, error)
-	GetAllOptionClasses(ctx context.Context, in *GetAllOptionClassesReq, opts ...grpc.CallOption) (*GetAllOptionClassesRes, error)
-	DelOption(ctx context.Context, in *DelOptionReq, opts ...grpc.CallOption) (*DelOptionRes, error)
-	GetAllGoods(ctx context.Context, in *GetAllGoodsReq, opts ...grpc.CallOption) (*GetAllGoodsRes, error)
-	DelOptionClass(ctx context.Context, in *DelOptionClassReq, opts ...grpc.CallOption) (*DelOptionClassRes, error)
+	AddDesk(ctx context.Context, in *AddDeskReq, opts ...grpc.CallOption) (*AddDeskRes, error)
+	OrderGood(ctx context.Context, in *OrderGoodReq, opts ...grpc.CallOption) (*OrderGoodRes, error)
+	OpenDesk(ctx context.Context, in *OpenDeskReq, opts ...grpc.CallOption) (*OpenDeskRes, error)
+	CloseDesk(ctx context.Context, in *CloseDeskReq, opts ...grpc.CallOption) (*CloseDeskRes, error)
+	GetDesk(ctx context.Context, in *GetDeskReq, opts ...grpc.CallOption) (*GetDeskRes, error)
 	GetAllGoodClasses(ctx context.Context, in *GetAllGoodClassesReq, opts ...grpc.CallOption) (*GetAllGoodClassesRes, error)
 	AddGoodClass(ctx context.Context, in *AddGoodClassReq, opts ...grpc.CallOption) (*AddGoodClassRes, error)
-	DelGoodClass(ctx context.Context, in *DelGoodClassReq, opts ...grpc.CallOption) (*DelGoodClassRes, error)
-	GetOrderLog(ctx context.Context, in *GetOrderLogReq, opts ...grpc.CallOption) (*GetOrderLogRes, error)
+	CheckOut(ctx context.Context, in *CheckOutReq, opts ...grpc.CallOption) (*CheckOutRes, error)
 }
 
 type mvpClient struct {
@@ -54,117 +45,45 @@ func (c *mvpClient) AddGood(ctx context.Context, in *AddGoodReq, opts ...grpc.Ca
 	return out, nil
 }
 
-func (c *mvpClient) AddBilliardDesk(ctx context.Context, in *AddBilliardDeskReq, opts ...grpc.CallOption) (*AddBilliardDeskRes, error) {
-	out := new(AddBilliardDeskRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/AddBilliardDesk", in, out, opts...)
+func (c *mvpClient) AddDesk(ctx context.Context, in *AddDeskReq, opts ...grpc.CallOption) (*AddDeskRes, error) {
+	out := new(AddDeskRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/AddDesk", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mvpClient) SellGood(ctx context.Context, in *SellGoodReq, opts ...grpc.CallOption) (*SellGoodRes, error) {
-	out := new(SellGoodRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/SellGood", in, out, opts...)
+func (c *mvpClient) OrderGood(ctx context.Context, in *OrderGoodReq, opts ...grpc.CallOption) (*OrderGoodRes, error) {
+	out := new(OrderGoodRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/OrderGood", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mvpClient) BeginPlayBilliard(ctx context.Context, in *BeginPlayBilliardReq, opts ...grpc.CallOption) (*BeginPlayBilliardRes, error) {
-	out := new(BeginPlayBilliardRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/BeginPlayBilliard", in, out, opts...)
+func (c *mvpClient) OpenDesk(ctx context.Context, in *OpenDeskReq, opts ...grpc.CallOption) (*OpenDeskRes, error) {
+	out := new(OpenDeskRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/OpenDesk", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mvpClient) StopPlayBilliard(ctx context.Context, in *StopPlayBilliardReq, opts ...grpc.CallOption) (*StopPlayBilliardRes, error) {
-	out := new(StopPlayBilliardRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/StopPlayBilliard", in, out, opts...)
+func (c *mvpClient) CloseDesk(ctx context.Context, in *CloseDeskReq, opts ...grpc.CallOption) (*CloseDeskRes, error) {
+	out := new(CloseDeskRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/CloseDesk", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mvpClient) Order(ctx context.Context, in *OrderReq, opts ...grpc.CallOption) (*OrderRes, error) {
-	out := new(OrderRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/Order", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *mvpClient) GetOrderGoods(ctx context.Context, in *GetOrderGoodsReq, opts ...grpc.CallOption) (*GetOrderGoodsRes, error) {
-	out := new(GetOrderGoodsRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/GetOrderGoods", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *mvpClient) AddGoodType(ctx context.Context, in *AddGoodTypeReq, opts ...grpc.CallOption) (*AddGoodTypeRes, error) {
-	out := new(AddGoodTypeRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/AddGoodType", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *mvpClient) Checkout(ctx context.Context, in *CheckoutReq, opts ...grpc.CallOption) (*CheckoutRes, error) {
-	out := new(CheckoutRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/Checkout", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *mvpClient) AddOptionClass(ctx context.Context, in *AddOptionClassReq, opts ...grpc.CallOption) (*AddOptionClassRes, error) {
-	out := new(AddOptionClassRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/AddOptionClass", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *mvpClient) GetAllOptionClasses(ctx context.Context, in *GetAllOptionClassesReq, opts ...grpc.CallOption) (*GetAllOptionClassesRes, error) {
-	out := new(GetAllOptionClassesRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/GetAllOptionClasses", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *mvpClient) DelOption(ctx context.Context, in *DelOptionReq, opts ...grpc.CallOption) (*DelOptionRes, error) {
-	out := new(DelOptionRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/DelOption", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *mvpClient) GetAllGoods(ctx context.Context, in *GetAllGoodsReq, opts ...grpc.CallOption) (*GetAllGoodsRes, error) {
-	out := new(GetAllGoodsRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/GetAllGoods", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *mvpClient) DelOptionClass(ctx context.Context, in *DelOptionClassReq, opts ...grpc.CallOption) (*DelOptionClassRes, error) {
-	out := new(DelOptionClassRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/DelOptionClass", in, out, opts...)
+func (c *mvpClient) GetDesk(ctx context.Context, in *GetDeskReq, opts ...grpc.CallOption) (*GetDeskRes, error) {
+	out := new(GetDeskRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/GetDesk", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -189,18 +108,9 @@ func (c *mvpClient) AddGoodClass(ctx context.Context, in *AddGoodClassReq, opts 
 	return out, nil
 }
 
-func (c *mvpClient) DelGoodClass(ctx context.Context, in *DelGoodClassReq, opts ...grpc.CallOption) (*DelGoodClassRes, error) {
-	out := new(DelGoodClassRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/DelGoodClass", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *mvpClient) GetOrderLog(ctx context.Context, in *GetOrderLogReq, opts ...grpc.CallOption) (*GetOrderLogRes, error) {
-	out := new(GetOrderLogRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/GetOrderLog", in, out, opts...)
+func (c *mvpClient) CheckOut(ctx context.Context, in *CheckOutReq, opts ...grpc.CallOption) (*CheckOutRes, error) {
+	out := new(CheckOutRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/CheckOut", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -212,23 +122,14 @@ func (c *mvpClient) GetOrderLog(ctx context.Context, in *GetOrderLogReq, opts ..
 // for forward compatibility
 type MvpServer interface {
 	AddGood(context.Context, *AddGoodReq) (*AddGoodRes, error)
-	AddBilliardDesk(context.Context, *AddBilliardDeskReq) (*AddBilliardDeskRes, error)
-	SellGood(context.Context, *SellGoodReq) (*SellGoodRes, error)
-	BeginPlayBilliard(context.Context, *BeginPlayBilliardReq) (*BeginPlayBilliardRes, error)
-	StopPlayBilliard(context.Context, *StopPlayBilliardReq) (*StopPlayBilliardRes, error)
-	Order(context.Context, *OrderReq) (*OrderRes, error)
-	GetOrderGoods(context.Context, *GetOrderGoodsReq) (*GetOrderGoodsRes, error)
-	AddGoodType(context.Context, *AddGoodTypeReq) (*AddGoodTypeRes, error)
-	Checkout(context.Context, *CheckoutReq) (*CheckoutRes, error)
-	AddOptionClass(context.Context, *AddOptionClassReq) (*AddOptionClassRes, error)
-	GetAllOptionClasses(context.Context, *GetAllOptionClassesReq) (*GetAllOptionClassesRes, error)
-	DelOption(context.Context, *DelOptionReq) (*DelOptionRes, error)
-	GetAllGoods(context.Context, *GetAllGoodsReq) (*GetAllGoodsRes, error)
-	DelOptionClass(context.Context, *DelOptionClassReq) (*DelOptionClassRes, error)
+	AddDesk(context.Context, *AddDeskReq) (*AddDeskRes, error)
+	OrderGood(context.Context, *OrderGoodReq) (*OrderGoodRes, error)
+	OpenDesk(context.Context, *OpenDeskReq) (*OpenDeskRes, error)
+	CloseDesk(context.Context, *CloseDeskReq) (*CloseDeskRes, error)
+	GetDesk(context.Context, *GetDeskReq) (*GetDeskRes, error)
 	GetAllGoodClasses(context.Context, *GetAllGoodClassesReq) (*GetAllGoodClassesRes, error)
 	AddGoodClass(context.Context, *AddGoodClassReq) (*AddGoodClassRes, error)
-	DelGoodClass(context.Context, *DelGoodClassReq) (*DelGoodClassRes, error)
-	GetOrderLog(context.Context, *GetOrderLogReq) (*GetOrderLogRes, error)
+	CheckOut(context.Context, *CheckOutReq) (*CheckOutRes, error)
 	mustEmbedUnimplementedMvpServer()
 }
 
@@ -239,44 +140,20 @@ type UnimplementedMvpServer struct {
 func (UnimplementedMvpServer) AddGood(context.Context, *AddGoodReq) (*AddGoodRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddGood not implemented")
 }
-func (UnimplementedMvpServer) AddBilliardDesk(context.Context, *AddBilliardDeskReq) (*AddBilliardDeskRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddBilliardDesk not implemented")
+func (UnimplementedMvpServer) AddDesk(context.Context, *AddDeskReq) (*AddDeskRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddDesk not implemented")
 }
-func (UnimplementedMvpServer) SellGood(context.Context, *SellGoodReq) (*SellGoodRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SellGood not implemented")
+func (UnimplementedMvpServer) OrderGood(context.Context, *OrderGoodReq) (*OrderGoodRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OrderGood not implemented")
 }
-func (UnimplementedMvpServer) BeginPlayBilliard(context.Context, *BeginPlayBilliardReq) (*BeginPlayBilliardRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method BeginPlayBilliard not implemented")
+func (UnimplementedMvpServer) OpenDesk(context.Context, *OpenDeskReq) (*OpenDeskRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OpenDesk not implemented")
 }
-func (UnimplementedMvpServer) StopPlayBilliard(context.Context, *StopPlayBilliardReq) (*StopPlayBilliardRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method StopPlayBilliard not implemented")
+func (UnimplementedMvpServer) CloseDesk(context.Context, *CloseDeskReq) (*CloseDeskRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CloseDesk not implemented")
 }
-func (UnimplementedMvpServer) Order(context.Context, *OrderReq) (*OrderRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Order not implemented")
-}
-func (UnimplementedMvpServer) GetOrderGoods(context.Context, *GetOrderGoodsReq) (*GetOrderGoodsRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetOrderGoods not implemented")
-}
-func (UnimplementedMvpServer) AddGoodType(context.Context, *AddGoodTypeReq) (*AddGoodTypeRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddGoodType not implemented")
-}
-func (UnimplementedMvpServer) Checkout(context.Context, *CheckoutReq) (*CheckoutRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Checkout not implemented")
-}
-func (UnimplementedMvpServer) AddOptionClass(context.Context, *AddOptionClassReq) (*AddOptionClassRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddOptionClass not implemented")
-}
-func (UnimplementedMvpServer) GetAllOptionClasses(context.Context, *GetAllOptionClassesReq) (*GetAllOptionClassesRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAllOptionClasses not implemented")
-}
-func (UnimplementedMvpServer) DelOption(context.Context, *DelOptionReq) (*DelOptionRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DelOption not implemented")
-}
-func (UnimplementedMvpServer) GetAllGoods(context.Context, *GetAllGoodsReq) (*GetAllGoodsRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAllGoods not implemented")
-}
-func (UnimplementedMvpServer) DelOptionClass(context.Context, *DelOptionClassReq) (*DelOptionClassRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DelOptionClass not implemented")
+func (UnimplementedMvpServer) GetDesk(context.Context, *GetDeskReq) (*GetDeskRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDesk not implemented")
 }
 func (UnimplementedMvpServer) GetAllGoodClasses(context.Context, *GetAllGoodClassesReq) (*GetAllGoodClassesRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllGoodClasses not implemented")
@@ -284,11 +161,8 @@ func (UnimplementedMvpServer) GetAllGoodClasses(context.Context, *GetAllGoodClas
 func (UnimplementedMvpServer) AddGoodClass(context.Context, *AddGoodClassReq) (*AddGoodClassRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddGoodClass not implemented")
 }
-func (UnimplementedMvpServer) DelGoodClass(context.Context, *DelGoodClassReq) (*DelGoodClassRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DelGoodClass not implemented")
-}
-func (UnimplementedMvpServer) GetOrderLog(context.Context, *GetOrderLogReq) (*GetOrderLogRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetOrderLog not implemented")
+func (UnimplementedMvpServer) CheckOut(context.Context, *CheckOutReq) (*CheckOutRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CheckOut not implemented")
 }
 func (UnimplementedMvpServer) mustEmbedUnimplementedMvpServer() {}
 
@@ -299,7 +173,7 @@ type UnsafeMvpServer interface {
 	mustEmbedUnimplementedMvpServer()
 }
 
-func RegisterMvpServer(s *grpc.Server, srv MvpServer) {
+func RegisterMvpServer(s grpc.ServiceRegistrar, srv MvpServer) {
 	s.RegisterService(&_Mvp_serviceDesc, srv)
 }
 
@@ -321,236 +195,92 @@ func _Mvp_AddGood_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Mvp_AddBilliardDesk_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddBilliardDeskReq)
+func _Mvp_AddDesk_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddDeskReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MvpServer).AddBilliardDesk(ctx, in)
+		return srv.(MvpServer).AddDesk(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.Mvp/AddBilliardDesk",
+		FullMethod: "/pb.Mvp/AddDesk",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).AddBilliardDesk(ctx, req.(*AddBilliardDeskReq))
+		return srv.(MvpServer).AddDesk(ctx, req.(*AddDeskReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Mvp_SellGood_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SellGoodReq)
+func _Mvp_OrderGood_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OrderGoodReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MvpServer).SellGood(ctx, in)
+		return srv.(MvpServer).OrderGood(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.Mvp/SellGood",
+		FullMethod: "/pb.Mvp/OrderGood",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).SellGood(ctx, req.(*SellGoodReq))
+		return srv.(MvpServer).OrderGood(ctx, req.(*OrderGoodReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Mvp_BeginPlayBilliard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BeginPlayBilliardReq)
+func _Mvp_OpenDesk_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OpenDeskReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MvpServer).BeginPlayBilliard(ctx, in)
+		return srv.(MvpServer).OpenDesk(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.Mvp/BeginPlayBilliard",
+		FullMethod: "/pb.Mvp/OpenDesk",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).BeginPlayBilliard(ctx, req.(*BeginPlayBilliardReq))
+		return srv.(MvpServer).OpenDesk(ctx, req.(*OpenDeskReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Mvp_StopPlayBilliard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(StopPlayBilliardReq)
+func _Mvp_CloseDesk_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CloseDeskReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MvpServer).StopPlayBilliard(ctx, in)
+		return srv.(MvpServer).CloseDesk(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.Mvp/StopPlayBilliard",
+		FullMethod: "/pb.Mvp/CloseDesk",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).StopPlayBilliard(ctx, req.(*StopPlayBilliardReq))
+		return srv.(MvpServer).CloseDesk(ctx, req.(*CloseDeskReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Mvp_Order_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(OrderReq)
+func _Mvp_GetDesk_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDeskReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MvpServer).Order(ctx, in)
+		return srv.(MvpServer).GetDesk(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.Mvp/Order",
+		FullMethod: "/pb.Mvp/GetDesk",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).Order(ctx, req.(*OrderReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Mvp_GetOrderGoods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetOrderGoodsReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MvpServer).GetOrderGoods(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/pb.Mvp/GetOrderGoods",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).GetOrderGoods(ctx, req.(*GetOrderGoodsReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Mvp_AddGoodType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddGoodTypeReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MvpServer).AddGoodType(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/pb.Mvp/AddGoodType",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).AddGoodType(ctx, req.(*AddGoodTypeReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Mvp_Checkout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CheckoutReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MvpServer).Checkout(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/pb.Mvp/Checkout",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).Checkout(ctx, req.(*CheckoutReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Mvp_AddOptionClass_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddOptionClassReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MvpServer).AddOptionClass(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/pb.Mvp/AddOptionClass",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).AddOptionClass(ctx, req.(*AddOptionClassReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Mvp_GetAllOptionClasses_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAllOptionClassesReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MvpServer).GetAllOptionClasses(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/pb.Mvp/GetAllOptionClasses",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).GetAllOptionClasses(ctx, req.(*GetAllOptionClassesReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Mvp_DelOption_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DelOptionReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MvpServer).DelOption(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/pb.Mvp/DelOption",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).DelOption(ctx, req.(*DelOptionReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Mvp_GetAllGoods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAllGoodsReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MvpServer).GetAllGoods(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/pb.Mvp/GetAllGoods",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).GetAllGoods(ctx, req.(*GetAllGoodsReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Mvp_DelOptionClass_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DelOptionClassReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MvpServer).DelOptionClass(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/pb.Mvp/DelOptionClass",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).DelOptionClass(ctx, req.(*DelOptionClassReq))
+		return srv.(MvpServer).GetDesk(ctx, req.(*GetDeskReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -591,38 +321,20 @@ func _Mvp_AddGoodClass_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Mvp_DelGoodClass_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DelGoodClassReq)
+func _Mvp_CheckOut_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CheckOutReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MvpServer).DelGoodClass(ctx, in)
+		return srv.(MvpServer).CheckOut(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.Mvp/DelGoodClass",
+		FullMethod: "/pb.Mvp/CheckOut",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).DelGoodClass(ctx, req.(*DelGoodClassReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Mvp_GetOrderLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetOrderLogReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MvpServer).GetOrderLog(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/pb.Mvp/GetOrderLog",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).GetOrderLog(ctx, req.(*GetOrderLogReq))
+		return srv.(MvpServer).CheckOut(ctx, req.(*CheckOutReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -636,56 +348,24 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Mvp_AddGood_Handler,
 		},
 		{
-			MethodName: "AddBilliardDesk",
-			Handler:    _Mvp_AddBilliardDesk_Handler,
+			MethodName: "AddDesk",
+			Handler:    _Mvp_AddDesk_Handler,
 		},
 		{
-			MethodName: "SellGood",
-			Handler:    _Mvp_SellGood_Handler,
+			MethodName: "OrderGood",
+			Handler:    _Mvp_OrderGood_Handler,
 		},
 		{
-			MethodName: "BeginPlayBilliard",
-			Handler:    _Mvp_BeginPlayBilliard_Handler,
+			MethodName: "OpenDesk",
+			Handler:    _Mvp_OpenDesk_Handler,
 		},
 		{
-			MethodName: "StopPlayBilliard",
-			Handler:    _Mvp_StopPlayBilliard_Handler,
+			MethodName: "CloseDesk",
+			Handler:    _Mvp_CloseDesk_Handler,
 		},
 		{
-			MethodName: "Order",
-			Handler:    _Mvp_Order_Handler,
-		},
-		{
-			MethodName: "GetOrderGoods",
-			Handler:    _Mvp_GetOrderGoods_Handler,
-		},
-		{
-			MethodName: "AddGoodType",
-			Handler:    _Mvp_AddGoodType_Handler,
-		},
-		{
-			MethodName: "Checkout",
-			Handler:    _Mvp_Checkout_Handler,
-		},
-		{
-			MethodName: "AddOptionClass",
-			Handler:    _Mvp_AddOptionClass_Handler,
-		},
-		{
-			MethodName: "GetAllOptionClasses",
-			Handler:    _Mvp_GetAllOptionClasses_Handler,
-		},
-		{
-			MethodName: "DelOption",
-			Handler:    _Mvp_DelOption_Handler,
-		},
-		{
-			MethodName: "GetAllGoods",
-			Handler:    _Mvp_GetAllGoods_Handler,
-		},
-		{
-			MethodName: "DelOptionClass",
-			Handler:    _Mvp_DelOptionClass_Handler,
+			MethodName: "GetDesk",
+			Handler:    _Mvp_GetDesk_Handler,
 		},
 		{
 			MethodName: "GetAllGoodClasses",
@@ -696,12 +376,8 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Mvp_AddGoodClass_Handler,
 		},
 		{
-			MethodName: "DelGoodClass",
-			Handler:    _Mvp_DelGoodClass_Handler,
-		},
-		{
-			MethodName: "GetOrderLog",
-			Handler:    _Mvp_GetOrderLog_Handler,
+			MethodName: "CheckOut",
+			Handler:    _Mvp_CheckOut_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

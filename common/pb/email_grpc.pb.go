@@ -61,7 +61,7 @@ type UnsafeEmailServer interface {
 	mustEmbedUnimplementedEmailServer()
 }
 
-func RegisterEmailServer(s *grpc.Server, srv EmailServer) {
+func RegisterEmailServer(s grpc.ServiceRegistrar, srv EmailServer) {
 	s.RegisterService(&_Email_serviceDesc, srv)
 }
 

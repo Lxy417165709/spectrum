@@ -60,15 +60,6 @@ func (Thing ) TableName() string {
 	return "thing"
 }
 
-type Order struct {
-	gorm.Model    // ID需额外生成
-	Price         float64
-	HasCheckedOut int `json:"has_checked_out"`
-}
-
-func (Order) TableName() string {
-	return "order"
-}
 
 
 
@@ -100,3 +91,13 @@ type ThingAttachGoodRecord struct {
 func (ThingAttachGoodRecord) TableName() string {
 	return "thing_attach_good_record"
 }
+
+//type GoodAttachClassRecord struct {
+//	gorm.Model
+//	GoodID        int `json:"good_id"`
+//	AttachGoodClassID int `json:"attach_good_class_id"`
+//}
+//
+//func (GoodAttachClassRecord) TableName() string {
+//	return "good_attach_class_record"
+//}

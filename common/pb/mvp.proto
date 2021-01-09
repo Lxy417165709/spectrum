@@ -2,44 +2,118 @@ syntax = "proto3";
 
 package pb;
 
+enum DiscountType {
+  NONE = 0;           // 无
+  REBATE = 1;         // 打折
+  FULL_REDUCTION = 2; // 满减
+  FREE = 3;           // 免单
+}
+
+enum PriceRuleType {
+  Time = 0;
+  Count = 1;
+}
+
+enum ElementType {
+  Main = 0;
+  Attach = 1;
+}
+
+
+// ---------------------- instance 相关 ----------------------
+message Order {
+  int64 id = 1;
+  Desk desk = 2;
+  Discount discount = 3;
+}
+
+message Desk{
+  Space space = 1;
+  int64 startTimestamp = 2;
+  int64 endTimestamp = 3;
+  repeated Good goods = 4;
+  bool hadCheckOut = 5;
+  Discount discount = 6;
+}
+
+
+message Space {
+  string name = 1;
+  int64 num = 2;
+  double price = 3;
+  PriceRuleType priceRuleType = 4;
+}
+
+message GoodClass {
+  string name = 1;
+  repeated Good goods = 2;
+}
+
+message Good{
+  int64 id = 1;
+  Element mainElement = 2;
+  repeated Element attachElements = 3;
+  repeated DiscountType selectableDiscountTypes = 4;
+  bool hadCheckOut = 5;
+  Discount discount = 6;
+}
+
+message Element {
+  string name = 1;
+  repeated SizeInfo sizeInfos = 2;
+}
+
+message SizeInfo {
+  string size = 1;
+  double price = 2;
+  string  pictureStorePath = 3;
+  bool isSelected = 4;
+}
+
+message Discount {
+  DiscountType discountType = 1;
+  repeated string parameters = 2;
+}
+
+
+// 添加货物
 message AddGoodReq {
   Good good = 1;
-  string goodClassName = 2;
+  string className = 2;
 }
+
 message AddGoodRes {}
 
-
-
-message SellGoodReq {
-  string goodName = 1;
-  float sellPrice = 2;
+message AddGoodClassReq{
+  GoodClass goodClass = 1;
 }
-message SellGoodRes {}
+message AddGoodClassRes{}
 
-
-
-message AddBilliardDeskReq {
-  string billiardDeskName = 1;
+message AddDeskReq{
+  Desk desk = 1;
 }
-message AddBilliardDeskRes {}
+
+message AddDeskRes{}
 
 
-
-message BeginPlayBilliardReq {
-  string billiardDeskName = 1;
-  int64 beginPlayTimestamp = 2;
+message OrderGoodReq{
+  int64 deskID = 1;
+  repeated Good goods = 2;
+  string className = 3;
 }
-message BeginPlayBilliardRes {}
 
-
-
-message StopPlayBilliardReq {
-  string billiardDeskName = 1;
-  int64 beginPlayTimestamp = 2;
-  int64  stopPlayTimestamp = 3;
+message OrderGoodRes{
+  // 这里可以返回 goods, 这些goods 有 goodID
 }
-message StopPlayBilliardRes {}
 
+message OpenDeskReq{
+  string spaceName = 1;
+  int64 spaceNum = 2;
+}
+
+message OpenDeskRes{
+  int64 deskID = 1;
+}
 
 message OrderReq{
   Order order = 1;
@@ -48,64 +122,13 @@ message OrderRes{
   int64 orderID = 1;
 }
 
-
-message GetOrderGoodsReq{
-  int64 orderID = 1;
+message CloseDeskReq{
+  int64 deskID = 1;
 }
-message GetOrderGoodsRes{
-  repeated Good goods = 1;
+message CloseDeskRes{
 }
 
 
-message AddGoodTypeReq {
-  string typeName = 1;
-}
-message AddGoodTypeRes {}
-
-
-message CheckoutReq {
-  int64 orderID = 1;
-}
-message CheckoutRes{
-  float price = 1;
-}
-
-
-message AddOptionClassReq{
-  OptionClass optionClass = 1;
-}
-message AddOptionClassRes{}
-
-
-message GetAllOptionClassesReq{}
-message GetAllOptionClassesRes{
-  repeated OptionClass optionClasses = 1;
-}
-
-
-message DelOptionReq {
-  string className = 1;
-  string optionName = 2;
-}
-message DelOptionRes {}
-
-
-message GetAllGoodsReq{}
-message GetAllGoodsRes{
-  repeated Good goods = 1;
-}
-
-
-message DelOptionClassReq{
-  repeated OptionClass OptionClasses = 1;
-}
-message DelOptionClassRes{}
-
-
-message DelGoodClassReq{
-  repeated GoodClass goodClasses = 1;
-}
-message DelGoodClassRes{}
 
 
 message GetAllGoodClassesReq{}
@@ -114,125 +137,35 @@ message GetAllGoodClassesRes{
 }
 
 
-message AddGoodClassReq{
-  GoodClass goodClass = 1;
-}
-message AddGoodClassRes{}
-
-
-message GetOrderLogReq{
-  int64 orderID = 1;
+message GetDeskReq{
+  int64 deskID = 1;
 }
 
-message GetOrderLogRes{
-  OrderLog orderLog = 1;
+message GetDeskRes{
+  Desk desk = 1;
+}
+
+message CheckOutReq {
+  int64 deskID = 1;
+}
+
+message CheckOutRes{
+  double expanse = 1;
 }
 
 service Mvp {
-  rpc AddGood(AddGoodReq) returns (AddGoodRes);
-  rpc AddBilliardDesk(AddBilliardDeskReq) returns (AddBilliardDeskRes);
-  rpc SellGood(SellGoodReq) returns (SellGoodRes);
-  rpc BeginPlayBilliard(BeginPlayBilliardReq) returns (BeginPlayBilliardRes);
-  rpc StopPlayBilliard(StopPlayBilliardReq) returns (StopPlayBilliardRes);
-  rpc Order(OrderReq) returns (OrderRes);
-  rpc GetOrderGoods(GetOrderGoodsReq) returns (GetOrderGoodsRes);
-  rpc AddGoodType(AddGoodTypeReq) returns (AddGoodTypeRes);
-  rpc Checkout(CheckoutReq) returns (CheckoutRes);
-  rpc AddOptionClass(AddOptionClassReq) returns (AddOptionClassRes);
-  rpc GetAllOptionClasses(GetAllOptionClassesReq) returns (GetAllOptionClassesRes);
-  rpc DelOption(DelOptionReq) returns (DelOptionRes);
-  rpc GetAllGoods(GetAllGoodsReq) returns (GetAllGoodsRes);
-  rpc DelOptionClass(DelOptionClassReq) returns (DelOptionClassRes);
-  rpc GetAllGoodClasses(GetAllGoodClassesReq) returns (GetAllGoodClassesRes);
-  rpc AddGoodClass(AddGoodClassReq) returns (AddGoodClassRes);
-  rpc DelGoodClass(DelGoodClassReq) returns (DelGoodClassRes);
-  rpc GetOrderLog(GetOrderLogReq) returns (GetOrderLogRes);
+  rpc AddGoodClass(AddGoodClassReq) returns (AddGoodClassRes);  // 添加商品类
+  rpc AddGood(AddGoodReq) returns (AddGoodRes);           // 添加货物
+
+  rpc AddDesk(AddDeskReq) returns (AddDeskRes);           // 添加桌位
+  rpc OrderGood(OrderGoodReq) returns (OrderGoodRes);     // 为某桌点单
+  rpc OpenDesk(OpenDeskReq) returns(OpenDeskRes);         // 开桌
+  rpc CloseDesk(CloseDeskReq) returns(CloseDeskRes);      // 退桌
+  rpc GetDesk(GetDeskReq) returns(GetDeskRes);            // 获得某桌的信息 （如开桌时长、点单货物...）
+  rpc CheckOut(CheckOutReq) returns(CheckOutRes);         // 某桌结账
+
+  rpc GetAllGoodClasses(GetAllGoodClassesReq) returns (GetAllGoodClassesRes); // 获得所有商品类及其下的货物
+
 }
 
 
-// ------------------------- 枚举 -------------------------
-enum Discount {
-  NONE = 0;           // 无
-  REBATE = 1;         // 打折
-  FULL_REDUCTION = 2; // 满减
-  FREE = 3;           // 免单
-}
-
-enum ClassType {
-  Single = 0; // 单品类
-  Attach = 1; // 附属品类
-}
-
-
-// ---------------------- class 相关 ----------------------
-message OptionClass {
-  string name = 1;
-  int32 selectOptionIndex = 2;
-  repeated Option options = 3;
-}
-
-
-message GoodClass{
-  string name = 1;
-  ClassType classType = 2;
-  repeated Good goods = 3;
-  repeated string selectGoodNames = 4;
-}
-
-
-// ---------------------- instance 相关 ----------------------
-message Order {
-  repeated Good goods = 1;
-  int64 createdTime = 2;
-  //  map<string, DiscountArray> discountsMap = 3;   // 用 0 表示整单折扣，大于 0 则是单品折扣
-}
-
-message Good{
-  string name = 1;
-  string pictureStorePath = 2;
-  float price = 3;
-  repeated OptionClass optionClasses = 4;
-  repeated GoodClass attachGoodClasses = 5;
-}
-
-message Option {
-  string name = 1;
-}
-
-
-message OrderLog {
-  repeated GoodLog goodLogs = 1;
-  float price = 2;
-  bool hasCheckedOut = 3;
-}
-
-message GoodLog {
-  float price = 1;
-  string name = 2;
-  repeated OptionClassLog optionClassLogs = 3;
-  repeated AttachGoodClassLog attachGoodClassLogs = 4;
-}
-
-message OptionClassLog{
-  string name = 1;
-  OptionLog optionLog = 2;
-}
-
-message AttachGoodClassLog{
-  string name = 1;
-  repeated AttachGoodLog attachGoodLogs = 2;
-}
-
-message OptionLog {
-  string name = 1;
-}
-
-message AttachGoodLog {
-  string name = 1;
-  float price = 2;
-}
-
-// --------------------------- 其他 -------------------------
-message DiscountArray{
-  repeated Discount discounts = 1;
-}

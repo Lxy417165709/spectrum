@@ -6,15 +6,15 @@ import (
 	"spectrum/service/mvp/model"
 )
 
-var GoodDao goodDao
+var SpaceDao spaceDao
 
-type goodDao struct{}
+type spaceDao struct{}
 
-func (goodDao) Create(obj *model.Good) error {
-	var table model.Good
+func (spaceDao) Create(obj *model.Space) error {
+	var table model.Space
 	createTableWhenNotExist(&table)
 
-	if err := mainDB.Create(&obj).Error; err != nil {
+	if err := mainDB.Create(obj).Error; err != nil {
 		logger.Error("Fail to finish mainDB.Create", zap.Any("obj", obj), zap.Error(err))
 		return err
 	}
