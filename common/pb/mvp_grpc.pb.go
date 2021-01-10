@@ -17,15 +17,17 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MvpClient interface {
+	AddGoodClass(ctx context.Context, in *AddGoodClassReq, opts ...grpc.CallOption) (*AddGoodClassRes, error)
 	AddGood(ctx context.Context, in *AddGoodReq, opts ...grpc.CallOption) (*AddGoodRes, error)
+	AddElement(ctx context.Context, in *AddElementReq, opts ...grpc.CallOption) (*AddElementRes, error)
 	AddDesk(ctx context.Context, in *AddDeskReq, opts ...grpc.CallOption) (*AddDeskRes, error)
 	OrderGood(ctx context.Context, in *OrderGoodReq, opts ...grpc.CallOption) (*OrderGoodRes, error)
 	OpenDesk(ctx context.Context, in *OpenDeskReq, opts ...grpc.CallOption) (*OpenDeskRes, error)
 	CloseDesk(ctx context.Context, in *CloseDeskReq, opts ...grpc.CallOption) (*CloseDeskRes, error)
 	GetDesk(ctx context.Context, in *GetDeskReq, opts ...grpc.CallOption) (*GetDeskRes, error)
-	GetAllGoodClasses(ctx context.Context, in *GetAllGoodClassesReq, opts ...grpc.CallOption) (*GetAllGoodClassesRes, error)
-	AddGoodClass(ctx context.Context, in *AddGoodClassReq, opts ...grpc.CallOption) (*AddGoodClassRes, error)
+	FormExpense(ctx context.Context, in *FormExpenseReq, opts ...grpc.CallOption) (*FormExpenseRes, error)
 	CheckOut(ctx context.Context, in *CheckOutReq, opts ...grpc.CallOption) (*CheckOutRes, error)
+	GetAllGoodClasses(ctx context.Context, in *GetAllGoodClassesReq, opts ...grpc.CallOption) (*GetAllGoodClassesRes, error)
 }
 
 type mvpClient struct {
@@ -36,9 +38,27 @@ func NewMvpClient(cc grpc.ClientConnInterface) MvpClient {
 	return &mvpClient{cc}
 }
 
+func (c *mvpClient) AddGoodClass(ctx context.Context, in *AddGoodClassReq, opts ...grpc.CallOption) (*AddGoodClassRes, error) {
+	out := new(AddGoodClassRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/AddGoodClass", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *mvpClient) AddGood(ctx context.Context, in *AddGoodReq, opts ...grpc.CallOption) (*AddGoodRes, error) {
 	out := new(AddGoodRes)
 	err := c.cc.Invoke(ctx, "/pb.Mvp/AddGood", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *mvpClient) AddElement(ctx context.Context, in *AddElementReq, opts ...grpc.CallOption) (*AddElementRes, error) {
+	out := new(AddElementRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/AddElement", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -90,18 +110,9 @@ func (c *mvpClient) GetDesk(ctx context.Context, in *GetDeskReq, opts ...grpc.Ca
 	return out, nil
 }
 
-func (c *mvpClient) GetAllGoodClasses(ctx context.Context, in *GetAllGoodClassesReq, opts ...grpc.CallOption) (*GetAllGoodClassesRes, error) {
-	out := new(GetAllGoodClassesRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/GetAllGoodClasses", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *mvpClient) AddGoodClass(ctx context.Context, in *AddGoodClassReq, opts ...grpc.CallOption) (*AddGoodClassRes, error) {
-	out := new(AddGoodClassRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/AddGoodClass", in, out, opts...)
+func (c *mvpClient) FormExpense(ctx context.Context, in *FormExpenseReq, opts ...grpc.CallOption) (*FormExpenseRes, error) {
+	out := new(FormExpenseRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/FormExpense", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -117,19 +128,30 @@ func (c *mvpClient) CheckOut(ctx context.Context, in *CheckOutReq, opts ...grpc.
 	return out, nil
 }
 
+func (c *mvpClient) GetAllGoodClasses(ctx context.Context, in *GetAllGoodClassesReq, opts ...grpc.CallOption) (*GetAllGoodClassesRes, error) {
+	out := new(GetAllGoodClassesRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/GetAllGoodClasses", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MvpServer is the server API for Mvp service.
 // All implementations must embed UnimplementedMvpServer
 // for forward compatibility
 type MvpServer interface {
+	AddGoodClass(context.Context, *AddGoodClassReq) (*AddGoodClassRes, error)
 	AddGood(context.Context, *AddGoodReq) (*AddGoodRes, error)
+	AddElement(context.Context, *AddElementReq) (*AddElementRes, error)
 	AddDesk(context.Context, *AddDeskReq) (*AddDeskRes, error)
 	OrderGood(context.Context, *OrderGoodReq) (*OrderGoodRes, error)
 	OpenDesk(context.Context, *OpenDeskReq) (*OpenDeskRes, error)
 	CloseDesk(context.Context, *CloseDeskReq) (*CloseDeskRes, error)
 	GetDesk(context.Context, *GetDeskReq) (*GetDeskRes, error)
-	GetAllGoodClasses(context.Context, *GetAllGoodClassesReq) (*GetAllGoodClassesRes, error)
-	AddGoodClass(context.Context, *AddGoodClassReq) (*AddGoodClassRes, error)
+	FormExpense(context.Context, *FormExpenseReq) (*FormExpenseRes, error)
 	CheckOut(context.Context, *CheckOutReq) (*CheckOutRes, error)
+	GetAllGoodClasses(context.Context, *GetAllGoodClassesReq) (*GetAllGoodClassesRes, error)
 	mustEmbedUnimplementedMvpServer()
 }
 
@@ -137,8 +159,14 @@ type MvpServer interface {
 type UnimplementedMvpServer struct {
 }
 
+func (UnimplementedMvpServer) AddGoodClass(context.Context, *AddGoodClassReq) (*AddGoodClassRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddGoodClass not implemented")
+}
 func (UnimplementedMvpServer) AddGood(context.Context, *AddGoodReq) (*AddGoodRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddGood not implemented")
+}
+func (UnimplementedMvpServer) AddElement(context.Context, *AddElementReq) (*AddElementRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddElement not implemented")
 }
 func (UnimplementedMvpServer) AddDesk(context.Context, *AddDeskReq) (*AddDeskRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddDesk not implemented")
@@ -155,14 +183,14 @@ func (UnimplementedMvpServer) CloseDesk(context.Context, *CloseDeskReq) (*CloseD
 func (UnimplementedMvpServer) GetDesk(context.Context, *GetDeskReq) (*GetDeskRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDesk not implemented")
 }
-func (UnimplementedMvpServer) GetAllGoodClasses(context.Context, *GetAllGoodClassesReq) (*GetAllGoodClassesRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAllGoodClasses not implemented")
-}
-func (UnimplementedMvpServer) AddGoodClass(context.Context, *AddGoodClassReq) (*AddGoodClassRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddGoodClass not implemented")
+func (UnimplementedMvpServer) FormExpense(context.Context, *FormExpenseReq) (*FormExpenseRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FormExpense not implemented")
 }
 func (UnimplementedMvpServer) CheckOut(context.Context, *CheckOutReq) (*CheckOutRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckOut not implemented")
+}
+func (UnimplementedMvpServer) GetAllGoodClasses(context.Context, *GetAllGoodClassesReq) (*GetAllGoodClassesRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllGoodClasses not implemented")
 }
 func (UnimplementedMvpServer) mustEmbedUnimplementedMvpServer() {}
 
@@ -175,6 +203,24 @@ type UnsafeMvpServer interface {
 
 func RegisterMvpServer(s grpc.ServiceRegistrar, srv MvpServer) {
 	s.RegisterService(&_Mvp_serviceDesc, srv)
+}
+
+func _Mvp_AddGoodClass_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddGoodClassReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).AddGoodClass(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/AddGoodClass",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).AddGoodClass(ctx, req.(*AddGoodClassReq))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Mvp_AddGood_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -191,6 +237,24 @@ func _Mvp_AddGood_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MvpServer).AddGood(ctx, req.(*AddGoodReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Mvp_AddElement_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddElementReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).AddElement(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/AddElement",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).AddElement(ctx, req.(*AddElementReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -285,38 +349,20 @@ func _Mvp_GetDesk_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Mvp_GetAllGoodClasses_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAllGoodClassesReq)
+func _Mvp_FormExpense_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FormExpenseReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MvpServer).GetAllGoodClasses(ctx, in)
+		return srv.(MvpServer).FormExpense(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.Mvp/GetAllGoodClasses",
+		FullMethod: "/pb.Mvp/FormExpense",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).GetAllGoodClasses(ctx, req.(*GetAllGoodClassesReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Mvp_AddGoodClass_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddGoodClassReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MvpServer).AddGoodClass(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/pb.Mvp/AddGoodClass",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).AddGoodClass(ctx, req.(*AddGoodClassReq))
+		return srv.(MvpServer).FormExpense(ctx, req.(*FormExpenseReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -339,13 +385,39 @@ func _Mvp_CheckOut_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Mvp_GetAllGoodClasses_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllGoodClassesReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).GetAllGoodClasses(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/GetAllGoodClasses",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).GetAllGoodClasses(ctx, req.(*GetAllGoodClassesReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Mvp_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.Mvp",
 	HandlerType: (*MvpServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "AddGoodClass",
+			Handler:    _Mvp_AddGoodClass_Handler,
+		},
+		{
 			MethodName: "AddGood",
 			Handler:    _Mvp_AddGood_Handler,
+		},
+		{
+			MethodName: "AddElement",
+			Handler:    _Mvp_AddElement_Handler,
 		},
 		{
 			MethodName: "AddDesk",
@@ -368,16 +440,16 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Mvp_GetDesk_Handler,
 		},
 		{
-			MethodName: "GetAllGoodClasses",
-			Handler:    _Mvp_GetAllGoodClasses_Handler,
-		},
-		{
-			MethodName: "AddGoodClass",
-			Handler:    _Mvp_AddGoodClass_Handler,
+			MethodName: "FormExpense",
+			Handler:    _Mvp_FormExpense_Handler,
 		},
 		{
 			MethodName: "CheckOut",
 			Handler:    _Mvp_CheckOut_Handler,
+		},
+		{
+			MethodName: "GetAllGoodClasses",
+			Handler:    _Mvp_GetAllGoodClasses_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

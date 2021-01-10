@@ -29,6 +29,13 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 
 	return &res, nil
 }
+func (MvpServer) AddElement(ctx context.Context, req *pb.AddElementReq) (*pb.AddElementRes, error) {
+	logs.Info("AddElement", ctx, req)
+
+	var res pb.AddElementRes
+	panic("UnImplement method")
+	return &res, nil
+}
 
 func (MvpServer) GetAllGoodClasses(ctx context.Context, req *pb.GetAllGoodClassesReq) (*pb.GetAllGoodClassesRes, error) {
 	logs.Info("GetAllGoodClasses", ctx, req)
@@ -79,25 +86,20 @@ func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.Order
 
 	for _, good := range req.Goods {
 
-		// 生成货物编号
+		// 生成货物编号, 将货物与桌位联结
 		dbGood := &model.Good{
-			//Name: good.MainElement.Name,
+			Name:   good.MainElement.Name,
+			DeskID: int(req.DeskID),
+		}
+		if err := dao.GoodDao.Create(dbGood); err != nil {
+			// todo:log
+			return nil, err
 		}
 		good.Id = int64(dbGood.ID)
 		if err := createGood(good, req.ClassName); err != nil {
 			logger.Error("Fail to finish createGood",
 				zap.Any("req", req),
 				zap.Error(err))
-			return nil, err
-		}
-
-		// todo: 将货物与Desk联结起来
-		if err := dao.DeskGoodRecordDao.Create(&model.DeskGoodRecord{
-			GoodID:          int(dbGood.ID),
-			DeskID:          int(req.DeskID),
-			MainElementName: good.MainElement.Name,
-		}); err != nil {
-			// todo:log
 			return nil, err
 		}
 
@@ -148,9 +150,10 @@ func (MvpServer) AddDesk(ctx context.Context, req *pb.AddDeskReq) (*pb.AddDeskRe
 
 	// 1. 创建
 	if err := dao.SpaceDao.Create(&model.Space{
-		Name:          req.Desk.Space.Name,
-		Price:         float64(req.Desk.Space.Price),
-		PriceRuleType: req.Desk.Space.PriceRuleType,
+		Name:          req.Space.Name,
+		Num:           req.Space.Num,
+		Price:         req.Space.Price,
+		PriceRuleType: req.Space.PriceRuleType,
 	}); err != nil {
 		logger.Error("Fail to finish SpaceDao.Create",
 			zap.Any("req", req),
@@ -175,23 +178,71 @@ func (MvpServer) CloseDesk(ctx context.Context, req *pb.CloseDeskReq) (*pb.Close
 	return &res, nil
 }
 
-func (MvpServer) CheckOut(ctx context.Context, req *pb.CheckOutReq) (*pb.CheckOutRes, error) {
-	logger.Info("CheckOut", zap.Any("ctx", ctx), zap.Any("req", req))
-	var res pb.CheckOutRes
+func (MvpServer) FormExpense(ctx context.Context, req *pb.FormExpenseReq) (*pb.FormExpenseRes, error) {
+	logger.Info("FormExpense", zap.Any("ctx", ctx), zap.Any("req", req))
+	var res pb.FormExpenseRes
 	desk := getDesk(int(req.DeskID))
 	// todo: desk 可能等于 nil
-	deskExpense := getDeskExpense(desk)
-	res.Expanse = deskExpense
+	formDeskExpense(desk)
+	writeToDB(desk, "expense")
+	res.Desk = desk
 	return &res, nil
 }
 
-func getDeskExpense(desk *pb.Desk) float64 {
+func (MvpServer) CheckOut(ctx context.Context, req *pb.CheckOutReq) (*pb.CheckOutRes, error) {
+	logger.Info("CheckOut", zap.Any("ctx", ctx), zap.Any("req", req))
+	var res pb.CheckOutRes
+
+	writeToDB(req.Desk, "had_check_out")
+	return &res, nil
+
+}
+
+func writeToDB(desk *pb.Desk, field string) {
+
+	deskTo := make(map[string]interface{})
+	deskTo["id"] = desk.Id
+	if field == "expense" {
+		deskTo["expense"] = desk.ExpenseInfo.Expense
+	}
+	if field == "had_check_out" {
+		deskTo["had_check_out"] = desk.ExpenseInfo.HadCheckOut
+	}
+
+	if err := dao.DeskDao.Update(deskTo); err != nil {
+		logger.Error("Fail to finish DeskDao.Update", zap.Error(err))
+		return
+	}
+
+	for _, good := range desk.Goods {
+		goodTo := make(map[string]interface{})
+		goodTo["id"] = good.Id
+		if field == "expense" {
+			goodTo["expense"] = good.ExpenseInfo.Expense
+		}
+		if field == "had_check_out" {
+			goodTo["had_check_out"] = good.ExpenseInfo.HadCheckOut
+		}
+
+		if err := dao.GoodDao.Update(goodTo); err != nil {
+			logger.Error("Fail to finish GoodDao.Update", zap.Error(err))
+			return
+		}
+	}
+}
+
+func formDeskExpense(desk *pb.Desk) float64 {
+	// todo: priceRuleType 还未应用
 	enjoyHours := time.Unix(desk.EndTimestamp, 0).Sub(time.Unix(desk.StartTimestamp, 0)).Hours()
 	enjoyExpense := desk.Space.Price * enjoyHours
-	goodsExpense := getGoodsExpense(desk.Goods...)
+	goodsExpense := formGoodsExpense(desk.Goods...)
+	desk.ExpenseInfo = &pb.ExpenseInfo{
+		Expense: enjoyExpense,
+	}
 	return enjoyExpense + goodsExpense
 }
-func getGoodsExpense(goods ...*pb.Good) float64 {
+
+func formGoodsExpense(goods ...*pb.Good) float64 {
 	// todo: getSelectSizeInfo 可能返回nil
 	// todo: 折扣计算还未进行
 	allExpense := 0.0
@@ -203,6 +254,10 @@ func getGoodsExpense(goods ...*pb.Good) float64 {
 		}
 		goodExpense := mainElementExpense + attachElementsExpense
 		allExpense += goodExpense
+
+		good.ExpenseInfo = &pb.ExpenseInfo{
+			Expense: goodExpense,
+		}
 	}
 	return allExpense
 }
@@ -215,33 +270,35 @@ func getClassGoods(className string) []*pb.Good {
 	return goods
 }
 func getDesk(deskID int) *pb.Desk {
-	var pbDesk pb.Desk
-	pbDesk.Goods = getDeskGoods(deskID)
 	desk, err := dao.DeskDao.Get(deskID)
 	if err != nil {
 		// todo: log
 		return nil
 	}
-	pbDesk.StartTimestamp = desk.StartTimestamp
-	pbDesk.EndTimestamp = desk.EndTimestamp
-	pbDesk.Space = &pb.Space{
-		Name:          desk.SpaceName,
-		Num:           int64(desk.SpaceNum),
-		PriceRuleType: desk.PriceRuleType,
-		Price:         desk.Price,
-	}
-	return &pbDesk
 
+	space, err := dao.SpaceDao.Get(desk.SpaceName, int64(desk.SpaceNum))
+	if err != nil {
+		// todo: log
+		return nil
+	}
+
+	return &pb.Desk{
+		Goods:          getDeskGoods(deskID),
+		StartTimestamp: desk.StartTimestamp,
+		EndTimestamp:   desk.EndTimestamp,
+		Space:          space.ToPb(),
+	}
 }
+
 func getDeskGoods(deskID int) []*pb.Good {
-	records, err := dao.DeskGoodRecordDao.GetByDeskID(deskID)
+	dbGoods, err := dao.GoodDao.GetByDeskID(deskID)
 	if err != nil {
 		// todo: log
 		return nil
 	}
 	var goods []*pb.Good
-	for _, record := range records {
-		goods = append(goods, getGood(record.GoodID, record.MainElementName))
+	for _, dbGood := range dbGoods {
+		goods = append(goods, getGood(int(dbGood.ID), dbGood.Name))
 	}
 	return goods
 }
@@ -333,6 +390,7 @@ func getElementNames(className string) []string {
 	}
 	return elementNames
 }
+
 func getSelectSizeInfo(infos []*pb.SizeInfo) *pb.SizeInfo {
 	for _, sizeInfo := range infos {
 		if sizeInfo.IsSelected {
@@ -362,19 +420,11 @@ func createGood(good *pb.Good, className string) error {
 		return nil
 	}
 
-	for _, sizeInfo := range good.MainElement.SizeInfos {
-		if err := dao.ElementDao.Create(&model.Element{
-			Name:             good.MainElement.Name,
-			Size:             sizeInfo.Size,
-			Price:            float64(sizeInfo.Price),
-			PictureStorePath: sizeInfo.PictureStorePath,
-			Type:             pb.ElementType_Main,
-			ClassName:        className,
-		}); err != nil {
-			logger.Error("Fail to finish ElementDao.Create", zap.Error(err))
-			return err
-		}
+	if err := createElement(good.MainElement, className); err != nil {
+		// todo: log
+		return err
 	}
+
 	if err := dao.MainElementSizeRecordDao.Create(&model.MainElementSizeRecord{
 		GoodID:          int(good.Id),
 		MainElementName: good.MainElement.Name,
@@ -384,13 +434,13 @@ func createGood(good *pb.Good, className string) error {
 		return err
 	}
 
-	// 3. 主元素归类 (todo: 类不存在时才创建)
-	if err := dao.ElementClassDao.Create(&model.ElementClass{
-		Name: className,
-	}); err != nil {
-		logger.Error("Fail to finish ElementClassDao.Create", zap.Error(err))
-		return err
-	}
+	// 3. 主元素归类 (todo: 类不存在时才创建) todo: 这里默认类已存在
+	//if err := dao.ElementClassDao.Create(&model.ElementClass{
+	//	Name: className,
+	//}); err != nil {
+	//	logger.Error("Fail to finish ElementClassDao.Create", zap.Error(err))
+	//	return err
+	//}
 
 	// 4. 创建主元素、附属元素的对应关系
 	for _, attachElement := range good.AttachElements {
@@ -405,4 +455,30 @@ func createGood(good *pb.Good, className string) error {
 		}
 	}
 	return nil
+}
+func createElement(pbElement *pb.Element, className string) error {
+	dbElements := getDbElements(pbElement, className)
+	for _, dbElement := range dbElements {
+		if err := dao.ElementDao.Create(dbElement); err != nil {
+			logger.Error("Fail to finish ElementDao.Create", zap.Error(err))
+			return err
+		}
+	}
+	return nil
+}
+func getDbElements(pbElement *pb.Element, className string) []*model.Element {
+	var result []*model.Element
+
+	for _, sizeInfo := range pbElement.SizeInfos {
+		result = append(result, &model.Element{
+			Name:      pbElement.Name,
+			Type:      pbElement.Type,
+			ClassName: className,
+
+			Size:             sizeInfo.Size,
+			Price:            sizeInfo.Price,
+			PictureStorePath: sizeInfo.PictureStorePath,
+		})
+	}
+	return result
 }
