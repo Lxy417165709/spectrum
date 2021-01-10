@@ -20,6 +20,7 @@ enum ElementType {
 }
 
 
+
 // ---------------------- instance 相关 ----------------------
 message ExpenseInfo {
   double nonDiscountExpense = 1;  // 未打折费用
@@ -103,17 +104,16 @@ message AddGoodClassReq{
 }
 message AddGoodClassRes{}
 
-message AddDeskReq{
+message AddSpaceReq{
   Space space = 1;
 }
 
-message AddDeskRes{}
+message AddSpaceRes{}
 
 
 message OrderGoodReq{
   int64 deskID = 1;
   repeated Good goods = 2;
-  string className = 3;
 }
 
 message OrderGoodRes{
@@ -138,9 +138,9 @@ message OrderRes{
 
 message CloseDeskReq{
   int64 deskID = 1;
+  int64 endTimestamp = 2;
 }
-message CloseDeskRes{
-}
+message CloseDeskRes{}
 
 
 
@@ -176,15 +176,20 @@ message CheckOutRes {
 
 message AddElementReq {
   Element element = 1;
+  string className = 2;
 }
 message AddElementRes {}
 
 service Mvp {
+  // todo: 打折设计
+
+
   rpc AddGoodClass(AddGoodClassReq) returns (AddGoodClassRes);  // 添加商品类
   rpc AddGood(AddGoodReq) returns (AddGoodRes);           // 添加货物
-  rpc AddElement(AddElementReq) returns(AddElementRes); // 添加元素
 
-  rpc AddDesk(AddDeskReq) returns (AddDeskRes);           // 添加桌位
+  rpc AddElement(AddElementReq) returns(AddElementRes); // 添加元素
+  rpc AddSpace(AddSpaceReq) returns (AddSpaceRes);           // 添加桌位
+
   rpc OrderGood(OrderGoodReq) returns (OrderGoodRes);     // 为某桌点单
   rpc OpenDesk(OpenDeskReq) returns(OpenDeskRes);         // 开桌
   rpc CloseDesk(CloseDeskReq) returns(CloseDeskRes);      // 退桌

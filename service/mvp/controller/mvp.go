@@ -2,7 +2,7 @@ package controller
 
 import (
 	"context"
-	"github.com/astaxie/beego/logs"
+	"fmt"
 	"go.uber.org/zap"
 	"spectrum/common/logger"
 	"spectrum/common/pb"
@@ -16,12 +16,17 @@ type MvpServer struct {
 }
 
 func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRes, error) {
-	logs.Info("AddGood", ctx, req)
+	logger.Info("AddGood", zap.Any("ctx", ctx), zap.Any("req", req))
 
 	var res pb.AddGoodRes
-
-	if err := createGood(req.Good, req.ClassName); err != nil {
-		logger.Error("Fail to finish createGood",
+	if err := createElement(req.Good.MainElement, req.ClassName); err != nil {
+		logger.Error("Fail to finish createElement",
+			zap.Any("req", req),
+			zap.Error(err))
+		return nil, err
+	}
+	if err := writeGoodSizeToDB(req.Good); err != nil {
+		logger.Error("Fail to finish writeGoodSizeToDB",
 			zap.Any("req", req),
 			zap.Error(err))
 		return nil, err
@@ -29,16 +34,24 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 
 	return &res, nil
 }
+
 func (MvpServer) AddElement(ctx context.Context, req *pb.AddElementReq) (*pb.AddElementRes, error) {
-	logs.Info("AddElement", ctx, req)
+	logger.Info("AddElement", zap.Any("ctx", ctx), zap.Any("req", req))
 
 	var res pb.AddElementRes
-	panic("UnImplement method")
+
+	if err := createElement(req.Element, req.ClassName); err != nil {
+		logger.Error("Fail to finish createElement",
+			zap.Any("req", req),
+			zap.Error(err))
+		return nil, err
+	}
 	return &res, nil
 }
 
 func (MvpServer) GetAllGoodClasses(ctx context.Context, req *pb.GetAllGoodClassesReq) (*pb.GetAllGoodClassesRes, error) {
-	logs.Info("GetAllGoodClasses", ctx, req)
+	logger.Info("GetAllGoodClasses", zap.Any("ctx", ctx), zap.Any("req", req))
+
 	var res pb.GetAllGoodClassesRes
 
 	// 1. 获得主元素的所有类
@@ -62,7 +75,7 @@ func (MvpServer) GetAllGoodClasses(ctx context.Context, req *pb.GetAllGoodClasse
 }
 
 func (MvpServer) AddGoodClass(ctx context.Context, req *pb.AddGoodClassReq) (*pb.AddGoodClassRes, error) {
-	logs.Info("AddGoodClass", ctx, req)
+	logger.Info("AddGoodClass", zap.Any("ctx", ctx), zap.Any("req", req))
 
 	var res pb.AddGoodClassRes
 	// todo: 判断类名是否为空、是否存在
@@ -80,23 +93,22 @@ func (MvpServer) AddGoodClass(ctx context.Context, req *pb.AddGoodClassReq) (*pb
 }
 
 func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.OrderGoodRes, error) {
-	logs.Info("OrderGood", ctx, req)
+	logger.Info("OrderGood", zap.Any("ctx", ctx), zap.Any("req", req))
 
 	var res pb.OrderGoodRes
 
 	for _, good := range req.Goods {
-
 		// 生成货物编号, 将货物与桌位联结
 		dbGood := &model.Good{
 			Name:   good.MainElement.Name,
-			DeskID: int(req.DeskID),
+			DeskID: req.DeskID,
 		}
 		if err := dao.GoodDao.Create(dbGood); err != nil {
 			// todo:log
 			return nil, err
 		}
 		good.Id = int64(dbGood.ID)
-		if err := createGood(good, req.ClassName); err != nil {
+		if err := writeGoodSizeToDB(good); err != nil {
 			logger.Error("Fail to finish createGood",
 				zap.Any("req", req),
 				zap.Error(err))
@@ -109,7 +121,8 @@ func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.Order
 }
 
 func (MvpServer) OpenDesk(ctx context.Context, req *pb.OpenDeskReq) (*pb.OpenDeskRes, error) {
-	logs.Info("OpenDesk", ctx, req)
+	logger.Info("OpenDesk", zap.Any("ctx", ctx), zap.Any("req", req))
+
 	// todo: 通过 SpaceName Num 查询 Price PriceRuleType
 	var res pb.OpenDeskRes
 
@@ -136,25 +149,20 @@ func (MvpServer) OpenDesk(ctx context.Context, req *pb.OpenDeskReq) (*pb.OpenDes
 }
 
 func (MvpServer) GetDesk(ctx context.Context, req *pb.GetDeskReq) (*pb.GetDeskRes, error) {
-	logs.Info("GetDesk", ctx, req)
+	logger.Info("GetDesk", zap.Any("ctx", ctx), zap.Any("req", req))
 
 	var res pb.GetDeskRes
 
-	res.Desk = getDesk(int(req.DeskID))
+	res.Desk = getDesk(req.DeskID)
 	return &res, nil
 }
 
-func (MvpServer) AddDesk(ctx context.Context, req *pb.AddDeskReq) (*pb.AddDeskRes, error) {
+func (MvpServer) AddSpace(ctx context.Context, req *pb.AddSpaceReq) (*pb.AddSpaceRes, error) {
 	logger.Info("AddDesk", zap.Any("ctx", ctx), zap.Any("req", req))
-	var res pb.AddDeskRes
+	var res pb.AddSpaceRes
 
 	// 1. 创建
-	if err := dao.SpaceDao.Create(&model.Space{
-		Name:          req.Space.Name,
-		Num:           req.Space.Num,
-		Price:         req.Space.Price,
-		PriceRuleType: req.Space.PriceRuleType,
-	}); err != nil {
+	if err := dao.SpaceDao.Create(getDbSpace(req.Space)); err != nil {
 		logger.Error("Fail to finish SpaceDao.Create",
 			zap.Any("req", req),
 			zap.Error(err))
@@ -166,11 +174,8 @@ func (MvpServer) AddDesk(ctx context.Context, req *pb.AddDeskReq) (*pb.AddDeskRe
 func (MvpServer) CloseDesk(ctx context.Context, req *pb.CloseDeskReq) (*pb.CloseDeskRes, error) {
 	logger.Info("CloseDesk", zap.Any("ctx", ctx), zap.Any("req", req))
 	var res pb.CloseDeskRes
-	if err := dao.DeskDao.Update(map[string]interface{}{
-		"id":            req.DeskID,
-		"end_timestamp": time.Now().Unix(),
-	}); err != nil {
-		logger.Error("Fail to finish DeskDao.Update",
+	if err := closeDeskIfOpening(req.DeskID, req.EndTimestamp); err != nil {
+		logger.Error("Fail to finish closeDesk",
 			zap.Any("req", req),
 			zap.Error(err))
 		return nil, err
@@ -181,8 +186,12 @@ func (MvpServer) CloseDesk(ctx context.Context, req *pb.CloseDeskReq) (*pb.Close
 func (MvpServer) FormExpense(ctx context.Context, req *pb.FormExpenseReq) (*pb.FormExpenseRes, error) {
 	logger.Info("FormExpense", zap.Any("ctx", ctx), zap.Any("req", req))
 	var res pb.FormExpenseRes
-	desk := getDesk(int(req.DeskID))
-	// todo: desk 可能等于 nil
+	desk := getDesk(req.DeskID)
+	if desk == nil {
+		err := fmt.Errorf("desk(id = %d) is non", req.DeskID)
+		logger.Error("Desk is non", zap.Error(err))
+		return nil, err
+	}
 	formDeskExpense(desk)
 	writeToDB(desk, "expense")
 	res.Desk = desk
@@ -190,49 +199,67 @@ func (MvpServer) FormExpense(ctx context.Context, req *pb.FormExpenseReq) (*pb.F
 }
 
 func (MvpServer) CheckOut(ctx context.Context, req *pb.CheckOutReq) (*pb.CheckOutRes, error) {
+	// todo: 形成订单
 	logger.Info("CheckOut", zap.Any("ctx", ctx), zap.Any("req", req))
 	var res pb.CheckOutRes
 
 	writeToDB(req.Desk, "had_check_out")
 	return &res, nil
-
 }
 
 func writeToDB(desk *pb.Desk, field string) {
-
-	deskTo := make(map[string]interface{})
-	deskTo["id"] = desk.Id
-	if field == "expense" {
-		deskTo["expense"] = desk.ExpenseInfo.Expense
-	}
-	if field == "had_check_out" {
-		deskTo["had_check_out"] = desk.ExpenseInfo.HadCheckOut
-	}
-
-	if err := dao.DeskDao.Update(deskTo); err != nil {
+	if err := dao.DeskDao.Update(getToMap(desk, field)); err != nil {
 		logger.Error("Fail to finish DeskDao.Update", zap.Error(err))
 		return
 	}
 
 	for _, good := range desk.Goods {
-		goodTo := make(map[string]interface{})
-		goodTo["id"] = good.Id
-		if field == "expense" {
-			goodTo["expense"] = good.ExpenseInfo.Expense
-		}
-		if field == "had_check_out" {
-			goodTo["had_check_out"] = good.ExpenseInfo.HadCheckOut
-		}
-
-		if err := dao.GoodDao.Update(goodTo); err != nil {
+		if err := dao.GoodDao.Update(getToMap(good, field)); err != nil {
 			logger.Error("Fail to finish GoodDao.Update", zap.Error(err))
 			return
 		}
 	}
 }
 
+func getToMap(obj interface{}, field string) map[string]interface{} {
+	to := make(map[string]interface{})
+	switch obj.(type) {
+	case *pb.Desk:
+		desk := obj.(*pb.Desk)
+		to["id"] = desk.Id
+		if field == "expense" {
+			to["expense"] = desk.ExpenseInfo.Expense
+		}
+		if field == "had_check_out" {
+			to["had_check_out"] = desk.ExpenseInfo.HadCheckOut
+		}
+	case *pb.Good:
+		good := obj.(*pb.Good)
+		to["id"] = good.Id
+		if field == "expense" {
+			to["expense"] = good.ExpenseInfo.Expense
+		}
+		if field == "had_check_out" {
+			to["had_check_out"] = good.ExpenseInfo.HadCheckOut
+		}
+	default:
+		logger.Error("UnFix interface", zap.Any("obj", obj), zap.String("field", field))
+		panic("UnFix interface")
+	}
+	return to
+}
+
 func formDeskExpense(desk *pb.Desk) float64 {
 	// todo: priceRuleType 还未应用
+	if desk.EndTimestamp == 0 {
+		closeTimestamp := time.Now().Unix()
+		if err := closeDeskIfOpening(desk.Id, closeTimestamp); err != nil {
+			logger.Error("Fail to finish closeDesk",
+				zap.Error(err))
+			return 0
+		}
+		desk.EndTimestamp = closeTimestamp
+	}
 	enjoyHours := time.Unix(desk.EndTimestamp, 0).Sub(time.Unix(desk.StartTimestamp, 0)).Hours()
 	enjoyExpense := desk.Space.Price * enjoyHours
 	goodsExpense := formGoodsExpense(desk.Goods...)
@@ -269,7 +296,7 @@ func getClassGoods(className string) []*pb.Good {
 	}
 	return goods
 }
-func getDesk(deskID int) *pb.Desk {
+func getDesk(deskID int64) *pb.Desk {
 	desk, err := dao.DeskDao.Get(deskID)
 	if err != nil {
 		// todo: log
@@ -290,7 +317,7 @@ func getDesk(deskID int) *pb.Desk {
 	}
 }
 
-func getDeskGoods(deskID int) []*pb.Good {
+func getDeskGoods(deskID int64) []*pb.Good {
 	dbGoods, err := dao.GoodDao.GetByDeskID(deskID)
 	if err != nil {
 		// todo: log
@@ -298,18 +325,18 @@ func getDeskGoods(deskID int) []*pb.Good {
 	}
 	var goods []*pb.Good
 	for _, dbGood := range dbGoods {
-		goods = append(goods, getGood(int(dbGood.ID), dbGood.Name))
+		goods = append(goods, getGood(int64(dbGood.ID), dbGood.Name))
 	}
 	return goods
 }
-func getGood(goodID int, mainElementName string) *pb.Good {
+func getGood(goodID int64, mainElementName string) *pb.Good {
 	return &pb.Good{
 		Id:             int64(goodID),
 		MainElement:    getMainElement(goodID, mainElementName),
 		AttachElements: getAttachElements(goodID, mainElementName),
 	}
 }
-func getMainElement(goodID int, mainElementName string) *pb.Element {
+func getMainElement(goodID int64, mainElementName string) *pb.Element {
 	mainElements, err := dao.ElementDao.GetByName(mainElementName)
 	if err != nil {
 		// todo: log
@@ -334,7 +361,7 @@ func getMainElement(goodID int, mainElementName string) *pb.Element {
 		SizeInfos: getSizeInfos(sizeRecord.SelectSize, mainElements),
 	}
 }
-func getAttachElements(goodID int, mainElementName string) []*pb.Element {
+func getAttachElements(goodID int64, mainElementName string) []*pb.Element {
 	var attachElements []*pb.Element
 	var attachRecords []*model.MainElementAttachElementRecord
 	var err error
@@ -400,7 +427,7 @@ func getSelectSizeInfo(infos []*pb.SizeInfo) *pb.SizeInfo {
 	return nil
 }
 
-func createGood(good *pb.Good, className string) error {
+func writeGoodSizeToDB(good *pb.Good) error {
 	// 1. 判断主元素是否存在
 	//elements, err := dao.ElementDao.GetByName(good.MainElement.Name)
 	//if err != nil {
@@ -419,16 +446,18 @@ func createGood(good *pb.Good, className string) error {
 	if len(good.MainElement.SizeInfos) == 0 {
 		return nil
 	}
-
-	if err := createElement(good.MainElement, className); err != nil {
-		// todo: log
-		return err
-	}
+	//if good.Id == 0 {
+	//	if err := createElement(good.MainElement, className); err != nil {
+	//		// todo: log
+	//		return err
+	//	}
+	//}
 
 	if err := dao.MainElementSizeRecordDao.Create(&model.MainElementSizeRecord{
-		GoodID:          int(good.Id),
+		GoodID:          good.Id,
 		MainElementName: good.MainElement.Name,
-		SelectSize:      good.MainElement.SizeInfos[0].Size,
+
+		SelectSize: good.MainElement.SizeInfos[0].Size,
 	}); err != nil {
 		logger.Error("Fail to finish MainElementSizeRecordDao.Create", zap.Error(err))
 		return err
@@ -445,10 +474,11 @@ func createGood(good *pb.Good, className string) error {
 	// 4. 创建主元素、附属元素的对应关系
 	for _, attachElement := range good.AttachElements {
 		if err := dao.MainElementAttachElementRecordDao.Create(&model.MainElementAttachElementRecord{
+			GoodID:            good.Id,
 			MainElementName:   good.MainElement.Name,
 			AttachElementName: attachElement.Name,
-			SelectSize:        getSelectSizeInfo(attachElement.SizeInfos).Size,
-			GoodID:            int(good.Id),
+
+			SelectSize: getSelectSizeInfo(attachElement.SizeInfos).Size,
 		}); err != nil {
 			logger.Error("Fail to finish MainElementAttachElementDao.Create", zap.Error(err))
 			return err
@@ -456,6 +486,7 @@ func createGood(good *pb.Good, className string) error {
 	}
 	return nil
 }
+
 func createElement(pbElement *pb.Element, className string) error {
 	dbElements := getDbElements(pbElement, className)
 	for _, dbElement := range dbElements {
@@ -466,6 +497,7 @@ func createElement(pbElement *pb.Element, className string) error {
 	}
 	return nil
 }
+
 func getDbElements(pbElement *pb.Element, className string) []*model.Element {
 	var result []*model.Element
 
@@ -481,4 +513,37 @@ func getDbElements(pbElement *pb.Element, className string) []*model.Element {
 		})
 	}
 	return result
+}
+func getDbSpace(pbSpace *pb.Space) *model.Space {
+	return &model.Space{
+		Name:          pbSpace.Name,
+		Num:           pbSpace.Num,
+		Price:         pbSpace.Price,
+		PriceRuleType: pbSpace.PriceRuleType,
+	}
+}
+
+func closeDeskIfOpening(deskID int64, endTimestamp int64) error {
+	desk, err := dao.DeskDao.Get(deskID)
+	if err != nil {
+		logger.Error("Fail to finish DeskDao.Get",
+			zap.Error(err))
+		return err
+	}
+
+	isOpening := desk.EndTimestamp == 0
+	if !isOpening {
+		logger.Warn("Desk had been closed", zap.Int64("deskID", deskID))
+		return nil
+	}
+
+	if err := dao.DeskDao.Update(map[string]interface{}{
+		"id":            deskID,
+		"end_timestamp": endTimestamp,
+	}); err != nil {
+		logger.Error("Fail to finish DeskDao.Update",
+			zap.Error(err))
+		return err
+	}
+	return nil
 }

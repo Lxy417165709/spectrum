@@ -36,7 +36,7 @@ func (mainElementSizeRecordDao) GetByMainElementName(mainElementName string) (*m
 	return &result, nil
 }
 
-func (mainElementSizeRecordDao) GetByGoodID(goodID int) (*model.MainElementSizeRecord, error) {
+func (mainElementSizeRecordDao) GetByGoodID(goodID int64) (*model.MainElementSizeRecord, error) {
 	var table model.MainElementSizeRecord
 	createTableWhenNotExist(&table)
 	var result model.MainElementSizeRecord
@@ -44,7 +44,7 @@ func (mainElementSizeRecordDao) GetByGoodID(goodID int) (*model.MainElementSizeR
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, nil
 		}
-		logger.Error("Fail to finish mainDB.Find", zap.Int("goodID", goodID), zap.Error(err))
+		logger.Error("Fail to finish mainDB.First", zap.Int64("goodID", goodID), zap.Error(err))
 		return nil, err
 	}
 	return &result, nil

@@ -21,13 +21,13 @@ func (goodDao) Create(obj *model.Good) error {
 	return nil
 }
 
-func (goodDao) GetByDeskID(deskID int) ([]*model.Good, error) {
+func (goodDao) GetByDeskID(deskID int64) ([]*model.Good, error) {
 	var table model.Good
 	createTableWhenNotExist(&table)
 
 	var result []*model.Good
 	if err := mainDB.Find(&result, "desk_id = ?", deskID).Error; err != nil {
-		logger.Error("Fail to finish mainDB.Find", zap.Int("deskID", deskID), zap.Error(err))
+		logger.Error("Fail to finish mainDB.Find", zap.Int64("deskID", deskID), zap.Error(err))
 		return nil, err
 	}
 	return result, nil

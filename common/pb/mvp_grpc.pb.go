@@ -20,7 +20,7 @@ type MvpClient interface {
 	AddGoodClass(ctx context.Context, in *AddGoodClassReq, opts ...grpc.CallOption) (*AddGoodClassRes, error)
 	AddGood(ctx context.Context, in *AddGoodReq, opts ...grpc.CallOption) (*AddGoodRes, error)
 	AddElement(ctx context.Context, in *AddElementReq, opts ...grpc.CallOption) (*AddElementRes, error)
-	AddDesk(ctx context.Context, in *AddDeskReq, opts ...grpc.CallOption) (*AddDeskRes, error)
+	AddSpace(ctx context.Context, in *AddSpaceReq, opts ...grpc.CallOption) (*AddSpaceRes, error)
 	OrderGood(ctx context.Context, in *OrderGoodReq, opts ...grpc.CallOption) (*OrderGoodRes, error)
 	OpenDesk(ctx context.Context, in *OpenDeskReq, opts ...grpc.CallOption) (*OpenDeskRes, error)
 	CloseDesk(ctx context.Context, in *CloseDeskReq, opts ...grpc.CallOption) (*CloseDeskRes, error)
@@ -65,9 +65,9 @@ func (c *mvpClient) AddElement(ctx context.Context, in *AddElementReq, opts ...g
 	return out, nil
 }
 
-func (c *mvpClient) AddDesk(ctx context.Context, in *AddDeskReq, opts ...grpc.CallOption) (*AddDeskRes, error) {
-	out := new(AddDeskRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/AddDesk", in, out, opts...)
+func (c *mvpClient) AddSpace(ctx context.Context, in *AddSpaceReq, opts ...grpc.CallOption) (*AddSpaceRes, error) {
+	out := new(AddSpaceRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/AddSpace", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -144,7 +144,7 @@ type MvpServer interface {
 	AddGoodClass(context.Context, *AddGoodClassReq) (*AddGoodClassRes, error)
 	AddGood(context.Context, *AddGoodReq) (*AddGoodRes, error)
 	AddElement(context.Context, *AddElementReq) (*AddElementRes, error)
-	AddDesk(context.Context, *AddDeskReq) (*AddDeskRes, error)
+	AddSpace(context.Context, *AddSpaceReq) (*AddSpaceRes, error)
 	OrderGood(context.Context, *OrderGoodReq) (*OrderGoodRes, error)
 	OpenDesk(context.Context, *OpenDeskReq) (*OpenDeskRes, error)
 	CloseDesk(context.Context, *CloseDeskReq) (*CloseDeskRes, error)
@@ -168,8 +168,8 @@ func (UnimplementedMvpServer) AddGood(context.Context, *AddGoodReq) (*AddGoodRes
 func (UnimplementedMvpServer) AddElement(context.Context, *AddElementReq) (*AddElementRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddElement not implemented")
 }
-func (UnimplementedMvpServer) AddDesk(context.Context, *AddDeskReq) (*AddDeskRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddDesk not implemented")
+func (UnimplementedMvpServer) AddSpace(context.Context, *AddSpaceReq) (*AddSpaceRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddSpace not implemented")
 }
 func (UnimplementedMvpServer) OrderGood(context.Context, *OrderGoodReq) (*OrderGoodRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OrderGood not implemented")
@@ -259,20 +259,20 @@ func _Mvp_AddElement_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Mvp_AddDesk_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddDeskReq)
+func _Mvp_AddSpace_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddSpaceReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MvpServer).AddDesk(ctx, in)
+		return srv.(MvpServer).AddSpace(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.Mvp/AddDesk",
+		FullMethod: "/pb.Mvp/AddSpace",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).AddDesk(ctx, req.(*AddDeskReq))
+		return srv.(MvpServer).AddSpace(ctx, req.(*AddSpaceReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -420,8 +420,8 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Mvp_AddElement_Handler,
 		},
 		{
-			MethodName: "AddDesk",
-			Handler:    _Mvp_AddDesk_Handler,
+			MethodName: "AddSpace",
+			Handler:    _Mvp_AddSpace_Handler,
 		},
 		{
 			MethodName: "OrderGood",

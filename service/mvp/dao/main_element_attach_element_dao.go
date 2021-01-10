@@ -33,18 +33,18 @@ func (mainElementAttachElementRecordDao) GetByMainElementName(mainElementName st
 	return result, nil
 }
 
-func (mainElementAttachElementRecordDao) GetByGoodID(goodID int) ([]*model.MainElementAttachElementRecord, error) {
+func (mainElementAttachElementRecordDao) GetByGoodID(goodID int64) ([]*model.MainElementAttachElementRecord, error) {
 	var table model.MainElementAttachElementRecord
 	createTableWhenNotExist(&table)
 	var result []*model.MainElementAttachElementRecord
 	if err := mainDB.Find(&result, "good_id = ? and main_element_name = ?", goodID).Error; err != nil {
-		logger.Error("Fail to finish mainDB.Find", zap.Int("good_id", goodID), zap.Error(err))
+		logger.Error("Fail to finish mainDB.Find", zap.Int64("good_id", goodID), zap.Error(err))
 		return nil, err
 	}
 	return result, nil
 }
 
-func (mainElementAttachElementRecordDao) GetByBothName(goodID int, mainElementName string, attachElementName string) (*model.MainElementAttachElementRecord, error) {
+func (mainElementAttachElementRecordDao) GetByBothName(goodID int64, mainElementName string, attachElementName string) (*model.MainElementAttachElementRecord, error) {
 	var table model.MainElementAttachElementRecord
 	createTableWhenNotExist(&table)
 	var result model.MainElementAttachElementRecord
@@ -54,11 +54,13 @@ func (mainElementAttachElementRecordDao) GetByBothName(goodID int, mainElementNa
 	).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			logger.Warn("Can't find out attach element",
+				zap.Int64("goodID",goodID),
 				zap.String("mainElementName", mainElementName),
 				zap.String("attachElementName", attachElementName))
 			return nil, nil
 		}
-		logger.Error("Fail to finish mainDB.Find",
+		logger.Error("Fail to finish mainDB.First",
+			zap.Int64("goodID",goodID),
 			zap.String("mainElementName", mainElementName),
 			zap.String("attachElementName", attachElementName),
 			zap.Error(err))

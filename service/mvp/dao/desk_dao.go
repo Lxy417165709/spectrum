@@ -33,7 +33,7 @@ func (deskDao) Update(to map[string]interface{}) error {
 	return nil
 }
 
-func (deskDao) Get(id int) (*model.Desk, error) {
+func (deskDao) Get(id int64) (*model.Desk, error) {
 	var table model.Desk
 	createTableWhenNotExist(&table)
 
@@ -42,7 +42,7 @@ func (deskDao) Get(id int) (*model.Desk, error) {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, nil
 		}
-		logger.Error("Fail to finish mainDB.First", zap.Int("id", id), zap.Error(err))
+		logger.Error("Fail to finish mainDB.First", zap.Int64("id", id), zap.Error(err))
 		return nil, err
 	}
 	return &result, nil

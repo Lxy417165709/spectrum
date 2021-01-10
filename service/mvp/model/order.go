@@ -4,7 +4,7 @@ import "github.com/jinzhu/gorm"
 
 type Order struct {
 	gorm.Model
-	DeskID int
+	DeskID int64
 }
 
 func (Order) TableName() string {

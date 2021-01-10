@@ -18,7 +18,7 @@ type Element struct {
 	Type      pb.ElementType `json:"type"`
 	ClassName string         `json:"class_name"`
 
-	Size      string         `json:"size"`
+	Size             string  `json:"size"`
 	Price            float64 `json:"price"`
 	PictureStorePath string  `json:"picture_store_path"`
 }
@@ -29,8 +29,8 @@ func (Element) TableName() string {
 
 type MainElementAttachElementRecord struct {
 	gorm.Model
-	MainElementName   string `json:"main_element_name"`
-	GoodID            int    `json:"good_id"`
+	MainElementName string `json:"main_element_name"`
+	GoodID          int64    `json:"good_id"`
 
 	AttachElementName string `json:"attach_element_name"`
 	SelectSize        string `json:"select_size"`
@@ -43,11 +43,10 @@ func (MainElementAttachElementRecord) TableName() string {
 type MainElementSizeRecord struct {
 	gorm.Model
 	MainElementName string `json:"main_element_name"`
-	GoodID          int    `json:"good_id"`
+	GoodID          int64    `json:"good_id"`
 
-	SelectSize      string `json:"select_size"`
+	SelectSize string `json:"select_size"`
 }
-
 
 type ElementClass struct {
 	gorm.Model

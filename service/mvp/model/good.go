@@ -6,7 +6,7 @@ import "github.com/jinzhu/gorm"
 type Good struct {
 	gorm.Model
 	Name   string `json:"name"`
-	DeskID int    `json:"desk_id"`
+	DeskID int64    `json:"desk_id"`
 
 	Expense     float64 `json:"expense"`
 	HadCheckOut bool    `json:"had_check_out"`
