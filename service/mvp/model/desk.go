@@ -12,7 +12,7 @@ type Desk struct {
 	EndTimestamp   int64 `json:"end_timestamp"`
 
 	SpaceName string `json:"space_name"`
-	SpaceNum  int    `json:"space_num"`
+	SpaceNum  int64  `json:"space_num"`
 
 	Expense           float64 `json:"expense"`
 	CheckOutTimestamp int64   `json:"check_out_timestamp"`
@@ -22,8 +22,10 @@ type Desk struct {
 func (*Desk) TableName() string {
 	return "desk"
 }
-
-func (d *Desk) GetExpenseInfo(nonFavorExpense float64, favors []*pb.Favor) *pb.ExpenseInfo {
+func (*Desk) GetName() string {
+	return ChargeableObjectNameOfDesk
+}
+func (d *Desk) GetExpenseInfo(pricePerHour float64, favors []*pb.Favor) *pb.ExpenseInfo {
 	if d.CheckOutTimestamp != 0 {
 		return &pb.ExpenseInfo{
 			NonFavorExpense:   d.NonFavorExpense,
@@ -31,14 +33,15 @@ func (d *Desk) GetExpenseInfo(nonFavorExpense float64, favors []*pb.Favor) *pb.E
 			Expense:           d.Expense,
 		}
 	}
+	nonFavorExpense := d.getNonFavorExpense(pricePerHour)
 	return &pb.ExpenseInfo{
 		NonFavorExpense:   nonFavorExpense,
-		CheckOutTimestamp: d.CheckOutTimestamp,
+		CheckOutTimestamp: 0,
 		Expense:           GetFavorExpense(nonFavorExpense, favors),
 	}
 }
 
-func (d *Desk) GetExpense(pricePerHour float64) float64 {
+func (d *Desk) getNonFavorExpense(pricePerHour float64) float64 {
 	var endTimestamp int64
 	if d.IsOpening() {
 		endTimestamp = time.Now().Unix()
@@ -47,8 +50,15 @@ func (d *Desk) GetExpense(pricePerHour float64) float64 {
 	}
 	hours := time.Unix(endTimestamp, 0).Sub(time.Unix(d.StartTimestamp, 0)).Hours()
 	return hours * pricePerHour
-
 }
+
 func (d *Desk) IsOpening() bool {
 	return d.EndTimestamp == 0
+}
+
+func (d *Desk) GetID() int64 {
+	return int64(d.ID)
+}
+func (d *Desk) SetID(id int64) {
+	d.ID = uint(id)
 }

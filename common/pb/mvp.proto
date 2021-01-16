@@ -44,7 +44,6 @@ message Desk{
   int64 startTimestamp = 3;
   int64 endTimestamp = 4;
   repeated Good goods = 5;
-
   repeated Favor favors = 6;
   ExpenseInfo expenseInfo = 7;
 }
@@ -53,7 +52,6 @@ message Good{
   int64 id = 1;
   Element mainElement = 2;
   repeated Element attachElements = 3;
-
   repeated Favor favors = 4;
   ExpenseInfo expenseInfo = 5;
 }
@@ -158,9 +156,9 @@ message GetDeskRes{
   Desk desk = 1;
 }
 
+// todo: 这个接口参数有待调整
 message CheckOutReq {
-  repeated int64 deskIDs = 1;
-  repeated int64 goodIDs = 2;
+  Desk desk = 1;
 }
 
 message CheckOutRes {}
@@ -172,6 +170,8 @@ message AddElementReq {
 message AddElementRes {}
 
 service Mvp {
+  rpc GetAllGoodClasses(GetAllGoodClassesReq) returns (GetAllGoodClassesRes); // 获得所有商品类及其下的货物
+
   rpc AddGoodClass(AddGoodClassReq) returns (AddGoodClassRes);    // 添加商品类
   rpc AddGood(AddGoodReq) returns (AddGoodRes);                   // 添加货物
 
@@ -182,11 +182,8 @@ service Mvp {
   rpc OrderDesk(OrderDeskReq) returns (OrderDeskRes);          // 预定桌位
 
   rpc GetDesk(GetDeskReq) returns(GetDeskRes);            // 获得某桌的信息 （如开桌时长、点单货物...）
-
-
   rpc CloseDesk(CloseDeskReq) returns(CloseDeskRes);      // 退桌
-  //  rpc FormExpense(FormExpenseReq) returns(FormExpenseRes);         // 形成某桌的账单
-  rpc CheckOut(CheckOutReq) returns(CheckOutRes); // 某桌结账
-  rpc GetAllGoodClasses(GetAllGoodClassesReq) returns (GetAllGoodClassesRes); // 获得所有商品类及其下的货物
+
+  rpc CheckOut(CheckOutReq) returns(CheckOutRes);         // 结账
 }
 

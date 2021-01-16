@@ -14,6 +14,7 @@ type MvpServer struct {
 	pb.UnimplementedMvpServer
 }
 
+// tip: req.good.Id 需要等于 0
 func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRes, error) {
 	logger.Info("AddGood", zap.Any("ctx", ctx), zap.Any("req", req))
 
@@ -30,6 +31,7 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 			zap.Error(err))
 		return nil, err
 	}
+
 	return &res, nil
 }
 
@@ -98,7 +100,6 @@ func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.Order
 	for _, good := range req.Goods {
 		// 生成货物编号, 将货物与桌位联结
 		dbGood := &model.Good{
-			Model:             nil,
 			Name:              good.MainElement.Name,
 			DeskID:            req.DeskID,
 			Expense:           good.ExpenseInfo.Expense,
@@ -133,7 +134,7 @@ func (MvpServer) OrderDesk(ctx context.Context, req *pb.OrderDeskReq) (*pb.Order
 
 	desk := &model.Desk{
 		SpaceName:      req.SpaceName,
-		SpaceNum:       int(req.SpaceNum),
+		SpaceNum:       req.SpaceNum,
 		StartTimestamp: time.Now().Unix(),
 	}
 	if err := dao.DeskDao.Create(desk); err != nil {
@@ -184,11 +185,11 @@ func (MvpServer) CloseDesk(ctx context.Context, req *pb.CloseDeskReq) (*pb.Close
 func (MvpServer) CheckOut(ctx context.Context, req *pb.CheckOutReq) (*pb.CheckOutRes, error) {
 	logger.Info("CheckOut", zap.Any("ctx", ctx), zap.Any("req", req))
 	var res pb.CheckOutRes
-	if err := checkOut(dao.GoodDao, req.GoodIDs); err != nil {
+	if err := checkOut(&model.Good{}, req.GoodIDs); err != nil {
 		// todo: log
 		return nil, err
 	}
-	if err := checkOut(dao.DeskDao, req.DeskIDs); err != nil {
+	if err := checkOut(&model.Desk{}, req.DeskIDs); err != nil {
 		// todo: log
 		return nil, err
 	}

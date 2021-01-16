@@ -5,6 +5,16 @@ import (
 	"spectrum/common/pb"
 )
 
+func GetSelectSizeInfo(infos []*pb.SizeInfo) *pb.SizeInfo {
+	for _, sizeInfo := range infos {
+		if sizeInfo.IsSelected {
+			return sizeInfo
+		}
+	}
+	return nil
+}
+
+
 func GetFavorExpense(nonFavorExpense float64, pbFavors []*pb.Favor) float64 {
 	favors := make([]Favor, 0)
 	for _, pbFavor := range pbFavors {

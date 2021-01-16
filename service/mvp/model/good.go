@@ -5,6 +5,12 @@ import (
 	"spectrum/common/pb"
 )
 
+type Chargeable interface {
+	GetName() string
+	GetID() int64
+	SetID(id int64)
+}
+
 // todo: Favor 还未添加
 type Good struct {
 	gorm.Model
@@ -16,11 +22,23 @@ type Good struct {
 	NonFavorExpense   float64 `json:"non_favor_expense"`
 }
 
+func (g *Good) GetID() int64 {
+	return int64(g.ID)
+}
+
+func (g *Good) SetID(id int64) {
+	g.ID = uint(id)
+}
+
 func (*Good) TableName() string {
 	return "good"
 }
 
-func (g *Good) GetExpenseInfo(nonFavorExpense float64, favors []*pb.Favor) *pb.ExpenseInfo {
+func (*Good) GetName() string {
+	return ChargeableObjectNameOfGood
+}
+
+func (g *Good) GetExpenseInfo(mainElement *pb.Element, attachElement []*pb.Element, favors []*pb.Favor) *pb.ExpenseInfo {
 	if g.CheckOutTimestamp != 0 {
 		return &pb.ExpenseInfo{
 			NonFavorExpense:   g.NonFavorExpense,
@@ -28,9 +46,18 @@ func (g *Good) GetExpenseInfo(nonFavorExpense float64, favors []*pb.Favor) *pb.E
 			Expense:           g.Expense,
 		}
 	}
+	nonFavorExpense := g.getNonFavorExpense(append(attachElement, mainElement))
 	return &pb.ExpenseInfo{
 		NonFavorExpense:   nonFavorExpense,
-		CheckOutTimestamp: g.CheckOutTimestamp,
+		CheckOutTimestamp: 0,
 		Expense:           GetFavorExpense(nonFavorExpense, favors),
 	}
+}
+
+func (g *Good) getNonFavorExpense(elements []*pb.Element) float64 {
+	expense := 0.0
+	for _, element := range elements {
+		expense += GetSelectSizeInfo(element.SizeInfos).Price
+	}
+	return expense
 }

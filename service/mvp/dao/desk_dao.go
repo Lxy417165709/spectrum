@@ -48,6 +48,6 @@ func (deskDao) Get(id int64) (*model.Desk, error) {
 	return &result, nil
 }
 
-func (deskDao) GetChargeableObjectName() string {
-	return model.ChargeableObjectNameOfDesk
-}
+//func (deskDao) GetName() string {
+//	return model.ChargeableObjectNameOfDesk
+//}

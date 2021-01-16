@@ -54,5 +54,5 @@ func universalGet(id int, obj interface{}) (interface{}, error) {
 
 type ChargeableDao interface {
 	Update(to map[string]interface{}) error
-	GetChargeableObjectName() string
+	//GetName() string
 }

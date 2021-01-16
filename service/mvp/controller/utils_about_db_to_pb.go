@@ -18,34 +18,29 @@ func getClassGoods(className string) []*pb.Good {
 	return goods
 }
 
+// 返回的 desk:
+// 已结账时: 返回结账的金额信息
+// 未结账时: 返回最新的金额信息
 func getDesk(deskID int64) *pb.Desk {
 	desk, err := dao.DeskDao.Get(deskID)
 	if err != nil {
 		// todo: log
 		return nil
 	}
-
-	space, err := dao.SpaceDao.Get(desk.SpaceName, int64(desk.SpaceNum))
+	space, err := dao.SpaceDao.Get(desk.SpaceName, desk.SpaceNum)
 	if err != nil {
 		// todo: log
 		return nil
 	}
-
-	records, err := dao.FavorRecordDao.Get(model.ChargeableObjectNameOfDesk, deskID)
-	if err != nil {
-		// todo: log
-		return nil
-	}
-
-	favors := getFavors(records)
+	favor := getFavors(desk)
 	return &pb.Desk{
 		Id:             deskID,
 		Space:          space.ToPb(),
 		StartTimestamp: desk.StartTimestamp,
 		EndTimestamp:   desk.EndTimestamp,
 		Goods:          getDeskGoods(deskID),
-		Favors:         favors,
-		ExpenseInfo:    desk.GetExpenseInfo(desk.GetExpense(space.Price), favors),
+		Favors:         favor,
+		ExpenseInfo:    desk.GetExpenseInfo(space.Price, favor),
 	}
 }
 
@@ -62,24 +57,19 @@ func getDeskGoods(deskID int64) []*pb.Good {
 	return goods
 }
 
-func getGood(dbGood *model.Good) *pb.Good {
-	records, err := dao.FavorRecordDao.Get(model.ChargeableObjectNameOfGood, int64(dbGood.ID))
-	if err != nil {
-		// todo: log
-		return nil
-	}
-
-	favors := getFavors(records)
-	mainElement := getMainElement(int64(dbGood.ID), dbGood.Name)
-	attachElements := getAttachElements(int64(dbGood.ID), dbGood.Name)
-	nonFavorExpense := getElementsExpense(append(attachElements, mainElement))
-
+// 返回的 good:
+// 已结账时: 返回结账的金额信息
+// 未结账时: 返回最新的金额信息
+func getGood(good *model.Good) *pb.Good {
+	mainElement := getMainElement(int64(good.ID), good.Name)
+	attachElements := getAttachElements(int64(good.ID), good.Name)
+	favors := getFavors(good)
 	return &pb.Good{
-		Id:             int64(dbGood.ID),
+		Id:             int64(good.ID),
 		MainElement:    mainElement,
 		AttachElements: attachElements,
 		Favors:         favors,
-		ExpenseInfo:    dbGood.GetExpenseInfo(nonFavorExpense, favors),
+		ExpenseInfo:    good.GetExpenseInfo(mainElement, attachElements, favors),
 	}
 }
 
@@ -89,12 +79,7 @@ func getMainElement(goodID int64, mainElementName string) *pb.Element {
 		// todo: log
 		return nil
 	}
-	var sizeRecord *model.MainElementSizeRecord
-	if goodID == 0 {
-		sizeRecord, err = dao.MainElementSizeRecordDao.GetByMainElementName(mainElementName)
-	} else {
-		sizeRecord, err = dao.MainElementSizeRecordDao.GetByGoodID(goodID)
-	}
+	sizeRecord, err := dao.MainElementSizeRecordDao.GetByGoodIdAndMainElementName(goodID, mainElementName)
 	if err != nil {
 		// todo: log
 		return nil
@@ -105,21 +90,16 @@ func getMainElement(goodID int64, mainElementName string) *pb.Element {
 	}
 	return &pb.Element{
 		Name:      mainElementName,
+		Type:      pb.ElementType_Main,
 		SizeInfos: getSizeInfos(sizeRecord.SelectSize, mainElements),
 	}
 }
 
 func getAttachElements(goodID int64, mainElementName string) []*pb.Element {
 	var attachElements []*pb.Element
-	var attachRecords []*model.MainElementAttachElementRecord
-	var err error
-	if goodID == 0 {
-		attachRecords, err = dao.MainElementAttachElementRecordDao.GetByMainElementName(mainElementName)
-	} else {
-		attachRecords, err = dao.MainElementAttachElementRecordDao.GetByGoodID(goodID)
-	}
+	attachRecords, err := dao.MainElementAttachElementRecordDao.GetByGoodIdAndMainElementName(goodID, mainElementName)
 	if err != nil {
-		logger.Error("Fail to finish MainElementAttachElementRecordDao.GetByMainElementName", zap.Error(err))
+		logger.Error("Fail to finish MainElementAttachElementRecordDao.GetByGoodIdAndMainElementName", zap.Error(err))
 		return nil
 	}
 	for _, attachRecord := range attachRecords {
@@ -136,7 +116,12 @@ func getAttachElements(goodID int64, mainElementName string) []*pb.Element {
 	return attachElements
 }
 
-func getFavors(records []*model.FavorRecord) []*pb.Favor {
+func getFavors(chargeableObj model.Chargeable) []*pb.Favor {
+	records, err := dao.FavorRecordDao.Get(chargeableObj.GetName(), chargeableObj.GetID())
+	if err != nil {
+		// todo: log
+		return nil
+	}
 	result := make([]*pb.Favor, 0)
 	for _, record := range records {
 		result = append(result, record.ToPb())

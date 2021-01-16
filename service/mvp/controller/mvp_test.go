@@ -1,133 +1,101 @@
 package controller
 
 import (
-	"context"
-	"github.com/astaxie/beego/logs"
-	"log"
+	"fmt"
 	"spectrum/common/pb"
+	"spectrum/service/mvp/model"
 	"testing"
-	"time"
 )
 
-func TestMvpServer_AddGood(t *testing.T) {
-	initMvpClient()
-
-	if _, err := mvpClient.AddGood(context.Background(), &pb.AddGoodReq{
-		GoodName: "椰果",
-		Price:    1,
-	}); err != nil {
-		t.Fatal(err)
-		return
+// 2021年01月17日01:26:56 Parse
+func TestGetSelectSizeInfo(t *testing.T) {
+	testSamples := [][]*pb.SizeInfo{
+		{
+			{
+				Size:             "小",
+				Price:            1,
+				PictureStorePath: "",
+				IsSelected:       false,
+			},
+			{
+				Size:             "中",
+				Price:            2,
+				PictureStorePath: "",
+				IsSelected:       false,
+			},
+			{
+				Size:             "大",
+				Price:            3,
+				PictureStorePath: "",
+				IsSelected:       true,
+			},
+		}, // 大
+		{
+			{
+				Size:             "小",
+				Price:            1,
+				PictureStorePath: "",
+				IsSelected:       false,
+			},
+			{
+				Size:             "中",
+				Price:            2,
+				PictureStorePath: "",
+				IsSelected:       false,
+			},
+			{
+				Size:             "大",
+				Price:            3,
+				PictureStorePath: "",
+				IsSelected:       false,
+			},
+		}, // nil
+		{
+			{
+				Size:             "小",
+				Price:            1,
+				PictureStorePath: "",
+				IsSelected:       true,
+			},
+			{
+				Size:             "中",
+				Price:            2,
+				PictureStorePath: "",
+				IsSelected:       false,
+			},
+			{
+				Size:             "大",
+				Price:            3,
+				PictureStorePath: "",
+				IsSelected:       false,
+			},
+		}, // 小
+		{
+			{
+				Size:             "小",
+				Price:            1,
+				PictureStorePath: "",
+				IsSelected:       false,
+			},
+			{
+				Size:             "中",
+				Price:            2,
+				PictureStorePath: "",
+				IsSelected:       true,
+			},
+			{
+				Size:             "大",
+				Price:            3,
+				PictureStorePath: "",
+				IsSelected:       false,
+			},
+		}, // 中
 	}
-
-	log.Println("Add successfully!")
-}
-
-func TestMvpServer_SellGood(t *testing.T) {
-	initMvpClient()
-
-	if _, err := mvpClient.SellGood(context.Background(), &pb.SellGoodReq{
-		GoodName:  "超神水果茶",
-		SellPrice: 18.0,
-	}); err != nil {
-		t.Fatal(err)
-		return
+	for index, sample := range testSamples {
+		fmt.Printf("Sample %+v: %+v\n", index, model.GetSelectSizeInfo(sample))
 	}
-
-	log.Println("Sell successfully!")
-}
-
-func TestMvpServer_AddBilliardDesk(t *testing.T) {
-	initMvpClient()
-
-	if _, err := mvpClient.AddBilliardDesk(context.Background(), &pb.AddBilliardDeskReq{
-		BilliardDeskName: "一号桌",
-	}); err != nil {
-		t.Fatal(err)
-		return
-	}
-
-	log.Println("Add successfully!")
-}
-
-func TestMvpServer_BeginPlayBilliard(t *testing.T) {
-	initMvpClient()
-
-	if _, err := mvpClient.BeginPlayBilliard(context.Background(), &pb.BeginPlayBilliardReq{
-		BilliardDeskName:   "一号桌",
-		BeginPlayTimestamp: time.Unix(10001, 0).Unix(),
-	}); err != nil {
-		t.Fatal(err)
-		return
-	}
-
-	log.Println("Play successfully!")
-}
-
-func TestMvpServer_StopPlayBilliard(t *testing.T) {
-	initMvpClient()
-
-	if _, err := mvpClient.StopPlayBilliard(context.Background(), &pb.StopPlayBilliardReq{
-		BilliardDeskName:   "一号桌",
-		BeginPlayTimestamp: time.Unix(10001, 0).Unix(),
-		StopPlayTimestamp:  time.Unix(2000000, 0).Unix(),
-	}); err != nil {
-		t.Fatal(err)
-		return
-	}
-
-	log.Println("Stop successfully!")
-}
-
-func TestMvpServer_Order(t *testing.T) {
-	initMvpClient()
-
-	res, err := mvpClient.Order(context.Background(), &pb.OrderReq{
-		//Goods: []*pb.Good{
-		//	{
-		//		Name: "波霸奶茶",
-		//		AttachGoods: []*pb.AttachGood{
-		//			{
-		//				Name: "椰果",
-		//			},
-		//			{
-		//				Name: "少冰",
-		//			},
-		//		},
-		//	},
-		//	{
-		//		Name: "波霸奶茶",
-		//		AttachGoods: []*pb.AttachGood{
-		//			{
-		//				Name: "椰果",
-		//			},
-		//		},
-		//	},
-		//	{
-		//		Name: "超神水果茶",
-		//	},
-		//},
-	})
-	logs.Info(res, err)
-	if err != nil {
-		t.Fatal(err)
-		return
-	}
-
-	log.Println("Order successfully!")
-}
-
-func TestMvpServer_GetOrderGoods(t *testing.T) {
-	initMvpClient()
-
-	res, err := mvpClient.GetOrderGoods(context.Background(), &pb.GetOrderGoodsReq{
-		OrderID: 0,
-	})
-	logs.Info(res, len(res.Goods[0].AttachGoods),err)
-	if err != nil {
-		t.Fatal(err)
-		return
-	}
-
-	log.Println("Order successfully!")
+	// Sample 0: size:"大" price:3 isSelected:true
+	// Sample 1: <nil>
+	// Sample 2: size:"小" price:1 isSelected:true
+	// Sample 3: size:"中" price:2 isSelected:true
 }

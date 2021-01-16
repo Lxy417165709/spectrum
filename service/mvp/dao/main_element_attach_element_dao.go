@@ -22,23 +22,23 @@ func (mainElementAttachElementRecordDao) Create(obj *model.MainElementAttachElem
 	return nil
 }
 
-func (mainElementAttachElementRecordDao) GetByMainElementName(mainElementName string) ([]*model.MainElementAttachElementRecord, error) {
+func (mainElementAttachElementRecordDao) GetByGoodIdAndMainElementName(goodID int64, mainElementName string) ([]*model.MainElementAttachElementRecord, error) {
 	var table model.MainElementAttachElementRecord
 	createTableWhenNotExist(&table)
 	var result []*model.MainElementAttachElementRecord
-	if err := mainDB.Find(&result, "good_id = ? and main_element_name = ?", 0, mainElementName).Error; err != nil {
-		logger.Error("Fail to finish mainDB.Find", zap.String("mainElementName", mainElementName), zap.Error(err))
-		return nil, err
-	}
-	return result, nil
-}
 
-func (mainElementAttachElementRecordDao) GetByGoodID(goodID int64) ([]*model.MainElementAttachElementRecord, error) {
-	var table model.MainElementAttachElementRecord
-	createTableWhenNotExist(&table)
-	var result []*model.MainElementAttachElementRecord
-	if err := mainDB.Find(&result, "good_id = ? and main_element_name = ?", goodID).Error; err != nil {
-		logger.Error("Fail to finish mainDB.Find", zap.Int64("good_id", goodID), zap.Error(err))
+	var whereClause string
+	var parameters []interface{}
+	if goodID == 0 {
+		whereClause = "good_id = ? and main_element_name = ?"
+		parameters = []interface{}{goodID, mainElementName}
+	} else {
+		whereClause = "good_id = ?"
+		parameters = []interface{}{goodID}
+	}
+
+	if err := mainDB.Where(whereClause, parameters...).First(&result).Error; err != nil {
+		logger.Error("Fail to finish mainDB.Find", zap.String("mainElementName", mainElementName), zap.Error(err))
 		return nil, err
 	}
 	return result, nil
@@ -54,13 +54,13 @@ func (mainElementAttachElementRecordDao) GetByBothName(goodID int64, mainElement
 	).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			logger.Warn("Can't find out attach element",
-				zap.Int64("goodID",goodID),
+				zap.Int64("goodID", goodID),
 				zap.String("mainElementName", mainElementName),
 				zap.String("attachElementName", attachElementName))
 			return nil, nil
 		}
 		logger.Error("Fail to finish mainDB.First",
-			zap.Int64("goodID",goodID),
+			zap.Int64("goodID", goodID),
 			zap.String("mainElementName", mainElementName),
 			zap.String("attachElementName", attachElementName),
 			zap.Error(err))

@@ -1,7 +1,9 @@
 package controller
 
 import (
+	"fmt"
 	"go.uber.org/zap"
+	"reflect"
 	"spectrum/common/logger"
 	"spectrum/common/pb"
 	"spectrum/service/mvp/dao"
@@ -11,64 +13,61 @@ import (
 )
 
 func writeFavorToDB(favorableStruct interface{}) error {
+
+	var chargeableObject model.Chargeable
+	var favors []*pb.Favor
 	switch favorableStruct.(type) {
 	case *pb.Good:
 		good := favorableStruct.(*pb.Good)
-		for _, favor := range good.Favors {
-			if err := dao.FavorRecordDao.Create(&model.FavorRecord{
-				ChargeableObjectName: model.ChargeableObjectNameOfGood,
-				ChargeableObjectID:   good.Id,
-				FavorType:            favor.FavorType,
-				FavorParameters:      strings.Join(favor.Parameters, "|"),
-			}); err != nil {
-				// todo: log
-				return err
-			}
-		}
+		chargeableObject = &model.Good{}
+		chargeableObject.SetID(good.Id)
+		favors = good.Favors
 	case *pb.Desk:
 		desk := favorableStruct.(*pb.Desk)
-		for _, favor := range desk.Favors {
-			if err := dao.FavorRecordDao.Create(&model.FavorRecord{
-				ChargeableObjectName: model.ChargeableObjectNameOfDesk,
-				ChargeableObjectID:   desk.Id,
-				FavorType:            favor.FavorType,
-				FavorParameters:      strings.Join(favor.Parameters, "|"),
-			}); err != nil {
-				// todo: log
-				return err
-			}
-		}
-	case *pb.Order:
-		order := favorableStruct.(*pb.Order)
-		for _, favor := range order.Favors {
-			if err := dao.FavorRecordDao.Create(&model.FavorRecord{
-				ChargeableObjectName: model.ChargeableObjectNameOfOrder,
-				ChargeableObjectID:   order.Id,
-				FavorType:            favor.FavorType,
-				FavorParameters:      strings.Join(favor.Parameters, "|"),
-			}); err != nil {
-				// todo: log
-				return err
-			}
+		chargeableObject = &model.Desk{}
+		chargeableObject.SetID(desk.Id)
+		favors = desk.Favors
+	default:
+		err := fmt.Errorf("unfix type")
+		logger.Error("Unfix type", zap.String("type", reflect.TypeOf(favorableStruct).String()), zap.Error(err))
+		return err
+	}
+
+	for _, favor := range favors {
+		if err := dao.FavorRecordDao.Create(&model.FavorRecord{
+			ChargeableObjectName: chargeableObject.GetName(),
+			ChargeableObjectID:   chargeableObject.GetID(),
+			FavorType:            favor.FavorType,
+			FavorParameters:      strings.Join(favor.Parameters, "|"),
+		}); err != nil {
+			// todo: log
+			return err
 		}
 	}
+
 	return nil
 }
 
-func checkOut(chargeableDao dao.ChargeableDao, ids []int64) error {
+// todo: 不能重复结账
+func checkOut(chargeableObj model.Chargeable, ids []int64) error {
 	for _, id := range ids {
 		checkOutTimestamp := time.Now().Unix()
 		if err := dao.CheckOutRecordDao.Create(&model.CheckOutRecord{
-			ChargeableObjectName: chargeableDao.GetChargeableObjectName(),
+			ChargeableObjectName: chargeableObj.GetName(),
 			ChargeableObjectID:   id,
 			CheckOutTimestamp:    checkOutTimestamp,
 		}); err != nil {
 			logger.Error("Fail to finish CheckOutRecordDao.Create", zap.Error(err))
 			return err
 		}
+		chargeableObj.SetID(id)
+		expenseInfo, chargeableDao := getExpenseInfoAndChargeableDao(chargeableObj)
+		// todo: chargeableDao 接口函数有待完善
 		if err := chargeableDao.Update(map[string]interface{}{
 			"id":                  id,
 			"check_out_timestamp": checkOutTimestamp,
+			"expense":             expenseInfo.Expense,
+			"non_favor_expense":   expenseInfo.NonFavorExpense,
 		}); err != nil {
 			logger.Error("Fail to finish chargeableDao.Update", zap.Error(err))
 			return err
@@ -98,7 +97,7 @@ func writeGoodSizeToDB(good *pb.Good) error {
 			GoodID:            good.Id,
 			MainElementName:   good.MainElement.Name,
 			AttachElementName: attachElement.Name,
-			SelectSize:        getSelectSizeInfo(attachElement.SizeInfos).Size,
+			SelectSize:        model.GetSelectSizeInfo(attachElement.SizeInfos).Size,
 		}); err != nil {
 			logger.Error("Fail to finish MainElementAttachElementDao.Create", zap.Error(err))
 			return err
@@ -138,4 +137,29 @@ func createElement(pbElement *pb.Element, className string) error {
 		}
 	}
 	return nil
+}
+
+func getDbElements(pbElement *pb.Element, className string) []*model.Element {
+	var result []*model.Element
+
+	for _, sizeInfo := range pbElement.SizeInfos {
+		result = append(result, &model.Element{
+			Name:             pbElement.Name,
+			Type:             pbElement.Type,
+			ClassName:        className,
+			Size:             sizeInfo.Size,
+			Price:            sizeInfo.Price,
+			PictureStorePath: sizeInfo.PictureStorePath,
+		})
+	}
+	return result
+}
+
+func getDbSpace(pbSpace *pb.Space) *model.Space {
+	return &model.Space{
+		Name:          pbSpace.Name,
+		Num:           pbSpace.Num,
+		Price:         pbSpace.Price,
+		PriceRuleType: pbSpace.PriceRuleType,
+	}
 }

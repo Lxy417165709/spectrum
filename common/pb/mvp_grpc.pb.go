@@ -17,6 +17,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MvpClient interface {
+	GetAllGoodClasses(ctx context.Context, in *GetAllGoodClassesReq, opts ...grpc.CallOption) (*GetAllGoodClassesRes, error)
 	AddGoodClass(ctx context.Context, in *AddGoodClassReq, opts ...grpc.CallOption) (*AddGoodClassRes, error)
 	AddGood(ctx context.Context, in *AddGoodReq, opts ...grpc.CallOption) (*AddGoodRes, error)
 	AddElement(ctx context.Context, in *AddElementReq, opts ...grpc.CallOption) (*AddElementRes, error)
@@ -25,9 +26,7 @@ type MvpClient interface {
 	OrderDesk(ctx context.Context, in *OrderDeskReq, opts ...grpc.CallOption) (*OrderDeskRes, error)
 	GetDesk(ctx context.Context, in *GetDeskReq, opts ...grpc.CallOption) (*GetDeskRes, error)
 	CloseDesk(ctx context.Context, in *CloseDeskReq, opts ...grpc.CallOption) (*CloseDeskRes, error)
-	//  rpc FormExpense(FormExpenseReq) returns(FormExpenseRes);         // 形成某桌的账单
 	CheckOut(ctx context.Context, in *CheckOutReq, opts ...grpc.CallOption) (*CheckOutRes, error)
-	GetAllGoodClasses(ctx context.Context, in *GetAllGoodClassesReq, opts ...grpc.CallOption) (*GetAllGoodClassesRes, error)
 }
 
 type mvpClient struct {
@@ -36,6 +35,15 @@ type mvpClient struct {
 
 func NewMvpClient(cc grpc.ClientConnInterface) MvpClient {
 	return &mvpClient{cc}
+}
+
+func (c *mvpClient) GetAllGoodClasses(ctx context.Context, in *GetAllGoodClassesReq, opts ...grpc.CallOption) (*GetAllGoodClassesRes, error) {
+	out := new(GetAllGoodClassesRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/GetAllGoodClasses", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *mvpClient) AddGoodClass(ctx context.Context, in *AddGoodClassReq, opts ...grpc.CallOption) (*AddGoodClassRes, error) {
@@ -119,19 +127,11 @@ func (c *mvpClient) CheckOut(ctx context.Context, in *CheckOutReq, opts ...grpc.
 	return out, nil
 }
 
-func (c *mvpClient) GetAllGoodClasses(ctx context.Context, in *GetAllGoodClassesReq, opts ...grpc.CallOption) (*GetAllGoodClassesRes, error) {
-	out := new(GetAllGoodClassesRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/GetAllGoodClasses", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // MvpServer is the server API for Mvp service.
 // All implementations must embed UnimplementedMvpServer
 // for forward compatibility
 type MvpServer interface {
+	GetAllGoodClasses(context.Context, *GetAllGoodClassesReq) (*GetAllGoodClassesRes, error)
 	AddGoodClass(context.Context, *AddGoodClassReq) (*AddGoodClassRes, error)
 	AddGood(context.Context, *AddGoodReq) (*AddGoodRes, error)
 	AddElement(context.Context, *AddElementReq) (*AddElementRes, error)
@@ -140,9 +140,7 @@ type MvpServer interface {
 	OrderDesk(context.Context, *OrderDeskReq) (*OrderDeskRes, error)
 	GetDesk(context.Context, *GetDeskReq) (*GetDeskRes, error)
 	CloseDesk(context.Context, *CloseDeskReq) (*CloseDeskRes, error)
-	//  rpc FormExpense(FormExpenseReq) returns(FormExpenseRes);         // 形成某桌的账单
 	CheckOut(context.Context, *CheckOutReq) (*CheckOutRes, error)
-	GetAllGoodClasses(context.Context, *GetAllGoodClassesReq) (*GetAllGoodClassesRes, error)
 	mustEmbedUnimplementedMvpServer()
 }
 
@@ -150,6 +148,9 @@ type MvpServer interface {
 type UnimplementedMvpServer struct {
 }
 
+func (UnimplementedMvpServer) GetAllGoodClasses(context.Context, *GetAllGoodClassesReq) (*GetAllGoodClassesRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllGoodClasses not implemented")
+}
 func (UnimplementedMvpServer) AddGoodClass(context.Context, *AddGoodClassReq) (*AddGoodClassRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddGoodClass not implemented")
 }
@@ -177,9 +178,6 @@ func (UnimplementedMvpServer) CloseDesk(context.Context, *CloseDeskReq) (*CloseD
 func (UnimplementedMvpServer) CheckOut(context.Context, *CheckOutReq) (*CheckOutRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckOut not implemented")
 }
-func (UnimplementedMvpServer) GetAllGoodClasses(context.Context, *GetAllGoodClassesReq) (*GetAllGoodClassesRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAllGoodClasses not implemented")
-}
 func (UnimplementedMvpServer) mustEmbedUnimplementedMvpServer() {}
 
 // UnsafeMvpServer may be embedded to opt out of forward compatibility for this service.
@@ -191,6 +189,24 @@ type UnsafeMvpServer interface {
 
 func RegisterMvpServer(s grpc.ServiceRegistrar, srv MvpServer) {
 	s.RegisterService(&_Mvp_serviceDesc, srv)
+}
+
+func _Mvp_GetAllGoodClasses_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllGoodClassesReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).GetAllGoodClasses(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/GetAllGoodClasses",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).GetAllGoodClasses(ctx, req.(*GetAllGoodClassesReq))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Mvp_AddGoodClass_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -355,28 +371,14 @@ func _Mvp_CheckOut_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Mvp_GetAllGoodClasses_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAllGoodClassesReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MvpServer).GetAllGoodClasses(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/pb.Mvp/GetAllGoodClasses",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).GetAllGoodClasses(ctx, req.(*GetAllGoodClassesReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 var _Mvp_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.Mvp",
 	HandlerType: (*MvpServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetAllGoodClasses",
+			Handler:    _Mvp_GetAllGoodClasses_Handler,
+		},
 		{
 			MethodName: "AddGoodClass",
 			Handler:    _Mvp_AddGoodClass_Handler,
@@ -412,10 +414,6 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CheckOut",
 			Handler:    _Mvp_CheckOut_Handler,
-		},
-		{
-			MethodName: "GetAllGoodClasses",
-			Handler:    _Mvp_GetAllGoodClasses_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
