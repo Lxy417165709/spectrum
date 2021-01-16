@@ -18,14 +18,14 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MvpClient interface {
 	AddGoodClass(ctx context.Context, in *AddGoodClassReq, opts ...grpc.CallOption) (*AddGoodClassRes, error)
-	AddSellGood(ctx context.Context, in *AddSellGoodReq, opts ...grpc.CallOption) (*AddSellGoodRes, error)
+	AddGood(ctx context.Context, in *AddGoodReq, opts ...grpc.CallOption) (*AddGoodRes, error)
 	AddElement(ctx context.Context, in *AddElementReq, opts ...grpc.CallOption) (*AddElementRes, error)
 	AddSpace(ctx context.Context, in *AddSpaceReq, opts ...grpc.CallOption) (*AddSpaceRes, error)
 	OrderGood(ctx context.Context, in *OrderGoodReq, opts ...grpc.CallOption) (*OrderGoodRes, error)
-	OpenDesk(ctx context.Context, in *OpenDeskReq, opts ...grpc.CallOption) (*OpenDeskRes, error)
-	CloseDesk(ctx context.Context, in *CloseDeskReq, opts ...grpc.CallOption) (*CloseDeskRes, error)
+	OrderDesk(ctx context.Context, in *OrderDeskReq, opts ...grpc.CallOption) (*OrderDeskRes, error)
 	GetDesk(ctx context.Context, in *GetDeskReq, opts ...grpc.CallOption) (*GetDeskRes, error)
-	FormExpense(ctx context.Context, in *FormExpenseReq, opts ...grpc.CallOption) (*FormExpenseRes, error)
+	CloseDesk(ctx context.Context, in *CloseDeskReq, opts ...grpc.CallOption) (*CloseDeskRes, error)
+	//  rpc FormExpense(FormExpenseReq) returns(FormExpenseRes);         // 形成某桌的账单
 	CheckOut(ctx context.Context, in *CheckOutReq, opts ...grpc.CallOption) (*CheckOutRes, error)
 	GetAllGoodClasses(ctx context.Context, in *GetAllGoodClassesReq, opts ...grpc.CallOption) (*GetAllGoodClassesRes, error)
 }
@@ -47,9 +47,9 @@ func (c *mvpClient) AddGoodClass(ctx context.Context, in *AddGoodClassReq, opts 
 	return out, nil
 }
 
-func (c *mvpClient) AddSellGood(ctx context.Context, in *AddSellGoodReq, opts ...grpc.CallOption) (*AddSellGoodRes, error) {
-	out := new(AddSellGoodRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/AddSellGood", in, out, opts...)
+func (c *mvpClient) AddGood(ctx context.Context, in *AddGoodReq, opts ...grpc.CallOption) (*AddGoodRes, error) {
+	out := new(AddGoodRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/AddGood", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -83,18 +83,9 @@ func (c *mvpClient) OrderGood(ctx context.Context, in *OrderGoodReq, opts ...grp
 	return out, nil
 }
 
-func (c *mvpClient) OpenDesk(ctx context.Context, in *OpenDeskReq, opts ...grpc.CallOption) (*OpenDeskRes, error) {
-	out := new(OpenDeskRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/OpenDesk", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *mvpClient) CloseDesk(ctx context.Context, in *CloseDeskReq, opts ...grpc.CallOption) (*CloseDeskRes, error) {
-	out := new(CloseDeskRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/CloseDesk", in, out, opts...)
+func (c *mvpClient) OrderDesk(ctx context.Context, in *OrderDeskReq, opts ...grpc.CallOption) (*OrderDeskRes, error) {
+	out := new(OrderDeskRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/OrderDesk", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -110,9 +101,9 @@ func (c *mvpClient) GetDesk(ctx context.Context, in *GetDeskReq, opts ...grpc.Ca
 	return out, nil
 }
 
-func (c *mvpClient) FormExpense(ctx context.Context, in *FormExpenseReq, opts ...grpc.CallOption) (*FormExpenseRes, error) {
-	out := new(FormExpenseRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/FormExpense", in, out, opts...)
+func (c *mvpClient) CloseDesk(ctx context.Context, in *CloseDeskReq, opts ...grpc.CallOption) (*CloseDeskRes, error) {
+	out := new(CloseDeskRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/CloseDesk", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -142,14 +133,14 @@ func (c *mvpClient) GetAllGoodClasses(ctx context.Context, in *GetAllGoodClasses
 // for forward compatibility
 type MvpServer interface {
 	AddGoodClass(context.Context, *AddGoodClassReq) (*AddGoodClassRes, error)
-	AddSellGood(context.Context, *AddSellGoodReq) (*AddSellGoodRes, error)
+	AddGood(context.Context, *AddGoodReq) (*AddGoodRes, error)
 	AddElement(context.Context, *AddElementReq) (*AddElementRes, error)
 	AddSpace(context.Context, *AddSpaceReq) (*AddSpaceRes, error)
 	OrderGood(context.Context, *OrderGoodReq) (*OrderGoodRes, error)
-	OpenDesk(context.Context, *OpenDeskReq) (*OpenDeskRes, error)
-	CloseDesk(context.Context, *CloseDeskReq) (*CloseDeskRes, error)
+	OrderDesk(context.Context, *OrderDeskReq) (*OrderDeskRes, error)
 	GetDesk(context.Context, *GetDeskReq) (*GetDeskRes, error)
-	FormExpense(context.Context, *FormExpenseReq) (*FormExpenseRes, error)
+	CloseDesk(context.Context, *CloseDeskReq) (*CloseDeskRes, error)
+	//  rpc FormExpense(FormExpenseReq) returns(FormExpenseRes);         // 形成某桌的账单
 	CheckOut(context.Context, *CheckOutReq) (*CheckOutRes, error)
 	GetAllGoodClasses(context.Context, *GetAllGoodClassesReq) (*GetAllGoodClassesRes, error)
 	mustEmbedUnimplementedMvpServer()
@@ -162,8 +153,8 @@ type UnimplementedMvpServer struct {
 func (UnimplementedMvpServer) AddGoodClass(context.Context, *AddGoodClassReq) (*AddGoodClassRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddGoodClass not implemented")
 }
-func (UnimplementedMvpServer) AddSellGood(context.Context, *AddSellGoodReq) (*AddSellGoodRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddSellGood not implemented")
+func (UnimplementedMvpServer) AddGood(context.Context, *AddGoodReq) (*AddGoodRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddGood not implemented")
 }
 func (UnimplementedMvpServer) AddElement(context.Context, *AddElementReq) (*AddElementRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddElement not implemented")
@@ -174,17 +165,14 @@ func (UnimplementedMvpServer) AddSpace(context.Context, *AddSpaceReq) (*AddSpace
 func (UnimplementedMvpServer) OrderGood(context.Context, *OrderGoodReq) (*OrderGoodRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OrderGood not implemented")
 }
-func (UnimplementedMvpServer) OpenDesk(context.Context, *OpenDeskReq) (*OpenDeskRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method OpenDesk not implemented")
-}
-func (UnimplementedMvpServer) CloseDesk(context.Context, *CloseDeskReq) (*CloseDeskRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CloseDesk not implemented")
+func (UnimplementedMvpServer) OrderDesk(context.Context, *OrderDeskReq) (*OrderDeskRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OrderDesk not implemented")
 }
 func (UnimplementedMvpServer) GetDesk(context.Context, *GetDeskReq) (*GetDeskRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDesk not implemented")
 }
-func (UnimplementedMvpServer) FormExpense(context.Context, *FormExpenseReq) (*FormExpenseRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method FormExpense not implemented")
+func (UnimplementedMvpServer) CloseDesk(context.Context, *CloseDeskReq) (*CloseDeskRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CloseDesk not implemented")
 }
 func (UnimplementedMvpServer) CheckOut(context.Context, *CheckOutReq) (*CheckOutRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckOut not implemented")
@@ -223,20 +211,20 @@ func _Mvp_AddGoodClass_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Mvp_AddSellGood_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddSellGoodReq)
+func _Mvp_AddGood_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddGoodReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MvpServer).AddSellGood(ctx, in)
+		return srv.(MvpServer).AddGood(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.Mvp/AddSellGood",
+		FullMethod: "/pb.Mvp/AddGood",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).AddSellGood(ctx, req.(*AddSellGoodReq))
+		return srv.(MvpServer).AddGood(ctx, req.(*AddGoodReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -295,38 +283,20 @@ func _Mvp_OrderGood_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Mvp_OpenDesk_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(OpenDeskReq)
+func _Mvp_OrderDesk_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OrderDeskReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MvpServer).OpenDesk(ctx, in)
+		return srv.(MvpServer).OrderDesk(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.Mvp/OpenDesk",
+		FullMethod: "/pb.Mvp/OrderDesk",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).OpenDesk(ctx, req.(*OpenDeskReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Mvp_CloseDesk_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CloseDeskReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MvpServer).CloseDesk(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/pb.Mvp/CloseDesk",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).CloseDesk(ctx, req.(*CloseDeskReq))
+		return srv.(MvpServer).OrderDesk(ctx, req.(*OrderDeskReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -349,20 +319,20 @@ func _Mvp_GetDesk_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Mvp_FormExpense_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FormExpenseReq)
+func _Mvp_CloseDesk_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CloseDeskReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MvpServer).FormExpense(ctx, in)
+		return srv.(MvpServer).CloseDesk(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.Mvp/FormExpense",
+		FullMethod: "/pb.Mvp/CloseDesk",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).FormExpense(ctx, req.(*FormExpenseReq))
+		return srv.(MvpServer).CloseDesk(ctx, req.(*CloseDeskReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -412,8 +382,8 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Mvp_AddGoodClass_Handler,
 		},
 		{
-			MethodName: "AddSellGood",
-			Handler:    _Mvp_AddSellGood_Handler,
+			MethodName: "AddGood",
+			Handler:    _Mvp_AddGood_Handler,
 		},
 		{
 			MethodName: "AddElement",
@@ -428,20 +398,16 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Mvp_OrderGood_Handler,
 		},
 		{
-			MethodName: "OpenDesk",
-			Handler:    _Mvp_OpenDesk_Handler,
-		},
-		{
-			MethodName: "CloseDesk",
-			Handler:    _Mvp_CloseDesk_Handler,
+			MethodName: "OrderDesk",
+			Handler:    _Mvp_OrderDesk_Handler,
 		},
 		{
 			MethodName: "GetDesk",
 			Handler:    _Mvp_GetDesk_Handler,
 		},
 		{
-			MethodName: "FormExpense",
-			Handler:    _Mvp_FormExpense_Handler,
+			MethodName: "CloseDesk",
+			Handler:    _Mvp_CloseDesk_Handler,
 		},
 		{
 			MethodName: "CheckOut",

@@ -3,8 +3,7 @@ syntax = "proto3";
 package pb;
 
 
-// todo: 商品可能同时拥有多个优惠，目前的设计是一个商品只有一个优惠
-
+// todo: 折扣修改后，价格需要改变~
 
 enum FavorType {
   NONE = 0;           // 无
@@ -23,19 +22,11 @@ enum ElementType {
   Attach = 1;
 }
 
-
-
-
-
-
 // ---------------------- instance 相关 ----------------------
 message ExpenseInfo {
   double nonFavorExpense = 1;  // 未打折费用
-
-  //  repeated FavorType selectableFavorTypes = 2;
-
-  bool hadCheckOut = 2; // 桌费、商品费是否已结
-  double expense = 3; // 桌费、商品费总和
+  int64 checkOutTimestamp = 2; // 结账时间
+  double expense = 3; // 打折后费用
 }
 
 
@@ -62,13 +53,10 @@ message Good{
   int64 id = 1;
   Element mainElement = 2;
   repeated Element attachElements = 3;
+
   repeated Favor favors = 4;
   ExpenseInfo expenseInfo = 5;
 }
-
-
-
-
 
 message Space {
   string name = 1;
@@ -102,16 +90,17 @@ message Favor {
 
 
 // 添加货物
-message AddSellGoodReq {
+message AddGoodReq {
   Good good = 1;
   string className = 2;
 }
 
-message AddSellGoodRes {}
+message AddGoodRes {}
 
 message AddGoodClassReq{
   GoodClass goodClass = 1;
 }
+
 message AddGoodClassRes{}
 
 message AddSpaceReq{
@@ -130,12 +119,12 @@ message OrderGoodRes{
   // 这里可以返回 goods, 这些goods 有 goodID
 }
 
-message OpenDeskReq{
+message OrderDeskReq{
   string spaceName = 1;
   int64 spaceNum = 2;
 }
 
-message OpenDeskRes{
+message OrderDeskRes{
   int64 deskID = 1;
 }
 
@@ -169,20 +158,12 @@ message GetDeskRes{
   Desk desk = 1;
 }
 
-message FormExpenseReq {
-  int64 deskID = 1;
-}
-
-message FormExpenseRes{
-  Desk desk = 1;
-}
-
 message CheckOutReq {
-  Desk desk = 1;
+  repeated int64 deskIDs = 1;
+  repeated int64 goodIDs = 2;
 }
 
-message CheckOutRes {
-}
+message CheckOutRes {}
 
 message AddElementReq {
   Element element = 1;
@@ -191,24 +172,21 @@ message AddElementReq {
 message AddElementRes {}
 
 service Mvp {
-  // todo: 打折设计
+  rpc AddGoodClass(AddGoodClassReq) returns (AddGoodClassRes);    // 添加商品类
+  rpc AddGood(AddGoodReq) returns (AddGoodRes);                   // 添加货物
 
+  rpc AddElement(AddElementReq) returns(AddElementRes);       // 添加元素
+  rpc AddSpace(AddSpaceReq) returns (AddSpaceRes);            // 添加桌位
 
-  rpc AddGoodClass(AddGoodClassReq) returns (AddGoodClassRes);  // 添加商品类
-  rpc AddSellGood(AddSellGoodReq) returns (AddSellGoodRes);           // 添加货物
+  rpc OrderGood(OrderGoodReq) returns (OrderGoodRes);         // 预定货物
+  rpc OrderDesk(OrderDeskReq) returns (OrderDeskRes);          // 预定桌位
 
-  rpc AddElement(AddElementReq) returns(AddElementRes); // 添加元素
-  rpc AddSpace(AddSpaceReq) returns (AddSpaceRes);           // 添加桌位
-
-  rpc OrderGood(OrderGoodReq) returns (OrderGoodRes);     // 为某桌点单
-  rpc OpenDesk(OpenDeskReq) returns(OpenDeskRes);         // 开桌
-  rpc CloseDesk(CloseDeskReq) returns(CloseDeskRes);      // 退桌
   rpc GetDesk(GetDeskReq) returns(GetDeskRes);            // 获得某桌的信息 （如开桌时长、点单货物...）
-  rpc FormExpense(FormExpenseReq) returns(FormExpenseRes);         // 形成某桌的账单
+
+
+  rpc CloseDesk(CloseDeskReq) returns(CloseDeskRes);      // 退桌
+  //  rpc FormExpense(FormExpenseReq) returns(FormExpenseRes);         // 形成某桌的账单
   rpc CheckOut(CheckOutReq) returns(CheckOutRes); // 某桌结账
-
   rpc GetAllGoodClasses(GetAllGoodClassesReq) returns (GetAllGoodClassesRes); // 获得所有商品类及其下的货物
-
 }
-
 

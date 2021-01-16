@@ -2,13 +2,11 @@ package controller
 
 import (
 	"context"
-	"fmt"
 	"go.uber.org/zap"
 	"spectrum/common/logger"
 	"spectrum/common/pb"
 	"spectrum/service/mvp/dao"
 	"spectrum/service/mvp/model"
-	"strings"
 	"time"
 )
 
@@ -16,10 +14,10 @@ type MvpServer struct {
 	pb.UnimplementedMvpServer
 }
 
-func (MvpServer) AddSellGood(ctx context.Context, req *pb.AddSellGoodReq) (*pb.AddSellGoodRes, error) {
-	logger.Info("AddSellGood", zap.Any("ctx", ctx), zap.Any("req", req))
+func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRes, error) {
+	logger.Info("AddGood", zap.Any("ctx", ctx), zap.Any("req", req))
 
-	var res pb.AddSellGoodRes
+	var res pb.AddGoodRes
 	if err := createElement(req.Good.MainElement, req.ClassName); err != nil {
 		logger.Error("Fail to finish createElement",
 			zap.Any("req", req),
@@ -100,8 +98,12 @@ func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.Order
 	for _, good := range req.Goods {
 		// 生成货物编号, 将货物与桌位联结
 		dbGood := &model.Good{
-			Name:   good.MainElement.Name,
-			DeskID: req.DeskID,
+			Model:             nil,
+			Name:              good.MainElement.Name,
+			DeskID:            req.DeskID,
+			Expense:           good.ExpenseInfo.Expense,
+			CheckOutTimestamp: good.ExpenseInfo.CheckOutTimestamp,
+			NonFavorExpense:   good.ExpenseInfo.NonFavorExpense,
 		}
 		if err := dao.GoodDao.Create(dbGood); err != nil {
 			// todo:log
@@ -121,14 +123,13 @@ func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.Order
 
 	}
 	return &res, nil
-
 }
 
-func (MvpServer) OpenDesk(ctx context.Context, req *pb.OpenDeskReq) (*pb.OpenDeskRes, error) {
-	logger.Info("OpenDesk", zap.Any("ctx", ctx), zap.Any("req", req))
+func (MvpServer) OrderDesk(ctx context.Context, req *pb.OrderDeskReq) (*pb.OrderDeskRes, error) {
+	logger.Info("OrderDesk", zap.Any("ctx", ctx), zap.Any("req", req))
 
 	// todo: 通过 SpaceName Num 查询 Price PriceRuleType
-	var res pb.OpenDeskRes
+	var res pb.OrderDeskRes
 
 	desk := &model.Desk{
 		SpaceName:      req.SpaceName,
@@ -149,9 +150,7 @@ func (MvpServer) OpenDesk(ctx context.Context, req *pb.OpenDeskReq) (*pb.OpenDes
 
 func (MvpServer) GetDesk(ctx context.Context, req *pb.GetDeskReq) (*pb.GetDeskRes, error) {
 	logger.Info("GetDesk", zap.Any("ctx", ctx), zap.Any("req", req))
-
 	var res pb.GetDeskRes
-
 	res.Desk = getDesk(req.DeskID)
 	return &res, nil
 }
@@ -182,29 +181,16 @@ func (MvpServer) CloseDesk(ctx context.Context, req *pb.CloseDeskReq) (*pb.Close
 	return &res, nil
 }
 
-// todo: 这个接口设计的不太好
-func (MvpServer) FormExpense(ctx context.Context, req *pb.FormExpenseReq) (*pb.FormExpenseRes, error) {
-	// todo: 折扣信息还未记录
-
-	logger.Info("FormExpense", zap.Any("ctx", ctx), zap.Any("req", req))
-	var res pb.FormExpenseRes
-	desk := getDesk(req.DeskID)
-	if desk == nil {
-		err := fmt.Errorf("desk(id = %d) is non", req.DeskID)
-		logger.Error("Desk is non", zap.Error(err))
-		return nil, err
-	}
-	formDeskExpense(desk)
-	writeToDB(desk, "expense")
-	res.Desk = desk
-	return &res, nil
-}
-
 func (MvpServer) CheckOut(ctx context.Context, req *pb.CheckOutReq) (*pb.CheckOutRes, error) {
-	// todo: 形成订单
 	logger.Info("CheckOut", zap.Any("ctx", ctx), zap.Any("req", req))
 	var res pb.CheckOutRes
-
-	writeToDB(req.Desk, "had_check_out")
+	if err := checkOut(dao.GoodDao, req.GoodIDs); err != nil {
+		// todo: log
+		return nil, err
+	}
+	if err := checkOut(dao.DeskDao, req.DeskIDs); err != nil {
+		// todo: log
+		return nil, err
+	}
 	return &res, nil
 }

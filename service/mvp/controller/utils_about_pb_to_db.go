@@ -7,6 +7,7 @@ import (
 	"spectrum/service/mvp/dao"
 	"spectrum/service/mvp/model"
 	"strings"
+	"time"
 )
 
 func writeFavorToDB(favorableStruct interface{}) error {
@@ -15,10 +16,10 @@ func writeFavorToDB(favorableStruct interface{}) error {
 		good := favorableStruct.(*pb.Good)
 		for _, favor := range good.Favors {
 			if err := dao.FavorRecordDao.Create(&model.FavorRecord{
-				FavorableStructName: "good", // todo: 这里可以写成枚举
-				FavorableStructID:   good.Id,
-				FavorType:           favor.FavorType,
-				FavorParameters:     strings.Join(favor.Parameters, "|"),
+				ChargeableObjectName: model.ChargeableObjectNameOfGood,
+				ChargeableObjectID:   good.Id,
+				FavorType:            favor.FavorType,
+				FavorParameters:      strings.Join(favor.Parameters, "|"),
 			}); err != nil {
 				// todo: log
 				return err
@@ -28,10 +29,10 @@ func writeFavorToDB(favorableStruct interface{}) error {
 		desk := favorableStruct.(*pb.Desk)
 		for _, favor := range desk.Favors {
 			if err := dao.FavorRecordDao.Create(&model.FavorRecord{
-				FavorableStructName: "desk", // todo: 这里可以写成枚举
-				FavorableStructID:   desk.Id,
-				FavorType:           favor.FavorType,
-				FavorParameters:     strings.Join(favor.Parameters, "|"),
+				ChargeableObjectName: model.ChargeableObjectNameOfDesk,
+				ChargeableObjectID:   desk.Id,
+				FavorType:            favor.FavorType,
+				FavorParameters:      strings.Join(favor.Parameters, "|"),
 			}); err != nil {
 				// todo: log
 				return err
@@ -41,10 +42,10 @@ func writeFavorToDB(favorableStruct interface{}) error {
 		order := favorableStruct.(*pb.Order)
 		for _, favor := range order.Favors {
 			if err := dao.FavorRecordDao.Create(&model.FavorRecord{
-				FavorableStructName: "order", // todo: 这里可以写成枚举
-				FavorableStructID:   order.Id,
-				FavorType:           favor.FavorType,
-				FavorParameters:     strings.Join(favor.Parameters, "|"),
+				ChargeableObjectName: model.ChargeableObjectNameOfOrder,
+				ChargeableObjectID:   order.Id,
+				FavorType:            favor.FavorType,
+				FavorParameters:      strings.Join(favor.Parameters, "|"),
 			}); err != nil {
 				// todo: log
 				return err
@@ -54,37 +55,44 @@ func writeFavorToDB(favorableStruct interface{}) error {
 	return nil
 }
 
-func writeToDB(desk *pb.Desk, field string) {
-	if err := dao.DeskDao.Update(getToMap(desk, field)); err != nil {
-		logger.Error("Fail to finish DeskDao.Update", zap.Error(err))
-		return
-	}
-
-	for _, good := range desk.Goods {
-		if err := dao.GoodDao.Update(getToMap(good, field)); err != nil {
-			logger.Error("Fail to finish GoodDao.Update", zap.Error(err))
-			return
+func checkOut(chargeableDao dao.ChargeableDao, ids []int64) error {
+	for _, id := range ids {
+		checkOutTimestamp := time.Now().Unix()
+		if err := dao.CheckOutRecordDao.Create(&model.CheckOutRecord{
+			ChargeableObjectName: chargeableDao.GetChargeableObjectName(),
+			ChargeableObjectID:   id,
+			CheckOutTimestamp:    checkOutTimestamp,
+		}); err != nil {
+			logger.Error("Fail to finish CheckOutRecordDao.Create", zap.Error(err))
+			return err
+		}
+		if err := chargeableDao.Update(map[string]interface{}{
+			"id":                  id,
+			"check_out_timestamp": checkOutTimestamp,
+		}); err != nil {
+			logger.Error("Fail to finish chargeableDao.Update", zap.Error(err))
+			return err
 		}
 	}
+	return nil
 }
 
 func writeGoodSizeToDB(good *pb.Good) error {
-	// 2. 创建主元素
 	if len(good.MainElement.SizeInfos) == 0 {
 		return nil
 	}
 
+	// 1. 创建主元素、主元素尺寸的对应关系
 	if err := dao.MainElementSizeRecordDao.Create(&model.MainElementSizeRecord{
 		GoodID:          good.Id,
 		MainElementName: good.MainElement.Name,
-
-		SelectSize: good.MainElement.SizeInfos[0].Size,
+		SelectSize:      good.MainElement.SizeInfos[0].Size,
 	}); err != nil {
 		logger.Error("Fail to finish MainElementSizeRecordDao.Create", zap.Error(err))
 		return err
 	}
 
-	// 4. 创建主元素、附属元素的对应关系
+	// 2. 创建主元素、附属元素、附属元素尺寸的对应关系
 	for _, attachElement := range good.AttachElements {
 		if err := dao.MainElementAttachElementRecordDao.Create(&model.MainElementAttachElementRecord{
 			GoodID:            good.Id,
@@ -106,13 +114,10 @@ func closeDeskIfOpening(deskID int64, endTimestamp int64) error {
 			zap.Error(err))
 		return err
 	}
-
-	isOpening := desk.EndTimestamp == 0
-	if !isOpening {
+	if !desk.IsOpening() {
 		logger.Warn("Desk had been closed", zap.Int64("deskID", deskID))
 		return nil
 	}
-
 	if err := dao.DeskDao.Update(map[string]interface{}{
 		"id":            deskID,
 		"end_timestamp": endTimestamp,

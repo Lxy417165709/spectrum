@@ -42,8 +42,8 @@ func (MainElementAttachElementRecord) TableName() string {
 
 type MainElementSizeRecord struct {
 	gorm.Model
-	MainElementName string `json:"main_element_name"`
 	GoodID          int64    `json:"good_id"`
+	MainElementName string `json:"main_element_name"`
 
 	SelectSize string `json:"select_size"`
 }

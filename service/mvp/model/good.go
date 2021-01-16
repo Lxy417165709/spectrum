@@ -11,14 +11,26 @@ type Good struct {
 	Name   string `json:"name"`
 	DeskID int64  `json:"desk_id"`
 
-	Expense     float64 `json:"expense"`
-	HadCheckOut bool    `json:"had_check_out"`
-
-	// 未使用字段
-	FavorType      pb.FavorType `json:"favor_type"`
-	FavorParameter string       `json:"favor_parameter"` // 这里将参数浓缩为字符串
+	Expense           float64 `json:"expense"`
+	CheckOutTimestamp int64   `json:"check_out_timestamp"`
+	NonFavorExpense   float64 `json:"non_favor_expense"`
 }
 
 func (*Good) TableName() string {
 	return "good"
+}
+
+func (g *Good) GetExpenseInfo(nonFavorExpense float64, favors []*pb.Favor) *pb.ExpenseInfo {
+	if g.CheckOutTimestamp != 0 {
+		return &pb.ExpenseInfo{
+			NonFavorExpense:   g.NonFavorExpense,
+			CheckOutTimestamp: g.CheckOutTimestamp,
+			Expense:           g.Expense,
+		}
+	}
+	return &pb.ExpenseInfo{
+		NonFavorExpense:   nonFavorExpense,
+		CheckOutTimestamp: g.CheckOutTimestamp,
+		Expense:           GetFavorExpense(nonFavorExpense, favors),
+	}
 }

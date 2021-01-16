@@ -11,7 +11,9 @@ import (
 func getClassGoods(className string) []*pb.Good {
 	var goods []*pb.Good
 	for _, mainElementName := range getElementNames(className) {
-		goods = append(goods, getGood(0, mainElementName))
+		goods = append(goods, getGood(&model.Good{
+			Name: mainElementName,
+		}))
 	}
 	return goods
 }
@@ -29,11 +31,21 @@ func getDesk(deskID int64) *pb.Desk {
 		return nil
 	}
 
+	records, err := dao.FavorRecordDao.Get(model.ChargeableObjectNameOfDesk, deskID)
+	if err != nil {
+		// todo: log
+		return nil
+	}
+
+	favors := getFavors(records)
 	return &pb.Desk{
-		Goods:          getDeskGoods(deskID),
+		Id:             deskID,
+		Space:          space.ToPb(),
 		StartTimestamp: desk.StartTimestamp,
 		EndTimestamp:   desk.EndTimestamp,
-		Space:          space.ToPb(),
+		Goods:          getDeskGoods(deskID),
+		Favors:         favors,
+		ExpenseInfo:    desk.GetExpenseInfo(desk.GetExpense(space.Price), favors),
 	}
 }
 
@@ -45,16 +57,29 @@ func getDeskGoods(deskID int64) []*pb.Good {
 	}
 	var goods []*pb.Good
 	for _, dbGood := range dbGoods {
-		goods = append(goods, getGood(int64(dbGood.ID), dbGood.Name))
+		goods = append(goods, getGood(dbGood))
 	}
 	return goods
 }
 
-func getGood(goodID int64, mainElementName string) *pb.Good {
+func getGood(dbGood *model.Good) *pb.Good {
+	records, err := dao.FavorRecordDao.Get(model.ChargeableObjectNameOfGood, int64(dbGood.ID))
+	if err != nil {
+		// todo: log
+		return nil
+	}
+
+	favors := getFavors(records)
+	mainElement := getMainElement(int64(dbGood.ID), dbGood.Name)
+	attachElements := getAttachElements(int64(dbGood.ID), dbGood.Name)
+	nonFavorExpense := getElementsExpense(append(attachElements, mainElement))
+
 	return &pb.Good{
-		Id:             goodID,
-		MainElement:    getMainElement(goodID, mainElementName),
-		AttachElements: getAttachElements(goodID, mainElementName),
+		Id:             int64(dbGood.ID),
+		MainElement:    mainElement,
+		AttachElements: attachElements,
+		Favors:         favors,
+		ExpenseInfo:    dbGood.GetExpenseInfo(nonFavorExpense, favors),
 	}
 }
 
@@ -111,6 +136,14 @@ func getAttachElements(goodID int64, mainElementName string) []*pb.Element {
 	return attachElements
 }
 
+func getFavors(records []*model.FavorRecord) []*pb.Favor {
+	result := make([]*pb.Favor, 0)
+	for _, record := range records {
+		result = append(result, record.ToPb())
+	}
+	return result
+}
+
 func getSizeInfos(selectSize string, sameNameElements []*model.Element) []*pb.SizeInfo {
 	var sizeInfos []*pb.SizeInfo
 	for _, element := range sameNameElements {
@@ -123,4 +156,3 @@ func getSizeInfos(selectSize string, sameNameElements []*model.Element) []*pb.Si
 	}
 	return sizeInfos
 }
-

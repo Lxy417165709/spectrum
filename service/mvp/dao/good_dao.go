@@ -44,3 +44,8 @@ func (goodDao) Update(to map[string]interface{}) error {
 	}
 	return nil
 }
+
+
+func (goodDao)GetChargeableObjectName() string{
+	return model.ChargeableObjectNameOfGood
+}
