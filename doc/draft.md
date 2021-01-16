@@ -84,7 +84,7 @@ type OrderDeskRecord struct{
     StartTimestamp int
     EndTimestamp int
     PricePerHour float64
-    DiscountType int
+    FavorType int
 }
 
 
@@ -94,7 +94,7 @@ type OrderMainGoodRecord struct{
     MainGoodID int
     MainGoodSize string
     HasCheckout bool
-    DiscountType int
+    FavorType int
     MainGoodNum int
     DeskID int
     Price int   // 考虑到之后价格可能更改
@@ -132,7 +132,7 @@ GoodClass: {
 Order: {
     ID int
     Desk Desk
-    Discount Discount   // 订单折扣
+    Favor Favor   // 订单折扣
 }
 
 Desk {
@@ -140,11 +140,11 @@ Desk {
     startTimeStamp int
     endTimeStamp int
     Goods []Good
-    Discount Discount   // 桌位折扣
+    Favor Favor   // 桌位折扣
     HadCheckOut bool
 }
 
-Discount {
+Favor {
     Name string
     Parameters []string
 }
@@ -157,8 +157,8 @@ Good {
     
     
     HadCheckOut bool
-    Discount Discount   // 物品折扣
-    SelecDeskDiscountType []DiscountType
+    Favor Favor   // 物品折扣
+    SelecDeskFavorType []FavorType
 }
 
 Space {

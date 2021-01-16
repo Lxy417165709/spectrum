@@ -34,14 +34,14 @@
                 <component :is="orderGoodUnit.detailComponent" :good="orderGoodUnit.good"></component>
               </el-collapse-item>
               <el-collapse-item name="2" style="padding-left: 20px;" title="折扣处理">
-                <Discounter></Discounter>
+                <Favorer></Favorer>
               </el-collapse-item>
             </el-collapse>
           </el-collapse-item>
         </el-collapse>
       </div>
       <el-form label-width="80px" style="width: 100%; margin-top:20px">
-        <Discounter></Discounter>
+        <Favorer></Favorer>
         <el-form-item>
           <el-button @click="sendOrder()">确定</el-button>
           <el-button @click="getOrder()">获取</el-button>
@@ -59,10 +59,10 @@ import utils from "../../common/utils";
 import init from "../../common/global_object/init";
 import global from "../../common/global_object/global";
 import GoodEditor from "./GoodEditor";
-import Discounter from "../discount/Discounter";
+import Favorer from "../Favor/Favorer";
 
 export default {
-  components: {Discounter},
+  components: {Favorer},
   async mounted() {
     await init.globalGoodClasses()
     this.goodClasses = global.goodClasses
@@ -86,7 +86,7 @@ export default {
       let order = {
         goods: goods,
         createdTime: new Date().getTime(),
-        // discountsMap: {
+        // FavorsMap: {
         //   0: []   // 先不使用折扣
         // }
       }

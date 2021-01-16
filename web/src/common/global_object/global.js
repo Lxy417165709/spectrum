@@ -4,7 +4,7 @@ export default {
   optionClasses: [],
   goods: [],
   goodClasses: [],
-  discountType: {
+  FavorType: {
     NONE: "无",
     REBATE: "打折",
     FULL_REDUCTION: "满减",

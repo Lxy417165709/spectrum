@@ -2,7 +2,11 @@ syntax = "proto3";
 
 package pb;
 
-enum DiscountType {
+
+// todo: 商品可能同时拥有多个优惠，目前的设计是一个商品只有一个优惠
+
+
+enum FavorType {
   NONE = 0;           // 无
   REBATE = 1;         // 打折
   FULL_REDUCTION = 2; // 满减
@@ -21,15 +25,17 @@ enum ElementType {
 
 
 
+
+
+
 // ---------------------- instance 相关 ----------------------
 message ExpenseInfo {
-  double nonDiscountExpense = 1;  // 未打折费用
+  double nonFavorExpense = 1;  // 未打折费用
 
-  repeated DiscountType selectableDiscountTypes = 2;
-  Discount discount = 3;  // 折扣
+  //  repeated FavorType selectableFavorTypes = 2;
 
-  bool hadCheckOut = 4; // 桌费、商品费是否已结
-  double expense = 5; // 桌费、商品费总和
+  bool hadCheckOut = 2; // 桌费、商品费是否已结
+  double expense = 3; // 桌费、商品费总和
 }
 
 
@@ -37,7 +43,8 @@ message Order {
   int64 id = 1;
   Desk desk = 2;
 
-  ExpenseInfo expenseInfo = 3;
+  repeated Favor favors = 3;
+  ExpenseInfo expenseInfo = 4;
 }
 
 message Desk{
@@ -47,15 +54,20 @@ message Desk{
   int64 endTimestamp = 4;
   repeated Good goods = 5;
 
-  ExpenseInfo expenseInfo = 6;
+  repeated Favor favors = 6;
+  ExpenseInfo expenseInfo = 7;
 }
 
 message Good{
   int64 id = 1;
   Element mainElement = 2;
   repeated Element attachElements = 3;
-  ExpenseInfo expenseInfo = 4;
+  repeated Favor favors = 4;
+  ExpenseInfo expenseInfo = 5;
 }
+
+
+
 
 
 message Space {
@@ -70,8 +82,6 @@ message GoodClass {
   repeated Good goods = 2;
 }
 
-
-
 message Element {
   string name = 1;
   ElementType type = 2;
@@ -85,19 +95,19 @@ message SizeInfo {
   bool isSelected = 4;
 }
 
-message Discount {
-  DiscountType discountType = 1;
+message Favor {
+  FavorType FavorType = 1;
   repeated string parameters = 2;
 }
 
 
 // 添加货物
-message AddGoodReq {
+message AddSellGoodReq {
   Good good = 1;
   string className = 2;
 }
 
-message AddGoodRes {}
+message AddSellGoodRes {}
 
 message AddGoodClassReq{
   GoodClass goodClass = 1;
@@ -185,7 +195,7 @@ service Mvp {
 
 
   rpc AddGoodClass(AddGoodClassReq) returns (AddGoodClassRes);  // 添加商品类
-  rpc AddGood(AddGoodReq) returns (AddGoodRes);           // 添加货物
+  rpc AddSellGood(AddSellGoodReq) returns (AddSellGoodRes);           // 添加货物
 
   rpc AddElement(AddElementReq) returns(AddElementRes); // 添加元素
   rpc AddSpace(AddSpaceReq) returns (AddSpaceRes);           // 添加桌位

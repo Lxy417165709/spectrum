@@ -23,7 +23,7 @@ import OptionClassManager from "./option/OptionClassManager";
 import GoodOrder from "./unuse/GoodOrder";
 import GoodWanner from "./good/GoodWanner";
 import GoodClassManager from "./good/GoodClassManager";
-import Discounter from "./discount/Discounter";
+import Favorer from "./Favor/Favorer";
 import init from "../common/global_object/init";
 
 
@@ -37,7 +37,7 @@ export default {
     GoodOrder,
     GoodWanner,
     GoodClassManager,
-    Discounter,
+    Favorer,
   },
   data() {
     return {

@@ -18,7 +18,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MvpClient interface {
 	AddGoodClass(ctx context.Context, in *AddGoodClassReq, opts ...grpc.CallOption) (*AddGoodClassRes, error)
-	AddGood(ctx context.Context, in *AddGoodReq, opts ...grpc.CallOption) (*AddGoodRes, error)
+	AddSellGood(ctx context.Context, in *AddSellGoodReq, opts ...grpc.CallOption) (*AddSellGoodRes, error)
 	AddElement(ctx context.Context, in *AddElementReq, opts ...grpc.CallOption) (*AddElementRes, error)
 	AddSpace(ctx context.Context, in *AddSpaceReq, opts ...grpc.CallOption) (*AddSpaceRes, error)
 	OrderGood(ctx context.Context, in *OrderGoodReq, opts ...grpc.CallOption) (*OrderGoodRes, error)
@@ -47,9 +47,9 @@ func (c *mvpClient) AddGoodClass(ctx context.Context, in *AddGoodClassReq, opts 
 	return out, nil
 }
 
-func (c *mvpClient) AddGood(ctx context.Context, in *AddGoodReq, opts ...grpc.CallOption) (*AddGoodRes, error) {
-	out := new(AddGoodRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/AddGood", in, out, opts...)
+func (c *mvpClient) AddSellGood(ctx context.Context, in *AddSellGoodReq, opts ...grpc.CallOption) (*AddSellGoodRes, error) {
+	out := new(AddSellGoodRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/AddSellGood", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -142,7 +142,7 @@ func (c *mvpClient) GetAllGoodClasses(ctx context.Context, in *GetAllGoodClasses
 // for forward compatibility
 type MvpServer interface {
 	AddGoodClass(context.Context, *AddGoodClassReq) (*AddGoodClassRes, error)
-	AddGood(context.Context, *AddGoodReq) (*AddGoodRes, error)
+	AddSellGood(context.Context, *AddSellGoodReq) (*AddSellGoodRes, error)
 	AddElement(context.Context, *AddElementReq) (*AddElementRes, error)
 	AddSpace(context.Context, *AddSpaceReq) (*AddSpaceRes, error)
 	OrderGood(context.Context, *OrderGoodReq) (*OrderGoodRes, error)
@@ -162,8 +162,8 @@ type UnimplementedMvpServer struct {
 func (UnimplementedMvpServer) AddGoodClass(context.Context, *AddGoodClassReq) (*AddGoodClassRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddGoodClass not implemented")
 }
-func (UnimplementedMvpServer) AddGood(context.Context, *AddGoodReq) (*AddGoodRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddGood not implemented")
+func (UnimplementedMvpServer) AddSellGood(context.Context, *AddSellGoodReq) (*AddSellGoodRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddSellGood not implemented")
 }
 func (UnimplementedMvpServer) AddElement(context.Context, *AddElementReq) (*AddElementRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddElement not implemented")
@@ -223,20 +223,20 @@ func _Mvp_AddGoodClass_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Mvp_AddGood_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddGoodReq)
+func _Mvp_AddSellGood_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddSellGoodReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MvpServer).AddGood(ctx, in)
+		return srv.(MvpServer).AddSellGood(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.Mvp/AddGood",
+		FullMethod: "/pb.Mvp/AddSellGood",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).AddGood(ctx, req.(*AddGoodReq))
+		return srv.(MvpServer).AddSellGood(ctx, req.(*AddSellGoodReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -412,8 +412,8 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Mvp_AddGoodClass_Handler,
 		},
 		{
-			MethodName: "AddGood",
-			Handler:    _Mvp_AddGood_Handler,
+			MethodName: "AddSellGood",
+			Handler:    _Mvp_AddSellGood_Handler,
 		},
 		{
 			MethodName: "AddElement",
