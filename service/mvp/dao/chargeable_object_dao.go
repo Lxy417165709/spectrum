@@ -8,7 +8,6 @@ import (
 	"strings"
 )
 
-// todo: 这个设计的不太好
 var ChargeableObjectDao chargeableObjectDao
 
 type chargeableObjectDao struct{}
@@ -27,6 +26,7 @@ func (chargeableObjectDao) Create(obj model.Chargeable) error {
 func (chargeableObjectDao) UpdateExpenseInfo(obj model.Chargeable, expenseInfo *pb.ExpenseInfo) error {
 	createTableWhenNotExist(obj)
 
+	// todo: 这三个字段名是约定，但这容易出错
 	to := map[string]interface{}{
 		"id":                  obj.GetID(),
 		"check_out_timestamp": expenseInfo.CheckOutTimestamp,
@@ -41,6 +41,7 @@ func (chargeableObjectDao) UpdateExpenseInfo(obj model.Chargeable, expenseInfo *
 	return nil
 }
 
+// todo: 下面的函数最好提为响应的dao吧，这样更符合规范
 func (chargeableObjectDao) CreateCheckOutRecord(obj *model.CheckOutRecord) error {
 	var table model.CheckOutRecord
 	createTableWhenNotExist(&table)
@@ -72,13 +73,13 @@ func (chargeableObjectDao) GetFavorRecords(obj model.Chargeable) ([]*model.Favor
 	return result, nil
 }
 
-func (chargeableObjectDao) CreateFavorRecord(cObj pb.Chargeable) error {
+func (chargeableObjectDao) CreateFavorRecord(chargeableObj pb.Chargeable) error {
 	var table model.FavorRecord
 	createTableWhenNotExist(&table)
-	for _, favor := range cObj.GetFavors() {
+	for _, favor := range chargeableObj.GetFavors() {
 		obj := &model.FavorRecord{
-			ChargeableObjectName: cObj.GetName(),
-			ChargeableObjectID:   cObj.GetId(),
+			ChargeableObjectName: chargeableObj.GetName(),
+			ChargeableObjectID:   chargeableObj.GetId(),
 			FavorType:            favor.FavorType,
 			FavorParameters:      strings.Join(favor.Parameters, "|"),
 		}

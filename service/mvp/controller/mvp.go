@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+// todo: 考虑一下， desk 里面是否要包括 good 呢？还是将二者分开，之后再通过其他手段联系呢？
 type MvpServer struct {
 	pb.UnimplementedMvpServer
 }
@@ -105,6 +106,7 @@ func (MvpServer) AddGoodClass(ctx context.Context, req *pb.AddGoodClassReq) (*pb
 	return &res, nil
 }
 
+// todo: 特殊化，不要接口化
 func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.OrderGoodRes, error) {
 	logger.Info("OrderGood", zap.Any("ctx", ctx), zap.Any("req", req))
 	// todo: 这里可以点单记录
@@ -125,6 +127,7 @@ func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.Order
 	return &res, nil
 }
 
+// todo: 特殊化，不要接口化
 func (MvpServer) OrderDesk(ctx context.Context, req *pb.OrderDeskReq) (*pb.OrderDeskRes, error) {
 	logger.Info("OrderDesk", zap.Any("ctx", ctx), zap.Any("req", req))
 	// todo: 这里可以点单记录
@@ -145,7 +148,7 @@ func (MvpServer) GetDesk(ctx context.Context, req *pb.GetDeskReq) (*pb.GetDeskRe
 		// todo: log
 		return nil, err
 	}
-	res.Desk = getPbDesk(desk)
+	res.Desk = getPbDesk(desk, true)
 	return &res, nil
 }
 

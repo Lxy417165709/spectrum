@@ -26,30 +26,14 @@ func getElementNames(className string) []string {
 	return elementNames
 }
 
-
 // 以下只用到了 chargeableObj  的 GetID,GetName
+// todo: 这个函数设计得不太好...
 func getExpenseInfo(chargeableObj model.Chargeable) *pb.ExpenseInfo {
-	id := chargeableObj.GetID()
-	favors := getFavors(chargeableObj)
-
-	// todo: 这里有部分和 getGood、getDesk 冗余了
 	switch chargeableObj.(type) {
 	case *model.Good:
-		mainElement := getMainElement(id, "")
-		attachElements := getAttachElements(id, "")
-		return chargeableObj.(*model.Good).GetExpenseInfo(mainElement, attachElements, favors)
+		return getPbGood(chargeableObj.(*model.Good)).ExpenseInfo
 	case *model.Desk:
-		desk, err := dao.DeskDao.Get(id)
-		if err != nil {
-			// todo: log
-			return nil
-		}
-		space, err := dao.SpaceDao.Get(desk.SpaceName, desk.SpaceNum)
-		if err != nil {
-			// todo: log
-			return nil
-		}
-		return chargeableObj.(*model.Desk).GetExpenseInfo(space.Price, favors)
+		return getPbDesk(chargeableObj.(*model.Desk), false).ExpenseInfo
 	default:
 		panic("unfix type")
 	}

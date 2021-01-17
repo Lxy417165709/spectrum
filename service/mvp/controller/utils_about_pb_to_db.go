@@ -11,6 +11,8 @@ import (
 
 // 如果未结账，则结账
 func checkOutIfNot(chargeableObj model.Chargeable) error {
+
+
 	expenseInfo := getExpenseInfo(chargeableObj)
 	if expenseInfo.CheckOutTimestamp != 0 {
 		// todo: 警告
@@ -124,6 +126,7 @@ func getDbSpace(pbSpace *pb.Space) *model.Space {
 	}
 }
 
+// todo: 这个函数让代码不好看了
 func writeChargeableObjectInfoToDbAndAttachID(pbChargeableObject pb.Chargeable, attachValues ...interface{}) error {
 	dbChargeableObject := getDbChargeableObject(pbChargeableObject, attachValues...)
 	if err := dao.ChargeableObjectDao.Create(dbChargeableObject); err != nil {
@@ -153,9 +156,13 @@ func getDbChargeableObject(pbChargeableObject pb.Chargeable, attachValues ...int
 	case *pb.Desk:
 		desk := pbChargeableObject.(*pb.Desk)
 		return &model.Desk{
-			SpaceName:      desk.Space.Name,
-			SpaceNum:       desk.Space.Num,
-			StartTimestamp: attachValues[0].(int64),
+			StartTimestamp:    attachValues[0].(int64),
+			EndTimestamp:      0,
+			SpaceName:         desk.Space.Name,
+			SpaceNum:          desk.Space.Num,
+			Expense:           desk.ExpenseInfo.Expense,
+			CheckOutTimestamp: desk.ExpenseInfo.CheckOutTimestamp,
+			NonFavorExpense:   desk.ExpenseInfo.NonFavorExpense,
 		}
 	default:
 		panic("unfix type")

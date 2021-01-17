@@ -21,19 +21,23 @@ func getClassGoods(className string) []*pb.Good {
 // 返回的 desk:
 // 已结账时: 返回结账的金额信息
 // 未结账时: 返回最新的金额信息
-func getPbDesk(desk *model.Desk) *pb.Desk {
+func getPbDesk(desk *model.Desk, needFormGood bool) *pb.Desk {
 	space, err := dao.SpaceDao.Get(desk.SpaceName, desk.SpaceNum)
 	if err != nil {
 		// todo: log
 		return nil
 	}
 	favor := getFavors(desk)
+	goods := make([]*pb.Good, 0)
+	if needFormGood {
+		goods = getDeskPbGoods(int64(desk.ID))
+	}
 	return &pb.Desk{
 		Id:             int64(desk.ID),
 		Space:          space.ToPb(),
 		StartTimestamp: desk.StartTimestamp,
 		EndTimestamp:   desk.EndTimestamp,
-		Goods:          getDeskPbGoods(int64(desk.ID)),
+		Goods:          goods,
 		Favors:         favor,
 		ExpenseInfo:    desk.GetExpenseInfo(space.Price, favor),
 	}
