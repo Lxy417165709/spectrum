@@ -1,29 +1,8 @@
 package model
 
 import (
-	"spectrum/common/pb"
 	"strconv"
 )
-
-const INF = 1E18
-
-func GetFavor(favor *pb.Favor) Favor {
-	// todo: 要确认优惠参数是合法的
-	if favor == nil {
-		return &None{}
-	}
-	switch favor.FavorType {
-	case pb.FavorType_NONE:
-		return (&None{}).ParseParameters(favor.Parameters)
-	case pb.FavorType_REBATE:
-		return (&Rebate{}).ParseParameters(favor.Parameters)
-	case pb.FavorType_FULL_REDUCTION:
-		return (&FullReduction{}).ParseParameters(favor.Parameters)
-	case pb.FavorType_FREE:
-		return (&Free{}).ParseParameters(favor.Parameters)
-	}
-	return &None{}
-}
 
 type Favor interface {
 	GetExpense(nonFavorExpense float64) float64

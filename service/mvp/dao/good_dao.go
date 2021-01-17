@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"github.com/jinzhu/gorm"
 	"go.uber.org/zap"
 	"spectrum/common/logger"
 	"spectrum/service/mvp/model"
@@ -19,6 +20,21 @@ func (goodDao) Create(obj *model.Good) error {
 		return err
 	}
 	return nil
+}
+
+func (goodDao) Get(id int64) (*model.Good, error) {
+	var table model.Good
+	createTableWhenNotExist(&table)
+
+	var result model.Good
+	if err := mainDB.First(&result, "id = ?", id).Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return nil, nil
+		}
+		logger.Error("Fail to finish mainDB.First", zap.Int64("id", id), zap.Error(err))
+		return nil, err
+	}
+	return &result, nil
 }
 
 func (goodDao) GetByDeskID(deskID int64) ([]*model.Good, error) {

@@ -1,78 +1,38 @@
 package controller
 
 import (
-	"fmt"
 	"go.uber.org/zap"
-	"reflect"
 	"spectrum/common/logger"
 	"spectrum/common/pb"
 	"spectrum/service/mvp/dao"
 	"spectrum/service/mvp/model"
-	"strings"
 	"time"
 )
 
-func writeFavorToDB(favorableStruct interface{}) error {
-
-	var chargeableObject model.Chargeable
-	var favors []*pb.Favor
-	switch favorableStruct.(type) {
-	case *pb.Good:
-		good := favorableStruct.(*pb.Good)
-		chargeableObject = &model.Good{}
-		chargeableObject.SetID(good.Id)
-		favors = good.Favors
-	case *pb.Desk:
-		desk := favorableStruct.(*pb.Desk)
-		chargeableObject = &model.Desk{}
-		chargeableObject.SetID(desk.Id)
-		favors = desk.Favors
-	default:
-		err := fmt.Errorf("unfix type")
-		logger.Error("Unfix type", zap.String("type", reflect.TypeOf(favorableStruct).String()), zap.Error(err))
+// 如果未结账，则结账
+func checkOutIfNot(chargeableObj model.Chargeable) error {
+	expenseInfo := getExpenseInfo(chargeableObj)
+	if expenseInfo.CheckOutTimestamp != 0 {
+		// todo: 警告
+		// 这里表示商品已结账过了
+		return nil
+	}
+	expenseInfo.CheckOutTimestamp = time.Now().Unix()
+	if err := dao.ChargeableObjectDao.UpdateExpenseInfo(chargeableObj, expenseInfo); err != nil {
+		logger.Error("Fail to finish chargeableDao.Update", zap.Error(err))
 		return err
 	}
 
-	for _, favor := range favors {
-		if err := dao.FavorRecordDao.Create(&model.FavorRecord{
-			ChargeableObjectName: chargeableObject.GetName(),
-			ChargeableObjectID:   chargeableObject.GetID(),
-			FavorType:            favor.FavorType,
-			FavorParameters:      strings.Join(favor.Parameters, "|"),
-		}); err != nil {
-			// todo: log
-			return err
-		}
+	// 添加结账记录
+	if err := dao.ChargeableObjectDao.CreateCheckOutRecord(&model.CheckOutRecord{
+		ChargeableObjectName: chargeableObj.GetName(),
+		ChargeableObjectID:   chargeableObj.GetID(),
+		CheckOutTimestamp:    expenseInfo.CheckOutTimestamp,
+	}); err != nil {
+		logger.Error("Fail to finish CheckOutRecordDao.Create", zap.Error(err))
+		return err
 	}
 
-	return nil
-}
-
-// todo: 不能重复结账
-func checkOut(chargeableObj model.Chargeable, ids []int64) error {
-	for _, id := range ids {
-		checkOutTimestamp := time.Now().Unix()
-		if err := dao.CheckOutRecordDao.Create(&model.CheckOutRecord{
-			ChargeableObjectName: chargeableObj.GetName(),
-			ChargeableObjectID:   id,
-			CheckOutTimestamp:    checkOutTimestamp,
-		}); err != nil {
-			logger.Error("Fail to finish CheckOutRecordDao.Create", zap.Error(err))
-			return err
-		}
-		chargeableObj.SetID(id)
-		expenseInfo, chargeableDao := getExpenseInfoAndChargeableDao(chargeableObj)
-		// todo: chargeableDao 接口函数有待完善
-		if err := chargeableDao.Update(map[string]interface{}{
-			"id":                  id,
-			"check_out_timestamp": checkOutTimestamp,
-			"expense":             expenseInfo.Expense,
-			"non_favor_expense":   expenseInfo.NonFavorExpense,
-		}); err != nil {
-			logger.Error("Fail to finish chargeableDao.Update", zap.Error(err))
-			return err
-		}
-	}
 	return nil
 }
 
@@ -161,5 +121,43 @@ func getDbSpace(pbSpace *pb.Space) *model.Space {
 		Num:           pbSpace.Num,
 		Price:         pbSpace.Price,
 		PriceRuleType: pbSpace.PriceRuleType,
+	}
+}
+
+func writeChargeableObjectInfoToDbAndAttachID(pbChargeableObject pb.Chargeable, attachValues ...interface{}) error {
+	dbChargeableObject := getDbChargeableObject(pbChargeableObject, attachValues...)
+	if err := dao.ChargeableObjectDao.Create(dbChargeableObject); err != nil {
+		// todo:log
+		return err
+	}
+	dbToPbAttachID(pbChargeableObject, dbChargeableObject)
+	if err := dao.ChargeableObjectDao.CreateFavorRecord(pbChargeableObject); err != nil {
+		// todo: log
+		return err
+	}
+	return nil
+}
+
+func getDbChargeableObject(pbChargeableObject pb.Chargeable, attachValues ...interface{}) model.Chargeable {
+	// todo: 校验参数合法性
+	switch pbChargeableObject.(type) {
+	case *pb.Good:
+		good := pbChargeableObject.(*pb.Good)
+		return &model.Good{
+			Name:              good.MainElement.Name,
+			DeskID:            attachValues[0].(int64),
+			Expense:           good.ExpenseInfo.Expense,
+			CheckOutTimestamp: good.ExpenseInfo.CheckOutTimestamp,
+			NonFavorExpense:   good.ExpenseInfo.NonFavorExpense,
+		}
+	case *pb.Desk:
+		desk := pbChargeableObject.(*pb.Desk)
+		return &model.Desk{
+			SpaceName:      desk.Space.Name,
+			SpaceNum:       desk.Space.Num,
+			StartTimestamp: attachValues[0].(int64),
+		}
+	default:
+		panic("unfix type")
 	}
 }

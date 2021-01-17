@@ -19,6 +19,14 @@ type Desk struct {
 	NonFavorExpense   float64 `json:"non_favor_expense"`
 }
 
+func (d *Desk) SetCheckOutTimestamp(timestamp int64) {
+	d.CheckOutTimestamp = timestamp
+}
+
+func (d *Desk) GetCheckOutTimestamp() int64 {
+	return d.CheckOutTimestamp
+}
+
 func (*Desk) TableName() string {
 	return "desk"
 }

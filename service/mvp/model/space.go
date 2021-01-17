@@ -17,14 +17,14 @@ func (*Space) TableName() string {
 	return "space"
 }
 
-func (space *Space) ToPb() *pb.Space {
-	if space == nil {
+func (s *Space) ToPb() *pb.Space {
+	if s == nil {
 		return nil
 	}
 	return &pb.Space{
-		Name:          space.Name,
-		Num:           space.Num,
-		Price:         space.Price,
-		PriceRuleType: space.PriceRuleType,
+		Name:          s.Name,
+		Num:           s.Num,
+		Price:         s.Price,
+		PriceRuleType: s.PriceRuleType,
 	}
 }

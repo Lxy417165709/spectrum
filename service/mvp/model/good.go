@@ -5,13 +5,6 @@ import (
 	"spectrum/common/pb"
 )
 
-type Chargeable interface {
-	GetName() string
-	GetID() int64
-	SetID(id int64)
-}
-
-// todo: Favor 还未添加
 type Good struct {
 	gorm.Model
 	Name   string `json:"name"`
@@ -20,6 +13,14 @@ type Good struct {
 	Expense           float64 `json:"expense"`
 	CheckOutTimestamp int64   `json:"check_out_timestamp"`
 	NonFavorExpense   float64 `json:"non_favor_expense"`
+}
+
+func (g *Good) SetCheckOutTimestamp(timestamp int64) {
+	g.CheckOutTimestamp = timestamp
+}
+
+func (g *Good) GetCheckOutTimestamp() int64 {
+	return g.CheckOutTimestamp
 }
 
 func (g *Good) GetID() int64 {

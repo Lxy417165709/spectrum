@@ -1,9 +1,7 @@
 package controller
 
 import (
-	"fmt"
 	"go.uber.org/zap"
-	"reflect"
 	"spectrum/common/logger"
 	"spectrum/common/pb"
 	"spectrum/service/mvp/dao"
@@ -28,7 +26,9 @@ func getElementNames(className string) []string {
 	return elementNames
 }
 
-func getExpenseInfoAndChargeableDao(chargeableObj model.Chargeable) (*pb.ExpenseInfo, dao.ChargeableDao) {
+
+// 以下只用到了 chargeableObj  的 GetID,GetName
+func getExpenseInfo(chargeableObj model.Chargeable) *pb.ExpenseInfo {
 	id := chargeableObj.GetID()
 	favors := getFavors(chargeableObj)
 
@@ -37,22 +37,20 @@ func getExpenseInfoAndChargeableDao(chargeableObj model.Chargeable) (*pb.Expense
 	case *model.Good:
 		mainElement := getMainElement(id, "")
 		attachElements := getAttachElements(id, "")
-		return chargeableObj.(*model.Good).GetExpenseInfo(mainElement, attachElements, favors), dao.GoodDao
+		return chargeableObj.(*model.Good).GetExpenseInfo(mainElement, attachElements, favors)
 	case *model.Desk:
 		desk, err := dao.DeskDao.Get(id)
 		if err != nil {
 			// todo: log
-			return nil, nil
+			return nil
 		}
 		space, err := dao.SpaceDao.Get(desk.SpaceName, desk.SpaceNum)
 		if err != nil {
 			// todo: log
-			return nil, nil
+			return nil
 		}
-		return chargeableObj.(*model.Desk).GetExpenseInfo(space.Price, favors), dao.DeskDao
+		return chargeableObj.(*model.Desk).GetExpenseInfo(space.Price, favors)
 	default:
-		err := fmt.Errorf("unfix type %v", reflect.TypeOf(chargeableObj).Name())
-		logger.Error("Unfix type", zap.Error(err))
-		return nil, nil
+		panic("unfix type")
 	}
 }

@@ -5,13 +5,6 @@ import (
 	"spectrum/common/pb"
 )
 
-const (
-	FlagOfNotAttachGood = 0
-	FlagOfAttachGood    = 1
-	FlagOfNotCheckout   = 0
-	FlagOfHasCheckedOut = 1
-)
-
 type Element struct {
 	gorm.Model
 	Name      string         `json:"name"`
@@ -25,34 +18,4 @@ type Element struct {
 
 func (Element) TableName() string {
 	return "element"
-}
-
-type MainElementAttachElementRecord struct {
-	gorm.Model
-	MainElementName string `json:"main_element_name"`
-	GoodID          int64    `json:"good_id"`
-
-	AttachElementName string `json:"attach_element_name"`
-	SelectSize        string `json:"select_size"`
-}
-
-func (MainElementAttachElementRecord) TableName() string {
-	return "main_element_attach_element_record"
-}
-
-type MainElementSizeRecord struct {
-	gorm.Model
-	GoodID          int64    `json:"good_id"`
-	MainElementName string `json:"main_element_name"`
-
-	SelectSize string `json:"select_size"`
-}
-
-type ElementClass struct {
-	gorm.Model
-	Name string `json:"name"`
-}
-
-func (ElementClass) TableName() string {
-	return "element_class"
 }
