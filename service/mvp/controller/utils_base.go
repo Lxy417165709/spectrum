@@ -27,13 +27,12 @@ func getElementNames(className string) []string {
 }
 
 // 以下只用到了 chargeableObj  的 GetID,GetName
-// todo: 这个函数设计得不太好...
 func getExpenseInfo(chargeableObj model.Chargeable) *pb.ExpenseInfo {
 	switch chargeableObj.(type) {
 	case *model.Good:
 		return getPbGood(chargeableObj.(*model.Good)).ExpenseInfo
 	case *model.Desk:
-		return getPbDesk(chargeableObj.(*model.Desk), false).ExpenseInfo
+		return getPbDesk(chargeableObj.(*model.Desk)).ExpenseInfo
 	default:
 		panic("unfix type")
 	}

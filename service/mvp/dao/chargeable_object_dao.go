@@ -73,13 +73,13 @@ func (chargeableObjectDao) GetFavorRecords(obj model.Chargeable) ([]*model.Favor
 	return result, nil
 }
 
-func (chargeableObjectDao) CreateFavorRecord(chargeableObj pb.Chargeable) error {
+func (chargeableObjectDao) CreateFavorRecord(chargeableObjName string,chargeableObjID int64,favors []*pb.Favor) error {
 	var table model.FavorRecord
 	createTableWhenNotExist(&table)
-	for _, favor := range chargeableObj.GetFavors() {
+	for _, favor := range favors {
 		obj := &model.FavorRecord{
-			ChargeableObjectName: chargeableObj.GetName(),
-			ChargeableObjectID:   chargeableObj.GetId(),
+			ChargeableObjectName: chargeableObjName,
+			ChargeableObjectID:   chargeableObjID,
 			FavorType:            favor.FavorType,
 			FavorParameters:      strings.Join(favor.Parameters, "|"),
 		}

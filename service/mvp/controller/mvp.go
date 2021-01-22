@@ -106,14 +106,24 @@ func (MvpServer) AddGoodClass(ctx context.Context, req *pb.AddGoodClassReq) (*pb
 	return &res, nil
 }
 
-// todo: 特殊化，不要接口化
 func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.OrderGoodRes, error) {
 	logger.Info("OrderGood", zap.Any("ctx", ctx), zap.Any("req", req))
 	// todo: 这里可以点单记录
 	var res pb.OrderGoodRes
 
 	for _, good := range req.Goods {
-		if err := writeChargeableObjectInfoToDbAndAttachID(good, req.DeskID); err != nil {
+		dbGood := &model.Good{
+			Name:              good.MainElement.Name,
+			DeskID:            req.DeskID,
+			Expense:           good.ExpenseInfo.Expense,
+			CheckOutTimestamp: good.ExpenseInfo.CheckOutTimestamp,
+			NonFavorExpense:   good.ExpenseInfo.NonFavorExpense,
+		}
+		if err := dao.ChargeableObjectDao.Create(dbGood); err != nil {
+			// todo: log
+			return nil, err
+		}
+		if err := dao.ChargeableObjectDao.CreateFavorRecord(dbGood.GetName(), int64(dbGood.ID), good.Favors); err != nil {
 			// todo: log
 			return nil, err
 		}
@@ -127,16 +137,29 @@ func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.Order
 	return &res, nil
 }
 
-// todo: 特殊化，不要接口化
 func (MvpServer) OrderDesk(ctx context.Context, req *pb.OrderDeskReq) (*pb.OrderDeskRes, error) {
 	logger.Info("OrderDesk", zap.Any("ctx", ctx), zap.Any("req", req))
 	// todo: 这里可以点单记录
 	var res pb.OrderDeskRes
-	if err := writeChargeableObjectInfoToDbAndAttachID(req.Desk, time.Now().Unix()); err != nil {
+
+	dbDesk := &model.Desk{
+		StartTimestamp:    time.Now().Unix(),
+		EndTimestamp:      0,
+		SpaceName:         req.Desk.Space.Name,
+		SpaceNum:          req.Desk.Space.Num,
+		Expense:           req.Desk.ExpenseInfo.Expense,
+		CheckOutTimestamp: req.Desk.ExpenseInfo.CheckOutTimestamp,
+		NonFavorExpense:   req.Desk.ExpenseInfo.NonFavorExpense,
+	}
+	if err := dao.ChargeableObjectDao.Create(dbDesk); err != nil {
 		// todo: log
 		return nil, err
 	}
-	res.DeskID = req.Desk.Id
+	if err := dao.ChargeableObjectDao.CreateFavorRecord(dbDesk.GetName(), int64(dbDesk.ID), req.Desk.Favors); err != nil {
+		// todo: log
+		return nil, err
+	}
+	res.DeskID = int64(dbDesk.ID)
 	return &res, nil
 }
 
@@ -148,7 +171,8 @@ func (MvpServer) GetDesk(ctx context.Context, req *pb.GetDeskReq) (*pb.GetDeskRe
 		// todo: log
 		return nil, err
 	}
-	res.Desk = getPbDesk(desk, true)
+	res.Desk = getPbDesk(desk)
+	res.Goods = getDeskPbGoods(int64(desk.ID))
 	return &res, nil
 }
 

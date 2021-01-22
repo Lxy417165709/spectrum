@@ -12,7 +12,6 @@ import (
 // 如果未结账，则结账
 func checkOutIfNot(chargeableObj model.Chargeable) error {
 
-
 	expenseInfo := getExpenseInfo(chargeableObj)
 	if expenseInfo.CheckOutTimestamp != 0 {
 		// todo: 警告
@@ -123,48 +122,5 @@ func getDbSpace(pbSpace *pb.Space) *model.Space {
 		Num:           pbSpace.Num,
 		Price:         pbSpace.Price,
 		PriceRuleType: pbSpace.PriceRuleType,
-	}
-}
-
-// todo: 这个函数让代码不好看了
-func writeChargeableObjectInfoToDbAndAttachID(pbChargeableObject pb.Chargeable, attachValues ...interface{}) error {
-	dbChargeableObject := getDbChargeableObject(pbChargeableObject, attachValues...)
-	if err := dao.ChargeableObjectDao.Create(dbChargeableObject); err != nil {
-		// todo:log
-		return err
-	}
-	dbToPbAttachID(pbChargeableObject, dbChargeableObject)
-	if err := dao.ChargeableObjectDao.CreateFavorRecord(pbChargeableObject); err != nil {
-		// todo: log
-		return err
-	}
-	return nil
-}
-
-func getDbChargeableObject(pbChargeableObject pb.Chargeable, attachValues ...interface{}) model.Chargeable {
-	// todo: 校验参数合法性
-	switch pbChargeableObject.(type) {
-	case *pb.Good:
-		good := pbChargeableObject.(*pb.Good)
-		return &model.Good{
-			Name:              good.MainElement.Name,
-			DeskID:            attachValues[0].(int64),
-			Expense:           good.ExpenseInfo.Expense,
-			CheckOutTimestamp: good.ExpenseInfo.CheckOutTimestamp,
-			NonFavorExpense:   good.ExpenseInfo.NonFavorExpense,
-		}
-	case *pb.Desk:
-		desk := pbChargeableObject.(*pb.Desk)
-		return &model.Desk{
-			StartTimestamp:    attachValues[0].(int64),
-			EndTimestamp:      0,
-			SpaceName:         desk.Space.Name,
-			SpaceNum:          desk.Space.Num,
-			Expense:           desk.ExpenseInfo.Expense,
-			CheckOutTimestamp: desk.ExpenseInfo.CheckOutTimestamp,
-			NonFavorExpense:   desk.ExpenseInfo.NonFavorExpense,
-		}
-	default:
-		panic("unfix type")
 	}
 }

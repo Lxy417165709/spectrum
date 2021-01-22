@@ -43,7 +43,7 @@ message Desk{
   Space space = 2;
   int64 startTimestamp = 3;
   int64 endTimestamp = 4;
-  repeated Good goods = 5;
+//  repeated Good goods = 5;
   repeated Favor favors = 6;
   ExpenseInfo expenseInfo = 7;
 }
@@ -153,6 +153,7 @@ message GetDeskReq{
 
 message GetDeskRes{
   Desk desk = 1;
+  repeated Good goods = 2;
 }
 
 // todo: 这个接口参数有待调整
