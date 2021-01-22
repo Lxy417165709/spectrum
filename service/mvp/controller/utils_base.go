@@ -26,7 +26,6 @@ func getElementNames(className string) []string {
 	return elementNames
 }
 
-// 以下只用到了 chargeableObj  的 GetID,GetName
 func getExpenseInfo(chargeableObj model.Chargeable) *pb.ExpenseInfo {
 	switch chargeableObj.(type) {
 	case *model.Good:

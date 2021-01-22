@@ -22,7 +22,6 @@ func (chargeableObjectDao) Create(obj model.Chargeable) error {
 	return nil
 }
 
-// 以下只用到了 chargeableObj  的 GetID, GetName
 func (chargeableObjectDao) UpdateExpenseInfo(obj model.Chargeable, expenseInfo *pb.ExpenseInfo) error {
 	createTableWhenNotExist(obj)
 
@@ -36,18 +35,6 @@ func (chargeableObjectDao) UpdateExpenseInfo(obj model.Chargeable, expenseInfo *
 	// todo: 要确定 where 条件，是否是 id == to[id]
 	if err := mainDB.Table(obj.GetName()).Update(to).Error; err != nil {
 		logger.Error("Fail to finish mainDB.Update", zap.Any("to", to), zap.Error(err))
-		return err
-	}
-	return nil
-}
-
-// todo: 下面的函数最好提为响应的dao吧，这样更符合规范
-func (chargeableObjectDao) CreateCheckOutRecord(obj *model.CheckOutRecord) error {
-	var table model.CheckOutRecord
-	createTableWhenNotExist(&table)
-
-	if err := mainDB.Create(obj).Error; err != nil {
-		logger.Error("Fail to finish mainDB.Create", zap.Any("obj", obj), zap.Error(err))
 		return err
 	}
 	return nil
@@ -73,9 +60,10 @@ func (chargeableObjectDao) GetFavorRecords(obj model.Chargeable) ([]*model.Favor
 	return result, nil
 }
 
-func (chargeableObjectDao) CreateFavorRecord(chargeableObjName string,chargeableObjID int64,favors []*pb.Favor) error {
+func (chargeableObjectDao) CreateFavorRecord(chargeableObjName string, chargeableObjID int64, favors []*pb.Favor) error {
 	var table model.FavorRecord
 	createTableWhenNotExist(&table)
+
 	for _, favor := range favors {
 		obj := &model.FavorRecord{
 			ChargeableObjectName: chargeableObjName,

@@ -9,7 +9,6 @@ import (
 	"time"
 )
 
-// 如果未结账，则结账
 func checkOutIfNot(chargeableObj model.Chargeable) error {
 
 	expenseInfo := getExpenseInfo(chargeableObj)
@@ -25,7 +24,7 @@ func checkOutIfNot(chargeableObj model.Chargeable) error {
 	}
 
 	// 添加结账记录
-	if err := dao.ChargeableObjectDao.CreateCheckOutRecord(&model.CheckOutRecord{
+	if err := dao.CheckOutRecordDao.Create(&model.CheckOutRecord{
 		ChargeableObjectName: chargeableObj.GetName(),
 		ChargeableObjectID:   chargeableObj.GetID(),
 		CheckOutTimestamp:    expenseInfo.CheckOutTimestamp,

@@ -15,24 +15,12 @@ type Good struct {
 	NonFavorExpense   float64 `json:"non_favor_expense"`
 }
 
-func (g *Good) SetCheckOutTimestamp(timestamp int64) {
-	g.CheckOutTimestamp = timestamp
-}
-
-func (g *Good) GetCheckOutTimestamp() int64 {
-	return g.CheckOutTimestamp
-}
-
 func (g *Good) GetID() int64 {
 	return int64(g.ID)
 }
 
-func (g *Good) SetID(id int64) {
-	g.ID = uint(id)
-}
-
-func (*Good) TableName() string {
-	return "good"
+func (g *Good) TableName() string {
+	return g.GetName()
 }
 
 func (*Good) GetName() string {

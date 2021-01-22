@@ -19,20 +19,14 @@ type Desk struct {
 	NonFavorExpense   float64 `json:"non_favor_expense"`
 }
 
-func (d *Desk) SetCheckOutTimestamp(timestamp int64) {
-	d.CheckOutTimestamp = timestamp
+func (d *Desk) TableName() string {
+	return d.GetName()
 }
 
-func (d *Desk) GetCheckOutTimestamp() int64 {
-	return d.CheckOutTimestamp
-}
-
-func (*Desk) TableName() string {
-	return "desk"
-}
 func (*Desk) GetName() string {
 	return ChargeableObjectNameOfDesk
 }
+
 func (d *Desk) GetExpenseInfo(pricePerHour float64, favors []*pb.Favor) *pb.ExpenseInfo {
 	if d.CheckOutTimestamp != 0 {
 		return &pb.ExpenseInfo{
@@ -66,7 +60,4 @@ func (d *Desk) IsOpening() bool {
 
 func (d *Desk) GetID() int64 {
 	return int64(d.ID)
-}
-func (d *Desk) SetID(id int64) {
-	d.ID = uint(id)
 }
