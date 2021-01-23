@@ -46,3 +46,15 @@ func (mainElementSizeRecordDao) GetByGoodIdAndMainElementName(goodID int64, main
 	}
 	return &result, nil
 }
+
+func (mainElementSizeRecordDao) BatchDelete(goodIDs []int64) error {
+	var table model.MainElementSizeRecord
+	createTableWhenNotExist(&table)
+
+	// todo: 这里要测试
+	if err := mainDB.Where("good_id in (?)", goodIDs).Delete(&table).Error; err != nil {
+		logger.Error("Fail to finish mainDB.Delete", zap.Any("goodIDs", goodIDs), zap.Error(err))
+		return err
+	}
+	return nil
+}

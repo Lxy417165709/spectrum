@@ -22,6 +22,18 @@ func (goodDao) Create(obj *model.Good) error {
 	return nil
 }
 
+func (goodDao) BatchDelete(ids []int64) error {
+	var table model.Good
+	createTableWhenNotExist(&table)
+
+	// todo: 这里要测试
+	if err := mainDB.Where("id in (?)", ids).Delete(&table).Error; err != nil {
+		logger.Error("Fail to finish mainDB.Delete", zap.Any("ids", ids), zap.Error(err))
+		return err
+	}
+	return nil
+}
+
 func (goodDao) Get(id int64) (*model.Good, error) {
 	var table model.Good
 	createTableWhenNotExist(&table)

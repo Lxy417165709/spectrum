@@ -20,13 +20,17 @@ type MvpClient interface {
 	GetAllGoodClasses(ctx context.Context, in *GetAllGoodClassesReq, opts ...grpc.CallOption) (*GetAllGoodClassesRes, error)
 	AddGoodClass(ctx context.Context, in *AddGoodClassReq, opts ...grpc.CallOption) (*AddGoodClassRes, error)
 	AddGood(ctx context.Context, in *AddGoodReq, opts ...grpc.CallOption) (*AddGoodRes, error)
+	CancelGood(ctx context.Context, in *CancelGoodReq, opts ...grpc.CallOption) (*CancelGoodRes, error)
 	AddElement(ctx context.Context, in *AddElementReq, opts ...grpc.CallOption) (*AddElementRes, error)
 	AddSpace(ctx context.Context, in *AddSpaceReq, opts ...grpc.CallOption) (*AddSpaceRes, error)
 	OrderGood(ctx context.Context, in *OrderGoodReq, opts ...grpc.CallOption) (*OrderGoodRes, error)
 	OrderDesk(ctx context.Context, in *OrderDeskReq, opts ...grpc.CallOption) (*OrderDeskRes, error)
+	ChangeDesk(ctx context.Context, in *ChangeDeskReq, opts ...grpc.CallOption) (*ChangeDeskRes, error)
 	GetDesk(ctx context.Context, in *GetDeskReq, opts ...grpc.CallOption) (*GetDeskRes, error)
 	CloseDesk(ctx context.Context, in *CloseDeskReq, opts ...grpc.CallOption) (*CloseDeskRes, error)
 	CheckOut(ctx context.Context, in *CheckOutReq, opts ...grpc.CallOption) (*CheckOutRes, error)
+	AddFavorForGood(ctx context.Context, in *AddFavorForGoodReq, opts ...grpc.CallOption) (*AddFavorForGoodRes, error)
+	DeleteFavorForGood(ctx context.Context, in *DeleteFavorForGoodReq, opts ...grpc.CallOption) (*DeleteFavorForGoodRes, error)
 }
 
 type mvpClient struct {
@@ -58,6 +62,15 @@ func (c *mvpClient) AddGoodClass(ctx context.Context, in *AddGoodClassReq, opts 
 func (c *mvpClient) AddGood(ctx context.Context, in *AddGoodReq, opts ...grpc.CallOption) (*AddGoodRes, error) {
 	out := new(AddGoodRes)
 	err := c.cc.Invoke(ctx, "/pb.Mvp/AddGood", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *mvpClient) CancelGood(ctx context.Context, in *CancelGoodReq, opts ...grpc.CallOption) (*CancelGoodRes, error) {
+	out := new(CancelGoodRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/CancelGood", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -100,6 +113,15 @@ func (c *mvpClient) OrderDesk(ctx context.Context, in *OrderDeskReq, opts ...grp
 	return out, nil
 }
 
+func (c *mvpClient) ChangeDesk(ctx context.Context, in *ChangeDeskReq, opts ...grpc.CallOption) (*ChangeDeskRes, error) {
+	out := new(ChangeDeskRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/ChangeDesk", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *mvpClient) GetDesk(ctx context.Context, in *GetDeskReq, opts ...grpc.CallOption) (*GetDeskRes, error) {
 	out := new(GetDeskRes)
 	err := c.cc.Invoke(ctx, "/pb.Mvp/GetDesk", in, out, opts...)
@@ -127,6 +149,24 @@ func (c *mvpClient) CheckOut(ctx context.Context, in *CheckOutReq, opts ...grpc.
 	return out, nil
 }
 
+func (c *mvpClient) AddFavorForGood(ctx context.Context, in *AddFavorForGoodReq, opts ...grpc.CallOption) (*AddFavorForGoodRes, error) {
+	out := new(AddFavorForGoodRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/AddFavorForGood", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *mvpClient) DeleteFavorForGood(ctx context.Context, in *DeleteFavorForGoodReq, opts ...grpc.CallOption) (*DeleteFavorForGoodRes, error) {
+	out := new(DeleteFavorForGoodRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/DeleteFavorForGood", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MvpServer is the server API for Mvp service.
 // All implementations must embed UnimplementedMvpServer
 // for forward compatibility
@@ -134,13 +174,17 @@ type MvpServer interface {
 	GetAllGoodClasses(context.Context, *GetAllGoodClassesReq) (*GetAllGoodClassesRes, error)
 	AddGoodClass(context.Context, *AddGoodClassReq) (*AddGoodClassRes, error)
 	AddGood(context.Context, *AddGoodReq) (*AddGoodRes, error)
+	CancelGood(context.Context, *CancelGoodReq) (*CancelGoodRes, error)
 	AddElement(context.Context, *AddElementReq) (*AddElementRes, error)
 	AddSpace(context.Context, *AddSpaceReq) (*AddSpaceRes, error)
 	OrderGood(context.Context, *OrderGoodReq) (*OrderGoodRes, error)
 	OrderDesk(context.Context, *OrderDeskReq) (*OrderDeskRes, error)
+	ChangeDesk(context.Context, *ChangeDeskReq) (*ChangeDeskRes, error)
 	GetDesk(context.Context, *GetDeskReq) (*GetDeskRes, error)
 	CloseDesk(context.Context, *CloseDeskReq) (*CloseDeskRes, error)
 	CheckOut(context.Context, *CheckOutReq) (*CheckOutRes, error)
+	AddFavorForGood(context.Context, *AddFavorForGoodReq) (*AddFavorForGoodRes, error)
+	DeleteFavorForGood(context.Context, *DeleteFavorForGoodReq) (*DeleteFavorForGoodRes, error)
 	mustEmbedUnimplementedMvpServer()
 }
 
@@ -157,6 +201,9 @@ func (UnimplementedMvpServer) AddGoodClass(context.Context, *AddGoodClassReq) (*
 func (UnimplementedMvpServer) AddGood(context.Context, *AddGoodReq) (*AddGoodRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddGood not implemented")
 }
+func (UnimplementedMvpServer) CancelGood(context.Context, *CancelGoodReq) (*CancelGoodRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CancelGood not implemented")
+}
 func (UnimplementedMvpServer) AddElement(context.Context, *AddElementReq) (*AddElementRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddElement not implemented")
 }
@@ -169,6 +216,9 @@ func (UnimplementedMvpServer) OrderGood(context.Context, *OrderGoodReq) (*OrderG
 func (UnimplementedMvpServer) OrderDesk(context.Context, *OrderDeskReq) (*OrderDeskRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OrderDesk not implemented")
 }
+func (UnimplementedMvpServer) ChangeDesk(context.Context, *ChangeDeskReq) (*ChangeDeskRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChangeDesk not implemented")
+}
 func (UnimplementedMvpServer) GetDesk(context.Context, *GetDeskReq) (*GetDeskRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDesk not implemented")
 }
@@ -177,6 +227,12 @@ func (UnimplementedMvpServer) CloseDesk(context.Context, *CloseDeskReq) (*CloseD
 }
 func (UnimplementedMvpServer) CheckOut(context.Context, *CheckOutReq) (*CheckOutRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckOut not implemented")
+}
+func (UnimplementedMvpServer) AddFavorForGood(context.Context, *AddFavorForGoodReq) (*AddFavorForGoodRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddFavorForGood not implemented")
+}
+func (UnimplementedMvpServer) DeleteFavorForGood(context.Context, *DeleteFavorForGoodReq) (*DeleteFavorForGoodRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteFavorForGood not implemented")
 }
 func (UnimplementedMvpServer) mustEmbedUnimplementedMvpServer() {}
 
@@ -241,6 +297,24 @@ func _Mvp_AddGood_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MvpServer).AddGood(ctx, req.(*AddGoodReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Mvp_CancelGood_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CancelGoodReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).CancelGood(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/CancelGood",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).CancelGood(ctx, req.(*CancelGoodReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -317,6 +391,24 @@ func _Mvp_OrderDesk_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Mvp_ChangeDesk_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChangeDeskReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).ChangeDesk(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/ChangeDesk",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).ChangeDesk(ctx, req.(*ChangeDeskReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Mvp_GetDesk_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetDeskReq)
 	if err := dec(in); err != nil {
@@ -371,6 +463,42 @@ func _Mvp_CheckOut_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Mvp_AddFavorForGood_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddFavorForGoodReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).AddFavorForGood(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/AddFavorForGood",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).AddFavorForGood(ctx, req.(*AddFavorForGoodReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Mvp_DeleteFavorForGood_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteFavorForGoodReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).DeleteFavorForGood(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/DeleteFavorForGood",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).DeleteFavorForGood(ctx, req.(*DeleteFavorForGoodReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Mvp_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.Mvp",
 	HandlerType: (*MvpServer)(nil),
@@ -386,6 +514,10 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddGood",
 			Handler:    _Mvp_AddGood_Handler,
+		},
+		{
+			MethodName: "CancelGood",
+			Handler:    _Mvp_CancelGood_Handler,
 		},
 		{
 			MethodName: "AddElement",
@@ -404,6 +536,10 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Mvp_OrderDesk_Handler,
 		},
 		{
+			MethodName: "ChangeDesk",
+			Handler:    _Mvp_ChangeDesk_Handler,
+		},
+		{
 			MethodName: "GetDesk",
 			Handler:    _Mvp_GetDesk_Handler,
 		},
@@ -414,6 +550,14 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CheckOut",
 			Handler:    _Mvp_CheckOut_Handler,
+		},
+		{
+			MethodName: "AddFavorForGood",
+			Handler:    _Mvp_AddFavorForGood_Handler,
+		},
+		{
+			MethodName: "DeleteFavorForGood",
+			Handler:    _Mvp_DeleteFavorForGood_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

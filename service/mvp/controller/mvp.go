@@ -226,3 +226,68 @@ func (MvpServer) CheckOut(ctx context.Context, req *pb.CheckOutReq) (*pb.CheckOu
 
 	return &res, nil
 }
+
+func (s MvpServer) ChangeDesk(ctx context.Context, req *pb.ChangeDeskReq) (*pb.ChangeDeskRes, error) {
+	logger.Info("ChangeDesk", zap.Any("ctx", ctx), zap.Any("req", req))
+
+	var res pb.ChangeDeskRes
+
+	if err := dao.DeskDao.Update(map[string]interface{}{
+		"id":         req.SrcDeskID,
+		"space_name": req.DstSpaceName,
+		"space_num":  req.DstSpaceNum,
+	}); err != nil {
+		// todo: log
+		return nil, err
+	}
+
+	return &res, nil
+}
+
+func (s MvpServer) CancelGood(ctx context.Context, req *pb.CancelGoodReq) (*pb.CancelGoodRes, error) {
+	logger.Info("CancelGood", zap.Any("ctx", ctx), zap.Any("req", req))
+
+	var res pb.CancelGoodRes
+
+	if err := dao.GoodDao.BatchDelete(req.GoodIDs); err != nil {
+		// todo: log
+		return nil, err
+	}
+	if err := dao.MainElementAttachElementRecordDao.BatchDelete(req.GoodIDs); err != nil {
+		// todo: log
+		return nil, err
+	}
+	if err := dao.MainElementSizeRecordDao.BatchDelete(req.GoodIDs); err != nil {
+		// todo: log
+		return nil, err
+	}
+	if err := dao.ChargeableObjectDao.BatchDeleteFavorRecord(model.ChargeableObjectNameOfGood, req.GoodIDs); err != nil {
+		// todo: log
+		return nil, err
+	}
+
+	return &res, nil
+}
+
+func (s MvpServer) AddFavorForGood(ctx context.Context, req *pb.AddFavorForGoodReq) (*pb.AddFavorForGoodRes, error) {
+	logger.Info("AddFavorForGood", zap.Any("ctx", ctx), zap.Any("req", req))
+
+	var res pb.AddFavorForGoodRes
+	if err := dao.ChargeableObjectDao.CreateFavorRecord(model.ChargeableObjectNameOfGood, req.GoodID, req.Favors); err != nil {
+		// todo: log
+		return nil, err
+	}
+
+	return &res, nil
+}
+
+func (s MvpServer) DeleteFavorForGood(ctx context.Context, req *pb.DeleteFavorForGoodReq) (*pb.DeleteFavorForGoodRes, error) {
+	logger.Info("DeleteFavorForGood", zap.Any("ctx", ctx), zap.Any("req", req))
+
+	var res pb.DeleteFavorForGoodRes
+	if err := dao.ChargeableObjectDao.DeleteFavorRecord(model.ChargeableObjectNameOfGood, req.GoodID, req.Favor); err != nil {
+		// todo: log
+		return nil, err
+	}
+	return &res, nil
+}

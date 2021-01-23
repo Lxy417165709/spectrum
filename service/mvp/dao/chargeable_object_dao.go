@@ -78,3 +78,39 @@ func (chargeableObjectDao) CreateFavorRecord(chargeableObjName string, chargeabl
 	}
 	return nil
 }
+
+func (chargeableObjectDao) DeleteFavorRecord(chargeableObjName string, chargeableObjID int64, favor *pb.Favor) error {
+	var table model.FavorRecord
+	createTableWhenNotExist(&table)
+
+	obj := &model.FavorRecord{
+		ChargeableObjectName: chargeableObjName,
+		ChargeableObjectID:   chargeableObjID,
+		FavorType:            favor.FavorType,
+		FavorParameters:      strings.Join(favor.Parameters, "|"),
+	}
+	if err := mainDB.Limit(1).Where(
+		"chargeable_object_name = ? and chargeable_object_id = ? and favor_type = ? and favor_parameters = ?",
+		chargeableObjName, chargeableObjID, favor.FavorType, strings.Join(favor.Parameters, "|"),
+	).Delete(&table).Error; err != nil {
+		logger.Error("Fail to finish mainDB.Delete", zap.Any("obj", obj), zap.Error(err))
+		return err
+	}
+	return nil
+}
+
+func (chargeableObjectDao) BatchDeleteFavorRecord(chargeableObjName string, chargeableObjIDs []int64) error {
+	var table model.FavorRecord
+	createTableWhenNotExist(&table)
+	if err := mainDB.Where(
+		"chargeable_object_name = ? and chargeable_object_id in (?)",
+		chargeableObjName, chargeableObjIDs,
+	).Delete(&table).Error; err != nil {
+		logger.Error("Fail to finish mainDB.Delete",
+			zap.String("chargeableObjName", chargeableObjName),
+			zap.Any("chargeableObjIDs", chargeableObjIDs),
+			zap.Error(err))
+		return err
+	}
+	return nil
+}

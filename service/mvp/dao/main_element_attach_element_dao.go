@@ -68,3 +68,15 @@ func (mainElementAttachElementRecordDao) GetByBothName(goodID int64, mainElement
 	}
 	return &result, nil
 }
+
+func (mainElementAttachElementRecordDao) BatchDelete(goodIDs []int64) error {
+	var table model.MainElementAttachElementRecord
+	createTableWhenNotExist(&table)
+
+	// todo: 这里要测试
+	if err := mainDB.Where("good_id in (?)", goodIDs).Delete(&table).Error; err != nil {
+		logger.Error("Fail to finish mainDB.Delete", zap.Any("goodIDs", goodIDs), zap.Error(err))
+		return err
+	}
+	return nil
+}
