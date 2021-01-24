@@ -309,3 +309,51 @@ func (s MvpServer) DeleteFavorForGood(ctx context.Context, req *pb.DeleteFavorFo
 	}
 	return &res, nil
 }
+
+func (s MvpServer) GetAllDeskSets(ctx context.Context, req *pb.GetAllDeskSetsReq) (*pb.GetAllDeskSetsRes, error) {
+	logger.Info("GetAllDeskSets", zap.Any("ctx", ctx), zap.Any("req", req))
+
+	var res pb.GetAllDeskSetsRes
+	spaces, err := dao.SpaceDao.GetAll()
+	if err != nil {
+		// todo: log
+		return nil, err
+	}
+
+	nameToSpaces := make(map[string][]*model.Space)
+	for _, space := range spaces {
+		nameToSpaces[space.Name] = append(nameToSpaces[space.Name], space)
+	}
+
+	deskSets := make([]*pb.DeskSet, 0)
+	for name, spaces := range nameToSpaces {
+		desks := make([]*pb.Desk, 0)
+		for _, space := range spaces {
+			desk, err := dao.DeskDao.GetNonCheckOutDesk(space.Name, space.Num)
+			if err != nil {
+				// todo:log
+				return nil, err
+			}
+			if desk == nil {
+				desks = append(desks, &pb.Desk{
+					Id:             0,
+					Space:          space.ToPb(),
+					StartTimestamp: 0,
+					EndTimestamp:   0,
+					Favors:         nil,
+					ExpenseInfo:    nil,
+				})
+			} else {
+				desks = append(desks, getPbDesk(desk)) // todo: 这里会和 getPbDesk 有部分冗余
+			}
+		}
+		deskSets = append(deskSets, &pb.DeskSet{
+			Name:  name,
+			Desks: desks,
+		})
+	}
+
+	res.DeskSets = deskSets
+
+	return &res, nil
+}

@@ -14,7 +14,7 @@
       <GoodWanner/>
     </el-tab-pane>
     <el-tab-pane label="桌位管理" name="9">
-      <DeskShower/>
+      <DeskSet/>
     </el-tab-pane>
   </el-tabs>
 </template>
@@ -26,7 +26,7 @@ import OptionClassManager from "./option/OptionClassManager";
 import GoodOrder from "./unuse/GoodOrder";
 import GoodWanner from "./good/GoodWanner";
 import GoodClassManager from "./good/GoodClassManager";
-import DeskShower from "./desk/DeskShower";
+import DeskSet from "./desk/DeskSet";
 
 
 export default {
@@ -38,7 +38,7 @@ export default {
     GoodOrder,
     GoodWanner,
     GoodClassManager,
-    DeskShower,
+    DeskSet,
   },
   data() {
     return {
