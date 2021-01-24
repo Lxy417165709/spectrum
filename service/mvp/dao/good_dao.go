@@ -61,6 +61,18 @@ func (goodDao) GetByDeskID(deskID int64) ([]*model.Good, error) {
 	return result, nil
 }
 
+func (goodDao) GetByOrderID(orderID int64) ([]*model.Good, error) {
+	var table model.Good
+	createTableWhenNotExist(&table)
+
+	var result []*model.Good
+	if err := mainDB.Find(&result, "order_id = ?", orderID).Error; err != nil {
+		logger.Error("Fail to finish mainDB.Find", zap.Int64("orderID", orderID), zap.Error(err))
+		return nil, err
+	}
+	return result, nil
+}
+
 func (goodDao) Update(to map[string]interface{}) error {
 	var table model.Good
 	createTableWhenNotExist(&table)

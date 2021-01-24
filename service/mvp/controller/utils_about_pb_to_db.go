@@ -117,9 +117,9 @@ func getDbElements(pbElement *pb.Element, className string) []*model.Element {
 
 func getDbSpace(pbSpace *pb.Space) *model.Space {
 	return &model.Space{
-		Name:          pbSpace.Name,
-		Num:           pbSpace.Num,
-		Price:         pbSpace.Price,
-		PriceRuleType: pbSpace.PriceRuleType,
+		Name:        pbSpace.Name,
+		Num:         pbSpace.Num,
+		Price:       pbSpace.Price,
+		BillingType: pbSpace.BillingType,
 	}
 }

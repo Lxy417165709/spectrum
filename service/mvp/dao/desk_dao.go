@@ -48,6 +48,21 @@ func (deskDao) Get(id int64) (*model.Desk, error) {
 	return &result, nil
 }
 
+func (deskDao) GetByOrderID(orderID int64) (*model.Desk, error) {
+	var table model.Desk
+	createTableWhenNotExist(&table)
+
+	var result model.Desk
+	if err := mainDB.First(&result, "order_id = ?", orderID).Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return nil, nil
+		}
+		logger.Error("Fail to finish mainDB.First", zap.Int64("orderID", orderID), zap.Error(err))
+		return nil, err
+	}
+	return &result, nil
+}
+
 //func (deskDao) GetName() string {
 //	return model.ChargeableObjectNameOfDesk
 //}

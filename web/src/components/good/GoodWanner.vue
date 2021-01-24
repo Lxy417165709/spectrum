@@ -59,10 +59,10 @@ import utils from "../../common/utils";
 import init from "../../common/global_object/init";
 import global from "../../common/global_object/global";
 import GoodEditor from "./GoodEditor";
-import Favorer from "../Favor/Favorer";
+import Discounter from "../discount/Discounter";
 
 export default {
-  components: {Favorer},
+  components: {Discounter},
   async mounted() {
     await init.globalGoodClasses()
     this.goodClasses = global.goodClasses

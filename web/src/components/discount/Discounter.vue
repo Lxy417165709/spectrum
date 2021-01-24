@@ -38,7 +38,7 @@
 import global from "../../common/global_object/global";
 
 export default {
-  name: "Favorer",
+  name: "Discounter",
   data() {
     return {
       FavorTypeName: global.FavorType.NONE,

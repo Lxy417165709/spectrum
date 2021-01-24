@@ -7,10 +7,10 @@ import (
 
 type Space struct {
 	gorm.Model
-	Name          string           `json:"name"` // 桌球、麻将...
-	Num           int64            `json:"num"`  // 1、2、3...
-	Price         float64          `json:"price"`
-	PriceRuleType pb.PriceRuleType `json:"price_rule_type"` // 定时、记时
+	Name        string         `json:"name"` // 桌球、麻将...
+	Num         int64          `json:"num"`  // 1、2、3...
+	Price       float64        `json:"price"`
+	BillingType pb.BillingType `json:"billing_type"` // 计场、计时
 }
 
 func (*Space) TableName() string {
@@ -22,9 +22,9 @@ func (s *Space) ToPb() *pb.Space {
 		return nil
 	}
 	return &pb.Space{
-		Name:          s.Name,
-		Num:           s.Num,
-		Price:         s.Price,
-		PriceRuleType: s.PriceRuleType,
+		Name:        s.Name,
+		Num:         s.Num,
+		Price:       s.Price,
+		BillingType: s.BillingType,
 	}
 }

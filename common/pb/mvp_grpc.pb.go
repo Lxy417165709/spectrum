@@ -26,8 +26,8 @@ type MvpClient interface {
 	OrderGood(ctx context.Context, in *OrderGoodReq, opts ...grpc.CallOption) (*OrderGoodRes, error)
 	OrderDesk(ctx context.Context, in *OrderDeskReq, opts ...grpc.CallOption) (*OrderDeskRes, error)
 	ChangeDesk(ctx context.Context, in *ChangeDeskReq, opts ...grpc.CallOption) (*ChangeDeskRes, error)
-	GetDesk(ctx context.Context, in *GetDeskReq, opts ...grpc.CallOption) (*GetDeskRes, error)
 	CloseDesk(ctx context.Context, in *CloseDeskReq, opts ...grpc.CallOption) (*CloseDeskRes, error)
+	GetOrder(ctx context.Context, in *GetOrderReq, opts ...grpc.CallOption) (*GetOrderRes, error)
 	CheckOut(ctx context.Context, in *CheckOutReq, opts ...grpc.CallOption) (*CheckOutRes, error)
 	AddFavorForGood(ctx context.Context, in *AddFavorForGoodReq, opts ...grpc.CallOption) (*AddFavorForGoodRes, error)
 	DeleteFavorForGood(ctx context.Context, in *DeleteFavorForGoodReq, opts ...grpc.CallOption) (*DeleteFavorForGoodRes, error)
@@ -122,18 +122,18 @@ func (c *mvpClient) ChangeDesk(ctx context.Context, in *ChangeDeskReq, opts ...g
 	return out, nil
 }
 
-func (c *mvpClient) GetDesk(ctx context.Context, in *GetDeskReq, opts ...grpc.CallOption) (*GetDeskRes, error) {
-	out := new(GetDeskRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/GetDesk", in, out, opts...)
+func (c *mvpClient) CloseDesk(ctx context.Context, in *CloseDeskReq, opts ...grpc.CallOption) (*CloseDeskRes, error) {
+	out := new(CloseDeskRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/CloseDesk", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mvpClient) CloseDesk(ctx context.Context, in *CloseDeskReq, opts ...grpc.CallOption) (*CloseDeskRes, error) {
-	out := new(CloseDeskRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/CloseDesk", in, out, opts...)
+func (c *mvpClient) GetOrder(ctx context.Context, in *GetOrderReq, opts ...grpc.CallOption) (*GetOrderRes, error) {
+	out := new(GetOrderRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/GetOrder", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -180,8 +180,8 @@ type MvpServer interface {
 	OrderGood(context.Context, *OrderGoodReq) (*OrderGoodRes, error)
 	OrderDesk(context.Context, *OrderDeskReq) (*OrderDeskRes, error)
 	ChangeDesk(context.Context, *ChangeDeskReq) (*ChangeDeskRes, error)
-	GetDesk(context.Context, *GetDeskReq) (*GetDeskRes, error)
 	CloseDesk(context.Context, *CloseDeskReq) (*CloseDeskRes, error)
+	GetOrder(context.Context, *GetOrderReq) (*GetOrderRes, error)
 	CheckOut(context.Context, *CheckOutReq) (*CheckOutRes, error)
 	AddFavorForGood(context.Context, *AddFavorForGoodReq) (*AddFavorForGoodRes, error)
 	DeleteFavorForGood(context.Context, *DeleteFavorForGoodReq) (*DeleteFavorForGoodRes, error)
@@ -219,11 +219,11 @@ func (UnimplementedMvpServer) OrderDesk(context.Context, *OrderDeskReq) (*OrderD
 func (UnimplementedMvpServer) ChangeDesk(context.Context, *ChangeDeskReq) (*ChangeDeskRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChangeDesk not implemented")
 }
-func (UnimplementedMvpServer) GetDesk(context.Context, *GetDeskReq) (*GetDeskRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetDesk not implemented")
-}
 func (UnimplementedMvpServer) CloseDesk(context.Context, *CloseDeskReq) (*CloseDeskRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CloseDesk not implemented")
+}
+func (UnimplementedMvpServer) GetOrder(context.Context, *GetOrderReq) (*GetOrderRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOrder not implemented")
 }
 func (UnimplementedMvpServer) CheckOut(context.Context, *CheckOutReq) (*CheckOutRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckOut not implemented")
@@ -409,24 +409,6 @@ func _Mvp_ChangeDesk_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Mvp_GetDesk_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetDeskReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MvpServer).GetDesk(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/pb.Mvp/GetDesk",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).GetDesk(ctx, req.(*GetDeskReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Mvp_CloseDesk_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CloseDeskReq)
 	if err := dec(in); err != nil {
@@ -441,6 +423,24 @@ func _Mvp_CloseDesk_Handler(srv interface{}, ctx context.Context, dec func(inter
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MvpServer).CloseDesk(ctx, req.(*CloseDeskReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Mvp_GetOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrderReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).GetOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/GetOrder",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).GetOrder(ctx, req.(*GetOrderReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -540,12 +540,12 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Mvp_ChangeDesk_Handler,
 		},
 		{
-			MethodName: "GetDesk",
-			Handler:    _Mvp_GetDesk_Handler,
-		},
-		{
 			MethodName: "CloseDesk",
 			Handler:    _Mvp_CloseDesk_Handler,
+		},
+		{
+			MethodName: "GetOrder",
+			Handler:    _Mvp_GetOrder_Handler,
 		},
 		{
 			MethodName: "CheckOut",

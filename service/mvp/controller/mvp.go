@@ -10,7 +10,8 @@ import (
 	"time"
 )
 
-// todo: 考虑一下， desk 里面是否要包括 good 呢？还是将二者分开，之后再通过其他手段联系呢？
+// todo: GetOrder 可以设置为一个查询接口，可以以 ID 为条件 查询，以 是否已结账 为条件查询
+
 type MvpServer struct {
 	pb.UnimplementedMvpServer
 }
@@ -111,6 +112,20 @@ func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.Order
 	// todo: 这里可以点单记录
 	var res pb.OrderGoodRes
 
+	var orderID int64
+	if req.OrderID == 0 {
+		// 这里表示用户首次点单
+		dbOrder := &model.Order{}
+		if err := dao.OrderDao.Create(dbOrder); err != nil {
+			// todo: log
+			return nil, err
+		}
+		orderID = int64(dbOrder.ID)
+	} else {
+		// 表示之前有点单了，在点单的基础上再点商品
+		orderID = req.OrderID
+	}
+
 	for _, good := range req.Goods {
 		dbGood := &model.Good{
 			Name:              good.MainElement.Name,
@@ -118,6 +133,7 @@ func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.Order
 			Expense:           good.ExpenseInfo.Expense,
 			CheckOutTimestamp: good.ExpenseInfo.CheckOutTimestamp,
 			NonFavorExpense:   good.ExpenseInfo.NonFavorExpense,
+			OrderID:           orderID,
 		}
 		if err := dao.ChargeableObjectDao.Create(dbGood); err != nil {
 			// todo: log
@@ -142,6 +158,12 @@ func (MvpServer) OrderDesk(ctx context.Context, req *pb.OrderDeskReq) (*pb.Order
 	// todo: 这里可以点单记录
 	var res pb.OrderDeskRes
 
+	dbOrder := &model.Order{}
+	if err := dao.OrderDao.Create(dbOrder); err != nil {
+		// todo: log
+		return nil, err
+	}
+
 	dbDesk := &model.Desk{
 		StartTimestamp:    time.Now().Unix(),
 		EndTimestamp:      0,
@@ -150,6 +172,7 @@ func (MvpServer) OrderDesk(ctx context.Context, req *pb.OrderDeskReq) (*pb.Order
 		Expense:           req.Desk.ExpenseInfo.Expense,
 		CheckOutTimestamp: req.Desk.ExpenseInfo.CheckOutTimestamp,
 		NonFavorExpense:   req.Desk.ExpenseInfo.NonFavorExpense,
+		OrderID:           int64(dbOrder.ID),
 	}
 	if err := dao.ChargeableObjectDao.Create(dbDesk); err != nil {
 		// todo: log
@@ -163,16 +186,11 @@ func (MvpServer) OrderDesk(ctx context.Context, req *pb.OrderDeskReq) (*pb.Order
 	return &res, nil
 }
 
-func (MvpServer) GetDesk(ctx context.Context, req *pb.GetDeskReq) (*pb.GetDeskRes, error) {
-	logger.Info("GetDesk", zap.Any("ctx", ctx), zap.Any("req", req))
-	var res pb.GetDeskRes
-	desk, err := dao.DeskDao.Get(req.DeskID)
-	if err != nil {
-		// todo: log
-		return nil, err
-	}
-	res.Desk = getPbDesk(desk)
-	res.Goods = getDeskPbGoods(int64(desk.ID))
+func (MvpServer) GetOrder(ctx context.Context, req *pb.GetOrderReq) (*pb.GetOrderRes, error) {
+	logger.Info("GetOrder", zap.Any("ctx", ctx), zap.Any("req", req))
+	var res pb.GetOrderRes
+
+	res.Order = getPbOrder(req.OrderID)
 	return &res, nil
 }
 

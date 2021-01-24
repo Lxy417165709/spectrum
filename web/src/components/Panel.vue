@@ -10,8 +10,11 @@
     <el-tab-pane label="选项类管理" name="3">
       <OptionClassManager/>
     </el-tab-pane>
-    <el-tab-pane label="商品点单"  name="8">
+    <el-tab-pane label="商品点单" name="8">
       <GoodWanner/>
+    </el-tab-pane>
+    <el-tab-pane label="桌位管理" name="9">
+      <DeskShower/>
     </el-tab-pane>
   </el-tabs>
 </template>
@@ -23,9 +26,7 @@ import OptionClassManager from "./option/OptionClassManager";
 import GoodOrder from "./unuse/GoodOrder";
 import GoodWanner from "./good/GoodWanner";
 import GoodClassManager from "./good/GoodClassManager";
-import Favorer from "./Favor/Favorer";
-import init from "../common/global_object/init";
-
+import DeskShower from "./desk/DeskShower";
 
 
 export default {
@@ -37,7 +38,7 @@ export default {
     GoodOrder,
     GoodWanner,
     GoodClassManager,
-    Favorer,
+    DeskShower,
   },
   data() {
     return {

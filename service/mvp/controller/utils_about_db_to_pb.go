@@ -34,12 +34,35 @@ func getPbDesk(desk *model.Desk) *pb.Desk {
 		StartTimestamp: desk.StartTimestamp,
 		EndTimestamp:   desk.EndTimestamp,
 		Favors:         favor,
-		ExpenseInfo:    desk.GetExpenseInfo(space.Price, favor),
+		ExpenseInfo:    desk.GetExpenseInfo(space.BillingType, space.Price, favor),
 	}
 }
 
-func getDeskPbGoods(deskID int64) []*pb.Good {
-	dbGoods, err := dao.GoodDao.GetByDeskID(deskID)
+func getPbOrder(orderID int64) *pb.Order {
+	order, err := dao.OrderDao.Get(orderID)
+	if err != nil {
+		// todo: log
+		return nil
+	}
+	desk, err := dao.DeskDao.GetByOrderID(orderID)
+	if err != nil {
+		// todo: log
+		return nil
+	}
+	pbDesk := getPbDesk(desk)
+	pbGoods := getOrderPbGoods(orderID)
+	favors := getFavors(order)
+	return &pb.Order{
+		Id:          orderID,
+		Desk:        pbDesk,
+		Goods:       pbGoods,
+		Favors:      favors,
+		ExpenseInfo: order.GetExpenseInfo(pbDesk, pbGoods, favors),
+	}
+}
+
+func getOrderPbGoods(orderID int64) []*pb.Good {
+	dbGoods, err := dao.GoodDao.GetByOrderID(orderID)
 	if err != nil {
 		// todo: log
 		return nil
