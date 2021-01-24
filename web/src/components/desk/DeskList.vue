@@ -6,8 +6,8 @@
 
       <!-- todo: 不知为何 在 span 中才能触发响应事件 -->
       <span @click="handleDeskCardClick(deskIndex)">
-        <component :is="desk.component" :num="desk.space.num"
-                   :pictureStorePath="desk.space.pictureStorePath"></component>
+        <desk-card :num="desk.space.num"
+                   :pictureStorePath="desk.space.pictureStorePath"></desk-card>
       </span>
     </el-col>
   </el-row>
@@ -15,7 +15,9 @@
 
 <script>
 /* eslint-disable */
+import DeskCard from "./DeskCard";
 export default {
+  components: {DeskCard},
   props: {
     desks: Array
   },
@@ -24,8 +26,7 @@ export default {
   },
   methods: {
     handleDeskCardClick(deskIndex) {
-       console.log("handleDeskCardClick")
-      this.$emit("passViewMode", 1, deskIndex)
+      this.$emit("passViewMode", deskIndex)
     },
   }
 }

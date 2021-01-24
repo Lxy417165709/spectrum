@@ -4,8 +4,8 @@
     <el-col v-for="(goodClass,goodClassIndex) in goodClasses" :key="goodClassIndex"
             style="height: 300px; width: 202px; margin-left: 10px; border: none">
       <span @click="handleGoodClassCardClick(goodClassIndex)">
-        <component :is="goodClass.component" :name="goodClass.name"
-                   :pictureStorePath="goodClass.pictureStorePath"></component>
+        <good-class-card  :name="goodClass.name"
+                   :pictureStorePath="goodClass.pictureStorePath"></good-class-card>
       </span>
     </el-col>
   </el-row>
@@ -13,7 +13,9 @@
 
 <script>
 /* eslint-disable */
+import GoodClassCard from "./GoodClassCard";
 export default {
+  components: {GoodClassCard},
   props: {
     goodClasses: Array
   },
