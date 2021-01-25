@@ -12,8 +12,8 @@
 
 <script>
 /* eslint-disable */
-import GoodClassList from "../good/GoodClassList";
-import GoodList from "../good/GoodList";
+import GoodClassList from "../list/GoodClassList";
+import GoodList from "../list/GoodList";
 
 export default {
   name: "GoodClass",
@@ -22,7 +22,6 @@ export default {
     goodClasses: Array,
   },
   mounted() {
-    console.log("??")
   },
   data() {
     return {

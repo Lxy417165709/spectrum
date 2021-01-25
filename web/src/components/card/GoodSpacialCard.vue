@@ -1,9 +1,9 @@
 <!-- eslint-disable -->
 <template>
   <el-card :body-style="{ padding: '0px' }" shadow="hover" style="position:relative;">
-    <img style="height:200px;width:200px; border: none" :src="pictureStorePath">
-    <div style="width: 200px;height: 30px;position:relative;padding: 0;margin: 0; border: none">
-      <span style="position:absolute; left:5px">{{ num }}</span>
+    <div
+      style="width: 200px;height: 235px; position:relative;padding: 0;margin: 0; border: none;text-align: center;line-height: 235px">
+      +
     </div>
   </el-card>
 </template>
@@ -12,13 +12,12 @@
 /* eslint-disable */
 export default {
   props: {
-    num: Number,
+    name: String,
     pictureStorePath: String,
   },
   data() {
     return {};
   },
-  methods: {
-  }
+  methods: {}
 }
 </script>

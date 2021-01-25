@@ -26,7 +26,7 @@ import OptionClassManager from "./option/OptionClassManager";
 import GoodOrder from "./unuse/GoodOrder";
 import GoodWanner from "./good/GoodWanner";
 import GoodClassManager from "./good/GoodClassManager";
-import DeskSet from "./desk/DeskSet";
+import DeskSet from "./page/DeskSet";
 
 
 export default {

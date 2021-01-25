@@ -15,7 +15,7 @@
 
 <script>
 /* eslint-disable */
-import DeskCard from "./DeskCard";
+import DeskCard from "../card/DeskCard";
 export default {
   components: {DeskCard},
   props: {

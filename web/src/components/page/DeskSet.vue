@@ -28,9 +28,9 @@
 </template>
 <script>
 /* eslint-disable */
-import DeskList from "./DeskList";
-import GoodCard from "../good/GoodCard";
-import GoodClass from "../good_class/GoodClass";
+import DeskList from "../list/DeskList";
+import GoodCard from "../card/GoodCard";
+import GoodClass from "../manager/GoodClass";
 // todo: 这个文件的 el-main 应该可以提出来
 export default {
   name: 'DeskShower',

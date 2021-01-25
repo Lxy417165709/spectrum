@@ -13,7 +13,7 @@
 
 <script>
 /* eslint-disable */
-import GoodClassCard from "./GoodClassCard";
+import GoodClassCard from "../card/GoodClassCard";
 export default {
   components: {GoodClassCard},
   props: {
