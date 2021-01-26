@@ -16,6 +16,9 @@
     <el-tab-pane label="桌位管理" name="9">
       <DeskSet/>
     </el-tab-pane>
+    <el-tab-pane label="商品管理" name="10">
+      <GoodClass :goodClasses="goodClasses" :isEditMode="true"/>
+    </el-tab-pane>
   </el-tabs>
 </template>
 <script>
@@ -27,12 +30,15 @@ import GoodOrder from "./unuse/GoodOrder";
 import GoodWanner from "./good/GoodWanner";
 import GoodClassManager from "./good/GoodClassManager";
 import DeskSet from "./page/DeskSet";
+import GoodClass from "./manager/GoodClass";
+import GoodCard from "./card/GoodCard";
 
 
 export default {
 
   name: "panel",
   components: {
+    GoodClass,
     GoodAdder,
     OptionClassManager,
     GoodOrder,
@@ -42,7 +48,48 @@ export default {
   },
   data() {
     return {
-      activeName: 'second'
+      activeName: 'second',
+      goodClasses: [
+        {
+          name: "奶茶系列",
+          goods: [
+            {
+              component: GoodCard,
+              name: "波霸奶茶",
+            },
+            {
+              component: GoodCard,
+              name: "红豆奶茶",
+            }
+          ]
+        },
+        {
+          name: "水果茶系列",
+          goods: [
+            {
+              component: GoodCard,
+              name: "超神水果茶",
+            },
+            {
+              component: GoodCard,
+              name: "我爱水果茶",
+            }
+          ]
+        },
+        {
+          name: "小吃系列",
+          goods: [
+            {
+              component: GoodCard,
+              name: "炸鸡",
+            },
+            {
+              component: GoodCard,
+              name: "薯条",
+            }
+          ]
+        }
+      ],
     };
   },
   methods: {

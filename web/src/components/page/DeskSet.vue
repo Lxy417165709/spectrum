@@ -20,7 +20,7 @@
                    @passViewMode="changeToGoodClassListMode"></desk-list>
       </div>
       <div v-show="viewMode !== 0">
-        <good-class :goodClasses="goodClasses" ref="goodClassSon"></good-class>
+        <good-class :goodClasses="goodClasses" ref="goodClassSon" :isEditMode="false" @turnToDeskListMode="turnToDeskListMode"></good-class>
       </div>
 
     </el-main>
@@ -137,6 +137,9 @@ export default {
       this.curDeskIndex = deskIndex
       console.log("test",this.curDeskIndex,this.viewMode,this.goodClasses)
     },
+    turnToDeskListMode(){
+      this.viewMode = 0
+    }
   }
 }
 </script>
