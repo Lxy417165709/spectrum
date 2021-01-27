@@ -19,6 +19,9 @@
     <el-tab-pane label="商品管理" name="10">
       <GoodClass :goodClasses="goodClasses" :isEditMode="true" :hasFather="false"/>
     </el-tab-pane>
+    <el-tab-pane label="商品编辑" name="11">
+      <GoodEditor/>
+    </el-tab-pane>
   </el-tabs>
 </template>
 <script>
@@ -32,12 +35,14 @@ import GoodClassManager from "./good/GoodClassManager";
 import DeskSet from "./page/DeskSet";
 import GoodClass from "./manager/GoodClass";
 import GoodCard from "./card/GoodCard";
+import GoodEditor from "./editor/GoodEditor";
 
 
 export default {
 
   name: "panel",
   components: {
+    GoodEditor,
     GoodClass,
     GoodAdder,
     OptionClassManager,
