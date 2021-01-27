@@ -2,7 +2,8 @@
 <template>
   <div>
     <el-row style="height: 40px;margin-left:10px;margin-bottom: 10px">
-      <el-button v-show="viewMode === 1 && hasFather || viewMode === 2" style="height: 40px" @click="handleButtonClick" type="primary">
+      <el-button v-show="viewMode === 1 && hasFather || viewMode === 2" style="height: 40px" @click="handleButtonClick"
+                 type="primary">
         退回
       </el-button>
     </el-row>
@@ -12,8 +13,22 @@
     </div>
     <div v-show="viewMode === 2">
       <good-list v-if="curGoodClassIndex!==-1" :isEditMode="isEditMode" :goods="goodClasses[curGoodClassIndex].goods"
-                 @turnToGoodClassListMode="turnToGoodClassListMode"></good-list>
+                 @turnToGoodClassListMode="turnToGoodClassListMode" @openGoodEditor="openGoodEditor"></good-list>
     </div>
+
+    <!--    :before-close="handleClose"-->
+    <el-dialog
+      title="商品添加/编辑"
+      :visible.sync="goodEditorVisible"
+      width="30%">
+      <!--      <span>这是一段信息</span>-->
+
+      <!--      <span slot="footer" class="dialog-footer">-->
+      <!--        <el-button @click="dialogVisible = false">取 消</el-button>-->
+      <!--        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>-->
+      <!--      </span>-->
+      <good-editor></good-editor>
+    </el-dialog>
   </div>
 </template>
 
@@ -21,10 +36,11 @@
 /* eslint-disable */
 import GoodClassList from "../list/GoodClassList";
 import GoodList from "../list/GoodList";
+import GoodEditor from "../editor/GoodEditor";
 
 export default {
   name: "GoodClass",
-  components: {GoodList, GoodClassList},
+  components: {GoodEditor, GoodList, GoodClassList},
   props: {
     goodClasses: Array,
     isEditMode: Boolean,
@@ -35,6 +51,7 @@ export default {
   data() {
     return {
       viewMode: 1,
+      goodEditorVisible: false,
       curGoodClassIndex: -1,
     }
   },
@@ -53,6 +70,9 @@ export default {
       if (this.viewMode === 2) {
         this.viewMode = 1
       }
+    },
+    openGoodEditor() {
+      this.goodEditorVisible = true
     }
   }
 }
