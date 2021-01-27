@@ -17,7 +17,7 @@
       <DeskSet/>
     </el-tab-pane>
     <el-tab-pane label="商品管理" name="10">
-      <GoodClass :goodClasses="goodClasses" :isEditMode="true"/>
+      <GoodClass :goodClasses="goodClasses" :isEditMode="true" :hasFather="false"/>
     </el-tab-pane>
   </el-tabs>
 </template>

@@ -1,8 +1,10 @@
 <!-- eslint-disable -->
 <template>
   <div>
-    <el-row style="height: 40px;background-color: #99a9bf;margin-left:10px;margin-bottom: 10px">
-      <el-button style="height: 40px" @click="handleButtonClick">退回</el-button>
+    <el-row style="height: 40px;margin-left:10px;margin-bottom: 10px">
+      <el-button v-show="viewMode === 1 && hasFather || viewMode === 2" style="height: 40px" @click="handleButtonClick" type="primary">
+        退回
+      </el-button>
     </el-row>
     <div v-show="viewMode === 1">
       <good-class-list :goodClasses="goodClasses" :isEditMode="isEditMode"
@@ -26,6 +28,7 @@ export default {
   props: {
     goodClasses: Array,
     isEditMode: Boolean,
+    hasFather: Boolean,
   },
   mounted() {
   },
@@ -45,7 +48,7 @@ export default {
     },
     handleButtonClick() {
       if (this.viewMode === 1) {
-        this.$emit("turnToDeskListMode")
+        this.$emit("turnToFatherMode")
       }
       if (this.viewMode === 2) {
         this.viewMode = 1

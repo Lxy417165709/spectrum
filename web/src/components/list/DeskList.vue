@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     handleDeskCardClick(deskIndex) {
-      this.$emit("passViewMode", deskIndex)
+      this.$emit("turnToGoodClassListMode", deskIndex)
     },
   }
 }

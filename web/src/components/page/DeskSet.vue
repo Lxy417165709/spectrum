@@ -16,11 +16,15 @@
       <!--            {{ curGoodClassIndex === -1 ? '' : " - " + goodClasses[curGoodClassIndex].name }}-->
       <!--            </span>-->
       <div v-show="viewMode === 0">
+        <el-row style="height: 40px;margin-left:10px;margin-bottom: 10px;line-height: 40px">
+          <span>{{ deskSets[curDeskSetIndex].name }}</span>
+        </el-row>
         <desk-list :desks="deskSets[curDeskSetIndex].desks"
-                   @passViewMode="changeToGoodClassListMode"></desk-list>
+                   @turnToGoodClassListMode="turnToGoodClassListMode"></desk-list>
       </div>
       <div v-show="viewMode !== 0">
-        <good-class :goodClasses="goodClasses" ref="goodClassSon" :isEditMode="false" @turnToDeskListMode="turnToDeskListMode"></good-class>
+        <good-class :goodClasses="goodClasses" ref="goodClassSon" :isEditMode="false"
+                    @turnToFatherMode="turnToDeskListMode" :hasFather="true"></good-class>
       </div>
 
     </el-main>
@@ -132,12 +136,12 @@ export default {
       this.curDeskIndex = -1
       this.$refs.goodClassSon.viewMode = 1; // 父传子
     },
-    changeToGoodClassListMode(deskIndex) {
+    turnToGoodClassListMode(deskIndex) {
       this.viewMode = 1
       this.curDeskIndex = deskIndex
-      console.log("test",this.curDeskIndex,this.viewMode,this.goodClasses)
+      console.log("test", this.curDeskIndex, this.viewMode, this.goodClasses)
     },
-    turnToDeskListMode(){
+    turnToDeskListMode() {
       this.viewMode = 0
     }
   }
