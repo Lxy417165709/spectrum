@@ -3,15 +3,7 @@
   <el-form ref="form" label-width="80px">
     <el-form-item label="商品名">{{ good.name }}</el-form-item>
 
-
-    <!--    todo: 这里要提出一个小组件 -->
-    <el-form-item label="照片">
-      <el-image :src="'api/file/' + good.pictureStorePath"
-                style="width: 100px; height: 100px;padding-top: 15px"></el-image>
-    </el-form-item>
-
-
-    <el-form-item label="价格">{{ good.price }}</el-form-item>
+      <good-size-editor style="margin-bottom: 20px"></good-size-editor>
 
     <el-form-item label="附属选项">
       <el-select v-model="selectableElement.curAttachOptionName" placeholder="附属选项">
@@ -45,19 +37,22 @@
         {{ element.name }}
       </el-tag>
     </el-form-item>
-
+    <el-form-item>
+      <el-button type="primary">确定</el-button>
+    </el-form-item>
   </el-form>
 </template>
 
 <script>
 /* eslint-disable */
+import GoodSizeEditor from "./GoodSizeEditor";
 export default {
   name: "GoodEditor",
+  components: {GoodSizeEditor},
   data() {
     return {
       good: {
         name: "波霸奶茶",
-        price: 18.0,
         attachElements: [
           {
             name: "冰量",
