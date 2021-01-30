@@ -29,19 +29,7 @@
         {{ sizeInfo.name }}
       </el-radio>
     </el-form-item>
-    <!--    todo: 优惠组件可以提出来-->
-    <el-form-item label="优惠">
-      <el-radio v-model="curFavorIndex" v-for="(favor,index) in favors" :label="index"
-                :key="index">
-        {{ favor.name }}
-      </el-radio>
-    </el-form-item>
-    <component :is="favors[curFavorIndex].component" @confirmFavor="confirmFavor"></component>
-    <el-form-item label="已选折扣">
-      <el-tag v-for="(favor,index) in selectedFavors" :key="index" closable style="margin-right: 10px">
-        {{ favor.name }}
-      </el-tag>
-    </el-form-item>
+    <discount-editor></discount-editor>
 
     <el-form-item label="价格">
       <span>{{ good.price }}</span>
@@ -58,37 +46,14 @@
 <script>
 /* eslint-disable */
 import DiscountComponent from "../baby/DiscountComponent";
+import DiscountEditor from "./DiscountEditor";
 
 export default {
   name: "GoodSellEditor",
+  components: {DiscountEditor},
   data() {
     return {
-      selectedFavors: [
-        {
-          name: "打 8 折"
-        },
-        {
-          name: "满 100 减 6"
-        },
-      ],
       needAttachGood: false,
-      curFavorIndex: 0,
-      // todo: favor 被选中后，要展示 favor 对应的组件
-      favors: [
-        {
-          name: "无",
-        },
-        {
-          name: "打折",
-          component: DiscountComponent
-        },
-        {
-          name: "满减",
-        },
-        {
-          name: "免单",
-        }
-      ],
       good: {
         price: 19,
         curSizeIndex: 0,
@@ -177,9 +142,6 @@ export default {
     needAddAttachGood() {
       this.needAttachGood = true
     },
-    confirmFavor(favor) {
-      this.selectedFavors.push(favor)
-    }
   }
 }
 </script>

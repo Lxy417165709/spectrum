@@ -22,6 +22,9 @@
     <el-tab-pane label="商品销售" name="11">
       <GoodSellEditor></GoodSellEditor>
     </el-tab-pane>
+    <el-tab-pane label="订单" name="12">
+      <Order></Order>
+    </el-tab-pane>
   </el-tabs>
 </template>
 <script>
@@ -36,12 +39,14 @@ import DeskSet from "./page/DeskSet";
 import GoodClass from "./manager/GoodClass";
 import GoodCard from "./card/GoodCard";
 import GoodSellEditor from "./editor/GoodSellEditor";
+import Order from "./page/Order";
 
 
 export default {
 
   name: "panel",
   components: {
+    Order,
     GoodSellEditor,
     GoodClass,
     GoodAdder,
