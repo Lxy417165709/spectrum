@@ -16,9 +16,9 @@
     <!--    2. 桌类详情-->
     <el-main>
       <div v-show="viewMode === 0">
-        <el-row style="height: 40px;margin-left:10px;margin-bottom: 10px;line-height: 40px">
-          <span>{{ deskSets[curDeskSetIndex].name }}</span>
+        <el-row style="height: 40px;margin-left:10px;margin-bottom: 10px">
         </el-row>
+        <el-divider content-position="left">{{ deskSets[curDeskSetIndex].name }}</el-divider>
         <desk-list :desks="deskSets[curDeskSetIndex].desks"
                    @turnToGoodClassListMode="turnToGoodClassListMode"></desk-list>
       </div>

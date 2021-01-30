@@ -1,8 +1,9 @@
 <!-- eslint-disable -->
 <template>
   <el-form label-width="80px">
-    <el-form-item label="照片">
-      <img src="" style="width: 200px;height: 200px;margin-top: 10px">
+    <el-form-item label="照片" >
+      <img style="height:200px;width:200px; border: none;margin-top: 12px" >
+
     </el-form-item>
     <el-form-item label="名字">
       <span>{{ good.name }}</span>

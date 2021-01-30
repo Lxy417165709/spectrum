@@ -17,6 +17,7 @@
     "axios": "^0.20.0",
     "element-ui": "^2.13.2",
     "vue": "^2.5.2",
+    "vue-contextmenu": "^1.5.10",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
