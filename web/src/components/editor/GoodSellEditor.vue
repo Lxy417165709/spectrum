@@ -29,6 +29,7 @@
         {{ sizeInfo.name }}
       </el-radio>
     </el-form-item>
+    <!--    todo: 优惠组件可以提出来-->
     <el-form-item label="优惠">
       <el-radio v-model="curFavorIndex" v-for="(favor,index) in favors" :label="index"
                 :key="index">
