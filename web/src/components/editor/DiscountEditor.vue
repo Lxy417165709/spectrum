@@ -20,6 +20,8 @@
 <script>
 /* eslint-disable */
 import DiscountComponent from "../baby/DiscountComponent";
+import FullReductionComponent from "../baby/FullReductionComponent";
+import FreeComponent from "../baby/FreeComponent";
 
 export default {
   name: "DiscountEditor",
@@ -34,7 +36,6 @@ export default {
         },
       ],
       curFavorIndex: 0,
-      // todo: favor 被选中后，要展示 favor 对应的组件
       favors: [
         {
           name: "无",
@@ -45,9 +46,11 @@ export default {
         },
         {
           name: "满减",
+          component: FullReductionComponent
         },
         {
           name: "免单",
+          component: FreeComponent
         }
       ],
     }

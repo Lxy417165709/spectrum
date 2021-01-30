@@ -61,11 +61,13 @@
             </el-table-column>
             <el-table-column
               prop="beginTime"
-              label="开桌时间">
+              label="开桌时间"
+              width="180px">
             </el-table-column>
             <el-table-column
               prop="endTime"
-              label="关桌时间">
+              label="关桌时间"
+              width="180px">
             </el-table-column>
             <el-table-column
               prop="duration"
@@ -84,8 +86,15 @@
               label="原花费">
             </el-table-column>
             <el-table-column
-              prop="favor"
-              label="优惠">
+              label="优惠"
+              width="180px">
+              <template slot-scope="scope">
+                <el-tag v-for="(favor,index) in scope.row.favors" :key="index" style="margin-right: 10px">
+                  {{
+                    favor.name
+                  }}
+                </el-tag>
+              </template>
             </el-table-column>
             <el-table-column
               prop="expense"
@@ -118,8 +127,16 @@
               label="原花费">
             </el-table-column>
             <el-table-column
-              prop="favor"
-              label="优惠">
+              label="优惠"
+              width="180px">
+              <template slot-scope="scope">
+                <!--            todo: 这个可以提出为一个组件 -->
+                <el-tag v-for="(favor,index) in scope.row.favors" :key="index" style="margin-right: 10px">
+                  {{
+                    favor.name
+                  }}
+                </el-tag>
+              </template>
             </el-table-column>
             <el-table-column
               prop="expense"
@@ -209,7 +226,14 @@ export default {
             countWay: "计时",
             price: 18,
             nonFavorExpense: 36,
-            favor: "9折",
+            favors: [
+              {
+                name: "8 折"
+              },
+              {
+                name: "满 100 减 6"
+              }
+            ],
             expense: 32.4
 
           }
@@ -218,13 +242,27 @@ export default {
           {
             name: "波霸奶茶",
             nonFavorExpense: 18.0,
-            favor: "8 折",
+            favors: [
+              {
+                name: "8 折"
+              },
+              {
+                name: "满 100 减 6"
+              }
+            ],
             expense: 14.4,
           },
           {
             name: "红豆奶茶",
             nonFavorExpense: 15.0,
-            favor: "10 折",
+            favors: [
+              {
+                name: "9 折"
+              },
+              {
+                name: "满 1090 减 6"
+              }
+            ],
             expense: 15,
           }
         ]
