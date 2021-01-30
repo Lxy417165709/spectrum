@@ -1,9 +1,10 @@
 <!-- eslint-disable -->
+<!-- todo: 这里要实现下，默认选中第一个 tab-->
 <template>
-  <el-tabs v-model="curSizeInfoName" type="border-card" @tab-click="" editable @edit="handleTabsEdit"
+  <el-tabs v-model="curSizeIndexName" type="border-card" @tab-click="" editable @edit="handleTabsEdit"
            @tab-add="handleClick">
     <el-tab-pane v-for="(sizeInfo,index) in sizeInfos" :label="sizeInfo.name" :name="sizeInfo.name" :key="index">
-      <good-size-info-editor :name="sizeInfo.name"></good-size-info-editor>
+      <good-size-info-editor :name="sizeInfo.name" :price="sizeInfo.price"></good-size-info-editor>
     </el-tab-pane>
   </el-tabs>
 </template>
@@ -16,24 +17,20 @@ import GoodSizeInfoEditor from "./GoodSizeInfoEditor";
 export default {
   name: "GoodSizeEditor",
   components: {GoodSizeInfoEditor},
+  props: {
+    curSizeIndex: Number,
+    sizeInfos: Array
+  },
+  mounted() {
+    // this.$nextTick(()=>{
+    //   this.curSizeIndexName = this.sizeInfos[this.curSizeIndex].name
+    // })
+
+  },
   data() {
     return {
-      curSizeInfoName: "小规格",
       addTabCount: 0,
-      sizeInfos: [
-        {
-          name: "小规格",
-          price: 18.0,
-        },
-        {
-          name: "中规格",
-          price: 20.0,
-        },
-        {
-          name: "大规格",
-          price: 25.0,
-        }
-      ]
+      curSizeIndexName: ""
     }
   },
   methods: {

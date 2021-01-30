@@ -4,18 +4,15 @@
     <el-col v-for="(good,goodIndex) in goods" :key="goodIndex"
             style="height: 300px; width: 202px; margin-left: 10px; border: none">
       <!--      todo: 为什么放在这里面才能右键呢-->
-      <div @contextmenu="showMenu">
-        <good-card :name="good.name" :pictureStorePath="good.pictureStorePath"></good-card>
+      <div @contextmenu="showMenu(good,$event)">
+        <good-card :good="good"></good-card>
       </div>
-
     </el-col>
     <el-col v-if="isEditMode" style="height: 300px; width: 202px; margin-left: 10px; border: none">
       <good-spacial-card @click.native="handleSpecialCardClick"></good-spacial-card>
     </el-col>
 
-
-    <vue-context-menu :contextMenuData="contextMenuData" @home="home" @deletedata="deletedata"></vue-context-menu>
-
+    <vue-context-menu :contextMenuData="contextMenuData" @openEditor="openEditor"></vue-context-menu>
   </el-row>
 
 </template>
@@ -27,15 +24,6 @@ import GoodSpacialCard from "../card/GoodSpacialCard";
 
 export default {
   components: {GoodSpacialCard, GoodCard},
-  watch: {
-    visible(value) {
-      if (value) {
-        document.body.addEventListener('click', this.closeMenu)
-      } else {
-        document.body.removeEventListener('click', this.closeMenu)
-      }
-    }
-  },
   props: {
     goods: Array,
     isEditMode: Boolean
@@ -44,6 +32,7 @@ export default {
     return {
       contextMenuData: {
         menuName: 'demo',
+        good: {},
         //菜单显示的位置
         axis: {
           x: null,
@@ -51,13 +40,9 @@ export default {
         },
         //菜单选项
         menulists: [{
-          fnHandler: 'home', //绑定事件
-          icoName: 'fa fa-home fa-fw', //icon图标
-          btnName: '回到主页' //菜单名称
-        }, {
-          fnHandler: 'deletedata',
-          icoName: 'fa fa-minus-square-o  fa-fw',
-          btnName: '删除布局'
+          fnHandler: 'openEditor', //绑定事件
+          // icoName: 'fa fa-home fa-fw', //icon图标
+          btnName: '编辑' //菜单名称
         }]
       }
     };
@@ -68,23 +53,20 @@ export default {
     },
     handleSpecialCardClick() {
       console.log("handleSpecialCardClick")
-      this.$emit("openGoodEditor")
+      this.$emit("openGoodEditor", {})
     },
-    showMenu() {
-      event.preventDefault()
-      let x = event.clientX
-      let y = event.clientY
-      // Get the current location
+    showMenu(good, e) {
+      e.preventDefault()
+      this.contextMenuData.good = good
       this.contextMenuData.axis = {
-        x, y
+        x: e.clientX,
+        y: e.clientY
       }
     },
-    home() {
-      alert("主页")
+    openEditor() {
+      console.log("this.contextMenuData.good", this.contextMenuData.good)
+      this.$emit("openGoodEditor", this.contextMenuData.good)
     },
-    deletedata() {
-      console.log('delete!')
-    }
   }
 }
 </script>

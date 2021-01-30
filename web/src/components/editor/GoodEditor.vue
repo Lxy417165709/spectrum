@@ -2,7 +2,9 @@
 <template>
   <el-form ref="form" label-width="80px">
     <el-form-item label="商品名">{{ good.name }}</el-form-item>
-    <good-size-editor style="margin-bottom: 20px"></good-size-editor>
+    <!--    todo: 这里会报错，因为子组件会修改 curSizeIndex..-->
+    <good-size-editor style="margin-bottom: 20px" ref="goodSizeEditor" :curSizeIndex="good.curSizeIndex"
+                      :sizeInfos="good.sizeInfos"></good-size-editor>
     <el-form-item label="附属选项">
       <el-select v-model="selectableElement.curAttachOptionName" placeholder="附属选项">
         <el-option v-for="(element,index) in selectableElement.attachElements" :key="index"
@@ -44,50 +46,18 @@
 <script>
 /* eslint-disable */
 import GoodSizeEditor from "./GoodSizeEditor";
+import test from "../../common/test/test";
 
 export default {
   name: "GoodEditor",
   components: {GoodSizeEditor},
+  mounted() {
+    this.selectableElement = test.selectableElement
+  },
   data() {
     return {
-      good: {
-        name: "波霸奶茶",
-        attachElements: [
-          {
-            name: "冰量",
-            elementType: 1,
-          },
-          {
-            name: "温度",
-            elementType: 1,
-          },
-          {
-            name: "珍珠",
-            elementType: 2,
-          }
-        ]
-      },
-      selectableElement: {
-        curAttachOptionName: "",
-        curAttachGoodName: "",
-
-        attachElements: [
-          {
-            name: "冰量",
-            elementType: 1,
-          },
-          {
-            name: "温度",
-            elementType: 1,
-          },
-          {
-            name: "珍珠",
-            elementType: 2,
-          }
-        ]
-      }
-
-
+      good: {},
+      selectableElement: {}
     }
   }
 }

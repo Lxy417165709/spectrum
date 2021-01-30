@@ -30,13 +30,6 @@ export default {
     goodClasses: Array,
     isEditMode: Boolean
   },
-  mounted() {
-    console.log(this.classType)
-    for (let i = 0; i < this.goodClasses.length; i++) {
-      console.log(i, this.goodClasses[i])
-    }
-    // console.log(this.goodClasses)
-  },
   data() {
     return {};
   },

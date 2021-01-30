@@ -17,10 +17,11 @@
       <DeskSet/>
     </el-tab-pane>
     <el-tab-pane label="商品管理" name="10">
+      <!--      todo: 不要用 props 吧，用Props组件内部修改属性时，会报错-->
       <GoodClass :goodClasses="goodClasses" :isEditMode="true" :hasFather="false"/>
     </el-tab-pane>
     <el-tab-pane label="商品销售" name="11">
-      <GoodSellEditor></GoodSellEditor>
+      <GoodSellEditor :good="goodClasses[0].goods[0]"></GoodSellEditor>
     </el-tab-pane>
     <el-tab-pane label="订单" name="12">
       <Order></Order>
@@ -40,6 +41,7 @@ import GoodClass from "./manager/GoodClass";
 import GoodCard from "./card/GoodCard";
 import GoodSellEditor from "./editor/GoodSellEditor";
 import Order from "./page/Order";
+import test from "../common/test/test";
 
 
 export default {
@@ -56,82 +58,14 @@ export default {
     GoodClassManager,
     DeskSet,
   },
+  mounted() {
+    this.goodClasses = test.goodClasses
+  },
   data() {
     return {
       activeName: 'second',
-      goodClasses: [
-        {
-          name: "奶茶系列",
-          classType: 1,
-          goods: [
-            {
-              component: GoodCard,
-              name: "波霸奶茶",
-            },
-            {
-              component: GoodCard,
-              name: "红豆奶茶",
-            }
-          ]
-        },
-        {
-          name: "水果茶系列",
-          classType: 1,
-          goods: [
-            {
-              component: GoodCard,
-              name: "超神水果茶",
-            },
-            {
-              component: GoodCard,
-              name: "我爱水果茶",
-            }
-          ]
-        },
-        {
-          name: "小吃系列",
-          classType: 1,
-          goods: [
-            {
-              component: GoodCard,
-              name: "炸鸡",
-            },
-            {
-              component: GoodCard,
-              name: "薯条",
-            }
-          ]
-        },
-        {
-          name: "附属选项",
-          classType: 2,
-          goods: [
-            {
-              component: GoodCard,
-              name: "冰量",
-            },
-            {
-              component: GoodCard,
-              name: "温度",
-            }
-          ]
-        },
-        {
-          name: "附属商品",
-          classType: 3,
-          goods: [
-            {
-              component: GoodCard,
-              name: "珍珠",
-            },
-            {
-              component: GoodCard,
-              name: "红豆",
-            }
-          ]
-        }
-      ],
-    };
+      goodClasses: [],
+    }
   },
   methods: {
     handleClick(tab, event) {

@@ -29,18 +29,13 @@
       title="商品添加/编辑"
       :visible.sync="goodEditorVisible"
       width="30%">
-      <!--      <span>这是一段信息</span>-->
-
-      <!--      <span slot="footer" class="dialog-footer">-->
-      <!--        <el-button @click="dialogVisible = false">取 消</el-button>-->
-      <!--        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>-->
-      <!--      </span>-->
-      <good-editor></good-editor>
+      <good-editor ref="goodEditor"></good-editor>
     </el-dialog>
 
     <el-dialog
       title="商品类添加/编辑"
       :visible.sync="goodClassEditorVisible"
+
       width="30%">
       <good-class-editor></good-class-editor>
     </el-dialog>
@@ -53,6 +48,7 @@ import GoodClassList from "../list/GoodClassList";
 import GoodList from "../list/GoodList";
 import GoodEditor from "../editor/GoodEditor";
 import GoodClassEditor from "../editor/GoodClassEditor";
+import test from "../../common/test/test";
 
 export default {
   name: "GoodClass",
@@ -62,8 +58,6 @@ export default {
     isEditMode: Boolean,
     hasFather: Boolean,
   },
-  mounted() {
-  },
   data() {
     return {
       viewMode: 1,
@@ -71,6 +65,8 @@ export default {
       goodClassEditorVisible: false,
       curGoodClassIndex: -1,
     }
+  },
+  mounted() {
   },
   methods: {
     turnToGoodListMode(mode, goodClassIndex) {
@@ -88,13 +84,15 @@ export default {
         this.viewMode = 1
       }
     },
-    openGoodEditor() {
+    openGoodEditor(good) {
       this.goodEditorVisible = true
+      this.$nextTick(() => {
+        this.$refs.goodEditor.good = good
+      })
     },
     openGoodClassEditor() {
       this.goodClassEditorVisible = true
     }
-
   }
 }
 </script>

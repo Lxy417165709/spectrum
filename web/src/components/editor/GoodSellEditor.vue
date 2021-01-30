@@ -1,8 +1,8 @@
 <!-- eslint-disable -->
 <template>
   <el-form label-width="80px">
-    <el-form-item label="照片" >
-      <img style="height:200px;width:200px; border: none;margin-top: 12px" >
+    <el-form-item label="照片">
+      <img style="height:200px;width:200px; border: none;margin-top: 12px">
 
     </el-form-item>
     <el-form-item label="名字">
@@ -46,97 +46,17 @@
 
 <script>
 /* eslint-disable */
-import DiscountComponent from "../baby/DiscountComponent";
 import DiscountEditor from "./DiscountEditor";
 
 export default {
   name: "GoodSellEditor",
   components: {DiscountEditor},
+  props: {
+    good: Object
+  },
   data() {
     return {
       needAttachGood: false,
-      good: {
-        price: 19,
-        curSizeIndex: 0,
-        name: "波霸奶茶",
-        attachElements: [
-          {
-            name: "冰量",
-            elementType: 1,
-            curSizeIndex: 0,
-            sizeInfos: [
-              {
-                name: "少冰",
-                price: 0,
-              },
-              {
-                name: "中冰",
-                price: 0,
-              },
-              {
-                name: "多冰",
-                price: 0,
-              },
-            ]
-          },
-          {
-            name: "温度",
-            curSizeIndex: 0,
-            elementType: 1,
-            sizeInfos: [
-              {
-                name: "冷饮",
-                price: 0,
-              },
-              {
-                name: "常温",
-                price: 0,
-              },
-              {
-                name: "热饮",
-                price: 0,
-              },
-            ]
-          },
-          {
-            name: "珍珠",
-            elementType: 2,
-            curSizeIndex: 0,
-            sizeInfos: [
-              {
-                name: "无",
-                price: 0,
-              },
-              {
-                name: "少量",
-                price: 1,
-              },
-              {
-                name: "中量",
-                price: 1,
-              },
-              {
-                name: "大量",
-                price: 1,
-              },
-            ]
-          }
-        ],
-        sizeInfos: [
-          {
-            name: "小规格",
-            price: 18.0,
-          },
-          {
-            name: "中规格",
-            price: 20.0,
-          },
-          {
-            name: "大规格",
-            price: 25.0,
-          }
-        ]
-      }
     }
   },
   methods: {

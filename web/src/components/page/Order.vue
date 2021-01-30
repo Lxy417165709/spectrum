@@ -165,10 +165,14 @@
 <script>
 /* eslint-disable */
 import DiscountEditor from "../editor/DiscountEditor";
+import test from "../../common/test/test";
 
 export default {
   name: "Order",
   components: {DiscountEditor},
+  mounted() {
+    this.order = test.order
+  },
   data() {
     return {
       activeName: "1",
@@ -211,58 +215,7 @@ export default {
       },
       value1: '',
       value2: '',
-      order: {
-        deskInfos: [
-          {
-            name: "桌球",
-            num: 1,
-            beginTime: "2021年01月29日16:08:07",
-            endTime: "2021年01月30日16:08:07",
-            duration: "2小时",
-            countWay: "计时",
-            price: 18,
-            nonFavorExpense: 36,
-            favors: [
-              {
-                name: "8 折"
-              },
-              {
-                name: "满 100 减 6"
-              }
-            ],
-            expense: 32.4
-
-          }
-        ],
-        goodInfos: [
-          {
-            name: "波霸奶茶",
-            nonFavorExpense: 18.0,
-            favors: [
-              {
-                name: "8 折"
-              },
-              {
-                name: "满 100 减 6"
-              }
-            ],
-            expense: 14.4,
-          },
-          {
-            name: "红豆奶茶",
-            nonFavorExpense: 15.0,
-            favors: [
-              {
-                name: "9 折"
-              },
-              {
-                name: "满 1090 减 6"
-              }
-            ],
-            expense: 15,
-          }
-        ]
-      }
+      order: {},
     }
   }
 }
