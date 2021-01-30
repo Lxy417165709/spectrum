@@ -121,7 +121,30 @@ export default {
                   price: 1,
                 },
               ]
-            }
+            },
+            {
+              curSizeIndex: 0,
+              name: "红豆",
+              elementType: 2,
+              sizeInfos: [
+                {
+                  name: "无",
+                  price: 0,
+                },
+                {
+                  name: "少量",
+                  price: 1,
+                },
+                {
+                  name: "中量",
+                  price: 1,
+                },
+                {
+                  name: "大量",
+                  price: 1,
+                },
+              ]
+            },
           ],
           sizeInfos: [
             {
