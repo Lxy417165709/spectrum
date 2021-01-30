@@ -62,6 +62,7 @@ export default {
       goodClasses: [
         {
           name: "奶茶系列",
+          classType: 1,
           goods: [
             {
               component: GoodCard,
@@ -75,6 +76,7 @@ export default {
         },
         {
           name: "水果茶系列",
+          classType: 1,
           goods: [
             {
               component: GoodCard,
@@ -88,6 +90,7 @@ export default {
         },
         {
           name: "小吃系列",
+          classType: 1,
           goods: [
             {
               component: GoodCard,
@@ -96,6 +99,34 @@ export default {
             {
               component: GoodCard,
               name: "薯条",
+            }
+          ]
+        },
+        {
+          name: "附属选项",
+          classType: 2,
+          goods: [
+            {
+              component: GoodCard,
+              name: "冰量",
+            },
+            {
+              component: GoodCard,
+              name: "温度",
+            }
+          ]
+        },
+        {
+          name: "附属商品",
+          classType: 3,
+          goods: [
+            {
+              component: GoodCard,
+              name: "珍珠",
+            },
+            {
+              component: GoodCard,
+              name: "红豆",
             }
           ]
         }

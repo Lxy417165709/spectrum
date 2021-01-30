@@ -40,7 +40,6 @@
           </template>
 
           <el-divider content-position="left">桌费</el-divider>
-          <!--todo: 表项内容有些不是纯文本，可能是按钮、标签-->
           <el-table
             :data="order.deskInfos"
             border
@@ -108,7 +107,6 @@
           </el-table>
 
           <el-divider content-position="left">商品费</el-divider>
-          <!--todo: 表项内容有些不是纯文本，可能是按钮、标签-->
           <el-table
             :data="order.goodInfos"
             border
@@ -151,13 +149,11 @@
 
 
           <el-divider>优惠设置</el-divider>
-          <!--          todo: 这里要抽出一个组件-->
           <el-form label-width="80px">
             <discount-editor></discount-editor>
             <el-form-item>
               <el-button type="primary">结账</el-button>
             </el-form-item>
-
           </el-form>
 
         </el-collapse-item>

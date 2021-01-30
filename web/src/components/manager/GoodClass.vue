@@ -8,10 +8,18 @@
       </el-button>
     </el-row>
     <div v-show="viewMode === 1">
+      <el-divider content-position="left">普通商品类</el-divider>
       <good-class-list :goodClasses="goodClasses" :isEditMode="isEditMode"
-                       @turnToGoodListMode="turnToGoodListMode" @openGoodClassEditor="openGoodClassEditor"></good-class-list>
+                       @turnToGoodListMode="turnToGoodListMode" @openGoodClassEditor="openGoodClassEditor"
+                       :classType="1"></good-class-list>
+
+      <el-divider content-position="left" v-if="isEditMode">附属类</el-divider>
+      <good-class-list :goodClasses="goodClasses" :isEditMode="isEditMode"
+                       @turnToGoodListMode="turnToGoodListMode" @openGoodClassEditor="openGoodClassEditor"
+                       :classType="-1" v-if="isEditMode"></good-class-list>
     </div>
     <div v-show="viewMode === 2">
+      <el-divider content-position="left">元素</el-divider>
       <good-list v-if="curGoodClassIndex!==-1" :isEditMode="isEditMode" :goods="goodClasses[curGoodClassIndex].goods"
                  @turnToGoodClassListMode="turnToGoodClassListMode" @openGoodEditor="openGoodEditor"></good-list>
     </div>
@@ -34,12 +42,6 @@
       title="商品类添加/编辑"
       :visible.sync="goodClassEditorVisible"
       width="30%">
-      <!--      <span>这是一段信息</span>-->
-
-      <!--      <span slot="footer" class="dialog-footer">-->
-      <!--        <el-button @click="dialogVisible = false">取 消</el-button>-->
-      <!--        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>-->
-      <!--      </span>-->
       <good-class-editor></good-class-editor>
     </el-dialog>
   </div>
@@ -66,7 +68,7 @@ export default {
     return {
       viewMode: 1,
       goodEditorVisible: false,
-      goodClassEditorVisible:false,
+      goodClassEditorVisible: false,
       curGoodClassIndex: -1,
     }
   },
@@ -90,7 +92,7 @@ export default {
       this.goodEditorVisible = true
     },
     openGoodClassEditor() {
-      this.goodClassEditorVisible=true
+      this.goodClassEditorVisible = true
     }
 
   }
