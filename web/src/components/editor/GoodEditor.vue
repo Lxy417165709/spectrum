@@ -2,9 +2,7 @@
 <template>
   <el-form ref="form" label-width="80px">
     <el-form-item label="商品名">{{ good.name }}</el-form-item>
-
-      <good-size-editor style="margin-bottom: 20px"></good-size-editor>
-
+    <good-size-editor style="margin-bottom: 20px"></good-size-editor>
     <el-form-item label="附属选项">
       <el-select v-model="selectableElement.curAttachOptionName" placeholder="附属选项">
         <el-option v-for="(element,index) in selectableElement.attachElements" :key="index"
@@ -46,6 +44,7 @@
 <script>
 /* eslint-disable */
 import GoodSizeEditor from "./GoodSizeEditor";
+
 export default {
   name: "GoodEditor",
   components: {GoodSizeEditor},

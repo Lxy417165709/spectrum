@@ -9,7 +9,7 @@
       </span>
     </el-col>
     <el-col v-if="isEditMode" style="height: 300px; width: 202px; margin-left: 10px; border: none">
-      <good-class-spacial-card></good-class-spacial-card>
+      <good-class-spacial-card @click.native="openGoodClassEditor"></good-class-spacial-card>
     </el-col>
   </el-row>
 </template>
@@ -30,9 +30,11 @@ export default {
   },
   methods: {
     handleGoodClassCardClick(goodClassIndex) {
-      console.log("handleDeskCardClick")
       this.$emit("turnToGoodListMode", 2, goodClassIndex)
     },
+    openGoodClassEditor() {
+      this.$emit("openGoodClassEditor")
+    }
   }
 }
 </script>

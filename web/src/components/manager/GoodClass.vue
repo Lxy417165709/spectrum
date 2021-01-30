@@ -9,7 +9,7 @@
     </el-row>
     <div v-show="viewMode === 1">
       <good-class-list :goodClasses="goodClasses" :isEditMode="isEditMode"
-                       @turnToGoodListMode="turnToGoodListMode"></good-class-list>
+                       @turnToGoodListMode="turnToGoodListMode" @openGoodClassEditor="openGoodClassEditor"></good-class-list>
     </div>
     <div v-show="viewMode === 2">
       <good-list v-if="curGoodClassIndex!==-1" :isEditMode="isEditMode" :goods="goodClasses[curGoodClassIndex].goods"
@@ -29,6 +29,19 @@
       <!--      </span>-->
       <good-editor></good-editor>
     </el-dialog>
+
+    <el-dialog
+      title="商品类添加/编辑"
+      :visible.sync="goodClassEditorVisible"
+      width="30%">
+      <!--      <span>这是一段信息</span>-->
+
+      <!--      <span slot="footer" class="dialog-footer">-->
+      <!--        <el-button @click="dialogVisible = false">取 消</el-button>-->
+      <!--        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>-->
+      <!--      </span>-->
+      <good-class-editor></good-class-editor>
+    </el-dialog>
   </div>
 </template>
 
@@ -37,10 +50,11 @@
 import GoodClassList from "../list/GoodClassList";
 import GoodList from "../list/GoodList";
 import GoodEditor from "../editor/GoodEditor";
+import GoodClassEditor from "../editor/GoodClassEditor";
 
 export default {
   name: "GoodClass",
-  components: {GoodEditor, GoodList, GoodClassList},
+  components: {GoodClassEditor, GoodEditor, GoodList, GoodClassList},
   props: {
     goodClasses: Array,
     isEditMode: Boolean,
@@ -52,6 +66,7 @@ export default {
     return {
       viewMode: 1,
       goodEditorVisible: false,
+      goodClassEditorVisible:false,
       curGoodClassIndex: -1,
     }
   },
@@ -73,7 +88,11 @@ export default {
     },
     openGoodEditor() {
       this.goodEditorVisible = true
+    },
+    openGoodClassEditor() {
+      this.goodClassEditorVisible=true
     }
+
   }
 }
 </script>

@@ -3,19 +3,19 @@
   <el-tabs v-model="curSizeInfoName" type="border-card" @tab-click="" editable @edit="handleTabsEdit"
            @tab-add="handleClick">
     <el-tab-pane v-for="(sizeInfo,index) in sizeInfos" :label="sizeInfo.name" :name="sizeInfo.name" :key="index">
-      <good-size-info-editor :name="sizeInfo.name"></good-size-info-editor>
+      <desk-size-info-editor :price="sizeInfo.price"></desk-size-info-editor>
     </el-tab-pane>
   </el-tabs>
 </template>
 
 <script>
 /* eslint-disable */
+import DeskSizeInfoEditor from "./DeskSizeInfoEditor";
 import utils from "../../common/utils";
-import GoodSizeInfoEditor from "./GoodSizeInfoEditor";
-
+// todo: 这里变量名、变量内容需要改变下
 export default {
-  name: "GoodSizeEditor",
-  components: {GoodSizeInfoEditor},
+  name: "DeskInfoEditor",
+  components: {DeskSizeInfoEditor},
   data() {
     return {
       curSizeInfoName: "小规格",

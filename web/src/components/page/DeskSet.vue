@@ -1,6 +1,7 @@
 <!-- eslint-disable -->
 <template>
   <el-container style="height: 800px; border: 1px solid #eee">
+    <!--    1. 桌类选择-->
     <el-aside width="200px">
       <el-menu>
         <el-menu-item v-for="(deskSet,deskSetIndex) in deskSets" :key="deskSetIndex"
@@ -8,13 +9,12 @@
           <template slot="title"><i class="el-icon-message"></i><span>{{ deskSet.name }}</span></template>
         </el-menu-item>
       </el-menu>
+      <el-button style="margin-left: 20px;margin-top: 10px" type="primary" @click="handleDeskButtonClick">添加桌位
+      </el-button>
     </el-aside>
+
+    <!--    2. 桌类详情-->
     <el-main>
-      <!--            <span>{{-->
-      <!--                deskSets[curDeskSetIndex].name-->
-      <!--              }} {{ curDeskIndex === -1 ? '' : " - " + deskSets[curDeskSetIndex].desks[curDeskIndex].space.num }}-->
-      <!--            {{ curGoodClassIndex === -1 ? '' : " - " + goodClasses[curGoodClassIndex].name }}-->
-      <!--            </span>-->
       <div v-show="viewMode === 0">
         <el-row style="height: 40px;margin-left:10px;margin-bottom: 10px;line-height: 40px">
           <span>{{ deskSets[curDeskSetIndex].name }}</span>
@@ -26,8 +26,19 @@
         <good-class :goodClasses="goodClasses" ref="goodClassSon" :isEditMode="false"
                     @turnToFatherMode="turnToDeskListMode" :hasFather="true"></good-class>
       </div>
-
     </el-main>
+    <el-dialog
+      title="桌类添加/编辑"
+      :visible.sync="deskSetEditorVisible"
+      width="30%">
+      <!--      <span>这是一段信息</span>-->
+
+      <!--      <span slot="footer" class="dialog-footer">-->
+      <!--        <el-button @click="dialogVisible = false">取 消</el-button>-->
+      <!--        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>-->
+      <!--      </span>-->
+      <desk-set-editor></desk-set-editor>
+    </el-dialog>
   </el-container>
 </template>
 <script>
@@ -35,13 +46,15 @@
 import DeskList from "../list/DeskList";
 import GoodCard from "../card/GoodCard";
 import GoodClass from "../manager/GoodClass";
-// todo: 这个文件的 el-main 应该可以提出来
+import DeskSetEditor from "../editor/DeskSetEditor";
+
 export default {
   name: 'DeskShower',
-  components: {GoodClass, DeskList},
+  components: {DeskSetEditor, GoodClass, DeskList},
   data() {
     return {
       viewMode: 0, // todo: 这里可以弄个枚举
+      deskSetEditorVisible: false,
       deskSets: [
         {
           name: "台球桌",
@@ -140,6 +153,9 @@ export default {
       this.viewMode = 1
       this.curDeskIndex = deskIndex
       console.log("test", this.curDeskIndex, this.viewMode, this.goodClasses)
+    },
+    handleDeskButtonClick() {
+      this.deskSetEditorVisible = true
     },
     turnToDeskListMode() {
       this.viewMode = 0
