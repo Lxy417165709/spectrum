@@ -12,7 +12,10 @@
       <good-spacial-card @click.native="handleSpecialCardClick"></good-spacial-card>
     </el-col>
 
-    <vue-context-menu :contextMenuData="contextMenuData" @openEditor="openEditor" @openGoodSellEditor="openGoodSellEditor"></vue-context-menu>
+    <vue-context-menu v-if='isEditMode' :contextMenuData="editContextMenuData"
+                      @openGoodInfoEditor="openGoodInfoEditor"></vue-context-menu>
+    <vue-context-menu v-if='!isEditMode' :contextMenuData="notEditContextMenuData"
+                      @openGoodSellEditor="openGoodSellEditor"></vue-context-menu>
   </el-row>
 
 </template>
@@ -31,7 +34,7 @@ export default {
   },
   data() {
     return {
-      contextMenuData: {
+      editContextMenuData: {
         menuName: 'demo',
         good: {},
         //菜单显示的位置
@@ -42,10 +45,22 @@ export default {
         //菜单选项
         menulists: [
           {
-            fnHandler: 'openEditor', //绑定事件
+            fnHandler: 'openGoodInfoEditor', //绑定事件
             // icoName: 'fa fa-home fa-fw', //icon图标
             btnName: '编辑' //菜单名称
           },
+        ]
+      },
+      notEditContextMenuData: {
+        menuName: 'demo',
+        good: {},
+        //菜单显示的位置
+        axis: {
+          x: null,
+          y: null
+        },
+        //菜单选项
+        menulists: [
           {
             fnHandler: 'openGoodSellEditor', //绑定事件
             // icoName: 'fa fa-home fa-fw', //icon图标
@@ -65,20 +80,27 @@ export default {
     },
     showMenu(good, e) {
       e.preventDefault()
-      this.contextMenuData.good = good
-      this.contextMenuData.axis = {
+      this.notEditContextMenuData.good = good
+      this.editContextMenuData.good = good
+      this.editContextMenuData.axis = {
+        x: e.clientX,
+        y: e.clientY
+      }
+      this.notEditContextMenuData.axis = {
         x: e.clientX,
         y: e.clientY
       }
     },
-    openEditor() {
-      console.log("this.contextMenuData.good", this.contextMenuData.good)
-      this.$emit("openGoodEditor", this.contextMenuData.good)
+    openGoodInfoEditor() {
+      console.log("this.editContextMenuData.good", this.editContextMenuData.good)
+      this.$emit("openGoodInfoEditor", this.editContextMenuData.good)
     },
     openGoodSellEditor() {
-      console.log("this.contextMenuData.good", this.contextMenuData.good)
-      this.$emit("openGoodSellEditor", this.contextMenuData.good)
+      console.log("this.notEditContextMenuData.good", this.notEditContextMenuData.good)
+      this.$emit("openGoodSellEditor", this.notEditContextMenuData.good)
     }
   }
 }
+
+// todo: 菜单显示不太正常！！！
 </script>

@@ -21,7 +21,8 @@
     <div v-show="viewMode === 2">
       <el-divider content-position="left">元素</el-divider>
       <good-list v-if="curGoodClassIndex!==-1" :isEditMode="isEditMode" :goods="goodClasses[curGoodClassIndex].goods"
-                 @turnToGoodClassListMode="turnToGoodClassListMode" @openGoodEditor="openGoodEditor"
+                 @turnToGoodClassListMode="turnToGoodClassListMode"
+                 @openGoodInfoEditor="openGoodInfoEditor"
                  @openGoodSellEditor="openGoodSellEditor"></good-list>
     </div>
 
@@ -97,7 +98,7 @@ export default {
         this.viewMode = 1
       }
     },
-    openGoodEditor(good) {
+    openGoodInfoEditor(good) {
       this.goodEditorVisible = true
       this.$nextTick(() => {
         this.$refs.goodEditor.good = good
