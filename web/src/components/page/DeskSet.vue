@@ -23,20 +23,14 @@
                    @turnToGoodClassListMode="turnToGoodClassListMode"></desk-list>
       </div>
       <div v-show="viewMode !== 0">
-        <good-class :goodClasses="goodClasses" ref="goodClass" :isEditMode="false"
-                    @turnToFatherMode="turnToDeskListMode" :hasFather="true"></good-class>
+        <good-class :isEditMode="false" :hasFather="true" ref="goodClass"
+                    @turnToFatherMode="turnToDeskListMode"></good-class>
       </div>
     </el-main>
     <el-dialog
       title="桌类添加/编辑"
       :visible.sync="deskSetEditorVisible"
       width="30%">
-      <!--      <span>这是一段信息</span>-->
-
-      <!--      <span slot="footer" class="dialog-footer">-->
-      <!--        <el-button @click="dialogVisible = false">取 消</el-button>-->
-      <!--        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>-->
-      <!--      </span>-->
       <desk-set-editor></desk-set-editor>
     </el-dialog>
   </el-container>
@@ -44,7 +38,6 @@
 <script>
 /* eslint-disable */
 import DeskList from "../list/DeskList";
-import GoodCard from "../card/GoodCard";
 import GoodClass from "../manager/GoodClass";
 import DeskSetEditor from "../editor/DeskSetEditor";
 import test from "../../common/test/test";
@@ -54,7 +47,6 @@ export default {
   components: {DeskSetEditor, GoodClass, DeskList},
   mounted() {
     this.deskSets = test.deskSets
-    this.goodClasses = test.goodClasses
   },
   data() {
     return {
@@ -62,8 +54,9 @@ export default {
       deskSetEditorVisible: false,
       curDeskSetIndex: 0,
       curDeskIndex: -1,
+
+      // 数据库读取属性
       deskSets: [],
-      goodClasses: [],
     }
   },
   methods: {

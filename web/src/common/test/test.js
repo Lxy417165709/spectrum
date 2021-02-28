@@ -74,7 +74,6 @@ export default {
                   price: 1,
                 },
               ]
-
             },
             {
               curSizeIndex: 0,
@@ -973,5 +972,14 @@ export default {
         expense: 15,
       }
     ]
-  }
+  },
+  blankGood: {
+    name: "请输入",
+    price: 0.0,
+    curSizeIndex: 0,
+    sizeInfos: [
+    ],
+    attachElements: [
+    ],
+  },
 }

@@ -19,30 +19,25 @@ export default {
   name: "GoodSizeEditor",
   components: {GoodSizeInfoEditor},
   props: {
-    originCurSizeIndex: String,
+    originCurSizeIndex: Number,
     originSizeInfos: Array
   },
   watch: {
-    // originSizeInfos(curVal, oldVal) {
-    //   console.log(curVal, oldVal);
-    // },
+    // 对 this.originCurSizeIndex 的监听不够准确，因为所有货物的 this.originCurSizeIndex 是一样的，导致传入 this.originCurSizeIndex
+    // 并无法使 curSizeIndex 改变。
+    //  originSizeInfos 的每个元素是一个对象，即使数据相同，由于对象不同，这里也能造成更新 (猜测)
     originSizeInfos() {
+      console.log("this.originSizeInfos", this.originSizeInfos, "this.originCurSizeIndex", this.originCurSizeIndex)
       this.sizeInfos = this.originSizeInfos
+      this.curSizeIndex = this.originCurSizeIndex.toString()
     },
-    originCurSizeIndex() {
-      this.curSizeIndex = this.originCurSizeIndex
-    }
-  },
-  mounted() {
-    this.$nextTick(() => {
-      this.sizeInfos = this.originSizeInfos
-    })
   },
   data() {
     return {
-      sizeInfos: [],
-      addTabCount: 0,
       curSizeIndex: '0',
+      sizeInfos: [],
+
+      addTabCount: 0,
     }
   },
   methods: {

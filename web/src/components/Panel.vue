@@ -17,8 +17,7 @@
       <DeskSet/>
     </el-tab-pane>
     <el-tab-pane label="商品管理" name="10">
-      <!--      todo: 不要用 props 吧，用Props组件内部修改属性时，会报错-->
-      <GoodClass :goodClasses="goodClasses" :isEditMode="true" :hasFather="false"/>
+      <GoodClass :isEditMode="true" :hasFather="false"/>
     </el-tab-pane>
     <el-tab-pane label="商品销售" name="11">
       <GoodSellEditor :good="goodClasses[0].goods[0]"></GoodSellEditor>

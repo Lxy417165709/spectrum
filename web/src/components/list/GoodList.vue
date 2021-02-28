@@ -21,6 +21,7 @@
 /* eslint-disable */
 import GoodCard from "../card/GoodCard";
 import GoodSpacialCard from "../card/GoodSpacialCard";
+import test from "../../common/test/test"
 
 export default {
   components: {GoodSpacialCard, GoodCard},
@@ -53,7 +54,7 @@ export default {
     },
     handleSpecialCardClick() {
       console.log("handleSpecialCardClick")
-      this.$emit("openGoodEditor", {})
+      this.$emit("openGoodEditor", test.blankGood)
     },
     showMenu(good, e) {
       e.preventDefault()

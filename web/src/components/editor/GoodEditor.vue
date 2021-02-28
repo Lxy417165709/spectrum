@@ -2,8 +2,8 @@
 <template>
   <el-form ref="form" label-width="80px">
     <el-form-item label="商品名">{{ good.name }}</el-form-item>
-    <!--    todo: 这里会报错，因为子组件会修改 curSizeIndex..-->
-    <good-size-editor style="margin-bottom: 20px" ref="goodSizeEditor" :originCurSizeIndex="good.curSizeIndex.toString()"
+    <good-size-editor style="margin-bottom: 20px" ref="goodSizeEditor"
+                      :originCurSizeIndex="good.curSizeIndex"
                       :originSizeInfos="good.sizeInfos"></good-size-editor>
     <el-form-item label="附属选项">
       <el-select v-model="selectableElement.curAttachOptionName" placeholder="附属选项">

@@ -54,9 +54,11 @@ export default {
   name: "GoodClass",
   components: {GoodClassEditor, GoodEditor, GoodList, GoodClassList},
   props: {
-    goodClasses: Array,
     isEditMode: Boolean,
     hasFather: Boolean,
+  },
+  mounted() {
+    this.goodClasses = test.goodClasses
   },
   data() {
     return {
@@ -64,9 +66,10 @@ export default {
       goodEditorVisible: false,
       goodClassEditorVisible: false,
       curGoodClassIndex: -1,
+
+      // 数据库读取属性
+      goodClasses: [],
     }
-  },
-  mounted() {
   },
   methods: {
     turnToGoodListMode(mode, goodClassIndex) {
