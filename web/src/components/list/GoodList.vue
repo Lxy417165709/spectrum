@@ -12,7 +12,7 @@
       <good-spacial-card @click.native="handleSpecialCardClick"></good-spacial-card>
     </el-col>
 
-    <vue-context-menu :contextMenuData="contextMenuData" @openEditor="openEditor"></vue-context-menu>
+    <vue-context-menu :contextMenuData="contextMenuData" @openEditor="openEditor" @openGoodSellEditor="openGoodSellEditor"></vue-context-menu>
   </el-row>
 
 </template>
@@ -40,11 +40,18 @@ export default {
           y: null
         },
         //菜单选项
-        menulists: [{
-          fnHandler: 'openEditor', //绑定事件
-          // icoName: 'fa fa-home fa-fw', //icon图标
-          btnName: '编辑' //菜单名称
-        }]
+        menulists: [
+          {
+            fnHandler: 'openEditor', //绑定事件
+            // icoName: 'fa fa-home fa-fw', //icon图标
+            btnName: '编辑' //菜单名称
+          },
+          {
+            fnHandler: 'openGoodSellEditor', //绑定事件
+            // icoName: 'fa fa-home fa-fw', //icon图标
+            btnName: '点单' //菜单名称
+          },
+        ]
       }
     };
   },
@@ -68,6 +75,10 @@ export default {
       console.log("this.contextMenuData.good", this.contextMenuData.good)
       this.$emit("openGoodEditor", this.contextMenuData.good)
     },
+    openGoodSellEditor() {
+      console.log("this.contextMenuData.good", this.contextMenuData.good)
+      this.$emit("openGoodSellEditor", this.contextMenuData.good)
+    }
   }
 }
 </script>

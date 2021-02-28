@@ -43,9 +43,9 @@ import DeskSetEditor from "../editor/DeskSetEditor";
 import test from "../../common/test/test";
 
 export default {
-  name: 'DeskShower',
+  name: 'DeskSet',
   components: {DeskSetEditor, GoodClass, DeskList},
-  mounted() {
+  created() {
     this.deskSets = test.deskSets
   },
   data() {

@@ -52,11 +52,11 @@ export default {
   name: "GoodSellEditor",
   components: {DiscountEditor},
   props: {
-    good: Object
   },
   data() {
     return {
       needAttachGood: false,
+      good: {}
     }
   },
   methods: {

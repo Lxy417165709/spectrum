@@ -12,12 +12,12 @@ export default {
   },
   goodClassTypes: [
     {
-      flag:0,
-      name:"单品",
+      flag: 0,
+      name: "单品",
     },
     {
-      flag:1,
-      name:"附属品",
+      flag: 1,
+      name: "附属品",
     }
   ]
 }

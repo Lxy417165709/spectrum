@@ -21,7 +21,8 @@
     <div v-show="viewMode === 2">
       <el-divider content-position="left">元素</el-divider>
       <good-list v-if="curGoodClassIndex!==-1" :isEditMode="isEditMode" :goods="goodClasses[curGoodClassIndex].goods"
-                 @turnToGoodClassListMode="turnToGoodClassListMode" @openGoodEditor="openGoodEditor"></good-list>
+                 @turnToGoodClassListMode="turnToGoodClassListMode" @openGoodEditor="openGoodEditor"
+                 @openGoodSellEditor="openGoodSellEditor"></good-list>
     </div>
 
     <!--    :before-close="handleClose"-->
@@ -30,6 +31,13 @@
       :visible.sync="goodEditorVisible"
       width="30%">
       <good-editor ref="goodEditor"></good-editor>
+    </el-dialog>
+
+    <el-dialog
+      title="商品点单"
+      :visible.sync="goodSellEditorVisible"
+      width="30%">
+      <good-sell-editor ref="goodSellEditor"></good-sell-editor>
     </el-dialog>
 
     <el-dialog
@@ -47,12 +55,13 @@
 import GoodClassList from "../list/GoodClassList";
 import GoodList from "../list/GoodList";
 import GoodEditor from "../editor/GoodEditor";
+import GoodSellEditor from "../editor/GoodSellEditor";
 import GoodClassEditor from "../editor/GoodClassEditor";
 import test from "../../common/test/test";
 
 export default {
   name: "GoodClass",
-  components: {GoodClassEditor, GoodEditor, GoodList, GoodClassList},
+  components: {GoodClassEditor, GoodEditor, GoodList, GoodClassList, GoodSellEditor},
   props: {
     isEditMode: Boolean,
     hasFather: Boolean,
@@ -65,6 +74,7 @@ export default {
       viewMode: 1,
       goodEditorVisible: false,
       goodClassEditorVisible: false,
+      goodSellEditorVisible: false,
       curGoodClassIndex: -1,
 
       // 数据库读取属性
@@ -91,6 +101,12 @@ export default {
       this.goodEditorVisible = true
       this.$nextTick(() => {
         this.$refs.goodEditor.good = good
+      })
+    },
+    openGoodSellEditor(good) {
+      this.goodSellEditorVisible = true
+      this.$nextTick(() => {
+        this.$refs.goodSellEditor.good = good
       })
     },
     openGoodClassEditor() {
