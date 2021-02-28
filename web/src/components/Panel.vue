@@ -1,18 +1,6 @@
 <!--eslint-disable-->
 <template>
   <el-tabs v-model="activeName" @tab-click="handleClick">
-    <el-tab-pane label="商品添加" name="1">
-      <GoodAdder/>
-    </el-tab-pane>
-    <el-tab-pane label="商品类管理" name="2">
-      <GoodClassManager/>
-    </el-tab-pane>
-    <el-tab-pane label="选项类管理" name="3">
-      <OptionClassManager/>
-    </el-tab-pane>
-    <el-tab-pane label="商品点单" name="8">
-      <GoodWanner/>
-    </el-tab-pane>
     <el-tab-pane label="桌位管理" name="9">
       <DeskSet/>
     </el-tab-pane>
@@ -30,17 +18,14 @@
 <script>
 
 /* eslint-disable */
-import GoodAdder from "./good/GoodAdder";
-import OptionClassManager from "./option/OptionClassManager";
 import GoodOrder from "./unuse/GoodOrder";
-import GoodWanner from "./good/GoodWanner";
-import GoodClassManager from "./good/GoodClassManager";
 import DeskSet from "./page/DeskSet";
 import GoodClass from "./manager/GoodClass";
-import GoodCard from "./card/GoodCard";
 import GoodSellEditor from "./editor/GoodSellEditor";
 import Order from "./page/Order";
 import test from "../common/test/test";
+import global from "../common/global_object/global";
+import utils from "../common/utils";
 
 
 export default {
@@ -50,11 +35,7 @@ export default {
     Order,
     GoodSellEditor,
     GoodClass,
-    GoodAdder,
-    OptionClassManager,
     GoodOrder,
-    GoodWanner,
-    GoodClassManager,
     DeskSet,
   },
   mounted() {
@@ -69,6 +50,20 @@ export default {
   methods: {
     handleClick(tab, event) {
       console.log(tab, event);
+      // let model = utils.getRequestModel("mvp", "GetAllGoodClasses", {})
+      // utils.sendRequestModel(model).then(res => {
+      //   if (!utils.hasRequestSuccess(res)) {
+      //     console.log(res.data.err)
+      //     return
+      //   }
+      //   // localStorage.setItem("global_good_classes",JSON.stringify({
+      //   //   classes:global.goodClasses
+      //   // }))
+      //   if (utils.hasData(res.data.data.goodClasses)) {
+      //     global.goodClasses = res.data.data.goodClasses
+      //   }
+      //   console.log("global_good_classes",global.goodClasses)
+      // })
     }
   }
 };
