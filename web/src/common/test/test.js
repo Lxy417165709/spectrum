@@ -1,4 +1,5 @@
 /* eslint-disable */
+
 export default {
   deskSets: [
     {
@@ -977,9 +978,7 @@ export default {
     name: "请输入",
     price: 0.0,
     curSizeIndex: 0,
-    sizeInfos: [
-    ],
-    attachElements: [
-    ],
+    sizeInfos: [],
+    attachElements: [],
   },
 }

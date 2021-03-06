@@ -5,7 +5,18 @@
   <el-tabs v-model="curSizeIndex" type="border-card" @tab-click="" editable @edit="handleTabsEdit"
            @tab-add="handleClick">
     <el-tab-pane v-for="(sizeInfo,index) in sizeInfos" :label="sizeInfo.name" :name="index.toString()" :key="index">
-      <good-size-info-editor :name="sizeInfo.name" :price="sizeInfo.price"></good-size-info-editor>
+      <el-form label-width="80px">
+        <el-form-item label="照片">
+          <el-upload
+            action="/api/upload"
+            list-type="picture-card">
+            <i class="el-icon-plus"></i>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="价格">
+          <el-input v-model="sizeInfo.price" style="width: 70%"></el-input>
+        </el-form-item>
+      </el-form>
     </el-tab-pane>
   </el-tabs>
 </template>
@@ -13,7 +24,7 @@
 <script>
 /* eslint-disable */
 import utils from "../../common/utils";
-import GoodSizeInfoEditor from "./GoodSizeInfoEditor";
+import GoodSizeInfoEditor from "./_GoodSizeInfoEditor";
 
 export default {
   name: "GoodSizeEditor",

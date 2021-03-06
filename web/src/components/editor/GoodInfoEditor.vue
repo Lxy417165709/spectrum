@@ -2,12 +2,36 @@
 <template>
   <el-form ref="form" label-width="80px">
 
+    <!-- 1. 商品名编辑器 -->
     <el-form-item label="商品名">
       <el-input style="width: 70%" v-model="good.name"></el-input>
     </el-form-item>
-    <good-size-editor style="margin-bottom: 20px" ref="goodSizeEditor"
-                      :originCurSizeIndex="good.curSizeIndex"
-                      :originSizeInfos="good.sizeInfos"></good-size-editor>
+
+    <!-- 2. 规格编辑器 -->
+    <!--    v-model 必须是 string 类型，不然会报错...-->
+    <el-tabs type="border-card" @tab-click="" editable @edit="handleTabsEdit"
+             @tab-add="handleClick" style="margin-bottom: 10px">
+      <el-tab-pane v-for="(sizeInfo,index) in good.sizeInfos" :label="sizeInfo.name" :name="index.toString()"
+                   :key="index">
+        <el-form label-width="80px">
+          <el-form-item label="照片">
+            <el-upload
+              action="/api/upload"
+              list-type="picture-card">
+              <i class="el-icon-plus"></i>
+            </el-upload>
+          </el-form-item>
+          <el-form-item label="价格">
+            <el-input v-model="sizeInfo.price" style="width: 70%"></el-input>
+          </el-form-item>
+          <el-form-item label="默认选中" v-if="good.curSizeIndex!==index">
+            <el-button @click="handleChangeDefaultSizeInfo(index)">确定</el-button>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
+    </el-tabs>
+
+    <!-- 3. 附属选项编辑器 -->
     <el-form-item label="附属选项">
       <el-select v-model="selectableElement.curAttachOptionName" placeholder="附属选项">
         <el-option v-for="(element,index) in selectableElement.attachElements" :key="index"
@@ -24,7 +48,6 @@
       </el-tag>
     </el-form-item>
 
-
     <el-form-item label="附属配料">
       <el-select v-model="selectableElement.curAttachGoodName" placeholder="附属配料">
         <el-option v-for="(element,index) in selectableElement.attachElements" :key="index"
@@ -40,6 +63,7 @@
         {{ element.name }}
       </el-tag>
     </el-form-item>
+
     <el-form-item>
       <el-button type="primary" @click="addGood(good)">确定</el-button>
     </el-form-item>
@@ -48,13 +72,13 @@
 
 <script>
 /* eslint-disable */
-import GoodSizeEditor from "./GoodSizeEditor";
+import GoodSizeEditor from "./_GoodSizeEditor";
 import test from "../../common/test/test";
 import utils from "../../common/utils";
 import global from "../../common/global_object/global";
 
 export default {
-  name: "GoodEditor",
+  name: "GoodInfoEditor",
   components: {GoodSizeEditor},
   mounted() {
     this.selectableElement = test.selectableElement
@@ -62,29 +86,38 @@ export default {
   data() {
     return {
       good: {},
-      selectableElement: {}
+      selectableElement: {},
+      // goodCurSizeName: "0",
+      addTabCount: 0,
     }
   },
   methods: {
+    handleClick(tab, event) {
+      this.addTabCount++
+      let name = "未设定规格" + this.addTabCount
+      // todo: sizeInfo 应该是一个对象，要有构造函数
+      this.good.sizeInfos.push({
+        name: name,
+        price: 30
+      })
+    },
+    handleTabsEdit(name, event) {
+      this.good.sizeInfos = utils.removeElementByField(this.good.sizeInfos, "name", name)
+    },
+    handleChangeDefaultSizeInfo(index) {
+      this.good.curSizeIndex = index
+    },
     async addGood(good) {
-      // todo: 将前端的 good，转换为协议的 good
       let model = utils.getRequestModel("mvp", "AddGood", {
-        good: {
-          mainElement: {
-            name: good.name,
-          }
-        },
-        className: "test_class",
+        good: utils.goodToPbGood(good), // todo: good.sizeInfos 字段没获取到
+        className: "test_class",  // todo: className 获取
       })
       await utils.sendRequestModel(model).then(res => {
         if (!utils.hasRequestSuccess(res)) {
           console.log(res.data.err)
-          return
+
         }
-        if (utils.hasData(res.data.data.goods)) {
-          global.goods = res.data.data.goods
-        }
-        console.log("global_goods", global.goods)
+        // todo: 成功提示
       })
     }
   }
