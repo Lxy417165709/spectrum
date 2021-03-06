@@ -37,7 +37,12 @@ func checkOutIfNot(chargeableObj model.Chargeable) error {
 }
 
 func writeGoodSizeToDB(good *pb.Good) error {
-	if len(good.MainElement.SizeInfos) == 0 {
+	if good == nil{
+		logger.Warn("Good is nil")
+		return nil
+	}
+	if  good.MainElement == nil {
+		logger.Warn("Good's main element is nil")
 		return nil
 	}
 
@@ -100,8 +105,11 @@ func createElement(pbElement *pb.Element, className string) error {
 }
 
 func getDbElements(pbElement *pb.Element, className string) []*model.Element {
-	var result []*model.Element
+	if pbElement == nil {
+		return nil
+	}
 
+	var result []*model.Element
 	for _, sizeInfo := range pbElement.SizeInfos {
 		result = append(result, &model.Element{
 			Name:             pbElement.Name,

@@ -38,7 +38,7 @@
       </el-tag>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary">确定</el-button>
+      <el-button type="primary" @click="addGood(good)">确定</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -47,6 +47,8 @@
 /* eslint-disable */
 import GoodSizeEditor from "./GoodSizeEditor";
 import test from "../../common/test/test";
+import utils from "../../common/utils";
+import global from "../../common/global_object/global";
 
 export default {
   name: "GoodEditor",
@@ -58,6 +60,24 @@ export default {
     return {
       good: {},
       selectableElement: {}
+    }
+  },
+  methods: {
+    async addGood(good) {
+      let model = utils.getRequestModel("mvp", "AddGood", {
+        good: good,
+        class_name: "test_class",
+      }) //todo:
+      await utils.sendRequestModel(model).then(res => {
+        if (!utils.hasRequestSuccess(res)) {
+          console.log(res.data.err)
+          return
+        }
+        if (utils.hasData(res.data.data.goods)) {
+          global.goods = res.data.data.goods
+        }
+        console.log("global_goods", global.goods)
+      })
     }
   }
 }

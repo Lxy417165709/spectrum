@@ -55,7 +55,7 @@
 /* eslint-disable */
 import GoodClassList from "../list/GoodClassList";
 import GoodList from "../list/GoodList";
-import GoodEditor from "../editor/GoodEditor";
+import GoodEditor from "../editor/GoodInfoEditor";
 import GoodSellEditor from "../editor/GoodSellEditor";
 import GoodClassEditor from "../editor/GoodClassEditor";
 import test from "../../common/test/test";

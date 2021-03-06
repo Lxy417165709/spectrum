@@ -47,16 +47,18 @@
 <script>
 /* eslint-disable */
 import DiscountEditor from "./DiscountEditor";
+import utils from "../../common/utils";
+import global from "../../common/global_object/global";
+import test from "../../common/test/test";
 
 export default {
   name: "GoodSellEditor",
   components: {DiscountEditor},
-  props: {
-  },
+  props: {},
   data() {
     return {
       needAttachGood: false,
-      good: {}
+      good: test.blankGood
     }
   },
   methods: {
