@@ -8,7 +8,6 @@
     </el-form-item>
 
     <!-- 2. 规格编辑器 -->
-    <!--    v-model 必须是 string 类型，不然会报错...-->
     <el-tabs type="border-card" @tab-click="" editable @edit="handleTabsEdit"
              @tab-add="handleClick" style="margin-bottom: 10px">
       <el-tab-pane v-for="(sizeInfo,index) in good.sizeInfos" :label="sizeInfo.name" :name="index.toString()"
@@ -33,37 +32,37 @@
 
     <!-- 3. 附属选项编辑器 -->
     <el-form-item label="附属选项">
-      <el-select v-model="selectableElement.curAttachOptionName" placeholder="附属选项">
+      <el-select v-model="selectableElement.curAttachElementName" placeholder="附属选项">
         <el-option v-for="(element,index) in selectableElement.attachElements" :key="index"
-                   v-show="element.elementType=== 1"
                    :label="element.name" :value="element.name"></el-option>
       </el-select>
-      <el-button type="primary">添加</el-button>
+      <el-button type="primary" @click="addAttachElement()">添加</el-button>
     </el-form-item>
     <el-form-item label="已选">
       <el-tag v-for="(element,index) in good.attachElements" :key="index" closable style="margin-right: 5px"
-              type="success" v-show="element.elementType=== 1">
+              type="success">
         {{ element.name }}
         <!--        @close="delSelectGoodClass(index)"-->
       </el-tag>
     </el-form-item>
 
+    <!-- 4. 附属配料编辑器 -->
     <el-form-item label="附属配料">
-      <el-select v-model="selectableElement.curAttachGoodName" placeholder="附属配料">
-        <el-option v-for="(element,index) in selectableElement.attachElements" :key="index"
-                   v-show="element.elementType=== 2"
+      <el-select v-model="selectableElement.curFavorName" placeholder="附属配料">
+        <el-option v-for="(element,index) in selectableElement.favors" :key="index"
                    :label="element.name" :value="element.name"></el-option>
       </el-select>
-      <el-button type="primary">添加</el-button>
+      <el-button type="primary" @click="addFavor()">添加</el-button>
     </el-form-item>
 
     <el-form-item label="已选">
-      <el-tag v-for="(element,index) in good.attachElements" :key="index" closable style="margin-right: 5px"
-              type="success" v-show="element.elementType=== 2">
+      <el-tag v-for="(element,index) in good.favors" :key="index" closable style="margin-right: 5px"
+              type="success">
         {{ element.name }}
       </el-tag>
     </el-form-item>
 
+    <!--    5. 提交按钮-->
     <el-form-item>
       <el-button type="primary" @click="addGood(good)">确定</el-button>
     </el-form-item>
@@ -87,11 +86,24 @@ export default {
     return {
       good: {},
       selectableElement: {},
-      // goodCurSizeName: "0",
       addTabCount: 0,
     }
   },
   methods: {
+    addAttachElement() {
+      for (let i = 0; i < this.selectableElement.attachElements.length; i++) {
+        if (this.selectableElement.attachElements[i].name === this.selectableElement.curAttachElementName) {
+          this.good.attachElements.push(this.selectableElement.attachElements[i])
+        }
+      }
+    },
+    addFavor() {
+      for (let i = 0; i < this.selectableElement.favors.length; i++) {
+        if (this.selectableElement.favors[i].name === this.selectableElement.curFavorName) {
+          this.good.favors.push(this.selectableElement.favors[i])
+        }
+      }
+    },
     handleClick(tab, event) {
       this.addTabCount++
       let name = "未设定规格" + this.addTabCount

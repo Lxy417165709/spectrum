@@ -77,7 +77,7 @@ message Element {
 message SizeInfo {
     string size = 1;
     double price = 2;
-    string  pictureStorePath = 3;
+    string pictureStorePath = 3;
     bool isSelected = 4;
 }
 

@@ -11,7 +11,7 @@ func GetSelectSizeInfo(infos []*pb.SizeInfo) *pb.SizeInfo {
 			return sizeInfo
 		}
 	}
-	return nil
+	panic("No default selected size info")
 }
 
 func GetFavorExpense(nonFavorExpense float64, pbFavors []*pb.Favor) float64 {

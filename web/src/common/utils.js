@@ -56,18 +56,65 @@ export default {
     return obj !== undefined && obj !== null
   },
   goodToPbGood(good) {
-    console.log("utils.goodToPbGood", good)
+    console.log("utils.goodToPbGood", "good:", good)
+    let pbGood = {
+      id: good.id,
+      mainElement: this.getGoodPbMainElement(good),
+      attachElements: this.getGoodPbAttachElements(good),
+      favors: this.getGoodPbFavors(good),
+      expenseInfo: {}
+    }
+    console.log("utils.goodToPbGood", "pbGood:", pbGood)
+    return pbGood
+  },
+  getGoodPbMainElement(good) {
     let pbSizeInfos = []
     for (let i = 0; i < good.sizeInfos.length; i++) {
       pbSizeInfos.push(this.sizeInfoToPbSizeInfo(good.curSizeIndex, i, good.sizeInfos[i]))
     }
     return {
-      mainElement: {
-        name: good.name,
-        sizeInfos: pbSizeInfos,
-      },
-      // todo: 还有一些字段
+      name: good.name,
+      sizeInfos: pbSizeInfos,
+      type: 0,
     }
+  },
+  getGoodPbAttachElements(good) {
+    let pbAttachElements = []
+    for (let i = 0; i < good.attachElements.length; i++) {
+      pbAttachElements.push(this.attachElementToPbAttachElement(good.attachElements[i]))
+    }
+    return pbAttachElements
+  },
+  getGoodPbFavors(good) {
+    let pbFavors = []
+    for (let i = 0; i < good.favors.length; i++) {
+      pbFavors.push(this.favorToPbFavor(good.favors[i]))
+    }
+    return pbFavors
+  },
+  attachElementToPbAttachElement(attachElement) {
+    return {
+      name: attachElement.name,
+      type: 1,
+      sizeInfos: this.sizeInfosToPbSizeInfos(attachElement.curSizeIndex, attachElement.sizeInfos),
+    }
+  },
+  favorToPbFavor(favor) {
+    return {
+      name: favor.name,
+      // type: 2,
+      sizeInfos: this.sizeInfosToPbSizeInfos(favor.curSizeIndex, favor.sizeInfos),
+    }
+  },
+  sizeInfosToPbSizeInfos(defaultSelectIndex, sizeInfos) {
+    let pbSizeInfos = []
+    if (sizeInfos === undefined) {
+      return pbSizeInfos
+    }
+    for (let i = 0; i < sizeInfos.length; i++) {
+      pbSizeInfos.push(this.sizeInfoToPbSizeInfo(defaultSelectIndex, i, sizeInfos[i]))
+    }
+    return pbSizeInfos
   },
   sizeInfoToPbSizeInfo(defaultSelectIndex, curIndex, sizeInfo) {
     return {

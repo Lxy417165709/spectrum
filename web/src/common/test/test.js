@@ -906,20 +906,52 @@ export default {
     }
   ],
   selectableElement: {
-    curAttachOptionName: "",
-    curAttachGoodName: "",
+    curFavorName: "",
+    curAttachElementName: "",
     attachElements: [
       {
         name: "冰量",
-        elementType: 1,
+        curSizeIndex: 0,
+        sizeInfos: [
+          {
+            name: "少冰",
+            price: 0.0,
+          },
+          {
+            name: "多冰",
+            price: 0.0,
+          }
+        ]
       },
       {
         name: "温度",
-        elementType: 1,
+        curSizeIndex: 0,
+        sizeInfos: [
+          {
+            name: "常温",
+            price: 0.0,
+          },
+          {
+            name: "热饮",
+            price: 0.0,
+          }
+        ]
       },
+    ],
+    favors: [
       {
         name: "珍珠",
-        elementType: 2,
+        curSizeIndex: 0,
+        sizeInfos: [
+          {
+            name: "少量",
+            price: 1,
+          },
+          {
+            name: "大量",
+            price: 2,
+          }
+        ]
       }
     ]
   },
@@ -980,5 +1012,6 @@ export default {
     curSizeIndex: 0,
     sizeInfos: [],
     attachElements: [],
+    favors: [],
   },
 }
