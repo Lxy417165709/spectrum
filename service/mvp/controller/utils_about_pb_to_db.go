@@ -45,6 +45,10 @@ func writeGoodSizeToDB(good *pb.Good) error {
 		logger.Warn("Good's main element is nil")
 		return nil
 	}
+	if len(good.MainElement.SizeInfos) == 0{
+		logger.Warn("Good main element's size infos is empty")
+		return nil
+	}
 
 	// 1. 创建主元素、主元素尺寸的对应关系
 	if err := dao.MainElementSizeRecordDao.Create(&model.MainElementSizeRecord{

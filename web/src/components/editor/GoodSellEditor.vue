@@ -47,9 +47,6 @@
 <script>
 /* eslint-disable */
 import DiscountEditor from "./DiscountEditor";
-import utils from "../../common/utils";
-import global from "../../common/global_object/global";
-import test from "../../common/test/test";
 
 export default {
   name: "GoodSellEditor",
@@ -58,7 +55,7 @@ export default {
   data() {
     return {
       needAttachGood: false,
-      good: test.blankGood
+      good: {},
     }
   },
   methods: {

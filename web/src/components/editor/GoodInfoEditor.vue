@@ -1,7 +1,10 @@
 <!-- eslint-disable -->
 <template>
   <el-form ref="form" label-width="80px">
-    <el-form-item label="商品名">{{ good.name }}</el-form-item>
+
+    <el-form-item label="商品名">
+      <el-input style="width: 70%" v-model="good.name"></el-input>
+    </el-form-item>
     <good-size-editor style="margin-bottom: 20px" ref="goodSizeEditor"
                       :originCurSizeIndex="good.curSizeIndex"
                       :originSizeInfos="good.sizeInfos"></good-size-editor>
@@ -64,10 +67,15 @@ export default {
   },
   methods: {
     async addGood(good) {
+      // todo: 将前端的 good，转换为协议的 good
       let model = utils.getRequestModel("mvp", "AddGood", {
-        good: good,
-        class_name: "test_class",
-      }) //todo:
+        good: {
+          mainElement: {
+            name: good.name,
+          }
+        },
+        className: "test_class",
+      })
       await utils.sendRequestModel(model).then(res => {
         if (!utils.hasRequestSuccess(res)) {
           console.log(res.data.err)
