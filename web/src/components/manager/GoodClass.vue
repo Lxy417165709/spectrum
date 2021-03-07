@@ -5,7 +5,7 @@
     <!--    1. 顶栏-->
     <el-row style="height: 40px;margin-left:10px;margin-bottom: 10px">
       <el-button v-show="cpt_canBackButtonShow" style="height: 40px"
-                 @click="turnToFatherMode"
+                 @click="turnToParentComponentMode"
                  type="primary">
         退回
       </el-button>
@@ -14,23 +14,23 @@
     <!--    2. 商品类展示-->
     <div v-show="cpt_canClassListShow">
       <el-divider content-position="left">普通商品类</el-divider>
-      <good-class-list :goodClasses="goodClasses" :isAdminView="isAdminView"
+      <good-class-list :goodClasses="db_goodClasses" :props_isAdminView="props_isAdminView"
                        @turnToGoodListMode="turnToGoodListMode"
                        @openGoodClassEditor="openGoodClassEditor"></good-class-list>
 
-      <el-divider content-position="left" v-if="isAdminView">附属类</el-divider>
-      <good-option-class-list :goodOptionClasses="goodOptionClasses" :isAdminView="isAdminView"
+      <el-divider content-position="left" v-if="props_isAdminView">附属类</el-divider>
+      <good-option-class-list :goodOptionClasses="db_goodOptionClasses" :props_isAdminView="props_isAdminView"
                               @turnToGoodOptionListMode="turnToGoodOptionListMode"
-                              v-if="isAdminView"></good-option-class-list>
+                              v-if="props_isAdminView"></good-option-class-list>
     </div>
 
     <!--    3. 商品类内的商品展示-->
     <div v-show="cpt_canGoodListShow">
       <el-divider content-position="left">元素</el-divider>
-      <good-list v-if="curGoodClassIndex!==-1"
-                 :isAdminView="isAdminView"
-                 :goods="goodClasses[curGoodClassIndex].goods"
-                 :className="goodClasses[curGoodClassIndex].name"
+      <good-list v-if="cpt_isGoodListExist"
+                 :props_isAdminView="props_isAdminView"
+                 :goods="db_goodClasses[curGoodClassIndex].goods"
+                 :className="db_goodClasses[curGoodClassIndex].name"
                  @turnToClassListMode="turnToClassListMode"
                  @openGoodEditorOfAdmin="openGoodEditorOfAdmin"
                  @openGoodEditorOfUser="openGoodEditorOfUser"></good-list>
@@ -39,10 +39,10 @@
     <!--    4. 附属选项类内的附属选项展示-->
     <div v-show="cpt_canGoodOptionListShow">
       <el-divider content-position="left">元素</el-divider>
-      <good-option-list v-if="curGoodOptionClassIndex!==-1"
-                        :isAdminView="isAdminView"
-                        :goodOptions="goodOptionClasses[curGoodOptionClassIndex].goodOptions"
-                        :className="goodOptionClasses[curGoodOptionClassIndex].name"></good-option-list>
+      <good-option-list v-if="cpt_isGoodOptionListExist"
+                        :props_isAdminView="props_isAdminView"
+                        :goodOptions="db_goodOptionClasses[curGoodOptionClassIndex].goodOptions"
+                        :className="db_goodOptionClasses[curGoodOptionClassIndex].name"></good-option-list>
     </div>
 
     <!--    4. 商品添加、编辑框-->
@@ -96,30 +96,27 @@ export default {
     GoodOptionList
   },
   props: {
-    isAdminView: Boolean,
-    hasFather: Boolean,
-  },
-  created() {
-    console.log("created", cst.VIEW_MODE)
+    props_isAdminView: Boolean,
+    props_haveParentComponent: Boolean,
   },
   async mounted() {
-    this.goodOptionClasses = test.goodOptionClasses
-    console.log("mounted", this.goodOptionClasses)
-
+    this.db_goodOptionClasses = test.goodOptionClasses
     await this.getAllGoodClasses()
   },
   data() {
     return {
       viewMode: cst.VIEW_MODE.CLASS_LIST_MODE,
+
       GoodEditorOfAdminVisible: false,
       GoodClassEditorVisible: false,
       GoodEditorOfUserVisible: false,
-      curGoodClassIndex: -1,
-      curGoodOptionClassIndex: -1,
 
-      // 数据库读取属性
-      goodClasses: [],
-      goodOptionClasses: [],
+      curGoodClassIndex: cst.INDEX.INVALID_INDEX,
+      curGoodOptionClassIndex: cst.INDEX.INVALID_INDEX,
+      curDeskIndex: cst.INDEX.INVALID_INDEX,
+
+      db_goodClasses: [],
+      db_goodOptionClasses: [],
     }
   },
   methods: {
@@ -130,13 +127,14 @@ export default {
           this.$message.error(res.data.err)
           return
         }
-        this.goodClasses = res.data.data.goodClasses
+        this.db_goodClasses = res.data.data.goodClasses
         this.$message.success(res.data.msg)
-        console.log("getAllGoodClasses-this.goodClasses", this.goodClasses)
+        console.log("this.db_goodClasses", this.db_goodClasses)
       })
     },
-    turnToClassListMode() {
+    turnToClassListMode(deskIndex) {
       this.viewMode = cst.VIEW_MODE.CLASS_LIST_MODE
+      this.curDeskIndex = deskIndex
     },
     turnToGoodOptionListMode(goodOptionClassIndex) {
       this.viewMode = cst.VIEW_MODE.GOOD_OPTION_LIST_MODE
@@ -146,9 +144,9 @@ export default {
       this.viewMode = cst.VIEW_MODE.GOOD_LIST_MODE
       this.curGoodClassIndex = goodClassIndex
     },
-    turnToFatherMode() {
+    turnToParentComponentMode() {
       if (this.viewMode === cst.VIEW_MODE.CLASS_LIST_MODE) {
-        this.$emit("turnToFatherMode")
+        this.$emit("turnToParentComponentMode")
       }
       if (this.viewMode === cst.VIEW_MODE.GOOD_OPTION_LIST_MODE || this.viewMode === cst.VIEW_MODE.GOOD_LIST_MODE) {
         this.viewMode = cst.VIEW_MODE.CLASS_LIST_MODE
@@ -176,7 +174,7 @@ export default {
   },
   computed: {
     cpt_canBackButtonShow() {
-      return this.viewMode === cst.VIEW_MODE.CLASS_LIST_MODE && this.hasFather ||
+      return this.viewMode === cst.VIEW_MODE.CLASS_LIST_MODE && this.props_haveParentComponent ||
         this.viewMode === cst.VIEW_MODE.GOOD_LIST_MODE ||
         this.viewMode === cst.VIEW_MODE.GOOD_OPTION_LIST_MODE
     },
@@ -189,6 +187,12 @@ export default {
     cpt_canClassListShow() {
       return this.viewMode === cst.VIEW_MODE.CLASS_LIST_MODE
     },
+    cpt_isGoodListExist() {
+      return this.curGoodClassIndex !== cst.INDEX.INVALID_INDEX
+    },
+    cpt_isGoodOptionListExist() {
+      return this.curGoodOptionClassIndex !== cst.INDEX.INVALID_INDEX
+    }
   },
 
 }

@@ -1,15 +1,15 @@
 <!-- eslint-disable -->
 <template>
   <el-row>
+    <!--    1. 展示 商品选项 部分-->
     <el-col v-for="(goodOption,goodOptionIndex) in goodOptions" :key="goodOptionIndex"
             style="height: 300px; width: 202px; margin-left: 10px; border: none">
       <good-option-card :goodOption="goodOption"></good-option-card>
     </el-col>
-    <el-col v-if="isAdminView" style="height: 300px; width: 202px; margin-left: 10px; border: none">
+    <el-col v-if="props_isAdminView" style="height: 300px; width: 202px; margin-left: 10px; border: none">
       <good-option-special-card></good-option-special-card>
     </el-col>
   </el-row>
-
 </template>
 
 <script>
@@ -24,14 +24,11 @@ export default {
   components: {GoodOptionSpecialCard, GoodOptionCard, GoodSpacialCard, GoodCard},
   props: {
     goodOptions: Array,
-    isAdminView: Boolean,
-    className: String
+    props_isAdminView: Boolean,
   },
   data() {
     return {};
   },
-  methods: {
-
-  }
+  methods: {}
 }
 </script>

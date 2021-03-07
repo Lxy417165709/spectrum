@@ -23,10 +23,12 @@
                    @turnToClassListMode="turnToClassListMode"></desk-list>
       </div>
       <div v-show="viewMode !== 0">
-        <good-class :isAdminView="false" :hasFather="true" ref="goodClass"
-                    @turnToFatherMode="turnToDeskListMode"></good-class>
+        <good-class :props_isAdminView="false" :props_haveParentComponent="true" ref="goodClass"
+                    @turnToParentComponentMode="turnToDeskListMode"></good-class>
       </div>
     </el-main>
+
+    <!--    3. 桌类添加、编辑-->
     <el-dialog
       title="桌类添加/编辑"
       :visible.sync="deskSetEditorVisible"

@@ -10,5 +10,9 @@ export default {
     // this.VIEW_MODE.CLASS_LIST_MODE,
     // this.VIEW_MODE.GOOD_LIST_MODE,
     // this.VIEW_MODE.GOOD_OPTION_LIST_MODE,
-  ]
+  ],
+  INDEX: {
+    INVALID_INDEX: -1,
+  }
+
 }

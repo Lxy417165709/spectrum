@@ -1,17 +1,14 @@
 <!-- eslint-disable -->
 <template>
   <el-row>
+    <!--    1. 展示 商品选项类 部分-->
     <el-col v-for="(goodOptionClass,goodOptionClassIndex) in goodOptionClasses" :key="goodOptionClassIndex"
             style="height: 300px; width: 202px; margin-left: 10px; border: none">
       <good-option-class-card
-                              :goodOptionClass="goodOptionClass"
-                              @click.native="handleGoodOptionClassCardClick(goodOptionClassIndex)"
+        :goodOptionClass="goodOptionClass"
+        @click.native="handleGoodOptionClassCardClick(goodOptionClassIndex)"
       ></good-option-class-card>
-
     </el-col>
-    <!--    <el-col v-if="isAdminView" style="height: 300px; width: 202px; margin-left: 10px; border: none">-->
-    <!--      <good-option-special-card></good-option-special-card>-->
-    <!--    </el-col>-->
   </el-row>
 </template>
 
@@ -26,7 +23,7 @@ export default {
   components: {GoodOptionClassCard, GoodOptionCard, GoodOptionSpecialCard},
   props: {
     goodOptionClasses: Array,
-    isAdminView: Boolean,
+    props_isAdminView: Boolean,
   },
   data() {
     return {};

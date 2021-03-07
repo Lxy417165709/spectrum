@@ -1,11 +1,14 @@
 <!-- eslint-disable -->
 <template>
   <el-row>
+    <!--    1. 展示 商品 部分-->
     <el-col v-for="(good,goodIndex) in goods" :key="goodIndex"
             style="height: 300px; width: 202px; margin-left: 10px; border: none">
       <good-card :good="good" @dblclick.native="openGoodEditor(good)"></good-card>
     </el-col>
-    <el-col v-if="isAdminView" style="height: 300px; width: 202px; margin-left: 10px; border: none">
+
+    <!--    2. 添加 商品 部分-->
+    <el-col v-if="props_isAdminView" style="height: 300px; width: 202px; margin-left: 10px; border: none">
       <good-spacial-card @click.native="tryToAddGood()"></good-spacial-card>
     </el-col>
   </el-row>
@@ -22,18 +25,15 @@ export default {
   components: {GoodSpacialCard, GoodCard},
   props: {
     goods: Array,
-    isAdminView: Boolean,
+    props_isAdminView: Boolean,
     className: String
   },
   data() {
     return {};
   },
   methods: {
-    handleButtonClick() {
-      this.$emit("turnToClassListMode")
-    },
     openGoodEditor(good) {
-      if (this.isAdminView) {
+      if (this.props_isAdminView) {
         this.openGoodEditorOfAdmin(good)
       } else {
         this.openGoodEditorOfUser(good)
@@ -52,6 +52,4 @@ export default {
     }
   }
 }
-
-// todo: 菜单显示不太正常！！！
 </script>

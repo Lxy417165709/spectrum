@@ -5,7 +5,7 @@
       <DeskSet/>
     </el-tab-pane>
     <el-tab-pane label="商品管理" name="2">
-      <GoodClass :isAdminView="true" :hasFather="false"/>
+      <GoodClass :props_isAdminView="true" :props_haveParentComponent="false"/>
     </el-tab-pane>
     <el-tab-pane label="订单" name="3">
       <Order></Order>

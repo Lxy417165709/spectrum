@@ -1,6 +1,7 @@
 <!-- eslint-disable -->
 <template>
   <el-row>
+    <!--    1. 展示 桌位 部分-->
     <el-col v-for="(desk,deskIndex) in desks" :key="deskIndex"
             style="height: 300px; width: 202px; margin-left: 10px; border: none">
       <span @click="handleDeskCardClick(deskIndex)">
@@ -14,6 +15,7 @@
 <script>
 /* eslint-disable */
 import DeskCard from "../card/DeskCard";
+
 export default {
   components: {DeskCard},
   props: {

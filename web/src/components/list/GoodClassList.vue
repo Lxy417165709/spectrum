@@ -1,9 +1,8 @@
 <!-- eslint-disable -->
 <template>
   <el-row>
-    <!--    <el-col v-for="(goodClass,goodClassIndex) in goodClasses" :key="goodClassIndex"-->
-    <!--            v-if="classType === 1 && goodClass.classType===1 || classType === -1-->
-    <!--            && (goodClass.classType=== 2 || goodClass.classType=== 3)"-->
+
+    <!--    1. 展示 商品类 部分-->
     <el-col v-for="(goodClass,goodClassIndex) in goodClasses" :key="goodClassIndex"
             style="height: 300px; width: 202px; margin-left: 10px; border: none">
 
@@ -12,7 +11,9 @@
                        @click.native="handleGoodClassCardClick(goodClassIndex)"></good-class-card>
 
     </el-col>
-    <el-col v-if="isAdminView" style="height: 300px; width: 202px; margin-left: 10px; border: none">
+
+    <!--    2. 添加 商品类 部分-->
+    <el-col v-if="props_isAdminView" style="height: 300px; width: 202px; margin-left: 10px; border: none">
       <good-class-spacial-card @click.native="openGoodClassEditor"></good-class-spacial-card>
     </el-col>
   </el-row>
@@ -28,14 +29,14 @@ export default {
   components: {GoodClassSpacialCard, GoodClassCard},
   props: {
     goodClasses: Array,
-    isAdminView: Boolean,
+    props_isAdminView: Boolean,
   },
   data() {
     return {};
   },
   methods: {
     handleGoodClassCardClick(goodClassIndex) {
-      this.$emit("turnToGoodListMode",  goodClassIndex)
+      this.$emit("turnToGoodListMode", goodClassIndex)
     },
     openGoodClassEditor() {
       this.$emit("openGoodClassEditor", test.blankGoodClass)
