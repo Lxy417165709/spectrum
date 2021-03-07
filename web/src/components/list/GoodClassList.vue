@@ -12,7 +12,7 @@
         ></good-class-card>
       </span>
     </el-col>
-    <el-col v-if="isEditMode && classType===1" style="height: 300px; width: 202px; margin-left: 10px; border: none">
+    <el-col v-if="isAdminView && classType===1" style="height: 300px; width: 202px; margin-left: 10px; border: none">
       <good-class-spacial-card @click.native="openGoodClassEditor"></good-class-spacial-card>
     </el-col>
   </el-row>
@@ -22,13 +22,14 @@
 /* eslint-disable */
 import GoodClassCard from "../card/GoodClassCard";
 import GoodClassSpacialCard from "../card/GoodClassSpacialCard";
+import test from "../../common/test/test";
 
 export default {
   components: {GoodClassSpacialCard, GoodClassCard},
   props: {
     classType: Number,
     goodClasses: Array,
-    isEditMode: Boolean
+    isAdminView: Boolean
   },
   data() {
     return {};
@@ -38,7 +39,7 @@ export default {
       this.$emit("turnToGoodListMode", 2, goodClassIndex)
     },
     openGoodClassEditor() {
-      this.$emit("openGoodClassEditor")
+      this.$emit("openGoodClassEditor", test.blankGoodClass)
     }
   }
 }

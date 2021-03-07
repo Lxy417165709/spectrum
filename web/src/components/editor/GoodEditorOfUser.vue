@@ -49,7 +49,7 @@
 import DiscountEditor from "./DiscountEditor";
 
 export default {
-  name: "GoodSellEditor",
+  name: "GoodEditorOfUser",
   components: {DiscountEditor},
   props: {},
   data() {

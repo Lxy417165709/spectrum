@@ -77,7 +77,7 @@ import utils from "../../common/utils";
 import global from "../../common/global_object/global";
 
 export default {
-  name: "GoodInfoEditor",
+  name: "GoodEditorOfAdmin",
   components: {GoodSizeEditor},
   mounted() {
     this.selectableElement = test.selectableElement
@@ -85,12 +85,15 @@ export default {
   data() {
     return {
       good: {},
+      className: "",
+
       selectableElement: {},
       addTabCount: 0,
     }
   },
   methods: {
     addAttachElement() {
+      // todo: 添加后，应该把元素从可选列表中删除
       for (let i = 0; i < this.selectableElement.attachElements.length; i++) {
         if (this.selectableElement.attachElements[i].name === this.selectableElement.curAttachElementName) {
           this.good.attachElements.push(this.selectableElement.attachElements[i])
@@ -98,6 +101,7 @@ export default {
       }
     },
     addFavor() {
+      // todo: 添加后，应该把元素从可选列表中删除
       for (let i = 0; i < this.selectableElement.favors.length; i++) {
         if (this.selectableElement.favors[i].name === this.selectableElement.curFavorName) {
           this.good.favors.push(this.selectableElement.favors[i])
@@ -106,6 +110,7 @@ export default {
     },
     handleClick(tab, event) {
       this.addTabCount++
+      // todo: name 应该是可以编辑的
       let name = "未设定规格" + this.addTabCount
       // todo: sizeInfo 应该是一个对象，要有构造函数
       this.good.sizeInfos.push({
@@ -121,15 +126,15 @@ export default {
     },
     async addGood(good) {
       let model = utils.getRequestModel("mvp", "AddGood", {
-        good: utils.goodToPbGood(good), // todo: good.sizeInfos 字段没获取到
-        className: "test_class",  // todo: className 获取
+        good: utils.goodToPbGood(good),
+        className: this.className,
       })
       await utils.sendRequestModel(model).then(res => {
         if (!utils.hasRequestSuccess(res)) {
-          console.log(res.data.err)
-
+          this.$message.error(res.data.err)
+          return
         }
-        // todo: 成功提示
+        this.$message.success(res.data.msg)
       })
     }
   }

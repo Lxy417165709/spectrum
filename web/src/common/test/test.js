@@ -1014,4 +1014,9 @@ export default {
     attachElements: [],
     favors: [],
   },
+  blankGoodClass: {
+    name: "请输入",
+    pictureStorePath: "",
+    goods: [],
+  }
 }

@@ -23,7 +23,7 @@
                    @turnToGoodClassListMode="turnToGoodClassListMode"></desk-list>
       </div>
       <div v-show="viewMode !== 0">
-        <good-class :isEditMode="false" :hasFather="true" ref="goodClass"
+        <good-class :isAdminView="false" :hasFather="true" ref="goodClass"
                     @turnToFatherMode="turnToDeskListMode"></good-class>
       </div>
     </el-main>
