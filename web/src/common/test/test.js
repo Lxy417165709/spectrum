@@ -1018,5 +1018,24 @@ export default {
     name: "请输入",
     pictureStorePath: "",
     goods: [],
-  }
+  },
+  goodOptionClasses: [
+    {
+      name: "附属选项类",
+      goodOptions: [
+        {
+          name: "冰量",
+          pictureStorePath: "",
+        },
+        {
+          name: "温度",
+          pictureStorePath: "",
+        },
+        {
+          name: "辣度",
+          pictureStorePath: "",
+        }
+      ],
+    }
+  ]
 }

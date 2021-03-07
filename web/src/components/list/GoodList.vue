@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     handleButtonClick() {
-      this.$emit("turnToGoodClassListMode")
+      this.$emit("turnToClassListMode")
     },
     openGoodEditor(good) {
       if (this.isAdminView) {

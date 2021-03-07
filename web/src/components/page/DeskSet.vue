@@ -20,7 +20,7 @@
         </el-row>
         <el-divider content-position="left">{{ deskSets[curDeskSetIndex].name }}</el-divider>
         <desk-list :desks="deskSets[curDeskSetIndex].desks"
-                   @turnToGoodClassListMode="turnToGoodClassListMode"></desk-list>
+                   @turnToClassListMode="turnToClassListMode"></desk-list>
       </div>
       <div v-show="viewMode !== 0">
         <good-class :isAdminView="false" :hasFather="true" ref="goodClass"
@@ -66,7 +66,7 @@ export default {
       this.curDeskIndex = -1
       this.$refs.goodClass.viewMode = 1; // 父传子
     },
-    turnToGoodClassListMode(deskIndex) {
+    turnToClassListMode(deskIndex) {
       this.viewMode = 1
       this.curDeskIndex = deskIndex
     },
