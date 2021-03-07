@@ -2184,7 +2184,7 @@ func (*DeleteFavorForGoodRes) Descriptor() ([]byte, []int) {
 	return file_common_pb_mvp_proto_rawDescGZIP(), []int{38}
 }
 
-type DeskSet struct {
+type DeskClass struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -2193,8 +2193,8 @@ type DeskSet struct {
 	Desks []*Desk `protobuf:"bytes,2,rep,name=desks,proto3" json:"desks,omitempty"`
 }
 
-func (x *DeskSet) Reset() {
-	*x = DeskSet{}
+func (x *DeskClass) Reset() {
+	*x = DeskClass{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_common_pb_mvp_proto_msgTypes[39]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2202,13 +2202,13 @@ func (x *DeskSet) Reset() {
 	}
 }
 
-func (x *DeskSet) String() string {
+func (x *DeskClass) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DeskSet) ProtoMessage() {}
+func (*DeskClass) ProtoMessage() {}
 
-func (x *DeskSet) ProtoReflect() protoreflect.Message {
+func (x *DeskClass) ProtoReflect() protoreflect.Message {
 	mi := &file_common_pb_mvp_proto_msgTypes[39]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2220,33 +2220,33 @@ func (x *DeskSet) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DeskSet.ProtoReflect.Descriptor instead.
-func (*DeskSet) Descriptor() ([]byte, []int) {
+// Deprecated: Use DeskClass.ProtoReflect.Descriptor instead.
+func (*DeskClass) Descriptor() ([]byte, []int) {
 	return file_common_pb_mvp_proto_rawDescGZIP(), []int{39}
 }
 
-func (x *DeskSet) GetName() string {
+func (x *DeskClass) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *DeskSet) GetDesks() []*Desk {
+func (x *DeskClass) GetDesks() []*Desk {
 	if x != nil {
 		return x.Desks
 	}
 	return nil
 }
 
-type GetAllDeskSetsReq struct {
+type GetAllDeskClassesReq struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
 
-func (x *GetAllDeskSetsReq) Reset() {
-	*x = GetAllDeskSetsReq{}
+func (x *GetAllDeskClassesReq) Reset() {
+	*x = GetAllDeskClassesReq{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_common_pb_mvp_proto_msgTypes[40]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2254,13 +2254,13 @@ func (x *GetAllDeskSetsReq) Reset() {
 	}
 }
 
-func (x *GetAllDeskSetsReq) String() string {
+func (x *GetAllDeskClassesReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetAllDeskSetsReq) ProtoMessage() {}
+func (*GetAllDeskClassesReq) ProtoMessage() {}
 
-func (x *GetAllDeskSetsReq) ProtoReflect() protoreflect.Message {
+func (x *GetAllDeskClassesReq) ProtoReflect() protoreflect.Message {
 	mi := &file_common_pb_mvp_proto_msgTypes[40]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2272,21 +2272,21 @@ func (x *GetAllDeskSetsReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetAllDeskSetsReq.ProtoReflect.Descriptor instead.
-func (*GetAllDeskSetsReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetAllDeskClassesReq.ProtoReflect.Descriptor instead.
+func (*GetAllDeskClassesReq) Descriptor() ([]byte, []int) {
 	return file_common_pb_mvp_proto_rawDescGZIP(), []int{40}
 }
 
-type GetAllDeskSetsRes struct {
+type GetAllDeskClassesRes struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	DeskSets []*DeskSet `protobuf:"bytes,1,rep,name=deskSets,proto3" json:"deskSets,omitempty"`
+	DeskClasses []*DeskClass `protobuf:"bytes,1,rep,name=deskClasses,proto3" json:"deskClasses,omitempty"`
 }
 
-func (x *GetAllDeskSetsRes) Reset() {
-	*x = GetAllDeskSetsRes{}
+func (x *GetAllDeskClassesRes) Reset() {
+	*x = GetAllDeskClassesRes{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_common_pb_mvp_proto_msgTypes[41]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2294,13 +2294,13 @@ func (x *GetAllDeskSetsRes) Reset() {
 	}
 }
 
-func (x *GetAllDeskSetsRes) String() string {
+func (x *GetAllDeskClassesRes) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetAllDeskSetsRes) ProtoMessage() {}
+func (*GetAllDeskClassesRes) ProtoMessage() {}
 
-func (x *GetAllDeskSetsRes) ProtoReflect() protoreflect.Message {
+func (x *GetAllDeskClassesRes) ProtoReflect() protoreflect.Message {
 	mi := &file_common_pb_mvp_proto_msgTypes[41]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2312,14 +2312,14 @@ func (x *GetAllDeskSetsRes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetAllDeskSetsRes.ProtoReflect.Descriptor instead.
-func (*GetAllDeskSetsRes) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetAllDeskClassesRes.ProtoReflect.Descriptor instead.
+func (*GetAllDeskClassesRes) Descriptor() ([]byte, []int) {
 	return file_common_pb_mvp_proto_rawDescGZIP(), []int{41}
 }
 
-func (x *GetAllDeskSetsRes) GetDeskSets() []*DeskSet {
+func (x *GetAllDeskClassesRes) GetDeskClasses() []*DeskClass {
 	if x != nil {
-		return x.DeskSets
+		return x.DeskClasses
 	}
 	return nil
 }
@@ -2626,9 +2626,9 @@ var file_common_pb_mvp_proto_goTypes = []interface{}{
 	(*ChangeDeskRes)(nil),         // 39: pb.ChangeDeskRes
 	(*DeleteFavorForGoodReq)(nil), // 40: pb.DeleteFavorForGoodReq
 	(*DeleteFavorForGoodRes)(nil), // 41: pb.DeleteFavorForGoodRes
-	(*DeskSet)(nil),               // 42: pb.DeskSet
-	(*GetAllDeskSetsReq)(nil),     // 43: pb.GetAllDeskSetsReq
-	(*GetAllDeskSetsRes)(nil),     // 44: pb.GetAllDeskSetsRes
+	(*DeskClass)(nil),               // 42: pb.DeskClass
+	(*GetAllDeskClassesReq)(nil),     // 43: pb.GetAllDeskClassesReq
+	(*GetAllDeskClassesRes)(nil),     // 44: pb.GetAllDeskClassesRes
 }
 var file_common_pb_mvp_proto_depIdxs = []int32{
 	5,  // 0: pb.Order.desk:type_name -> pb.Desk
@@ -2658,8 +2658,8 @@ var file_common_pb_mvp_proto_depIdxs = []int32{
 	4,  // 24: pb.GetOrderRes.order:type_name -> pb.Order
 	9,  // 25: pb.AddElementReq.element:type_name -> pb.Element
 	11, // 26: pb.DeleteFavorForGoodReq.favor:type_name -> pb.Favor
-	5,  // 27: pb.DeskSet.desks:type_name -> pb.Desk
-	42, // 28: pb.GetAllDeskSetsRes.deskSets:type_name -> pb.DeskSet
+	5,  // 27: pb.DeskClass.desks:type_name -> pb.Desk
+	42, // 28: pb.GetAllDeskClassesRes.deskClasses:type_name -> pb.DeskClass
 	30, // 29: pb.Mvp.GetAllGoodClasses:input_type -> pb.GetAllGoodClassesReq
 	16, // 30: pb.Mvp.AddGoodClass:input_type -> pb.AddGoodClassReq
 	14, // 31: pb.Mvp.AddGood:input_type -> pb.AddGoodReq
@@ -2674,7 +2674,7 @@ var file_common_pb_mvp_proto_depIdxs = []int32{
 	34, // 40: pb.Mvp.CheckOut:input_type -> pb.CheckOutReq
 	12, // 41: pb.Mvp.AddFavorForGood:input_type -> pb.AddFavorForGoodReq
 	40, // 42: pb.Mvp.DeleteFavorForGood:input_type -> pb.DeleteFavorForGoodReq
-	43, // 43: pb.Mvp.GetAllDeskSets:input_type -> pb.GetAllDeskSetsReq
+	43, // 43: pb.Mvp.GetAllDeskClasses:input_type -> pb.GetAllDeskClassesReq
 	31, // 44: pb.Mvp.GetAllGoodClasses:output_type -> pb.GetAllGoodClassesRes
 	17, // 45: pb.Mvp.AddGoodClass:output_type -> pb.AddGoodClassRes
 	15, // 46: pb.Mvp.AddGood:output_type -> pb.AddGoodRes
@@ -2689,7 +2689,7 @@ var file_common_pb_mvp_proto_depIdxs = []int32{
 	35, // 55: pb.Mvp.CheckOut:output_type -> pb.CheckOutRes
 	13, // 56: pb.Mvp.AddFavorForGood:output_type -> pb.AddFavorForGoodRes
 	41, // 57: pb.Mvp.DeleteFavorForGood:output_type -> pb.DeleteFavorForGoodRes
-	44, // 58: pb.Mvp.GetAllDeskSets:output_type -> pb.GetAllDeskSetsRes
+	44, // 58: pb.Mvp.GetAllDeskClasses:output_type -> pb.GetAllDeskClassesRes
 	44, // [44:59] is the sub-list for method output_type
 	29, // [29:44] is the sub-list for method input_type
 	29, // [29:29] is the sub-list for extension type_name
@@ -3172,7 +3172,7 @@ func file_common_pb_mvp_proto_init() {
 			}
 		}
 		file_common_pb_mvp_proto_msgTypes[39].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeskSet); i {
+			switch v := v.(*DeskClass); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3184,7 +3184,7 @@ func file_common_pb_mvp_proto_init() {
 			}
 		}
 		file_common_pb_mvp_proto_msgTypes[40].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetAllDeskSetsReq); i {
+			switch v := v.(*GetAllDeskClassesReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3196,7 +3196,7 @@ func file_common_pb_mvp_proto_init() {
 			}
 		}
 		file_common_pb_mvp_proto_msgTypes[41].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetAllDeskSetsRes); i {
+			switch v := v.(*GetAllDeskClassesRes); i {
 			case 0:
 				return &v.state
 			case 1:

@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 export default {
-  deskSets: [
+  deskClasses: [
     {
       name: "台球桌",
       desks: [

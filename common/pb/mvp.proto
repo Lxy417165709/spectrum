@@ -197,14 +197,14 @@ message DeleteFavorForGoodReq {
 message DeleteFavorForGoodRes{}
 
 
-message DeskSet {
+message DeskClass {
     string name = 1;
     repeated Desk desks = 2;
 }
 
-message GetAllDeskSetsReq{}
-message GetAllDeskSetsRes{
-    repeated DeskSet deskSets = 1;
+message GetAllDeskClassesReq{}
+message GetAllDeskClassesRes{
+    repeated DeskClass deskClasses = 1;
 }
 
 service Mvp {
@@ -228,7 +228,7 @@ service Mvp {
     rpc AddFavorForGood(AddFavorForGoodReq) returns(AddFavorForGoodRes);    // 为货物添加优惠
     rpc DeleteFavorForGood(DeleteFavorForGoodReq) returns(DeleteFavorForGoodRes);   // 删除货物的优惠
 
-    rpc GetAllDeskSets(GetAllDeskSetsReq) returns(GetAllDeskSetsRes);   // 获得所有桌、桌位
+    rpc GetAllDeskClasses(GetAllDeskClassesReq) returns(GetAllDeskClassesRes);   // 获得所有桌、桌位
 }
 
 // todo: 增加桌位删除接口

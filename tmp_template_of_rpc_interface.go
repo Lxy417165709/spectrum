@@ -1,5 +1,5 @@
-func (s MvpServer) GetAllDeskSets(ctx context.Context, req *pb.GetAllDeskSetsReq) (*pb.GetAllDeskSetsRes, error) {
-	logger.Info("GetAllDeskSets", zap.Any("ctx", ctx), zap.Any("req", req))
+func (s MvpServer) GetAllDeskClasses(ctx context.Context, req *pb.GetAllDeskClassesReq) (*pb.GetAllDeskClassesRes, error) {
+	logger.Info("GetAllDeskClasses", zap.Any("ctx", ctx), zap.Any("req", req))
 
-	var res pb.GetAllDeskSetsRes
+	var res pb.GetAllDeskClassesRes
 }

@@ -31,7 +31,7 @@ type MvpClient interface {
 	CheckOut(ctx context.Context, in *CheckOutReq, opts ...grpc.CallOption) (*CheckOutRes, error)
 	AddFavorForGood(ctx context.Context, in *AddFavorForGoodReq, opts ...grpc.CallOption) (*AddFavorForGoodRes, error)
 	DeleteFavorForGood(ctx context.Context, in *DeleteFavorForGoodReq, opts ...grpc.CallOption) (*DeleteFavorForGoodRes, error)
-	GetAllDeskSets(ctx context.Context, in *GetAllDeskSetsReq, opts ...grpc.CallOption) (*GetAllDeskSetsRes, error)
+	GetAllDeskClasses(ctx context.Context, in *GetAllDeskClassesReq, opts ...grpc.CallOption) (*GetAllDeskClassesRes, error)
 }
 
 type mvpClient struct {
@@ -168,9 +168,9 @@ func (c *mvpClient) DeleteFavorForGood(ctx context.Context, in *DeleteFavorForGo
 	return out, nil
 }
 
-func (c *mvpClient) GetAllDeskSets(ctx context.Context, in *GetAllDeskSetsReq, opts ...grpc.CallOption) (*GetAllDeskSetsRes, error) {
-	out := new(GetAllDeskSetsRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/GetAllDeskSets", in, out, opts...)
+func (c *mvpClient) GetAllDeskClasses(ctx context.Context, in *GetAllDeskClassesReq, opts ...grpc.CallOption) (*GetAllDeskClassesRes, error) {
+	out := new(GetAllDeskClassesRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/GetAllDeskClasses", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -195,7 +195,7 @@ type MvpServer interface {
 	CheckOut(context.Context, *CheckOutReq) (*CheckOutRes, error)
 	AddFavorForGood(context.Context, *AddFavorForGoodReq) (*AddFavorForGoodRes, error)
 	DeleteFavorForGood(context.Context, *DeleteFavorForGoodReq) (*DeleteFavorForGoodRes, error)
-	GetAllDeskSets(context.Context, *GetAllDeskSetsReq) (*GetAllDeskSetsRes, error)
+	GetAllDeskClasses(context.Context, *GetAllDeskClassesReq) (*GetAllDeskClassesRes, error)
 	mustEmbedUnimplementedMvpServer()
 }
 
@@ -245,8 +245,8 @@ func (UnimplementedMvpServer) AddFavorForGood(context.Context, *AddFavorForGoodR
 func (UnimplementedMvpServer) DeleteFavorForGood(context.Context, *DeleteFavorForGoodReq) (*DeleteFavorForGoodRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteFavorForGood not implemented")
 }
-func (UnimplementedMvpServer) GetAllDeskSets(context.Context, *GetAllDeskSetsReq) (*GetAllDeskSetsRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAllDeskSets not implemented")
+func (UnimplementedMvpServer) GetAllDeskClasses(context.Context, *GetAllDeskClassesReq) (*GetAllDeskClassesRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllDeskClasses not implemented")
 }
 func (UnimplementedMvpServer) mustEmbedUnimplementedMvpServer() {}
 
@@ -513,20 +513,20 @@ func _Mvp_DeleteFavorForGood_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Mvp_GetAllDeskSets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAllDeskSetsReq)
+func _Mvp_GetAllDeskClasses_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllDeskClassesReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MvpServer).GetAllDeskSets(ctx, in)
+		return srv.(MvpServer).GetAllDeskClasses(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.Mvp/GetAllDeskSets",
+		FullMethod: "/pb.Mvp/GetAllDeskClasses",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).GetAllDeskSets(ctx, req.(*GetAllDeskSetsReq))
+		return srv.(MvpServer).GetAllDeskClasses(ctx, req.(*GetAllDeskClassesReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -592,8 +592,8 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Mvp_DeleteFavorForGood_Handler,
 		},
 		{
-			MethodName: "GetAllDeskSets",
-			Handler:    _Mvp_GetAllDeskSets_Handler,
+			MethodName: "GetAllDeskClasses",
+			Handler:    _Mvp_GetAllDeskClasses_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

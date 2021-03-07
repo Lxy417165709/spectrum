@@ -2,7 +2,7 @@
 <template>
   <el-tabs v-model="activeName" @tab-click="handleClick">
     <el-tab-pane label="桌位管理" name="1">
-      <DeskSet/>
+      <DeskClass/>
     </el-tab-pane>
     <el-tab-pane label="商品管理" name="2">
       <GoodClass :props_isAdminView="true" :props_haveParentComponent="false"/>
@@ -16,7 +16,7 @@
 
 /* eslint-disable */
 import GoodOrder from "./unuse/GoodOrder";
-import DeskSet from "./page/DeskSet";
+import DeskClass from "./page/DeskClass";
 import GoodClass from "./manager/GoodClass";
 import GoodEditorOfUser from "./editor/GoodEditorOfUser";
 import Order from "./page/Order";
@@ -29,7 +29,7 @@ export default {
     GoodEditorOfUser,
     GoodClass,
     GoodOrder,
-    DeskSet,
+    DeskClass,
   },
   mounted() {
     this.goodClasses = test.goodClasses

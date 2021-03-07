@@ -1,7 +1,7 @@
 <!-- eslint-disable -->
 <template>
   <el-form label-width="80px">
-    <el-form-item label="桌类名">{{ deskSet.name }}</el-form-item>
+    <el-form-item label="桌类名">{{ deskClass.name }}</el-form-item>
     <!--    <el-form-item label="照片">-->
     <!--      <el-upload-->
     <!--        action="/api/upload"-->
@@ -22,11 +22,11 @@
 /* eslint-disable */
 import DeskInfoEditor from "./DeskSizeEditor";
 export default {
-  name: "DeskSetEditor",
+  name: "DeskClassEditor",
   components: {DeskInfoEditor},
   data() {
     return {
-      deskSet: {
+      deskClass: {
         name: "桌球"
       }
     }
