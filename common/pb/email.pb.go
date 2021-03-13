@@ -30,9 +30,9 @@ type SendEmailReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	To      string `protobuf:"bytes,1,opt,name=to,proto3" json:"to"`
-	Content string `protobuf:"bytes,2,opt,name=content,proto3" json:"content"`
-	Subject string `protobuf:"bytes,3,opt,name=subject,proto3" json:"subject"`
+	To      string `protobuf:"bytes,1,opt,name=to,proto3" json:"to,omitempty"`
+	Content string `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
+	Subject string `protobuf:"bytes,3,opt,name=subject,proto3" json:"subject,omitempty"`
 }
 
 func (x *SendEmailReq) Reset() {

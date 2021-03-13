@@ -40,7 +40,7 @@
       <el-button type="primary" @click="addAttachElement()">添加</el-button>
     </el-form-item>
     <el-form-item label="已选">
-      <el-tag v-for="(element,index) in good.attachElements" :key="index" closable style="margin-right: 5px"
+      <el-tag v-for="(element,index) in good.attachElements" :key="index" closable style="margin-right: 5px" v-if="element.type===1"
               type="success">
         {{ element.name }}
         <!--        @close="delSelectGoodClass(index)"-->
@@ -57,7 +57,7 @@
     </el-form-item>
 
     <el-form-item label="已选">
-      <el-tag v-for="(element,index) in good.favors" :key="index" closable style="margin-right: 5px"
+      <el-tag v-for="(element,index) in good.attachElements" :key="index" closable style="margin-right: 5px"  v-if="element.type===2"
               type="success">
         {{ element.name }}
       </el-tag>

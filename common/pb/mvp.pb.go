@@ -80,19 +80,22 @@ func (FavorType) EnumDescriptor() ([]byte, []int) {
 type ElementType int32
 
 const (
-	ElementType_Main   ElementType = 0
-	ElementType_Attach ElementType = 1
+	ElementType_Main       ElementType = 0
+	ElementType_Option     ElementType = 1
+	ElementType_Ingredient ElementType = 2
 )
 
 // Enum value maps for ElementType.
 var (
 	ElementType_name = map[int32]string{
 		0: "Main",
-		1: "Attach",
+		1: "Option",
+		2: "Ingredient",
 	}
 	ElementType_value = map[string]int32{
-		"Main":   0,
-		"Attach": 1,
+		"Main":       0,
+		"Option":     1,
+		"Ingredient": 2,
 	}
 )
 
@@ -175,9 +178,9 @@ type ExpenseInfo struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	NonFavorExpense   float64 `protobuf:"fixed64,1,opt,name=nonFavorExpense,proto3" json:"nonFavorExpense"`    // 未打折费用
-	CheckOutTimestamp int64   `protobuf:"varint,2,opt,name=checkOutTimestamp,proto3" json:"checkOutTimestamp"` // 结账时间
-	Expense           float64 `protobuf:"fixed64,3,opt,name=expense,proto3" json:"expense"`                    // 打折后费用
+	NonFavorExpense   float64 `protobuf:"fixed64,1,opt,name=nonFavorExpense,proto3" json:"nonFavorExpense,omitempty"`    // 未打折费用
+	CheckOutTimestamp int64   `protobuf:"varint,2,opt,name=checkOutTimestamp,proto3" json:"checkOutTimestamp,omitempty"` // 结账时间
+	Expense           float64 `protobuf:"fixed64,3,opt,name=expense,proto3" json:"expense,omitempty"`                    // 打折后费用
 }
 
 func (x *ExpenseInfo) Reset() {
@@ -238,11 +241,11 @@ type Order struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id          int64        `protobuf:"varint,1,opt,name=id,proto3" json:"id"`
-	Desk        *Desk        `protobuf:"bytes,2,opt,name=desk,proto3" json:"desk"`
-	Goods       []*Good      `protobuf:"bytes,3,rep,name=goods,proto3" json:"goods"`
-	Favors      []*Favor     `protobuf:"bytes,4,rep,name=favors,proto3" json:"favors"`
-	ExpenseInfo *ExpenseInfo `protobuf:"bytes,5,opt,name=expenseInfo,proto3" json:"expenseInfo"`
+	Id          int64        `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Desk        *Desk        `protobuf:"bytes,2,opt,name=desk,proto3" json:"desk,omitempty"`
+	Goods       []*Good      `protobuf:"bytes,3,rep,name=goods,proto3" json:"goods,omitempty"`
+	Favors      []*Favor     `protobuf:"bytes,4,rep,name=favors,proto3" json:"favors,omitempty"`
+	ExpenseInfo *ExpenseInfo `protobuf:"bytes,5,opt,name=expenseInfo,proto3" json:"expenseInfo,omitempty"`
 }
 
 func (x *Order) Reset() {
@@ -317,12 +320,12 @@ type Desk struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id             int64        `protobuf:"varint,1,opt,name=id,proto3" json:"id"`
-	Space          *Space       `protobuf:"bytes,2,opt,name=space,proto3" json:"space"`
-	StartTimestamp int64        `protobuf:"varint,3,opt,name=startTimestamp,proto3" json:"startTimestamp"`
-	EndTimestamp   int64        `protobuf:"varint,4,opt,name=endTimestamp,proto3" json:"endTimestamp"`
-	Favors         []*Favor     `protobuf:"bytes,5,rep,name=favors,proto3" json:"favors"`
-	ExpenseInfo    *ExpenseInfo `protobuf:"bytes,6,opt,name=expenseInfo,proto3" json:"expenseInfo"`
+	Id             int64        `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Space          *Space       `protobuf:"bytes,2,opt,name=space,proto3" json:"space,omitempty"`
+	StartTimestamp int64        `protobuf:"varint,3,opt,name=startTimestamp,proto3" json:"startTimestamp,omitempty"`
+	EndTimestamp   int64        `protobuf:"varint,4,opt,name=endTimestamp,proto3" json:"endTimestamp,omitempty"`
+	Favors         []*Favor     `protobuf:"bytes,5,rep,name=favors,proto3" json:"favors,omitempty"`
+	ExpenseInfo    *ExpenseInfo `protobuf:"bytes,6,opt,name=expenseInfo,proto3" json:"expenseInfo,omitempty"`
 }
 
 func (x *Desk) Reset() {
@@ -404,11 +407,11 @@ type Good struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id             int64        `protobuf:"varint,1,opt,name=id,proto3" json:"id"`
-	MainElement    *Element     `protobuf:"bytes,2,opt,name=mainElement,proto3" json:"mainElement"`
-	AttachElements []*Element   `protobuf:"bytes,3,rep,name=attachElements,proto3" json:"attachElements"`
-	Favors         []*Favor     `protobuf:"bytes,4,rep,name=favors,proto3" json:"favors"`
-	ExpenseInfo    *ExpenseInfo `protobuf:"bytes,5,opt,name=expenseInfo,proto3" json:"expenseInfo"`
+	Id             int64        `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	MainElement    *Element     `protobuf:"bytes,2,opt,name=mainElement,proto3" json:"mainElement,omitempty"`
+	AttachElements []*Element   `protobuf:"bytes,3,rep,name=attachElements,proto3" json:"attachElements,omitempty"`
+	Favors         []*Favor     `protobuf:"bytes,4,rep,name=favors,proto3" json:"favors,omitempty"`
+	ExpenseInfo    *ExpenseInfo `protobuf:"bytes,5,opt,name=expenseInfo,proto3" json:"expenseInfo,omitempty"`
 }
 
 func (x *Good) Reset() {
@@ -483,11 +486,11 @@ type Space struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Name             string      `protobuf:"bytes,1,opt,name=name,proto3" json:"name"`
-	Num              int64       `protobuf:"varint,2,opt,name=num,proto3" json:"num"`
-	Price            float64     `protobuf:"fixed64,3,opt,name=price,proto3" json:"price"`
-	BillingType      BillingType `protobuf:"varint,4,opt,name=billingType,proto3,enum=pb.BillingType" json:"billingType"`
-	PictureStorePath string      `protobuf:"bytes,5,opt,name=pictureStorePath,proto3" json:"pictureStorePath"`
+	Name             string      `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Num              int64       `protobuf:"varint,2,opt,name=num,proto3" json:"num,omitempty"`
+	Price            float64     `protobuf:"fixed64,3,opt,name=price,proto3" json:"price,omitempty"`
+	BillingType      BillingType `protobuf:"varint,4,opt,name=billingType,proto3,enum=pb.BillingType" json:"billingType,omitempty"`
+	PictureStorePath string      `protobuf:"bytes,5,opt,name=pictureStorePath,proto3" json:"pictureStorePath,omitempty"`
 }
 
 func (x *Space) Reset() {
@@ -562,8 +565,8 @@ type GoodClass struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Name             string `protobuf:"bytes,1,opt,name=name,proto3" json:"name"`
-	PictureStorePath string `protobuf:"bytes,2,opt,name=pictureStorePath,proto3" json:"pictureStorePath"` //    repeated Good goods = 2;
+	Name             string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	PictureStorePath string `protobuf:"bytes,2,opt,name=pictureStorePath,proto3" json:"pictureStorePath,omitempty"` //    repeated Good goods = 2;
 }
 
 func (x *GoodClass) Reset() {
@@ -617,9 +620,9 @@ type Element struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Name      string      `protobuf:"bytes,1,opt,name=name,proto3" json:"name"`
-	Type      ElementType `protobuf:"varint,2,opt,name=type,proto3,enum=pb.ElementType" json:"type"`
-	SizeInfos []*SizeInfo `protobuf:"bytes,3,rep,name=sizeInfos,proto3" json:"sizeInfos"`
+	Name      string      `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Type      ElementType `protobuf:"varint,2,opt,name=type,proto3,enum=pb.ElementType" json:"type,omitempty"`
+	SizeInfos []*SizeInfo `protobuf:"bytes,3,rep,name=sizeInfos,proto3" json:"sizeInfos,omitempty"`
 }
 
 func (x *Element) Reset() {
@@ -680,10 +683,10 @@ type SizeInfo struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Size             string  `protobuf:"bytes,1,opt,name=size,proto3" json:"size"`
-	Price            float64 `protobuf:"fixed64,2,opt,name=price,proto3" json:"price"`
-	PictureStorePath string  `protobuf:"bytes,3,opt,name=pictureStorePath,proto3" json:"pictureStorePath"`
-	IsSelected       bool    `protobuf:"varint,4,opt,name=isSelected,proto3" json:"isSelected"`
+	Size             string  `protobuf:"bytes,1,opt,name=size,proto3" json:"size,omitempty"`
+	Price            float64 `protobuf:"fixed64,2,opt,name=price,proto3" json:"price,omitempty"`
+	PictureStorePath string  `protobuf:"bytes,3,opt,name=pictureStorePath,proto3" json:"pictureStorePath,omitempty"`
+	IsSelected       bool    `protobuf:"varint,4,opt,name=isSelected,proto3" json:"isSelected,omitempty"`
 }
 
 func (x *SizeInfo) Reset() {
@@ -751,8 +754,8 @@ type Favor struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	FavorType  FavorType `protobuf:"varint,1,opt,name=FavorType,proto3,enum=pb.FavorType" json:"FavorType"`
-	Parameters []string  `protobuf:"bytes,2,rep,name=parameters,proto3" json:"parameters"`
+	FavorType  FavorType `protobuf:"varint,1,opt,name=FavorType,proto3,enum=pb.FavorType" json:"FavorType,omitempty"`
+	Parameters []string  `protobuf:"bytes,2,rep,name=parameters,proto3" json:"parameters,omitempty"`
 }
 
 func (x *Favor) Reset() {
@@ -806,8 +809,8 @@ type AddFavorForGoodReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	GoodID int64    `protobuf:"varint,1,opt,name=goodID,proto3" json:"goodID"`
-	Favors []*Favor `protobuf:"bytes,2,rep,name=favors,proto3" json:"favors"`
+	GoodID int64    `protobuf:"varint,1,opt,name=goodID,proto3" json:"goodID,omitempty"`
+	Favors []*Favor `protobuf:"bytes,2,rep,name=favors,proto3" json:"favors,omitempty"`
 }
 
 func (x *AddFavorForGoodReq) Reset() {
@@ -900,8 +903,8 @@ type AddGoodReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Good      *Good  `protobuf:"bytes,1,opt,name=good,proto3" json:"good"`
-	ClassName string `protobuf:"bytes,2,opt,name=className,proto3" json:"className"`
+	Good      *Good  `protobuf:"bytes,1,opt,name=good,proto3" json:"good,omitempty"`
+	ClassName string `protobuf:"bytes,2,opt,name=className,proto3" json:"className,omitempty"`
 }
 
 func (x *AddGoodReq) Reset() {
@@ -993,7 +996,7 @@ type AddGoodClassReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	GoodClass *GoodClass `protobuf:"bytes,1,opt,name=goodClass,proto3" json:"goodClass"`
+	GoodClass *GoodClass `protobuf:"bytes,1,opt,name=goodClass,proto3" json:"goodClass,omitempty"`
 }
 
 func (x *AddGoodClassReq) Reset() {
@@ -1078,7 +1081,7 @@ type AddSpaceReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Space *Space `protobuf:"bytes,1,opt,name=space,proto3" json:"space"`
+	Space *Space `protobuf:"bytes,1,opt,name=space,proto3" json:"space,omitempty"`
 }
 
 func (x *AddSpaceReq) Reset() {
@@ -1163,9 +1166,9 @@ type OrderGoodReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	DeskID  int64   `protobuf:"varint,1,opt,name=deskID,proto3" json:"deskID"`
-	OrderID int64   `protobuf:"varint,2,opt,name=orderID,proto3" json:"orderID"`
-	Goods   []*Good `protobuf:"bytes,3,rep,name=goods,proto3" json:"goods"`
+	DeskID  int64   `protobuf:"varint,1,opt,name=deskID,proto3" json:"deskID,omitempty"`
+	OrderID int64   `protobuf:"varint,2,opt,name=orderID,proto3" json:"orderID,omitempty"`
+	Goods   []*Good `protobuf:"bytes,3,rep,name=goods,proto3" json:"goods,omitempty"`
 }
 
 func (x *OrderGoodReq) Reset() {
@@ -1264,7 +1267,7 @@ type OrderDeskReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Desk *Desk `protobuf:"bytes,1,opt,name=desk,proto3" json:"desk"`
+	Desk *Desk `protobuf:"bytes,1,opt,name=desk,proto3" json:"desk,omitempty"`
 }
 
 func (x *OrderDeskReq) Reset() {
@@ -1311,7 +1314,7 @@ type OrderDeskRes struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	DeskID int64 `protobuf:"varint,1,opt,name=deskID,proto3" json:"deskID"`
+	DeskID int64 `protobuf:"varint,1,opt,name=deskID,proto3" json:"deskID,omitempty"`
 }
 
 func (x *OrderDeskRes) Reset() {
@@ -1358,7 +1361,7 @@ type OrderReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Order *Order `protobuf:"bytes,1,opt,name=order,proto3" json:"order"`
+	Order *Order `protobuf:"bytes,1,opt,name=order,proto3" json:"order,omitempty"`
 }
 
 func (x *OrderReq) Reset() {
@@ -1405,7 +1408,7 @@ type OrderRes struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	OrderID int64 `protobuf:"varint,1,opt,name=orderID,proto3" json:"orderID"`
+	OrderID int64 `protobuf:"varint,1,opt,name=orderID,proto3" json:"orderID,omitempty"`
 }
 
 func (x *OrderRes) Reset() {
@@ -1452,8 +1455,8 @@ type CloseDeskReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	DeskID       int64 `protobuf:"varint,1,opt,name=deskID,proto3" json:"deskID"`
-	EndTimestamp int64 `protobuf:"varint,2,opt,name=endTimestamp,proto3" json:"endTimestamp"`
+	DeskID       int64 `protobuf:"varint,1,opt,name=deskID,proto3" json:"deskID,omitempty"`
+	EndTimestamp int64 `protobuf:"varint,2,opt,name=endTimestamp,proto3" json:"endTimestamp,omitempty"`
 }
 
 func (x *CloseDeskReq) Reset() {
@@ -1545,7 +1548,7 @@ type CancelGoodReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	GoodIDs []int64 `protobuf:"varint,1,rep,packed,name=goodIDs,proto3" json:"goodIDs"`
+	GoodIDs []int64 `protobuf:"varint,1,rep,packed,name=goodIDs,proto3" json:"goodIDs,omitempty"`
 }
 
 func (x *CancelGoodReq) Reset() {
@@ -1668,7 +1671,7 @@ type GetAllGoodClassesRes struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	GoodClasses []*GoodClass `protobuf:"bytes,1,rep,name=goodClasses,proto3" json:"goodClasses"`
+	GoodClasses []*GoodClass `protobuf:"bytes,1,rep,name=goodClasses,proto3" json:"goodClasses,omitempty"`
 }
 
 func (x *GetAllGoodClassesRes) Reset() {
@@ -1715,7 +1718,7 @@ type GetOrderReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	OrderID int64 `protobuf:"varint,1,opt,name=orderID,proto3" json:"orderID"`
+	OrderID int64 `protobuf:"varint,1,opt,name=orderID,proto3" json:"orderID,omitempty"`
 }
 
 func (x *GetOrderReq) Reset() {
@@ -1762,7 +1765,7 @@ type GetOrderRes struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Order *Order `protobuf:"bytes,1,opt,name=order,proto3" json:"order"`
+	Order *Order `protobuf:"bytes,1,opt,name=order,proto3" json:"order,omitempty"`
 }
 
 func (x *GetOrderRes) Reset() {
@@ -1809,8 +1812,8 @@ type CheckOutReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	GoodIDs []int64 `protobuf:"varint,1,rep,packed,name=GoodIDs,proto3" json:"GoodIDs"`
-	DeskIDs []int64 `protobuf:"varint,2,rep,packed,name=DeskIDs,proto3" json:"DeskIDs"`
+	GoodIDs []int64 `protobuf:"varint,1,rep,packed,name=GoodIDs,proto3" json:"GoodIDs,omitempty"`
+	DeskIDs []int64 `protobuf:"varint,2,rep,packed,name=DeskIDs,proto3" json:"DeskIDs,omitempty"`
 }
 
 func (x *CheckOutReq) Reset() {
@@ -1902,8 +1905,8 @@ type AddElementReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Element   *Element `protobuf:"bytes,1,opt,name=element,proto3" json:"element"`
-	ClassName string   `protobuf:"bytes,2,opt,name=className,proto3" json:"className"`
+	Element   *Element `protobuf:"bytes,1,opt,name=element,proto3" json:"element,omitempty"`
+	ClassName string   `protobuf:"bytes,2,opt,name=className,proto3" json:"className,omitempty"`
 }
 
 func (x *AddElementReq) Reset() {
@@ -1995,9 +1998,9 @@ type ChangeDeskReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	SrcDeskID    int64  `protobuf:"varint,1,opt,name=srcDeskID,proto3" json:"srcDeskID"`
-	DstSpaceName string `protobuf:"bytes,2,opt,name=dstSpaceName,proto3" json:"dstSpaceName"`
-	DstSpaceNum  int64  `protobuf:"varint,3,opt,name=dstSpaceNum,proto3" json:"dstSpaceNum"`
+	SrcDeskID    int64  `protobuf:"varint,1,opt,name=srcDeskID,proto3" json:"srcDeskID,omitempty"`
+	DstSpaceName string `protobuf:"bytes,2,opt,name=dstSpaceName,proto3" json:"dstSpaceName,omitempty"`
+	DstSpaceNum  int64  `protobuf:"varint,3,opt,name=dstSpaceNum,proto3" json:"dstSpaceNum,omitempty"`
 }
 
 func (x *ChangeDeskReq) Reset() {
@@ -2096,8 +2099,8 @@ type DeleteFavorForGoodReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	GoodID int64  `protobuf:"varint,1,opt,name=goodID,proto3" json:"goodID"`
-	Favor  *Favor `protobuf:"bytes,2,opt,name=favor,proto3" json:"favor"`
+	GoodID int64  `protobuf:"varint,1,opt,name=goodID,proto3" json:"goodID,omitempty"`
+	Favor  *Favor `protobuf:"bytes,2,opt,name=favor,proto3" json:"favor,omitempty"`
 }
 
 func (x *DeleteFavorForGoodReq) Reset() {
@@ -2189,8 +2192,8 @@ type DeskClass struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Name  string  `protobuf:"bytes,1,opt,name=name,proto3" json:"name"`
-	Desks []*Desk `protobuf:"bytes,2,rep,name=desks,proto3" json:"desks"`
+	Name  string  `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Desks []*Desk `protobuf:"bytes,2,rep,name=desks,proto3" json:"desks,omitempty"`
 }
 
 func (x *DeskClass) Reset() {
@@ -2282,7 +2285,7 @@ type GetAllDeskClassesRes struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	DeskClasses []*DeskClass `protobuf:"bytes,1,rep,name=deskClasses,proto3" json:"deskClasses"`
+	DeskClasses []*DeskClass `protobuf:"bytes,1,rep,name=deskClasses,proto3" json:"deskClasses,omitempty"`
 }
 
 func (x *GetAllDeskClassesRes) Reset() {
@@ -2329,7 +2332,7 @@ type GetAllGoodsReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ClassName string `protobuf:"bytes,1,opt,name=className,proto3" json:"className"`
+	ClassName string `protobuf:"bytes,1,opt,name=className,proto3" json:"className,omitempty"`
 }
 
 func (x *GetAllGoodsReq) Reset() {
@@ -2376,7 +2379,7 @@ type GetAllGoodsRes struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Goods []*Good `protobuf:"bytes,1,rep,name=goods,proto3" json:"goods"`
+	Goods []*Good `protobuf:"bytes,1,rep,name=goods,proto3" json:"goods,omitempty"`
 }
 
 func (x *GetAllGoodsRes) Reset() {
@@ -2611,9 +2614,10 @@ var file_common_pb_mvp_proto_rawDesc = []byte{
 	0x4f, 0x4e, 0x45, 0x10, 0x00, 0x12, 0x0a, 0x0a, 0x06, 0x52, 0x45, 0x42, 0x41, 0x54, 0x45, 0x10,
 	0x01, 0x12, 0x12, 0x0a, 0x0e, 0x46, 0x55, 0x4c, 0x4c, 0x5f, 0x52, 0x45, 0x44, 0x55, 0x43, 0x54,
 	0x49, 0x4f, 0x4e, 0x10, 0x02, 0x12, 0x08, 0x0a, 0x04, 0x46, 0x52, 0x45, 0x45, 0x10, 0x03, 0x2a,
-	0x23, 0x0a, 0x0b, 0x45, 0x6c, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12, 0x08,
-	0x0a, 0x04, 0x4d, 0x61, 0x69, 0x6e, 0x10, 0x00, 0x12, 0x0a, 0x0a, 0x06, 0x41, 0x74, 0x74, 0x61,
-	0x63, 0x68, 0x10, 0x01, 0x2a, 0x26, 0x0a, 0x0b, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x6e, 0x67, 0x54,
+	0x33, 0x0a, 0x0b, 0x45, 0x6c, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12, 0x08,
+	0x0a, 0x04, 0x4d, 0x61, 0x69, 0x6e, 0x10, 0x00, 0x12, 0x0a, 0x0a, 0x06, 0x4f, 0x70, 0x74, 0x69,
+	0x6f, 0x6e, 0x10, 0x01, 0x12, 0x0e, 0x0a, 0x0a, 0x49, 0x6e, 0x67, 0x72, 0x65, 0x64, 0x69, 0x65,
+	0x6e, 0x74, 0x10, 0x02, 0x2a, 0x26, 0x0a, 0x0b, 0x42, 0x69, 0x6c, 0x6c, 0x69, 0x6e, 0x67, 0x54,
 	0x79, 0x70, 0x65, 0x12, 0x0a, 0x0a, 0x06, 0x54, 0x69, 0x6d, 0x69, 0x6e, 0x67, 0x10, 0x00, 0x12,
 	0x0b, 0x0a, 0x07, 0x53, 0x65, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x10, 0x01, 0x32, 0xfb, 0x06, 0x0a,
 	0x03, 0x4d, 0x76, 0x70, 0x12, 0x47, 0x0a, 0x11, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x47, 0x6f,

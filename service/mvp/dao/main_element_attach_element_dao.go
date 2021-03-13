@@ -37,7 +37,7 @@ func (mainElementAttachElementRecordDao) GetByGoodIdAndMainElementName(goodID in
 		parameters = []interface{}{goodID}
 	}
 
-	if err := mainDB.Where(whereClause, parameters...).First(&result).Error; err != nil {
+	if err := mainDB.Where(whereClause, parameters...).Find(&result).Error; err != nil {
 		logger.Error("Fail to finish mainDB.Find", zap.String("mainElementName", mainElementName), zap.Error(err))
 		return nil, err
 	}

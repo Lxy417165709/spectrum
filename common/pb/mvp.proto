@@ -14,7 +14,8 @@ enum FavorType {
 
 enum ElementType {
     Main = 0;
-    Attach = 1;
+    Option = 1;
+    Ingredient = 2;
 }
 
 enum BillingType {

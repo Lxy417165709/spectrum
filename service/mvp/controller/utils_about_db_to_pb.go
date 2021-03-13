@@ -119,14 +119,22 @@ func getAttachElements(goodID int64, mainElementName string) []*pb.Element {
 		logger.Error("Fail to finish MainElementAttachElementRecordDao.GetByGoodIdAndMainElementName", zap.Error(err))
 		return nil
 	}
+	logger.Info("Success to get attachRecords", zap.Any("attachRecords", attachRecords))
+
 	for _, attachRecord := range attachRecords {
 		elements, err := dao.ElementDao.GetByName(attachRecord.AttachElementName)
 		if err != nil {
 			logger.Error("Fail to finish ElementDao.GetByName", zap.Error(err))
 			return nil
 		}
+		if len(elements) == 0 {
+			logger.Error("Element not exist", zap.String("name", attachRecord.AttachElementName))
+			return nil
+		}
+
 		attachElements = append(attachElements, &pb.Element{
-			Name:      attachRecord.AttachElementName,
+			Name:      attachRecord.AttachElementName, // 这里也等于 elements[0].Name
+			Type:      elements[0].Type,               // 这里的元素包括了规格，但它们的 Type 是一样的
 			SizeInfos: model.GetSizeInfos(attachRecord.SelectSize, elements),
 		})
 	}
