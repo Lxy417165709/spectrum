@@ -6,8 +6,10 @@
             style="height: 300px; width: 202px; margin-left: 10px; border: none">
       <good-option-card :goodOption="goodOption"></good-option-card>
     </el-col>
+
+    <!--    1. 添加 商品选项 部分-->
     <el-col v-if="props_isAdminView" style="height: 300px; width: 202px; margin-left: 10px; border: none">
-      <good-option-special-card></good-option-special-card>
+      <good-option-special-card @click.native="tryToAddGoodOption()"></good-option-special-card>
     </el-col>
   </el-row>
 </template>
@@ -25,10 +27,18 @@ export default {
   props: {
     goodOptions: Array,
     props_isAdminView: Boolean,
+    className: String
   },
   data() {
     return {};
   },
-  methods: {}
+  methods: {
+    tryToAddGoodOption() {
+      this.openGoodOptionEditorOfAdmin(test.blankGoodOption)
+    },
+    openGoodOptionEditorOfAdmin(option) {
+      this.$emit("openGoodOptionEditorOfAdmin", option, this.className)
+    },
+  }
 }
 </script>

@@ -1019,6 +1019,12 @@ export default {
     pictureStorePath: "",
     goods: [],
   },
+  blankGoodOption: {
+    name: "请输入",
+    type: 1,
+    sizeInfos: []
+  },
+
   goodOptionClasses: [
     {
       name: "附属选项类",
@@ -1037,5 +1043,5 @@ export default {
         }
       ],
     }
-  ]
+  ],
 }

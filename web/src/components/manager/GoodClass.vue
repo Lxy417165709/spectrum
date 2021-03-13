@@ -44,6 +44,7 @@
       <good-option-list v-if="cpt_isGoodOptionListExist"
                         :props_isAdminView="props_isAdminView"
                         :goodOptions="db_goodOptionClasses[curGoodOptionClassIndex].goodOptions"
+                        @openGoodOptionEditorOfAdmin="openGoodOptionEditorOfAdmin"
                         :className="db_goodOptionClasses[curGoodOptionClassIndex].name"></good-option-list>
     </div>
 
@@ -53,6 +54,14 @@
       :visible.sync="GoodEditorOfAdminVisible"
       width="30%">
       <good-editor-of-admin ref="GoodEditorOfAdmin"></good-editor-of-admin>
+    </el-dialog>
+
+    <!--    4. 商品选项添加、编辑框-->
+    <el-dialog
+      title="商品选项添加/编辑"
+      :visible.sync="GoodOptionEditorOfAdminVisible"
+      width="30%">
+      <good-option-editor-of-admin ref="GoodOptionEditorOfAdmin"></good-option-editor-of-admin>
     </el-dialog>
 
     <!--    5. 商品下单框-->
@@ -85,10 +94,12 @@ import utils from "../../common/utils";
 import GoodOptionClassList from "../list/GoodOptionClassList";
 import GoodOptionList from "../list/GoodOptionList";
 import cst from "../../common/cst";
+import GoodOptionEditorOfAdmin from "../editor/GoodOptionEditorOfAdmin";
 
 export default {
   name: "GoodClass",
   components: {
+    GoodOptionEditorOfAdmin,
     GoodOptionClassList,
     GoodClassEditor,
     GoodEditorOfAdmin,
@@ -112,6 +123,7 @@ export default {
       GoodEditorOfAdminVisible: false,
       GoodClassEditorVisible: false,
       GoodEditorOfUserVisible: false,
+      GoodOptionEditorOfAdminVisible: false,
 
       curGoodClassIndex: cst.INDEX.INVALID_INDEX,
       curGoodOptionClassIndex: cst.INDEX.INVALID_INDEX,
@@ -175,6 +187,13 @@ export default {
       this.$nextTick(() => {
         this.$refs.GoodEditorOfAdmin.good = good
         this.$refs.GoodEditorOfAdmin.className = className
+      })
+    },
+    openGoodOptionEditorOfAdmin(option, className) {
+      this.GoodOptionEditorOfAdminVisible = true
+      this.$nextTick(() => {
+        this.$refs.GoodOptionEditorOfAdmin.option = option
+        this.$refs.GoodOptionEditorOfAdmin.className = className
       })
     },
     openGoodEditorOfUser(good) {
