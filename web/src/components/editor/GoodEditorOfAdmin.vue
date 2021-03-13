@@ -4,13 +4,14 @@
 
     <!-- 1. 商品名编辑器 -->
     <el-form-item label="商品名">
-      <el-input style="width: 70%" v-model="good.name"></el-input>
+      <el-input style="width: 70%" v-model="good.mainElement.name"></el-input>
     </el-form-item>
 
     <!-- 2. 规格编辑器 -->
     <el-tabs type="border-card" @tab-click="" editable @edit="handleTabsEdit"
              @tab-add="handleClick" style="margin-bottom: 10px">
-      <el-tab-pane v-for="(sizeInfo,index) in good.sizeInfos" :label="sizeInfo.name" :name="index.toString()"
+      <el-tab-pane v-for="(sizeInfo,index) in good.mainElement.sizeInfos" :label="sizeInfo.size"
+                   :name="index.toString()"
                    :key="index">
         <el-form label-width="80px">
           <el-form-item label="照片">
@@ -23,7 +24,7 @@
           <el-form-item label="价格">
             <el-input v-model="sizeInfo.price" style="width: 70%"></el-input>
           </el-form-item>
-          <el-form-item label="默认选中" v-if="good.curSizeIndex!==index">
+          <el-form-item label="默认选中" v-if="sizeInfo.isSelected===false">
             <el-button @click="handleChangeDefaultSizeInfo(index)">确定</el-button>
           </el-form-item>
         </el-form>
@@ -122,7 +123,10 @@ export default {
       this.good.sizeInfos = utils.removeElementByField(this.good.sizeInfos, "name", name)
     },
     handleChangeDefaultSizeInfo(index) {
-      this.good.curSizeIndex = index
+      // todo: 将其他的默认选中置为false
+      console.log("b",index,this.good.mainElement.sizeInfos[index])
+      this.good.mainElement.sizeInfos[index].isSelected = true
+      console.log("a",index,this.good.mainElement.sizeInfos[index])
     },
     async addGood(good) {
       let model = utils.getRequestModel("mvp", "AddGood", {

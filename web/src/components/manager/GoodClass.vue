@@ -155,11 +155,9 @@ export default {
 
         this.curGoodClassIndex = goodClassIndex
         this.viewMode = cst.VIEW_MODE.GOOD_LIST_MODE
-        console.log("res.data",res.data)
         console.log("res.data.data.goods", res.data.data.goods)
         this.$nextTick(() => {
           this.$refs.GoodList.goods = res.data.data.goods
-          console.log("res.data.data.goods", this.$refs.GoodList.goods)
         })
       })
 
