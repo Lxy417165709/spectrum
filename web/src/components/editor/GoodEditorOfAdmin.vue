@@ -4,12 +4,12 @@
 
     <!-- 1. 商品名编辑器 -->
     <el-form-item label="商品名">
-      <el-input style="width: 70%" v-model="good.mainElement.name"></el-input>
+      <el-input style="width: 70%" v-if="good.mainElement!==undefined" v-model="good.mainElement.name"></el-input>
     </el-form-item>
 
     <!-- 2. 规格编辑器 -->
     <el-tabs type="border-card" @tab-click="" editable @edit="handleTabsEdit"
-             @tab-add="handleClick" style="margin-bottom: 10px">
+             @tab-add="handleClick" style="margin-bottom: 10px" v-if="good.mainElement!==undefined">
       <el-tab-pane v-for="(sizeInfo,index) in good.mainElement.sizeInfos" :label="sizeInfo.size"
                    :name="index.toString()"
                    :key="index">
@@ -33,31 +33,34 @@
 
     <!-- 3. 附属选项编辑器 -->
     <el-form-item label="附属选项">
-      <el-select v-model="selectableElement.curAttachElementName" placeholder="附属选项">
-        <el-option v-for="(element,index) in selectableElement.attachElements" :key="index"
+      <el-select v-model="curGoodOptionName" placeholder="附属选项">
+        <el-option v-for="(element,index) in selectableElements" :key="index" v-if="element.type===1"
                    :label="element.name" :value="element.name"></el-option>
       </el-select>
-      <el-button type="primary" @click="addAttachElement()">添加</el-button>
+      <el-button type="primary" @click="addGoodOption()">添加</el-button>
     </el-form-item>
+
     <el-form-item label="已选">
-      <el-tag v-for="(element,index) in good.attachElements" :key="index" closable style="margin-right: 5px" v-if="element.type===1"
+      <el-tag v-for="(element,index) in good.attachElements" :key="index" closable style="margin-right: 5px"
+              v-if="element.type===1"
               type="success">
         {{ element.name }}
         <!--        @close="delSelectGoodClass(index)"-->
       </el-tag>
     </el-form-item>
 
-    <!-- 4. 附属配料编辑器 -->
+    <!--     4. 附属配料编辑器 -->
     <el-form-item label="附属配料">
-      <el-select v-model="selectableElement.curFavorName" placeholder="附属配料">
-        <el-option v-for="(element,index) in selectableElement.favors" :key="index"
+      <el-select v-model="curGoodIngredientName" placeholder="附属配料">
+        <el-option v-for="(element,index) in selectableElements" :key="index" v-if="element.type===2"
                    :label="element.name" :value="element.name"></el-option>
       </el-select>
-      <el-button type="primary" @click="addFavor()">添加</el-button>
+      <el-button type="primary" @click="addGoodIngredient()">添加</el-button>
     </el-form-item>
 
     <el-form-item label="已选">
-      <el-tag v-for="(element,index) in good.attachElements" :key="index" closable style="margin-right: 5px"  v-if="element.type===2"
+      <el-tag v-for="(element,index) in good.attachElements" :key="index" closable style="margin-right: 5px"
+              v-if="element.type===2"
               type="success">
         {{ element.name }}
       </el-tag>
@@ -80,32 +83,42 @@ import global from "../../common/global_object/global";
 export default {
   name: "GoodEditorOfAdmin",
   components: {GoodSizeEditor},
-  mounted() {
-    this.selectableElement = test.selectableElement
+  async mounted() {
+    let model = utils.getRequestModel("mvp", "GetAllGoodOptions", {})
+    await utils.sendRequestModel(model).then(res => {
+      console.log("GetAllGoodOptions res", res.data)
+      if (!utils.hasRequestSuccess(res)) {
+        this.$message.error(res.data.err)
+        return
+      }
+      this.$message.success(res.data.msg)
+      this.selectableElements = res.data.data.elements
+    })
   },
   data() {
     return {
       good: {},
       className: "",
+      curGoodOptionName: "",
+      curGoodIngredientName: "",
 
-      selectableElement: {},
+      selectableElements: [],
       addTabCount: 0,
     }
   },
   methods: {
-    addAttachElement() {
-      // todo: 添加后，应该把元素从可选列表中删除
-      for (let i = 0; i < this.selectableElement.attachElements.length; i++) {
-        if (this.selectableElement.attachElements[i].name === this.selectableElement.curAttachElementName) {
-          this.good.attachElements.push(this.selectableElement.attachElements[i])
+    addGoodOption() {
+      for (let i = 0; i < this.selectableElements.length; i++) {
+        if (this.selectableElements[i].name === this.curGoodOptionName) {
+          this.good.attachElements.push(this.selectableElements[i])
+          break
         }
       }
     },
-    addFavor() {
-      // todo: 添加后，应该把元素从可选列表中删除
-      for (let i = 0; i < this.selectableElement.favors.length; i++) {
-        if (this.selectableElement.favors[i].name === this.selectableElement.curFavorName) {
-          this.good.favors.push(this.selectableElement.favors[i])
+    addGoodIngredient() {
+      for (let i = 0; i < this.selectableElements.length; i++) {
+        if (this.selectableElements[i].name === this.curGoodIngredientName) {
+          this.good.attachElements.push(this.selectableElements[i])
         }
       }
     },
@@ -114,23 +127,23 @@ export default {
       // todo: name 应该是可以编辑的
       let name = "未设定规格" + this.addTabCount
       // todo: sizeInfo 应该是一个对象，要有构造函数
-      this.good.sizeInfos.push({
-        name: name,
+      this.good.mainElement.sizeInfos.push({
+        size: name,
         price: 30
       })
     },
     handleTabsEdit(name, event) {
-      this.good.sizeInfos = utils.removeElementByField(this.good.sizeInfos, "name", name)
+      this.good.mainElement.sizeInfos = utils.removeElementByField(this.good.mainElement.sizeInfos, "name", name)
     },
     handleChangeDefaultSizeInfo(index) {
-      // todo: 将其他的默认选中置为false
-      console.log("b",index,this.good.mainElement.sizeInfos[index])
+      for (let i = 0; i < this.good.mainElement.sizeInfos.length; i++) {
+        this.good.mainElement.sizeInfos[i] = false
+      }
       this.good.mainElement.sizeInfos[index].isSelected = true
-      console.log("a",index,this.good.mainElement.sizeInfos[index])
     },
     async addGood(good) {
       let model = utils.getRequestModel("mvp", "AddGood", {
-        good: utils.goodToPbGood(good),
+        good: good,
         className: this.className,
       })
       await utils.sendRequestModel(model).then(res => {

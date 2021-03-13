@@ -1,8 +1,10 @@
 package dao
 
 import (
+	"github.com/astaxie/beego/logs"
 	"go.uber.org/zap"
 	"spectrum/common/logger"
+	"spectrum/common/pb"
 	"spectrum/service/mvp/model"
 )
 
@@ -60,20 +62,18 @@ func (elementDao) GetByClassName(className string) ([]*model.Element, error) {
 	return result, nil
 }
 
-//func (elementDao) GetAll() ([]*model.Element, error) {
-//	createTableWhenNotExist(&model.Element{})
-//
-//	var elements []*model.element
-//	db := mainDB.Find(&elements)
-//	if err := db.Error; err != nil {
-//		if gorm.IsRecordNotFoundError(err) {
-//			return nil, nil
-//		}
-//		logs.Error(err)
-//		return nil, err
-//	}
-//	return elements, nil
-//}
+func (elementDao) GetAll() ([]*model.Element, error) {
+	var table model.Element
+	createTableWhenNotExist(&table)
+
+	var elements []*model.Element
+	db := mainDB.Where("type != ?", pb.ElementType_Main).Find(&elements)
+	if err := db.Error; err != nil {
+		logs.Error("Fail to finish mainDB.Find", zap.Error(err))
+		return nil, err
+	}
+	return elements, nil
+}
 
 //func (elementDao) GetByelementClassID(elementClassID int) ([]*model.element, error) {
 //	createTableWhenNotExist(&model.element{})

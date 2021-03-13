@@ -91,11 +91,43 @@ func (MvpServer) GetAllGoodClasses(ctx context.Context, req *pb.GetAllGoodClasse
 }
 
 func (MvpServer) GetAllGoods(ctx context.Context, req *pb.GetAllGoodsReq) (*pb.GetAllGoodsRes, error) {
-	logger.Info("GetAllGoodClasses", zap.Any("ctx", ctx), zap.Any("req", req))
+	logger.Info("GetAllGoods", zap.Any("ctx", ctx), zap.Any("req", req))
 
 	var res pb.GetAllGoodsRes
 
 	res.Goods = getClassGoods(req.ClassName)
+
+	return &res, nil
+}
+
+func (MvpServer) GetAllGoodOptions(ctx context.Context, req *pb.GetAllGoodOptionsReq) (*pb.GetAllGoodOptionsRes, error) {
+	logger.Info("GetAllElements", zap.Any("ctx", ctx), zap.Any("req", req))
+
+	var res pb.GetAllGoodOptionsRes
+
+	dbElements, err := dao.ElementDao.GetAll()
+	if err != nil {
+		logger.Error("Fail to finish ElementDao.GetAll",
+			zap.Any("req", req),
+			zap.Error(err))
+		return nil, err
+	}
+
+	nameToElements := make(map[string][]*model.Element)
+	for _, dbElement := range dbElements {
+		nameToElements[dbElement.Name] = append(nameToElements[dbElement.Name], dbElement)
+	}
+
+	pbElements := make([]*pb.Element, 0)
+	for name, elements := range nameToElements {
+		pbElements = append(pbElements, &pb.Element{
+			Name:      name,
+			Type:      elements[0].Type,
+			SizeInfos: model.GetSizeInfos(elements[0].Size, elements),
+		})
+	}
+
+	res.Elements = pbElements
 
 	return &res, nil
 }

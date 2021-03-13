@@ -75,22 +75,23 @@ export default {
     },
     handleChangeDefaultSizeInfo(index) {
       // todo: 将其他的默认选中置为false
-
+      for (let i = 0; i < this.option.sizeInfos.length; i++) {
+        this.option.sizeInfos[i].isSelected = false
+      }
       this.option.sizeInfos[index].isSelected = true
-
     },
     async addGoodOption(option) {
-      // let model = utils.getRequestModel("mvp", "AddGood", {
-      //   good: utils.goodToPbGood(good),
-      //   className: this.className,
-      // })
-      // await utils.sendRequestModel(model).then(res => {
-      //   if (!utils.hasRequestSuccess(res)) {
-      //     this.$message.error(res.data.err)
-      //     return
-      //   }
-      //   this.$message.success(res.data.msg)
-      // })
+      let model = utils.getRequestModel("mvp", "AddElement", {
+        element: option,
+        className: this.className,
+      })
+      await utils.sendRequestModel(model).then(res => {
+        if (!utils.hasRequestSuccess(res)) {
+          this.$message.error(res.data.err)
+          return
+        }
+        this.$message.success(res.data.msg)
+      })
     }
   }
 }

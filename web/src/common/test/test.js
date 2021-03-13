@@ -1007,12 +1007,11 @@ export default {
     ]
   },
   blankGood: {
-    name: "请输入",
-    price: 0.0,
-    curSizeIndex: 0,
-    sizeInfos: [],
+    mainElement: {
+      name: "请输入",
+      sizeInfos: [],
+    },
     attachElements: [],
-    favors: [],
   },
   blankGoodClass: {
     name: "请输入",
@@ -1024,7 +1023,11 @@ export default {
     type: 1,
     sizeInfos: []
   },
-
+  blankGoodIngredient: {
+    name: "请输入",
+    type: 2,
+    sizeInfos: []
+  },
   goodOptionClasses: [
     {
       name: "附属选项类",

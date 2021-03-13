@@ -217,9 +217,16 @@ message GetAllGoodsRes{
     repeated Good goods = 1;
 }
 
+message GetAllGoodOptionsReq{}
+
+message GetAllGoodOptionsRes{
+    repeated Element elements = 1;
+}
+
 service Mvp {
     rpc GetAllGoodClasses(GetAllGoodClassesReq) returns (GetAllGoodClassesRes); // 获得所有商品类及其下的货物
-    rpc GetAllGoods(GetAllGoodsReq) returns (GetAllGoodsRes);
+    rpc GetAllGoods(GetAllGoodsReq) returns (GetAllGoodsRes);   // 获取类名下的所有商品
+    rpc GetAllGoodOptions(GetAllGoodOptionsReq) returns (GetAllGoodOptionsRes);    // 获取附属选项
 
     rpc AddGoodClass(AddGoodClassReq) returns (AddGoodClassRes);    // 添加商品类
     rpc AddGood(AddGoodReq) returns (AddGoodRes);                   // 添加货物

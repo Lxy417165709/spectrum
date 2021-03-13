@@ -185,8 +185,10 @@ export default {
     openGoodEditorOfAdmin(good, className) {
       this.GoodEditorOfAdminVisible = true
       this.$nextTick(() => {
+        console.log("openGoodEditorOfAdmin",good)
         this.$refs.GoodEditorOfAdmin.good = good
         this.$refs.GoodEditorOfAdmin.className = className
+        console.log("openGoodEditorOfAdmin,this.$refs.GoodEditorOfAdmin",this.$refs.GoodEditorOfAdmin.good)
       })
     },
     openGoodOptionEditorOfAdmin(option, className) {
