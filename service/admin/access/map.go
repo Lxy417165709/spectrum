@@ -42,6 +42,16 @@ var objectFunctionToRpcUnit = map[string]map[string]*model.RpcUnit{
 			SuccessMsg: "添加商品类成功",
 			FailMsg:    "添加商品类失败",
 		},
+		"GetAllGoods": {
+			ReqFunc: func() interface{} {
+				return &pb.GetAllGoodsReq{}
+			},
+			ResFunc: func() interface{} {
+				return &pb.GetAllGoodsRes{}
+			},
+			SuccessMsg: "获取商品成功",
+			FailMsg:    "获取商品失败",
+		},
 	},
 	//"AddOptionClass": {
 	//	ReqFunc: func() interface{} {

@@ -24,12 +24,13 @@ import test from "../../common/test/test"
 export default {
   components: {GoodSpacialCard, GoodCard},
   props: {
-    goods: Array,
     props_isAdminView: Boolean,
     className: String
   },
   data() {
-    return {};
+    return {
+      goods: []
+    };
   },
   methods: {
     openGoodEditor(good) {

@@ -28,13 +28,15 @@
     <div v-show="cpt_canGoodListShow">
       <el-divider content-position="left">元素</el-divider>
       <good-list v-if="cpt_isGoodListExist"
+                 ref="GoodList"
+
                  :props_isAdminView="props_isAdminView"
-                 :goods="db_goodClasses[curGoodClassIndex].goods"
                  :className="db_goodClasses[curGoodClassIndex].name"
                  @turnToClassListMode="turnToClassListMode"
                  @openGoodEditorOfAdmin="openGoodEditorOfAdmin"
                  @openGoodEditorOfUser="openGoodEditorOfUser"></good-list>
     </div>
+    <!--    :goods="db_goodClasses[curGoodClassIndex].goods"-->
 
     <!--    4. 附属选项类内的附属选项展示-->
     <div v-show="cpt_canGoodOptionListShow">
@@ -140,9 +142,27 @@ export default {
       this.viewMode = cst.VIEW_MODE.GOOD_OPTION_LIST_MODE
       this.curGoodOptionClassIndex = goodOptionClassIndex
     },
-    turnToGoodListMode(goodClassIndex) {
-      this.viewMode = cst.VIEW_MODE.GOOD_LIST_MODE
-      this.curGoodClassIndex = goodClassIndex
+    async turnToGoodListMode(goodClassIndex) {
+      let model = utils.getRequestModel("mvp", "GetAllGoods", {
+        className: this.db_goodClasses[goodClassIndex].name,
+      })
+      await utils.sendRequestModel(model).then(res => {
+        if (!utils.hasRequestSuccess(res)) {
+          this.$message.error(res.data.err)
+          return
+        }
+        this.$message.success(res.data.msg)
+
+        this.curGoodClassIndex = goodClassIndex
+        this.viewMode = cst.VIEW_MODE.GOOD_LIST_MODE
+        console.log("res.data",res.data)
+        console.log("res.data.data.goods", res.data.data.goods)
+        this.$nextTick(() => {
+          this.$refs.GoodList.goods = res.data.data.goods
+          console.log("res.data.data.goods", this.$refs.GoodList.goods)
+        })
+      })
+
     },
     turnToParentComponentMode() {
       if (this.viewMode === cst.VIEW_MODE.CLASS_LIST_MODE) {

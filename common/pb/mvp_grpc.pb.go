@@ -18,6 +18,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MvpClient interface {
 	GetAllGoodClasses(ctx context.Context, in *GetAllGoodClassesReq, opts ...grpc.CallOption) (*GetAllGoodClassesRes, error)
+	GetAllGoods(ctx context.Context, in *GetAllGoodsReq, opts ...grpc.CallOption) (*GetAllGoodsRes, error)
 	AddGoodClass(ctx context.Context, in *AddGoodClassReq, opts ...grpc.CallOption) (*AddGoodClassRes, error)
 	AddGood(ctx context.Context, in *AddGoodReq, opts ...grpc.CallOption) (*AddGoodRes, error)
 	CancelGood(ctx context.Context, in *CancelGoodReq, opts ...grpc.CallOption) (*CancelGoodRes, error)
@@ -45,6 +46,15 @@ func NewMvpClient(cc grpc.ClientConnInterface) MvpClient {
 func (c *mvpClient) GetAllGoodClasses(ctx context.Context, in *GetAllGoodClassesReq, opts ...grpc.CallOption) (*GetAllGoodClassesRes, error) {
 	out := new(GetAllGoodClassesRes)
 	err := c.cc.Invoke(ctx, "/pb.Mvp/GetAllGoodClasses", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *mvpClient) GetAllGoods(ctx context.Context, in *GetAllGoodsReq, opts ...grpc.CallOption) (*GetAllGoodsRes, error) {
+	out := new(GetAllGoodsRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/GetAllGoods", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -182,6 +192,7 @@ func (c *mvpClient) GetAllDeskClasses(ctx context.Context, in *GetAllDeskClasses
 // for forward compatibility
 type MvpServer interface {
 	GetAllGoodClasses(context.Context, *GetAllGoodClassesReq) (*GetAllGoodClassesRes, error)
+	GetAllGoods(context.Context, *GetAllGoodsReq) (*GetAllGoodsRes, error)
 	AddGoodClass(context.Context, *AddGoodClassReq) (*AddGoodClassRes, error)
 	AddGood(context.Context, *AddGoodReq) (*AddGoodRes, error)
 	CancelGood(context.Context, *CancelGoodReq) (*CancelGoodRes, error)
@@ -205,6 +216,9 @@ type UnimplementedMvpServer struct {
 
 func (UnimplementedMvpServer) GetAllGoodClasses(context.Context, *GetAllGoodClassesReq) (*GetAllGoodClassesRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllGoodClasses not implemented")
+}
+func (UnimplementedMvpServer) GetAllGoods(context.Context, *GetAllGoodsReq) (*GetAllGoodsRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllGoods not implemented")
 }
 func (UnimplementedMvpServer) AddGoodClass(context.Context, *AddGoodClassReq) (*AddGoodClassRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddGoodClass not implemented")
@@ -275,6 +289,24 @@ func _Mvp_GetAllGoodClasses_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MvpServer).GetAllGoodClasses(ctx, req.(*GetAllGoodClassesReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Mvp_GetAllGoods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllGoodsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).GetAllGoods(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/GetAllGoods",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).GetAllGoods(ctx, req.(*GetAllGoodsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -538,6 +570,10 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAllGoodClasses",
 			Handler:    _Mvp_GetAllGoodClasses_Handler,
+		},
+		{
+			MethodName: "GetAllGoods",
+			Handler:    _Mvp_GetAllGoods_Handler,
 		},
 		{
 			MethodName: "AddGoodClass",

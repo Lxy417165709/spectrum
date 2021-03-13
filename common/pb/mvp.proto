@@ -65,7 +65,8 @@ message Space {
 
 message GoodClass {
     string name = 1;
-    repeated Good goods = 2;
+    string pictureStorePath = 2;
+    //    repeated Good goods = 2;
 }
 
 message Element {
@@ -207,8 +208,17 @@ message GetAllDeskClassesRes{
     repeated DeskClass deskClasses = 1;
 }
 
+message GetAllGoodsReq{
+    string className = 1;
+}
+
+message GetAllGoodsRes{
+    repeated Good goods = 1;
+}
+
 service Mvp {
     rpc GetAllGoodClasses(GetAllGoodClassesReq) returns (GetAllGoodClassesRes); // 获得所有商品类及其下的货物
+    rpc GetAllGoods(GetAllGoodsReq) returns (GetAllGoodsRes);
 
     rpc AddGoodClass(AddGoodClassReq) returns (AddGoodClassRes);    // 添加商品类
     rpc AddGood(AddGoodReq) returns (AddGoodRes);                   // 添加货物

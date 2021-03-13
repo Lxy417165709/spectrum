@@ -81,10 +81,21 @@ func (MvpServer) GetAllGoodClasses(ctx context.Context, req *pb.GetAllGoodClasse
 	// 2. 形成 GoodClasses
 	for _, class := range classes {
 		res.GoodClasses = append(res.GoodClasses, &pb.GoodClass{
-			Name:  class.Name,
-			Goods: getClassGoods(class.Name),
+			Name:             class.Name,
+			PictureStorePath: class.PictureStorePath,
+			//Goods: getClassGoods(class.Name),
 		})
 	}
+
+	return &res, nil
+}
+
+func (MvpServer) GetAllGoods(ctx context.Context, req *pb.GetAllGoodsReq) (*pb.GetAllGoodsRes, error) {
+	logger.Info("GetAllGoodClasses", zap.Any("ctx", ctx), zap.Any("req", req))
+
+	var res pb.GetAllGoodsRes
+
+	res.Goods = getClassGoods(req.ClassName)
 
 	return &res, nil
 }
@@ -97,7 +108,8 @@ func (MvpServer) AddGoodClass(ctx context.Context, req *pb.AddGoodClassReq) (*pb
 
 	// 1. 创建商品类
 	if err := dao.ElementClassDao.Create(&model.ElementClass{
-		Name: req.GoodClass.Name,
+		Name:             req.GoodClass.Name,
+		PictureStorePath: req.GoodClass.PictureStorePath,
 	}); err != nil {
 		logger.Error("Fail to finish ElementDao.Create",
 			zap.Any("req", req),

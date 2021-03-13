@@ -47,7 +47,7 @@ func (chargeableObjectDao) GetFavorRecords(obj model.Chargeable) ([]*model.Favor
 	var result []*model.FavorRecord
 	if err := mainDB.Find(
 		&result,
-		"favorable_struct_name = ? and favorable_struct_id = ？",
+		"chargeable_object_name = ? and chargeable_object_id = ?",
 		obj.GetName(), obj.GetID(),
 	).Error; err != nil {
 		logger.Error(

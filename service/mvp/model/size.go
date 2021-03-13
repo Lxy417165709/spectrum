@@ -26,6 +26,7 @@ type MainElementSizeRecord struct {
 type ElementClass struct {
 	gorm.Model
 	Name string `json:"name"`
+	PictureStorePath string `json:"picture_store_path"`
 }
 
 func (ElementClass) TableName() string {

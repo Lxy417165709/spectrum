@@ -86,7 +86,7 @@ func getPbGood(good *model.Good) *pb.Good {
 		MainElement:    mainElement,
 		AttachElements: attachElements,
 		Favors:         favors,
-		ExpenseInfo:    good.GetExpenseInfo(mainElement, attachElements, favors),
+		//ExpenseInfo:    good.GetExpenseInfo(mainElement, attachElements, favors),	// todo: 之后再说
 	}
 }
 

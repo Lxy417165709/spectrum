@@ -59,20 +59,30 @@ export default {
     console.log("goodClassToPbGoodClass", "goodClass:", goodClass)
     let pbGoodClass = {
       name: goodClass.name,
-      goods: this.goodsToPbGoods(goodClass.goods)
+      pictureStorePath:goodClass.pictureStorePath,
+      // goods: this.goodsToPbGoods(goodClass.goods)
     }
     console.log("goodClassToPbGoodClass", "pbGoodClass:", pbGoodClass)
     return pbGoodClass
   },
-  goodsToPbGoods(goods) {
-    let pbGoods = []
-    for (let i = 0; i < goods.length; i++) {
-      pbGoods.push(this.goodToPbGood(goods[i]))
+  // goodsToPbGoods(goods) {
+  //   let pbGoods = []
+  //   for (let i = 0; i < goods.length; i++) {
+  //     pbGoods.push(this.goodToPbGood(goods[i]))
+  //   }
+  //   return pbGoods
+  // },
+
+  PbGoodToGood(pbGood) {
+    console.log("utils.pbGoodToGood", "pbGood:", pbGood)
+    let good = {
+      id:pbGood.id,
+      name:pbGood.mainElement.name,
     }
-    return pbGoods
+
   },
+
   goodToPbGood(good) {
-    console.log("utils.goodToPbGood", "good:", good)
     let pbGood = {
       id: good.id,
       mainElement: this.getGoodPbMainElement(good),
@@ -139,5 +149,5 @@ export default {
       pictureStorePath: sizeInfo.pictureStorePath,
       isSelected: defaultSelectIndex === curIndex,
     }
-  }
+  },
 }
