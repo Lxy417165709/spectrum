@@ -36,17 +36,17 @@
                  @openGoodEditorOfAdmin="openGoodEditorOfAdmin"
                  @openGoodEditorOfUser="openGoodEditorOfUser"></good-list>
     </div>
-    <!--    :goods="db_goodClasses[curGoodClassIndex].goods"-->
 
     <!--    4. 附属选项类内的附属选项展示-->
     <div v-show="cpt_canGoodOptionListShow">
       <el-divider content-position="left">元素</el-divider>
       <good-option-list v-if="cpt_isGoodOptionListExist"
+                        ref="GoodOptionList"
                         :props_isAdminView="props_isAdminView"
-                        :goodOptions="db_goodOptionClasses[curGoodOptionClassIndex].goodOptions"
                         @openGoodOptionEditorOfAdmin="openGoodOptionEditorOfAdmin"
-                        :className="db_goodOptionClasses[curGoodOptionClassIndex].name"></good-option-list>
+      ></good-option-list>
     </div>
+    <!--    :goodOptions="db_goodOptionClasses[curGoodOptionClassIndex].goodOptions"-->
 
     <!--    4. 商品添加、编辑框-->
     <el-dialog
@@ -138,21 +138,38 @@ export default {
       let model = utils.getRequestModel("mvp", "GetAllGoodClasses", {})
       await utils.sendRequestModel(model).then(res => {
         if (!utils.hasRequestSuccess(res)) {
+          console.log("getAllGoodClasses.res", res)
           this.$message.error(res.data.err)
           return
         }
         this.db_goodClasses = res.data.data.goodClasses
         this.$message.success(res.data.msg)
-        console.log("this.db_goodClasses", this.db_goodClasses)
       })
     },
     turnToClassListMode(deskIndex) {
       this.viewMode = cst.VIEW_MODE.CLASS_LIST_MODE
       this.curDeskIndex = deskIndex
     },
-    turnToGoodOptionListMode(goodOptionClassIndex) {
-      this.viewMode = cst.VIEW_MODE.GOOD_OPTION_LIST_MODE
-      this.curGoodOptionClassIndex = goodOptionClassIndex
+    async turnToGoodOptionListMode(goodOptionClassIndex) {
+      let model = utils.getRequestModel("mvp", "GetAllGoodOptions", {
+        // className: this.db_goodOptionClasses[goodOptionClassIndex].name,
+      })
+      await utils.sendRequestModel(model).then(res => {
+        console.log("GetAllGoodOptions.res", res)
+        if (!utils.hasRequestSuccess(res)) {
+          this.$message.error(res.data.err)
+          return
+        }
+        this.$message.success(res.data.msg)
+
+        this.viewMode = cst.VIEW_MODE.GOOD_OPTION_LIST_MODE
+        this.curGoodOptionClassIndex = goodOptionClassIndex
+
+        this.$nextTick(() => {
+          this.$refs.GoodOptionList.goodOptions = res.data.data.elements
+        })
+      })
+
     },
     async turnToGoodListMode(goodClassIndex) {
       let model = utils.getRequestModel("mvp", "GetAllGoods", {
@@ -172,7 +189,6 @@ export default {
           this.$refs.GoodList.goods = res.data.data.goods
         })
       })
-
     },
     turnToParentComponentMode() {
       if (this.viewMode === cst.VIEW_MODE.CLASS_LIST_MODE) {
@@ -185,10 +201,10 @@ export default {
     openGoodEditorOfAdmin(good, className) {
       this.GoodEditorOfAdminVisible = true
       this.$nextTick(() => {
-        console.log("openGoodEditorOfAdmin",good)
+        console.log("openGoodEditorOfAdmin", good)
         this.$refs.GoodEditorOfAdmin.good = good
         this.$refs.GoodEditorOfAdmin.className = className
-        console.log("openGoodEditorOfAdmin,this.$refs.GoodEditorOfAdmin",this.$refs.GoodEditorOfAdmin.good)
+        console.log("openGoodEditorOfAdmin,this.$refs.GoodEditorOfAdmin", this.$refs.GoodEditorOfAdmin.good)
       })
     },
     openGoodOptionEditorOfAdmin(option, className) {

@@ -25,12 +25,13 @@ import GoodOptionSpecialCard from "../card/GoodOptionSpecialCard";
 export default {
   components: {GoodOptionSpecialCard, GoodOptionCard, GoodSpacialCard, GoodCard},
   props: {
-    goodOptions: Array,
     props_isAdminView: Boolean,
     className: String
   },
   data() {
-    return {};
+    return {
+      goodOptions: [],
+    };
   },
   methods: {
     tryToAddGoodOption() {

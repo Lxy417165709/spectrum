@@ -76,9 +76,7 @@
 <script>
 /* eslint-disable */
 import GoodSizeEditor from "./_GoodSizeEditor";
-import test from "../../common/test/test";
 import utils from "../../common/utils";
-import global from "../../common/global_object/global";
 
 export default {
   name: "GoodEditorOfAdmin",
