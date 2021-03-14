@@ -67,7 +67,11 @@ message Space {
 message GoodClass {
     string name = 1;
     string pictureStorePath = 2;
-    //    repeated Good goods = 2;
+}
+
+message DeskClass {
+    string name = 1;
+    string pictureStorePath = 2;
 }
 
 message Element {
@@ -108,6 +112,13 @@ message AddGoodClassReq{
 }
 
 message AddGoodClassRes{}
+
+
+message AddDeskClassReq{
+    DeskClass deskClass = 1;
+}
+
+message AddDeskClassRes{}
 
 message AddSpaceReq{
     Space space = 1;
@@ -199,10 +210,10 @@ message DeleteFavorForGoodReq {
 message DeleteFavorForGoodRes{}
 
 
-message DeskClass {
-    string name = 1;
-    repeated Desk desks = 2;
-}
+//message DeskClass {
+//    string name = 1;
+//    repeated Desk desks = 2;
+//}
 
 message GetAllDeskClassesReq{}
 message GetAllDeskClassesRes{
@@ -231,6 +242,7 @@ service Mvp {
     rpc GetAllGoodOptions(GetAllGoodOptionsReq) returns (GetAllGoodOptionsRes);    // 获取附属选项
 
     rpc AddGoodClass(AddGoodClassReq) returns (AddGoodClassRes);    // 添加商品类
+    rpc AddDeskClass(AddDeskClassReq) returns (AddDeskClassRes);    // 添加桌位类
     rpc AddGood(AddGoodReq) returns (AddGoodRes);                   // 添加货物
     rpc CancelGood(CancelGoodReq) returns(CancelGoodRes);    // 取消货物
 

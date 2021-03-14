@@ -72,7 +72,16 @@ var objectFunctionToRpcUnit = map[string]map[string]*model.RpcUnit{
 			SuccessMsg: "获取成功",
 			FailMsg:    "获取失败",
 		},
-
+		"AddDeskClass": {
+			ReqFunc: func() interface{} {
+				return &pb.AddDeskClassReq{}
+			},
+			ResFunc: func() interface{} {
+				return &pb.AddDeskClassRes{}
+			},
+			SuccessMsg: "添加成功",
+			FailMsg:    "添加失败",
+		},
 	},
 	//"AddOptionClass": {
 	//	ReqFunc: func() interface{} {

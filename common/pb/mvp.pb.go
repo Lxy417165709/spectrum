@@ -566,7 +566,7 @@ type GoodClass struct {
 	unknownFields protoimpl.UnknownFields
 
 	Name             string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	PictureStorePath string `protobuf:"bytes,2,opt,name=pictureStorePath,proto3" json:"pictureStorePath,omitempty"` //    repeated Good goods = 2;
+	PictureStorePath string `protobuf:"bytes,2,opt,name=pictureStorePath,proto3" json:"pictureStorePath,omitempty"`
 }
 
 func (x *GoodClass) Reset() {
@@ -615,6 +615,61 @@ func (x *GoodClass) GetPictureStorePath() string {
 	return ""
 }
 
+type DeskClass struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Name             string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	PictureStorePath string `protobuf:"bytes,2,opt,name=pictureStorePath,proto3" json:"pictureStorePath,omitempty"`
+}
+
+func (x *DeskClass) Reset() {
+	*x = DeskClass{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_common_pb_mvp_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DeskClass) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeskClass) ProtoMessage() {}
+
+func (x *DeskClass) ProtoReflect() protoreflect.Message {
+	mi := &file_common_pb_mvp_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeskClass.ProtoReflect.Descriptor instead.
+func (*DeskClass) Descriptor() ([]byte, []int) {
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *DeskClass) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *DeskClass) GetPictureStorePath() string {
+	if x != nil {
+		return x.PictureStorePath
+	}
+	return ""
+}
+
 type Element struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -628,7 +683,7 @@ type Element struct {
 func (x *Element) Reset() {
 	*x = Element{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[6]
+		mi := &file_common_pb_mvp_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -641,7 +696,7 @@ func (x *Element) String() string {
 func (*Element) ProtoMessage() {}
 
 func (x *Element) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[6]
+	mi := &file_common_pb_mvp_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -654,7 +709,7 @@ func (x *Element) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Element.ProtoReflect.Descriptor instead.
 func (*Element) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{6}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *Element) GetName() string {
@@ -692,7 +747,7 @@ type SizeInfo struct {
 func (x *SizeInfo) Reset() {
 	*x = SizeInfo{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[7]
+		mi := &file_common_pb_mvp_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -705,7 +760,7 @@ func (x *SizeInfo) String() string {
 func (*SizeInfo) ProtoMessage() {}
 
 func (x *SizeInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[7]
+	mi := &file_common_pb_mvp_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -718,7 +773,7 @@ func (x *SizeInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SizeInfo.ProtoReflect.Descriptor instead.
 func (*SizeInfo) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{7}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *SizeInfo) GetSize() string {
@@ -761,7 +816,7 @@ type Favor struct {
 func (x *Favor) Reset() {
 	*x = Favor{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[8]
+		mi := &file_common_pb_mvp_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -774,7 +829,7 @@ func (x *Favor) String() string {
 func (*Favor) ProtoMessage() {}
 
 func (x *Favor) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[8]
+	mi := &file_common_pb_mvp_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -787,7 +842,7 @@ func (x *Favor) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Favor.ProtoReflect.Descriptor instead.
 func (*Favor) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{8}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *Favor) GetFavorType() FavorType {
@@ -816,7 +871,7 @@ type AddFavorForGoodReq struct {
 func (x *AddFavorForGoodReq) Reset() {
 	*x = AddFavorForGoodReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[9]
+		mi := &file_common_pb_mvp_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -829,7 +884,7 @@ func (x *AddFavorForGoodReq) String() string {
 func (*AddFavorForGoodReq) ProtoMessage() {}
 
 func (x *AddFavorForGoodReq) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[9]
+	mi := &file_common_pb_mvp_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -842,7 +897,7 @@ func (x *AddFavorForGoodReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddFavorForGoodReq.ProtoReflect.Descriptor instead.
 func (*AddFavorForGoodReq) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{9}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *AddFavorForGoodReq) GetGoodID() int64 {
@@ -868,7 +923,7 @@ type AddFavorForGoodRes struct {
 func (x *AddFavorForGoodRes) Reset() {
 	*x = AddFavorForGoodRes{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[10]
+		mi := &file_common_pb_mvp_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -881,7 +936,7 @@ func (x *AddFavorForGoodRes) String() string {
 func (*AddFavorForGoodRes) ProtoMessage() {}
 
 func (x *AddFavorForGoodRes) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[10]
+	mi := &file_common_pb_mvp_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -894,7 +949,7 @@ func (x *AddFavorForGoodRes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddFavorForGoodRes.ProtoReflect.Descriptor instead.
 func (*AddFavorForGoodRes) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{10}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{11}
 }
 
 // 添加货物
@@ -910,7 +965,7 @@ type AddGoodReq struct {
 func (x *AddGoodReq) Reset() {
 	*x = AddGoodReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[11]
+		mi := &file_common_pb_mvp_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -923,7 +978,7 @@ func (x *AddGoodReq) String() string {
 func (*AddGoodReq) ProtoMessage() {}
 
 func (x *AddGoodReq) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[11]
+	mi := &file_common_pb_mvp_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -936,7 +991,7 @@ func (x *AddGoodReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddGoodReq.ProtoReflect.Descriptor instead.
 func (*AddGoodReq) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{11}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *AddGoodReq) GetGood() *Good {
@@ -962,7 +1017,7 @@ type AddGoodRes struct {
 func (x *AddGoodRes) Reset() {
 	*x = AddGoodRes{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[12]
+		mi := &file_common_pb_mvp_proto_msgTypes[13]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -975,7 +1030,7 @@ func (x *AddGoodRes) String() string {
 func (*AddGoodRes) ProtoMessage() {}
 
 func (x *AddGoodRes) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[12]
+	mi := &file_common_pb_mvp_proto_msgTypes[13]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -988,7 +1043,7 @@ func (x *AddGoodRes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddGoodRes.ProtoReflect.Descriptor instead.
 func (*AddGoodRes) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{12}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{13}
 }
 
 type AddGoodClassReq struct {
@@ -1002,7 +1057,7 @@ type AddGoodClassReq struct {
 func (x *AddGoodClassReq) Reset() {
 	*x = AddGoodClassReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[13]
+		mi := &file_common_pb_mvp_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1015,7 +1070,7 @@ func (x *AddGoodClassReq) String() string {
 func (*AddGoodClassReq) ProtoMessage() {}
 
 func (x *AddGoodClassReq) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[13]
+	mi := &file_common_pb_mvp_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1028,7 +1083,7 @@ func (x *AddGoodClassReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddGoodClassReq.ProtoReflect.Descriptor instead.
 func (*AddGoodClassReq) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{13}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *AddGoodClassReq) GetGoodClass() *GoodClass {
@@ -1047,7 +1102,7 @@ type AddGoodClassRes struct {
 func (x *AddGoodClassRes) Reset() {
 	*x = AddGoodClassRes{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[14]
+		mi := &file_common_pb_mvp_proto_msgTypes[15]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1060,7 +1115,7 @@ func (x *AddGoodClassRes) String() string {
 func (*AddGoodClassRes) ProtoMessage() {}
 
 func (x *AddGoodClassRes) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[14]
+	mi := &file_common_pb_mvp_proto_msgTypes[15]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1073,7 +1128,92 @@ func (x *AddGoodClassRes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddGoodClassRes.ProtoReflect.Descriptor instead.
 func (*AddGoodClassRes) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{14}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{15}
+}
+
+type AddDeskClassReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	DeskClass *DeskClass `protobuf:"bytes,1,opt,name=deskClass,proto3" json:"deskClass,omitempty"`
+}
+
+func (x *AddDeskClassReq) Reset() {
+	*x = AddDeskClassReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_common_pb_mvp_proto_msgTypes[16]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *AddDeskClassReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddDeskClassReq) ProtoMessage() {}
+
+func (x *AddDeskClassReq) ProtoReflect() protoreflect.Message {
+	mi := &file_common_pb_mvp_proto_msgTypes[16]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddDeskClassReq.ProtoReflect.Descriptor instead.
+func (*AddDeskClassReq) Descriptor() ([]byte, []int) {
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *AddDeskClassReq) GetDeskClass() *DeskClass {
+	if x != nil {
+		return x.DeskClass
+	}
+	return nil
+}
+
+type AddDeskClassRes struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *AddDeskClassRes) Reset() {
+	*x = AddDeskClassRes{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_common_pb_mvp_proto_msgTypes[17]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *AddDeskClassRes) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddDeskClassRes) ProtoMessage() {}
+
+func (x *AddDeskClassRes) ProtoReflect() protoreflect.Message {
+	mi := &file_common_pb_mvp_proto_msgTypes[17]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddDeskClassRes.ProtoReflect.Descriptor instead.
+func (*AddDeskClassRes) Descriptor() ([]byte, []int) {
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{17}
 }
 
 type AddSpaceReq struct {
@@ -1087,7 +1227,7 @@ type AddSpaceReq struct {
 func (x *AddSpaceReq) Reset() {
 	*x = AddSpaceReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[15]
+		mi := &file_common_pb_mvp_proto_msgTypes[18]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1100,7 +1240,7 @@ func (x *AddSpaceReq) String() string {
 func (*AddSpaceReq) ProtoMessage() {}
 
 func (x *AddSpaceReq) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[15]
+	mi := &file_common_pb_mvp_proto_msgTypes[18]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1113,7 +1253,7 @@ func (x *AddSpaceReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddSpaceReq.ProtoReflect.Descriptor instead.
 func (*AddSpaceReq) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{15}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *AddSpaceReq) GetSpace() *Space {
@@ -1132,7 +1272,7 @@ type AddSpaceRes struct {
 func (x *AddSpaceRes) Reset() {
 	*x = AddSpaceRes{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[16]
+		mi := &file_common_pb_mvp_proto_msgTypes[19]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1145,7 +1285,7 @@ func (x *AddSpaceRes) String() string {
 func (*AddSpaceRes) ProtoMessage() {}
 
 func (x *AddSpaceRes) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[16]
+	mi := &file_common_pb_mvp_proto_msgTypes[19]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1158,7 +1298,7 @@ func (x *AddSpaceRes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddSpaceRes.ProtoReflect.Descriptor instead.
 func (*AddSpaceRes) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{16}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{19}
 }
 
 type OrderGoodReq struct {
@@ -1174,7 +1314,7 @@ type OrderGoodReq struct {
 func (x *OrderGoodReq) Reset() {
 	*x = OrderGoodReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[17]
+		mi := &file_common_pb_mvp_proto_msgTypes[20]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1187,7 +1327,7 @@ func (x *OrderGoodReq) String() string {
 func (*OrderGoodReq) ProtoMessage() {}
 
 func (x *OrderGoodReq) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[17]
+	mi := &file_common_pb_mvp_proto_msgTypes[20]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1200,7 +1340,7 @@ func (x *OrderGoodReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OrderGoodReq.ProtoReflect.Descriptor instead.
 func (*OrderGoodReq) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{17}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *OrderGoodReq) GetDeskID() int64 {
@@ -1233,7 +1373,7 @@ type OrderGoodRes struct {
 func (x *OrderGoodRes) Reset() {
 	*x = OrderGoodRes{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[18]
+		mi := &file_common_pb_mvp_proto_msgTypes[21]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1246,7 +1386,7 @@ func (x *OrderGoodRes) String() string {
 func (*OrderGoodRes) ProtoMessage() {}
 
 func (x *OrderGoodRes) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[18]
+	mi := &file_common_pb_mvp_proto_msgTypes[21]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1259,7 +1399,7 @@ func (x *OrderGoodRes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OrderGoodRes.ProtoReflect.Descriptor instead.
 func (*OrderGoodRes) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{18}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{21}
 }
 
 type OrderDeskReq struct {
@@ -1273,7 +1413,7 @@ type OrderDeskReq struct {
 func (x *OrderDeskReq) Reset() {
 	*x = OrderDeskReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[19]
+		mi := &file_common_pb_mvp_proto_msgTypes[22]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1286,7 +1426,7 @@ func (x *OrderDeskReq) String() string {
 func (*OrderDeskReq) ProtoMessage() {}
 
 func (x *OrderDeskReq) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[19]
+	mi := &file_common_pb_mvp_proto_msgTypes[22]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1299,7 +1439,7 @@ func (x *OrderDeskReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OrderDeskReq.ProtoReflect.Descriptor instead.
 func (*OrderDeskReq) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{19}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *OrderDeskReq) GetDesk() *Desk {
@@ -1320,7 +1460,7 @@ type OrderDeskRes struct {
 func (x *OrderDeskRes) Reset() {
 	*x = OrderDeskRes{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[20]
+		mi := &file_common_pb_mvp_proto_msgTypes[23]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1333,7 +1473,7 @@ func (x *OrderDeskRes) String() string {
 func (*OrderDeskRes) ProtoMessage() {}
 
 func (x *OrderDeskRes) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[20]
+	mi := &file_common_pb_mvp_proto_msgTypes[23]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1346,7 +1486,7 @@ func (x *OrderDeskRes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OrderDeskRes.ProtoReflect.Descriptor instead.
 func (*OrderDeskRes) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{20}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *OrderDeskRes) GetDeskID() int64 {
@@ -1367,7 +1507,7 @@ type OrderReq struct {
 func (x *OrderReq) Reset() {
 	*x = OrderReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[21]
+		mi := &file_common_pb_mvp_proto_msgTypes[24]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1380,7 +1520,7 @@ func (x *OrderReq) String() string {
 func (*OrderReq) ProtoMessage() {}
 
 func (x *OrderReq) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[21]
+	mi := &file_common_pb_mvp_proto_msgTypes[24]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1393,7 +1533,7 @@ func (x *OrderReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OrderReq.ProtoReflect.Descriptor instead.
 func (*OrderReq) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{21}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *OrderReq) GetOrder() *Order {
@@ -1414,7 +1554,7 @@ type OrderRes struct {
 func (x *OrderRes) Reset() {
 	*x = OrderRes{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[22]
+		mi := &file_common_pb_mvp_proto_msgTypes[25]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1427,7 +1567,7 @@ func (x *OrderRes) String() string {
 func (*OrderRes) ProtoMessage() {}
 
 func (x *OrderRes) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[22]
+	mi := &file_common_pb_mvp_proto_msgTypes[25]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1440,7 +1580,7 @@ func (x *OrderRes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OrderRes.ProtoReflect.Descriptor instead.
 func (*OrderRes) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{22}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *OrderRes) GetOrderID() int64 {
@@ -1462,7 +1602,7 @@ type CloseDeskReq struct {
 func (x *CloseDeskReq) Reset() {
 	*x = CloseDeskReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[23]
+		mi := &file_common_pb_mvp_proto_msgTypes[26]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1475,7 +1615,7 @@ func (x *CloseDeskReq) String() string {
 func (*CloseDeskReq) ProtoMessage() {}
 
 func (x *CloseDeskReq) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[23]
+	mi := &file_common_pb_mvp_proto_msgTypes[26]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1488,7 +1628,7 @@ func (x *CloseDeskReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CloseDeskReq.ProtoReflect.Descriptor instead.
 func (*CloseDeskReq) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{23}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *CloseDeskReq) GetDeskID() int64 {
@@ -1514,7 +1654,7 @@ type CloseDeskRes struct {
 func (x *CloseDeskRes) Reset() {
 	*x = CloseDeskRes{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[24]
+		mi := &file_common_pb_mvp_proto_msgTypes[27]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1527,7 +1667,7 @@ func (x *CloseDeskRes) String() string {
 func (*CloseDeskRes) ProtoMessage() {}
 
 func (x *CloseDeskRes) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[24]
+	mi := &file_common_pb_mvp_proto_msgTypes[27]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1540,7 +1680,7 @@ func (x *CloseDeskRes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CloseDeskRes.ProtoReflect.Descriptor instead.
 func (*CloseDeskRes) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{24}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{27}
 }
 
 type CancelGoodReq struct {
@@ -1554,7 +1694,7 @@ type CancelGoodReq struct {
 func (x *CancelGoodReq) Reset() {
 	*x = CancelGoodReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[25]
+		mi := &file_common_pb_mvp_proto_msgTypes[28]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1567,7 +1707,7 @@ func (x *CancelGoodReq) String() string {
 func (*CancelGoodReq) ProtoMessage() {}
 
 func (x *CancelGoodReq) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[25]
+	mi := &file_common_pb_mvp_proto_msgTypes[28]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1580,7 +1720,7 @@ func (x *CancelGoodReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CancelGoodReq.ProtoReflect.Descriptor instead.
 func (*CancelGoodReq) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{25}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *CancelGoodReq) GetGoodIDs() []int64 {
@@ -1599,7 +1739,7 @@ type CancelGoodRes struct {
 func (x *CancelGoodRes) Reset() {
 	*x = CancelGoodRes{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[26]
+		mi := &file_common_pb_mvp_proto_msgTypes[29]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1612,7 +1752,7 @@ func (x *CancelGoodRes) String() string {
 func (*CancelGoodRes) ProtoMessage() {}
 
 func (x *CancelGoodRes) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[26]
+	mi := &file_common_pb_mvp_proto_msgTypes[29]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1625,7 +1765,7 @@ func (x *CancelGoodRes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CancelGoodRes.ProtoReflect.Descriptor instead.
 func (*CancelGoodRes) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{26}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{29}
 }
 
 type GetAllGoodClassesReq struct {
@@ -1637,7 +1777,7 @@ type GetAllGoodClassesReq struct {
 func (x *GetAllGoodClassesReq) Reset() {
 	*x = GetAllGoodClassesReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[27]
+		mi := &file_common_pb_mvp_proto_msgTypes[30]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1650,7 +1790,7 @@ func (x *GetAllGoodClassesReq) String() string {
 func (*GetAllGoodClassesReq) ProtoMessage() {}
 
 func (x *GetAllGoodClassesReq) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[27]
+	mi := &file_common_pb_mvp_proto_msgTypes[30]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1663,7 +1803,7 @@ func (x *GetAllGoodClassesReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllGoodClassesReq.ProtoReflect.Descriptor instead.
 func (*GetAllGoodClassesReq) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{27}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{30}
 }
 
 type GetAllGoodClassesRes struct {
@@ -1677,7 +1817,7 @@ type GetAllGoodClassesRes struct {
 func (x *GetAllGoodClassesRes) Reset() {
 	*x = GetAllGoodClassesRes{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[28]
+		mi := &file_common_pb_mvp_proto_msgTypes[31]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1690,7 +1830,7 @@ func (x *GetAllGoodClassesRes) String() string {
 func (*GetAllGoodClassesRes) ProtoMessage() {}
 
 func (x *GetAllGoodClassesRes) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[28]
+	mi := &file_common_pb_mvp_proto_msgTypes[31]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1703,7 +1843,7 @@ func (x *GetAllGoodClassesRes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllGoodClassesRes.ProtoReflect.Descriptor instead.
 func (*GetAllGoodClassesRes) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{28}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *GetAllGoodClassesRes) GetGoodClasses() []*GoodClass {
@@ -1724,7 +1864,7 @@ type GetOrderReq struct {
 func (x *GetOrderReq) Reset() {
 	*x = GetOrderReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[29]
+		mi := &file_common_pb_mvp_proto_msgTypes[32]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1737,7 +1877,7 @@ func (x *GetOrderReq) String() string {
 func (*GetOrderReq) ProtoMessage() {}
 
 func (x *GetOrderReq) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[29]
+	mi := &file_common_pb_mvp_proto_msgTypes[32]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1750,7 +1890,7 @@ func (x *GetOrderReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetOrderReq.ProtoReflect.Descriptor instead.
 func (*GetOrderReq) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{29}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *GetOrderReq) GetOrderID() int64 {
@@ -1771,7 +1911,7 @@ type GetOrderRes struct {
 func (x *GetOrderRes) Reset() {
 	*x = GetOrderRes{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[30]
+		mi := &file_common_pb_mvp_proto_msgTypes[33]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1784,7 +1924,7 @@ func (x *GetOrderRes) String() string {
 func (*GetOrderRes) ProtoMessage() {}
 
 func (x *GetOrderRes) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[30]
+	mi := &file_common_pb_mvp_proto_msgTypes[33]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1797,7 +1937,7 @@ func (x *GetOrderRes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetOrderRes.ProtoReflect.Descriptor instead.
 func (*GetOrderRes) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{30}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *GetOrderRes) GetOrder() *Order {
@@ -1819,7 +1959,7 @@ type CheckOutReq struct {
 func (x *CheckOutReq) Reset() {
 	*x = CheckOutReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[31]
+		mi := &file_common_pb_mvp_proto_msgTypes[34]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1832,7 +1972,7 @@ func (x *CheckOutReq) String() string {
 func (*CheckOutReq) ProtoMessage() {}
 
 func (x *CheckOutReq) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[31]
+	mi := &file_common_pb_mvp_proto_msgTypes[34]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1845,7 +1985,7 @@ func (x *CheckOutReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CheckOutReq.ProtoReflect.Descriptor instead.
 func (*CheckOutReq) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{31}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *CheckOutReq) GetGoodIDs() []int64 {
@@ -1871,7 +2011,7 @@ type CheckOutRes struct {
 func (x *CheckOutRes) Reset() {
 	*x = CheckOutRes{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[32]
+		mi := &file_common_pb_mvp_proto_msgTypes[35]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1884,7 +2024,7 @@ func (x *CheckOutRes) String() string {
 func (*CheckOutRes) ProtoMessage() {}
 
 func (x *CheckOutRes) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[32]
+	mi := &file_common_pb_mvp_proto_msgTypes[35]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1897,7 +2037,7 @@ func (x *CheckOutRes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CheckOutRes.ProtoReflect.Descriptor instead.
 func (*CheckOutRes) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{32}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{35}
 }
 
 type AddElementReq struct {
@@ -1912,7 +2052,7 @@ type AddElementReq struct {
 func (x *AddElementReq) Reset() {
 	*x = AddElementReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[33]
+		mi := &file_common_pb_mvp_proto_msgTypes[36]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1925,7 +2065,7 @@ func (x *AddElementReq) String() string {
 func (*AddElementReq) ProtoMessage() {}
 
 func (x *AddElementReq) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[33]
+	mi := &file_common_pb_mvp_proto_msgTypes[36]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1938,7 +2078,7 @@ func (x *AddElementReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddElementReq.ProtoReflect.Descriptor instead.
 func (*AddElementReq) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{33}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *AddElementReq) GetElement() *Element {
@@ -1964,7 +2104,7 @@ type AddElementRes struct {
 func (x *AddElementRes) Reset() {
 	*x = AddElementRes{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[34]
+		mi := &file_common_pb_mvp_proto_msgTypes[37]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1977,7 +2117,7 @@ func (x *AddElementRes) String() string {
 func (*AddElementRes) ProtoMessage() {}
 
 func (x *AddElementRes) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[34]
+	mi := &file_common_pb_mvp_proto_msgTypes[37]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1990,7 +2130,7 @@ func (x *AddElementRes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddElementRes.ProtoReflect.Descriptor instead.
 func (*AddElementRes) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{34}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{37}
 }
 
 type ChangeDeskReq struct {
@@ -2006,7 +2146,7 @@ type ChangeDeskReq struct {
 func (x *ChangeDeskReq) Reset() {
 	*x = ChangeDeskReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[35]
+		mi := &file_common_pb_mvp_proto_msgTypes[38]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2019,7 +2159,7 @@ func (x *ChangeDeskReq) String() string {
 func (*ChangeDeskReq) ProtoMessage() {}
 
 func (x *ChangeDeskReq) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[35]
+	mi := &file_common_pb_mvp_proto_msgTypes[38]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2032,7 +2172,7 @@ func (x *ChangeDeskReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChangeDeskReq.ProtoReflect.Descriptor instead.
 func (*ChangeDeskReq) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{35}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *ChangeDeskReq) GetSrcDeskID() int64 {
@@ -2065,7 +2205,7 @@ type ChangeDeskRes struct {
 func (x *ChangeDeskRes) Reset() {
 	*x = ChangeDeskRes{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[36]
+		mi := &file_common_pb_mvp_proto_msgTypes[39]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2078,7 +2218,7 @@ func (x *ChangeDeskRes) String() string {
 func (*ChangeDeskRes) ProtoMessage() {}
 
 func (x *ChangeDeskRes) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[36]
+	mi := &file_common_pb_mvp_proto_msgTypes[39]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2091,7 +2231,7 @@ func (x *ChangeDeskRes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChangeDeskRes.ProtoReflect.Descriptor instead.
 func (*ChangeDeskRes) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{36}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{39}
 }
 
 type DeleteFavorForGoodReq struct {
@@ -2106,7 +2246,7 @@ type DeleteFavorForGoodReq struct {
 func (x *DeleteFavorForGoodReq) Reset() {
 	*x = DeleteFavorForGoodReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[37]
+		mi := &file_common_pb_mvp_proto_msgTypes[40]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2119,7 +2259,7 @@ func (x *DeleteFavorForGoodReq) String() string {
 func (*DeleteFavorForGoodReq) ProtoMessage() {}
 
 func (x *DeleteFavorForGoodReq) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[37]
+	mi := &file_common_pb_mvp_proto_msgTypes[40]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2132,7 +2272,7 @@ func (x *DeleteFavorForGoodReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteFavorForGoodReq.ProtoReflect.Descriptor instead.
 func (*DeleteFavorForGoodReq) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{37}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *DeleteFavorForGoodReq) GetGoodID() int64 {
@@ -2158,7 +2298,7 @@ type DeleteFavorForGoodRes struct {
 func (x *DeleteFavorForGoodRes) Reset() {
 	*x = DeleteFavorForGoodRes{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[38]
+		mi := &file_common_pb_mvp_proto_msgTypes[41]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2171,7 +2311,7 @@ func (x *DeleteFavorForGoodRes) String() string {
 func (*DeleteFavorForGoodRes) ProtoMessage() {}
 
 func (x *DeleteFavorForGoodRes) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[38]
+	mi := &file_common_pb_mvp_proto_msgTypes[41]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2184,62 +2324,7 @@ func (x *DeleteFavorForGoodRes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteFavorForGoodRes.ProtoReflect.Descriptor instead.
 func (*DeleteFavorForGoodRes) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{38}
-}
-
-type DeskClass struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Name  string  `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Desks []*Desk `protobuf:"bytes,2,rep,name=desks,proto3" json:"desks,omitempty"`
-}
-
-func (x *DeskClass) Reset() {
-	*x = DeskClass{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[39]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *DeskClass) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeskClass) ProtoMessage() {}
-
-func (x *DeskClass) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[39]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeskClass.ProtoReflect.Descriptor instead.
-func (*DeskClass) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{39}
-}
-
-func (x *DeskClass) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *DeskClass) GetDesks() []*Desk {
-	if x != nil {
-		return x.Desks
-	}
-	return nil
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{41}
 }
 
 type GetAllDeskClassesReq struct {
@@ -2251,7 +2336,7 @@ type GetAllDeskClassesReq struct {
 func (x *GetAllDeskClassesReq) Reset() {
 	*x = GetAllDeskClassesReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[40]
+		mi := &file_common_pb_mvp_proto_msgTypes[42]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2264,7 +2349,7 @@ func (x *GetAllDeskClassesReq) String() string {
 func (*GetAllDeskClassesReq) ProtoMessage() {}
 
 func (x *GetAllDeskClassesReq) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[40]
+	mi := &file_common_pb_mvp_proto_msgTypes[42]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2277,7 +2362,7 @@ func (x *GetAllDeskClassesReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllDeskClassesReq.ProtoReflect.Descriptor instead.
 func (*GetAllDeskClassesReq) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{40}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{42}
 }
 
 type GetAllDeskClassesRes struct {
@@ -2291,7 +2376,7 @@ type GetAllDeskClassesRes struct {
 func (x *GetAllDeskClassesRes) Reset() {
 	*x = GetAllDeskClassesRes{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[41]
+		mi := &file_common_pb_mvp_proto_msgTypes[43]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2304,7 +2389,7 @@ func (x *GetAllDeskClassesRes) String() string {
 func (*GetAllDeskClassesRes) ProtoMessage() {}
 
 func (x *GetAllDeskClassesRes) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[41]
+	mi := &file_common_pb_mvp_proto_msgTypes[43]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2317,7 +2402,7 @@ func (x *GetAllDeskClassesRes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllDeskClassesRes.ProtoReflect.Descriptor instead.
 func (*GetAllDeskClassesRes) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{41}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *GetAllDeskClassesRes) GetDeskClasses() []*DeskClass {
@@ -2338,7 +2423,7 @@ type GetAllGoodsReq struct {
 func (x *GetAllGoodsReq) Reset() {
 	*x = GetAllGoodsReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[42]
+		mi := &file_common_pb_mvp_proto_msgTypes[44]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2351,7 +2436,7 @@ func (x *GetAllGoodsReq) String() string {
 func (*GetAllGoodsReq) ProtoMessage() {}
 
 func (x *GetAllGoodsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[42]
+	mi := &file_common_pb_mvp_proto_msgTypes[44]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2364,7 +2449,7 @@ func (x *GetAllGoodsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllGoodsReq.ProtoReflect.Descriptor instead.
 func (*GetAllGoodsReq) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{42}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *GetAllGoodsReq) GetClassName() string {
@@ -2385,7 +2470,7 @@ type GetAllGoodsRes struct {
 func (x *GetAllGoodsRes) Reset() {
 	*x = GetAllGoodsRes{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[43]
+		mi := &file_common_pb_mvp_proto_msgTypes[45]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2398,7 +2483,7 @@ func (x *GetAllGoodsRes) String() string {
 func (*GetAllGoodsRes) ProtoMessage() {}
 
 func (x *GetAllGoodsRes) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[43]
+	mi := &file_common_pb_mvp_proto_msgTypes[45]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2411,7 +2496,7 @@ func (x *GetAllGoodsRes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllGoodsRes.ProtoReflect.Descriptor instead.
 func (*GetAllGoodsRes) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{43}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *GetAllGoodsRes) GetGoods() []*Good {
@@ -2432,7 +2517,7 @@ type GetAllGoodOptionsReq struct {
 func (x *GetAllGoodOptionsReq) Reset() {
 	*x = GetAllGoodOptionsReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[44]
+		mi := &file_common_pb_mvp_proto_msgTypes[46]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2445,7 +2530,7 @@ func (x *GetAllGoodOptionsReq) String() string {
 func (*GetAllGoodOptionsReq) ProtoMessage() {}
 
 func (x *GetAllGoodOptionsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[44]
+	mi := &file_common_pb_mvp_proto_msgTypes[46]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2458,7 +2543,7 @@ func (x *GetAllGoodOptionsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllGoodOptionsReq.ProtoReflect.Descriptor instead.
 func (*GetAllGoodOptionsReq) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{44}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *GetAllGoodOptionsReq) GetClassName() string {
@@ -2479,7 +2564,7 @@ type GetAllGoodOptionsRes struct {
 func (x *GetAllGoodOptionsRes) Reset() {
 	*x = GetAllGoodOptionsRes{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_pb_mvp_proto_msgTypes[45]
+		mi := &file_common_pb_mvp_proto_msgTypes[47]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2492,7 +2577,7 @@ func (x *GetAllGoodOptionsRes) String() string {
 func (*GetAllGoodOptionsRes) ProtoMessage() {}
 
 func (x *GetAllGoodOptionsRes) ProtoReflect() protoreflect.Message {
-	mi := &file_common_pb_mvp_proto_msgTypes[45]
+	mi := &file_common_pb_mvp_proto_msgTypes[47]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2505,7 +2590,7 @@ func (x *GetAllGoodOptionsRes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllGoodOptionsRes.ProtoReflect.Descriptor instead.
 func (*GetAllGoodOptionsRes) Descriptor() ([]byte, []int) {
-	return file_common_pb_mvp_proto_rawDescGZIP(), []int{45}
+	return file_common_pb_mvp_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *GetAllGoodOptionsRes) GetElements() []*Element {
@@ -2580,44 +2665,54 @@ var file_common_pb_mvp_proto_rawDesc = []byte{
 	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x2a, 0x0a,
 	0x10, 0x70, 0x69, 0x63, 0x74, 0x75, 0x72, 0x65, 0x53, 0x74, 0x6f, 0x72, 0x65, 0x50, 0x61, 0x74,
 	0x68, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x10, 0x70, 0x69, 0x63, 0x74, 0x75, 0x72, 0x65,
-	0x53, 0x74, 0x6f, 0x72, 0x65, 0x50, 0x61, 0x74, 0x68, 0x22, 0x6e, 0x0a, 0x07, 0x45, 0x6c, 0x65,
-	0x6d, 0x65, 0x6e, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x23, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65,
-	0x18, 0x02, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x0f, 0x2e, 0x70, 0x62, 0x2e, 0x45, 0x6c, 0x65, 0x6d,
-	0x65, 0x6e, 0x74, 0x54, 0x79, 0x70, 0x65, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x2a, 0x0a,
-	0x09, 0x73, 0x69, 0x7a, 0x65, 0x49, 0x6e, 0x66, 0x6f, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x0b,
-	0x32, 0x0c, 0x2e, 0x70, 0x62, 0x2e, 0x53, 0x69, 0x7a, 0x65, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x09,
-	0x73, 0x69, 0x7a, 0x65, 0x49, 0x6e, 0x66, 0x6f, 0x73, 0x22, 0x80, 0x01, 0x0a, 0x08, 0x53, 0x69,
-	0x7a, 0x65, 0x49, 0x6e, 0x66, 0x6f, 0x12, 0x12, 0x0a, 0x04, 0x73, 0x69, 0x7a, 0x65, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x73, 0x69, 0x7a, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x70, 0x72,
-	0x69, 0x63, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x70, 0x72, 0x69, 0x63, 0x65,
-	0x12, 0x2a, 0x0a, 0x10, 0x70, 0x69, 0x63, 0x74, 0x75, 0x72, 0x65, 0x53, 0x74, 0x6f, 0x72, 0x65,
-	0x50, 0x61, 0x74, 0x68, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x10, 0x70, 0x69, 0x63, 0x74,
-	0x75, 0x72, 0x65, 0x53, 0x74, 0x6f, 0x72, 0x65, 0x50, 0x61, 0x74, 0x68, 0x12, 0x1e, 0x0a, 0x0a,
-	0x69, 0x73, 0x53, 0x65, 0x6c, 0x65, 0x63, 0x74, 0x65, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28, 0x08,
-	0x52, 0x0a, 0x69, 0x73, 0x53, 0x65, 0x6c, 0x65, 0x63, 0x74, 0x65, 0x64, 0x22, 0x54, 0x0a, 0x05,
-	0x46, 0x61, 0x76, 0x6f, 0x72, 0x12, 0x2b, 0x0a, 0x09, 0x46, 0x61, 0x76, 0x6f, 0x72, 0x54, 0x79,
-	0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x0d, 0x2e, 0x70, 0x62, 0x2e, 0x46, 0x61,
-	0x76, 0x6f, 0x72, 0x54, 0x79, 0x70, 0x65, 0x52, 0x09, 0x46, 0x61, 0x76, 0x6f, 0x72, 0x54, 0x79,
-	0x70, 0x65, 0x12, 0x1e, 0x0a, 0x0a, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x65, 0x74, 0x65, 0x72, 0x73,
-	0x18, 0x02, 0x20, 0x03, 0x28, 0x09, 0x52, 0x0a, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x65, 0x74, 0x65,
-	0x72, 0x73, 0x22, 0x4f, 0x0a, 0x12, 0x41, 0x64, 0x64, 0x46, 0x61, 0x76, 0x6f, 0x72, 0x46, 0x6f,
-	0x72, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x71, 0x12, 0x16, 0x0a, 0x06, 0x67, 0x6f, 0x6f, 0x64,
-	0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x06, 0x67, 0x6f, 0x6f, 0x64, 0x49, 0x44,
-	0x12, 0x21, 0x0a, 0x06, 0x66, 0x61, 0x76, 0x6f, 0x72, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0b,
-	0x32, 0x09, 0x2e, 0x70, 0x62, 0x2e, 0x46, 0x61, 0x76, 0x6f, 0x72, 0x52, 0x06, 0x66, 0x61, 0x76,
-	0x6f, 0x72, 0x73, 0x22, 0x14, 0x0a, 0x12, 0x41, 0x64, 0x64, 0x46, 0x61, 0x76, 0x6f, 0x72, 0x46,
-	0x6f, 0x72, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x73, 0x22, 0x48, 0x0a, 0x0a, 0x41, 0x64, 0x64,
-	0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x71, 0x12, 0x1c, 0x0a, 0x04, 0x67, 0x6f, 0x6f, 0x64, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x08, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x6f, 0x6f, 0x64, 0x52,
-	0x04, 0x67, 0x6f, 0x6f, 0x64, 0x12, 0x1c, 0x0a, 0x09, 0x63, 0x6c, 0x61, 0x73, 0x73, 0x4e, 0x61,
-	0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x63, 0x6c, 0x61, 0x73, 0x73, 0x4e,
-	0x61, 0x6d, 0x65, 0x22, 0x0c, 0x0a, 0x0a, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65,
-	0x73, 0x22, 0x3e, 0x0a, 0x0f, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x43, 0x6c, 0x61, 0x73,
-	0x73, 0x52, 0x65, 0x71, 0x12, 0x2b, 0x0a, 0x09, 0x67, 0x6f, 0x6f, 0x64, 0x43, 0x6c, 0x61, 0x73,
-	0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0d, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x6f, 0x6f,
-	0x64, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x52, 0x09, 0x67, 0x6f, 0x6f, 0x64, 0x43, 0x6c, 0x61, 0x73,
-	0x73, 0x22, 0x11, 0x0a, 0x0f, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x43, 0x6c, 0x61, 0x73,
+	0x53, 0x74, 0x6f, 0x72, 0x65, 0x50, 0x61, 0x74, 0x68, 0x22, 0x4b, 0x0a, 0x09, 0x44, 0x65, 0x73,
+	0x6b, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x2a, 0x0a, 0x10, 0x70, 0x69,
+	0x63, 0x74, 0x75, 0x72, 0x65, 0x53, 0x74, 0x6f, 0x72, 0x65, 0x50, 0x61, 0x74, 0x68, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x10, 0x70, 0x69, 0x63, 0x74, 0x75, 0x72, 0x65, 0x53, 0x74, 0x6f,
+	0x72, 0x65, 0x50, 0x61, 0x74, 0x68, 0x22, 0x6e, 0x0a, 0x07, 0x45, 0x6c, 0x65, 0x6d, 0x65, 0x6e,
+	0x74, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x23, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x0e, 0x32, 0x0f, 0x2e, 0x70, 0x62, 0x2e, 0x45, 0x6c, 0x65, 0x6d, 0x65, 0x6e, 0x74,
+	0x54, 0x79, 0x70, 0x65, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x2a, 0x0a, 0x09, 0x73, 0x69,
+	0x7a, 0x65, 0x49, 0x6e, 0x66, 0x6f, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0c, 0x2e,
+	0x70, 0x62, 0x2e, 0x53, 0x69, 0x7a, 0x65, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x09, 0x73, 0x69, 0x7a,
+	0x65, 0x49, 0x6e, 0x66, 0x6f, 0x73, 0x22, 0x80, 0x01, 0x0a, 0x08, 0x53, 0x69, 0x7a, 0x65, 0x49,
+	0x6e, 0x66, 0x6f, 0x12, 0x12, 0x0a, 0x04, 0x73, 0x69, 0x7a, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x04, 0x73, 0x69, 0x7a, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x70, 0x72, 0x69, 0x63, 0x65,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x70, 0x72, 0x69, 0x63, 0x65, 0x12, 0x2a, 0x0a,
+	0x10, 0x70, 0x69, 0x63, 0x74, 0x75, 0x72, 0x65, 0x53, 0x74, 0x6f, 0x72, 0x65, 0x50, 0x61, 0x74,
+	0x68, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x10, 0x70, 0x69, 0x63, 0x74, 0x75, 0x72, 0x65,
+	0x53, 0x74, 0x6f, 0x72, 0x65, 0x50, 0x61, 0x74, 0x68, 0x12, 0x1e, 0x0a, 0x0a, 0x69, 0x73, 0x53,
+	0x65, 0x6c, 0x65, 0x63, 0x74, 0x65, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28, 0x08, 0x52, 0x0a, 0x69,
+	0x73, 0x53, 0x65, 0x6c, 0x65, 0x63, 0x74, 0x65, 0x64, 0x22, 0x54, 0x0a, 0x05, 0x46, 0x61, 0x76,
+	0x6f, 0x72, 0x12, 0x2b, 0x0a, 0x09, 0x46, 0x61, 0x76, 0x6f, 0x72, 0x54, 0x79, 0x70, 0x65, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x0d, 0x2e, 0x70, 0x62, 0x2e, 0x46, 0x61, 0x76, 0x6f, 0x72,
+	0x54, 0x79, 0x70, 0x65, 0x52, 0x09, 0x46, 0x61, 0x76, 0x6f, 0x72, 0x54, 0x79, 0x70, 0x65, 0x12,
+	0x1e, 0x0a, 0x0a, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x65, 0x74, 0x65, 0x72, 0x73, 0x18, 0x02, 0x20,
+	0x03, 0x28, 0x09, 0x52, 0x0a, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x65, 0x74, 0x65, 0x72, 0x73, 0x22,
+	0x4f, 0x0a, 0x12, 0x41, 0x64, 0x64, 0x46, 0x61, 0x76, 0x6f, 0x72, 0x46, 0x6f, 0x72, 0x47, 0x6f,
+	0x6f, 0x64, 0x52, 0x65, 0x71, 0x12, 0x16, 0x0a, 0x06, 0x67, 0x6f, 0x6f, 0x64, 0x49, 0x44, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x06, 0x67, 0x6f, 0x6f, 0x64, 0x49, 0x44, 0x12, 0x21, 0x0a,
+	0x06, 0x66, 0x61, 0x76, 0x6f, 0x72, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x09, 0x2e,
+	0x70, 0x62, 0x2e, 0x46, 0x61, 0x76, 0x6f, 0x72, 0x52, 0x06, 0x66, 0x61, 0x76, 0x6f, 0x72, 0x73,
+	0x22, 0x14, 0x0a, 0x12, 0x41, 0x64, 0x64, 0x46, 0x61, 0x76, 0x6f, 0x72, 0x46, 0x6f, 0x72, 0x47,
+	0x6f, 0x6f, 0x64, 0x52, 0x65, 0x73, 0x22, 0x48, 0x0a, 0x0a, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f,
+	0x64, 0x52, 0x65, 0x71, 0x12, 0x1c, 0x0a, 0x04, 0x67, 0x6f, 0x6f, 0x64, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x0b, 0x32, 0x08, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x04, 0x67, 0x6f,
+	0x6f, 0x64, 0x12, 0x1c, 0x0a, 0x09, 0x63, 0x6c, 0x61, 0x73, 0x73, 0x4e, 0x61, 0x6d, 0x65, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x63, 0x6c, 0x61, 0x73, 0x73, 0x4e, 0x61, 0x6d, 0x65,
+	0x22, 0x0c, 0x0a, 0x0a, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x73, 0x22, 0x3e,
+	0x0a, 0x0f, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x52, 0x65,
+	0x71, 0x12, 0x2b, 0x0a, 0x09, 0x67, 0x6f, 0x6f, 0x64, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x0b, 0x32, 0x0d, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x6f, 0x6f, 0x64, 0x43, 0x6c,
+	0x61, 0x73, 0x73, 0x52, 0x09, 0x67, 0x6f, 0x6f, 0x64, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x22, 0x11,
+	0x0a, 0x0f, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x52, 0x65,
+	0x73, 0x22, 0x3e, 0x0a, 0x0f, 0x41, 0x64, 0x64, 0x44, 0x65, 0x73, 0x6b, 0x43, 0x6c, 0x61, 0x73,
+	0x73, 0x52, 0x65, 0x71, 0x12, 0x2b, 0x0a, 0x09, 0x64, 0x65, 0x73, 0x6b, 0x43, 0x6c, 0x61, 0x73,
+	0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0d, 0x2e, 0x70, 0x62, 0x2e, 0x44, 0x65, 0x73,
+	0x6b, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x52, 0x09, 0x64, 0x65, 0x73, 0x6b, 0x43, 0x6c, 0x61, 0x73,
+	0x73, 0x22, 0x11, 0x0a, 0x0f, 0x41, 0x64, 0x64, 0x44, 0x65, 0x73, 0x6b, 0x43, 0x6c, 0x61, 0x73,
 	0x73, 0x52, 0x65, 0x73, 0x22, 0x2e, 0x0a, 0x0b, 0x41, 0x64, 0x64, 0x53, 0x70, 0x61, 0x63, 0x65,
 	0x52, 0x65, 0x71, 0x12, 0x1f, 0x0a, 0x05, 0x73, 0x70, 0x61, 0x63, 0x65, 0x18, 0x01, 0x20, 0x01,
 	0x28, 0x0b, 0x32, 0x09, 0x2e, 0x70, 0x62, 0x2e, 0x53, 0x70, 0x61, 0x63, 0x65, 0x52, 0x05, 0x73,
@@ -2687,102 +2782,101 @@ var file_common_pb_mvp_proto_rawDesc = []byte{
 	0x12, 0x1f, 0x0a, 0x05, 0x66, 0x61, 0x76, 0x6f, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32,
 	0x09, 0x2e, 0x70, 0x62, 0x2e, 0x46, 0x61, 0x76, 0x6f, 0x72, 0x52, 0x05, 0x66, 0x61, 0x76, 0x6f,
 	0x72, 0x22, 0x17, 0x0a, 0x15, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x46, 0x61, 0x76, 0x6f, 0x72,
-	0x46, 0x6f, 0x72, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x73, 0x22, 0x3f, 0x0a, 0x09, 0x44, 0x65,
-	0x73, 0x6b, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x1e, 0x0a, 0x05, 0x64,
-	0x65, 0x73, 0x6b, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x08, 0x2e, 0x70, 0x62, 0x2e,
-	0x44, 0x65, 0x73, 0x6b, 0x52, 0x05, 0x64, 0x65, 0x73, 0x6b, 0x73, 0x22, 0x16, 0x0a, 0x14, 0x47,
-	0x65, 0x74, 0x41, 0x6c, 0x6c, 0x44, 0x65, 0x73, 0x6b, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x65, 0x73,
-	0x52, 0x65, 0x71, 0x22, 0x47, 0x0a, 0x14, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x44, 0x65, 0x73,
-	0x6b, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x65, 0x73, 0x52, 0x65, 0x73, 0x12, 0x2f, 0x0a, 0x0b, 0x64,
-	0x65, 0x73, 0x6b, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b,
-	0x32, 0x0d, 0x2e, 0x70, 0x62, 0x2e, 0x44, 0x65, 0x73, 0x6b, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x52,
-	0x0b, 0x64, 0x65, 0x73, 0x6b, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x65, 0x73, 0x22, 0x2e, 0x0a, 0x0e,
-	0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x73, 0x52, 0x65, 0x71, 0x12, 0x1c,
-	0x0a, 0x09, 0x63, 0x6c, 0x61, 0x73, 0x73, 0x4e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x09, 0x63, 0x6c, 0x61, 0x73, 0x73, 0x4e, 0x61, 0x6d, 0x65, 0x22, 0x30, 0x0a, 0x0e,
-	0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x73, 0x52, 0x65, 0x73, 0x12, 0x1e,
-	0x0a, 0x05, 0x67, 0x6f, 0x6f, 0x64, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x08, 0x2e,
-	0x70, 0x62, 0x2e, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x05, 0x67, 0x6f, 0x6f, 0x64, 0x73, 0x22, 0x34,
-	0x0a, 0x14, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x4f, 0x70, 0x74, 0x69,
-	0x6f, 0x6e, 0x73, 0x52, 0x65, 0x71, 0x12, 0x1c, 0x0a, 0x09, 0x63, 0x6c, 0x61, 0x73, 0x73, 0x4e,
-	0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x63, 0x6c, 0x61, 0x73, 0x73,
-	0x4e, 0x61, 0x6d, 0x65, 0x22, 0x3f, 0x0a, 0x14, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x47, 0x6f,
-	0x6f, 0x64, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x65, 0x73, 0x12, 0x27, 0x0a, 0x08,
-	0x65, 0x6c, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0b,
-	0x2e, 0x70, 0x62, 0x2e, 0x45, 0x6c, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x08, 0x65, 0x6c, 0x65,
-	0x6d, 0x65, 0x6e, 0x74, 0x73, 0x2a, 0x3f, 0x0a, 0x09, 0x46, 0x61, 0x76, 0x6f, 0x72, 0x54, 0x79,
-	0x70, 0x65, 0x12, 0x08, 0x0a, 0x04, 0x4e, 0x4f, 0x4e, 0x45, 0x10, 0x00, 0x12, 0x0a, 0x0a, 0x06,
-	0x52, 0x45, 0x42, 0x41, 0x54, 0x45, 0x10, 0x01, 0x12, 0x12, 0x0a, 0x0e, 0x46, 0x55, 0x4c, 0x4c,
-	0x5f, 0x52, 0x45, 0x44, 0x55, 0x43, 0x54, 0x49, 0x4f, 0x4e, 0x10, 0x02, 0x12, 0x08, 0x0a, 0x04,
-	0x46, 0x52, 0x45, 0x45, 0x10, 0x03, 0x2a, 0x33, 0x0a, 0x0b, 0x45, 0x6c, 0x65, 0x6d, 0x65, 0x6e,
-	0x74, 0x54, 0x79, 0x70, 0x65, 0x12, 0x08, 0x0a, 0x04, 0x4d, 0x61, 0x69, 0x6e, 0x10, 0x00, 0x12,
-	0x0a, 0x0a, 0x06, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x10, 0x01, 0x12, 0x0e, 0x0a, 0x0a, 0x49,
-	0x6e, 0x67, 0x72, 0x65, 0x64, 0x69, 0x65, 0x6e, 0x74, 0x10, 0x02, 0x2a, 0x26, 0x0a, 0x0b, 0x42,
-	0x69, 0x6c, 0x6c, 0x69, 0x6e, 0x67, 0x54, 0x79, 0x70, 0x65, 0x12, 0x0a, 0x0a, 0x06, 0x54, 0x69,
-	0x6d, 0x69, 0x6e, 0x67, 0x10, 0x00, 0x12, 0x0b, 0x0a, 0x07, 0x53, 0x65, 0x73, 0x73, 0x69, 0x6f,
-	0x6e, 0x10, 0x01, 0x32, 0xc4, 0x07, 0x0a, 0x03, 0x4d, 0x76, 0x70, 0x12, 0x47, 0x0a, 0x11, 0x47,
+	0x46, 0x6f, 0x72, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x73, 0x22, 0x16, 0x0a, 0x14, 0x47, 0x65,
+	0x74, 0x41, 0x6c, 0x6c, 0x44, 0x65, 0x73, 0x6b, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x65, 0x73, 0x52,
+	0x65, 0x71, 0x22, 0x47, 0x0a, 0x14, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x44, 0x65, 0x73, 0x6b,
+	0x43, 0x6c, 0x61, 0x73, 0x73, 0x65, 0x73, 0x52, 0x65, 0x73, 0x12, 0x2f, 0x0a, 0x0b, 0x64, 0x65,
+	0x73, 0x6b, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32,
+	0x0d, 0x2e, 0x70, 0x62, 0x2e, 0x44, 0x65, 0x73, 0x6b, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x52, 0x0b,
+	0x64, 0x65, 0x73, 0x6b, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x65, 0x73, 0x22, 0x2e, 0x0a, 0x0e, 0x47,
+	0x65, 0x74, 0x41, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x73, 0x52, 0x65, 0x71, 0x12, 0x1c, 0x0a,
+	0x09, 0x63, 0x6c, 0x61, 0x73, 0x73, 0x4e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x09, 0x63, 0x6c, 0x61, 0x73, 0x73, 0x4e, 0x61, 0x6d, 0x65, 0x22, 0x30, 0x0a, 0x0e, 0x47,
+	0x65, 0x74, 0x41, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x73, 0x52, 0x65, 0x73, 0x12, 0x1e, 0x0a,
+	0x05, 0x67, 0x6f, 0x6f, 0x64, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x08, 0x2e, 0x70,
+	0x62, 0x2e, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x05, 0x67, 0x6f, 0x6f, 0x64, 0x73, 0x22, 0x34, 0x0a,
+	0x14, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x4f, 0x70, 0x74, 0x69, 0x6f,
+	0x6e, 0x73, 0x52, 0x65, 0x71, 0x12, 0x1c, 0x0a, 0x09, 0x63, 0x6c, 0x61, 0x73, 0x73, 0x4e, 0x61,
+	0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x63, 0x6c, 0x61, 0x73, 0x73, 0x4e,
+	0x61, 0x6d, 0x65, 0x22, 0x3f, 0x0a, 0x14, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x47, 0x6f, 0x6f,
+	0x64, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x65, 0x73, 0x12, 0x27, 0x0a, 0x08, 0x65,
+	0x6c, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0b, 0x2e,
+	0x70, 0x62, 0x2e, 0x45, 0x6c, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x08, 0x65, 0x6c, 0x65, 0x6d,
+	0x65, 0x6e, 0x74, 0x73, 0x2a, 0x3f, 0x0a, 0x09, 0x46, 0x61, 0x76, 0x6f, 0x72, 0x54, 0x79, 0x70,
+	0x65, 0x12, 0x08, 0x0a, 0x04, 0x4e, 0x4f, 0x4e, 0x45, 0x10, 0x00, 0x12, 0x0a, 0x0a, 0x06, 0x52,
+	0x45, 0x42, 0x41, 0x54, 0x45, 0x10, 0x01, 0x12, 0x12, 0x0a, 0x0e, 0x46, 0x55, 0x4c, 0x4c, 0x5f,
+	0x52, 0x45, 0x44, 0x55, 0x43, 0x54, 0x49, 0x4f, 0x4e, 0x10, 0x02, 0x12, 0x08, 0x0a, 0x04, 0x46,
+	0x52, 0x45, 0x45, 0x10, 0x03, 0x2a, 0x33, 0x0a, 0x0b, 0x45, 0x6c, 0x65, 0x6d, 0x65, 0x6e, 0x74,
+	0x54, 0x79, 0x70, 0x65, 0x12, 0x08, 0x0a, 0x04, 0x4d, 0x61, 0x69, 0x6e, 0x10, 0x00, 0x12, 0x0a,
+	0x0a, 0x06, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x10, 0x01, 0x12, 0x0e, 0x0a, 0x0a, 0x49, 0x6e,
+	0x67, 0x72, 0x65, 0x64, 0x69, 0x65, 0x6e, 0x74, 0x10, 0x02, 0x2a, 0x26, 0x0a, 0x0b, 0x42, 0x69,
+	0x6c, 0x6c, 0x69, 0x6e, 0x67, 0x54, 0x79, 0x70, 0x65, 0x12, 0x0a, 0x0a, 0x06, 0x54, 0x69, 0x6d,
+	0x69, 0x6e, 0x67, 0x10, 0x00, 0x12, 0x0b, 0x0a, 0x07, 0x53, 0x65, 0x73, 0x73, 0x69, 0x6f, 0x6e,
+	0x10, 0x01, 0x32, 0xfe, 0x07, 0x0a, 0x03, 0x4d, 0x76, 0x70, 0x12, 0x47, 0x0a, 0x11, 0x47, 0x65,
+	0x74, 0x41, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x65, 0x73, 0x12,
+	0x18, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x43,
+	0x6c, 0x61, 0x73, 0x73, 0x65, 0x73, 0x52, 0x65, 0x71, 0x1a, 0x18, 0x2e, 0x70, 0x62, 0x2e, 0x47,
 	0x65, 0x74, 0x41, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x65, 0x73,
-	0x12, 0x18, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64,
-	0x43, 0x6c, 0x61, 0x73, 0x73, 0x65, 0x73, 0x52, 0x65, 0x71, 0x1a, 0x18, 0x2e, 0x70, 0x62, 0x2e,
-	0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x65,
-	0x73, 0x52, 0x65, 0x73, 0x12, 0x35, 0x0a, 0x0b, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x47, 0x6f,
-	0x6f, 0x64, 0x73, 0x12, 0x12, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x47,
-	0x6f, 0x6f, 0x64, 0x73, 0x52, 0x65, 0x71, 0x1a, 0x12, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74,
-	0x41, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x73, 0x52, 0x65, 0x73, 0x12, 0x47, 0x0a, 0x11, 0x47,
+	0x52, 0x65, 0x73, 0x12, 0x35, 0x0a, 0x0b, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x47, 0x6f, 0x6f,
+	0x64, 0x73, 0x12, 0x12, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x47, 0x6f,
+	0x6f, 0x64, 0x73, 0x52, 0x65, 0x71, 0x1a, 0x12, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x41,
+	0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x73, 0x52, 0x65, 0x73, 0x12, 0x47, 0x0a, 0x11, 0x47, 0x65,
+	0x74, 0x41, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x12,
+	0x18, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x4f,
+	0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x65, 0x71, 0x1a, 0x18, 0x2e, 0x70, 0x62, 0x2e, 0x47,
 	0x65, 0x74, 0x41, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73,
-	0x12, 0x18, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64,
-	0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x65, 0x71, 0x1a, 0x18, 0x2e, 0x70, 0x62, 0x2e,
-	0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e,
-	0x73, 0x52, 0x65, 0x73, 0x12, 0x38, 0x0a, 0x0c, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x43,
-	0x6c, 0x61, 0x73, 0x73, 0x12, 0x13, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f,
-	0x64, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x52, 0x65, 0x71, 0x1a, 0x13, 0x2e, 0x70, 0x62, 0x2e, 0x41,
-	0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x52, 0x65, 0x73, 0x12, 0x29,
-	0x0a, 0x07, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x12, 0x0e, 0x2e, 0x70, 0x62, 0x2e, 0x41,
-	0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x71, 0x1a, 0x0e, 0x2e, 0x70, 0x62, 0x2e, 0x41,
-	0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x73, 0x12, 0x32, 0x0a, 0x0a, 0x43, 0x61, 0x6e,
-	0x63, 0x65, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x12, 0x11, 0x2e, 0x70, 0x62, 0x2e, 0x43, 0x61, 0x6e,
-	0x63, 0x65, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x71, 0x1a, 0x11, 0x2e, 0x70, 0x62, 0x2e,
-	0x43, 0x61, 0x6e, 0x63, 0x65, 0x6c, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x73, 0x12, 0x32, 0x0a,
-	0x0a, 0x41, 0x64, 0x64, 0x45, 0x6c, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x12, 0x11, 0x2e, 0x70, 0x62,
-	0x2e, 0x41, 0x64, 0x64, 0x45, 0x6c, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x1a, 0x11,
-	0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x45, 0x6c, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65,
-	0x73, 0x12, 0x2c, 0x0a, 0x08, 0x41, 0x64, 0x64, 0x53, 0x70, 0x61, 0x63, 0x65, 0x12, 0x0f, 0x2e,
-	0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x53, 0x70, 0x61, 0x63, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x0f,
-	0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x53, 0x70, 0x61, 0x63, 0x65, 0x52, 0x65, 0x73, 0x12,
-	0x2f, 0x0a, 0x09, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x47, 0x6f, 0x6f, 0x64, 0x12, 0x10, 0x2e, 0x70,
-	0x62, 0x2e, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x71, 0x1a, 0x10,
-	0x2e, 0x70, 0x62, 0x2e, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x73,
-	0x12, 0x2f, 0x0a, 0x09, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x44, 0x65, 0x73, 0x6b, 0x12, 0x10, 0x2e,
-	0x70, 0x62, 0x2e, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x44, 0x65, 0x73, 0x6b, 0x52, 0x65, 0x71, 0x1a,
-	0x10, 0x2e, 0x70, 0x62, 0x2e, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x44, 0x65, 0x73, 0x6b, 0x52, 0x65,
-	0x73, 0x12, 0x32, 0x0a, 0x0a, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x44, 0x65, 0x73, 0x6b, 0x12,
-	0x11, 0x2e, 0x70, 0x62, 0x2e, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x44, 0x65, 0x73, 0x6b, 0x52,
-	0x65, 0x71, 0x1a, 0x11, 0x2e, 0x70, 0x62, 0x2e, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x44, 0x65,
-	0x73, 0x6b, 0x52, 0x65, 0x73, 0x12, 0x2f, 0x0a, 0x09, 0x43, 0x6c, 0x6f, 0x73, 0x65, 0x44, 0x65,
-	0x73, 0x6b, 0x12, 0x10, 0x2e, 0x70, 0x62, 0x2e, 0x43, 0x6c, 0x6f, 0x73, 0x65, 0x44, 0x65, 0x73,
-	0x6b, 0x52, 0x65, 0x71, 0x1a, 0x10, 0x2e, 0x70, 0x62, 0x2e, 0x43, 0x6c, 0x6f, 0x73, 0x65, 0x44,
-	0x65, 0x73, 0x6b, 0x52, 0x65, 0x73, 0x12, 0x2c, 0x0a, 0x08, 0x47, 0x65, 0x74, 0x4f, 0x72, 0x64,
-	0x65, 0x72, 0x12, 0x0f, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72,
-	0x52, 0x65, 0x71, 0x1a, 0x0f, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x4f, 0x72, 0x64, 0x65,
-	0x72, 0x52, 0x65, 0x73, 0x12, 0x2c, 0x0a, 0x08, 0x43, 0x68, 0x65, 0x63, 0x6b, 0x4f, 0x75, 0x74,
-	0x12, 0x0f, 0x2e, 0x70, 0x62, 0x2e, 0x43, 0x68, 0x65, 0x63, 0x6b, 0x4f, 0x75, 0x74, 0x52, 0x65,
-	0x71, 0x1a, 0x0f, 0x2e, 0x70, 0x62, 0x2e, 0x43, 0x68, 0x65, 0x63, 0x6b, 0x4f, 0x75, 0x74, 0x52,
-	0x65, 0x73, 0x12, 0x41, 0x0a, 0x0f, 0x41, 0x64, 0x64, 0x46, 0x61, 0x76, 0x6f, 0x72, 0x46, 0x6f,
-	0x72, 0x47, 0x6f, 0x6f, 0x64, 0x12, 0x16, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x46, 0x61,
-	0x76, 0x6f, 0x72, 0x46, 0x6f, 0x72, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x71, 0x1a, 0x16, 0x2e,
-	0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x46, 0x61, 0x76, 0x6f, 0x72, 0x46, 0x6f, 0x72, 0x47, 0x6f,
-	0x6f, 0x64, 0x52, 0x65, 0x73, 0x12, 0x4a, 0x0a, 0x12, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x46,
-	0x61, 0x76, 0x6f, 0x72, 0x46, 0x6f, 0x72, 0x47, 0x6f, 0x6f, 0x64, 0x12, 0x19, 0x2e, 0x70, 0x62,
-	0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x46, 0x61, 0x76, 0x6f, 0x72, 0x46, 0x6f, 0x72, 0x47,
-	0x6f, 0x6f, 0x64, 0x52, 0x65, 0x71, 0x1a, 0x19, 0x2e, 0x70, 0x62, 0x2e, 0x44, 0x65, 0x6c, 0x65,
-	0x74, 0x65, 0x46, 0x61, 0x76, 0x6f, 0x72, 0x46, 0x6f, 0x72, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65,
-	0x73, 0x12, 0x47, 0x0a, 0x11, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x44, 0x65, 0x73, 0x6b, 0x43,
-	0x6c, 0x61, 0x73, 0x73, 0x65, 0x73, 0x12, 0x18, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x41,
-	0x6c, 0x6c, 0x44, 0x65, 0x73, 0x6b, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x65, 0x73, 0x52, 0x65, 0x71,
-	0x1a, 0x18, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x44, 0x65, 0x73, 0x6b,
-	0x43, 0x6c, 0x61, 0x73, 0x73, 0x65, 0x73, 0x52, 0x65, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x33,
+	0x52, 0x65, 0x73, 0x12, 0x38, 0x0a, 0x0c, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x43, 0x6c,
+	0x61, 0x73, 0x73, 0x12, 0x13, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64,
+	0x43, 0x6c, 0x61, 0x73, 0x73, 0x52, 0x65, 0x71, 0x1a, 0x13, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64,
+	0x64, 0x47, 0x6f, 0x6f, 0x64, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x52, 0x65, 0x73, 0x12, 0x38, 0x0a,
+	0x0c, 0x41, 0x64, 0x64, 0x44, 0x65, 0x73, 0x6b, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x12, 0x13, 0x2e,
+	0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x44, 0x65, 0x73, 0x6b, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x52,
+	0x65, 0x71, 0x1a, 0x13, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x44, 0x65, 0x73, 0x6b, 0x43,
+	0x6c, 0x61, 0x73, 0x73, 0x52, 0x65, 0x73, 0x12, 0x29, 0x0a, 0x07, 0x41, 0x64, 0x64, 0x47, 0x6f,
+	0x6f, 0x64, 0x12, 0x0e, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x52,
+	0x65, 0x71, 0x1a, 0x0e, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x47, 0x6f, 0x6f, 0x64, 0x52,
+	0x65, 0x73, 0x12, 0x32, 0x0a, 0x0a, 0x43, 0x61, 0x6e, 0x63, 0x65, 0x6c, 0x47, 0x6f, 0x6f, 0x64,
+	0x12, 0x11, 0x2e, 0x70, 0x62, 0x2e, 0x43, 0x61, 0x6e, 0x63, 0x65, 0x6c, 0x47, 0x6f, 0x6f, 0x64,
+	0x52, 0x65, 0x71, 0x1a, 0x11, 0x2e, 0x70, 0x62, 0x2e, 0x43, 0x61, 0x6e, 0x63, 0x65, 0x6c, 0x47,
+	0x6f, 0x6f, 0x64, 0x52, 0x65, 0x73, 0x12, 0x32, 0x0a, 0x0a, 0x41, 0x64, 0x64, 0x45, 0x6c, 0x65,
+	0x6d, 0x65, 0x6e, 0x74, 0x12, 0x11, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x45, 0x6c, 0x65,
+	0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x1a, 0x11, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64,
+	0x45, 0x6c, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x12, 0x2c, 0x0a, 0x08, 0x41, 0x64,
+	0x64, 0x53, 0x70, 0x61, 0x63, 0x65, 0x12, 0x0f, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x53,
+	0x70, 0x61, 0x63, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x0f, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64,
+	0x53, 0x70, 0x61, 0x63, 0x65, 0x52, 0x65, 0x73, 0x12, 0x2f, 0x0a, 0x09, 0x4f, 0x72, 0x64, 0x65,
+	0x72, 0x47, 0x6f, 0x6f, 0x64, 0x12, 0x10, 0x2e, 0x70, 0x62, 0x2e, 0x4f, 0x72, 0x64, 0x65, 0x72,
+	0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x71, 0x1a, 0x10, 0x2e, 0x70, 0x62, 0x2e, 0x4f, 0x72, 0x64,
+	0x65, 0x72, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x73, 0x12, 0x2f, 0x0a, 0x09, 0x4f, 0x72, 0x64,
+	0x65, 0x72, 0x44, 0x65, 0x73, 0x6b, 0x12, 0x10, 0x2e, 0x70, 0x62, 0x2e, 0x4f, 0x72, 0x64, 0x65,
+	0x72, 0x44, 0x65, 0x73, 0x6b, 0x52, 0x65, 0x71, 0x1a, 0x10, 0x2e, 0x70, 0x62, 0x2e, 0x4f, 0x72,
+	0x64, 0x65, 0x72, 0x44, 0x65, 0x73, 0x6b, 0x52, 0x65, 0x73, 0x12, 0x32, 0x0a, 0x0a, 0x43, 0x68,
+	0x61, 0x6e, 0x67, 0x65, 0x44, 0x65, 0x73, 0x6b, 0x12, 0x11, 0x2e, 0x70, 0x62, 0x2e, 0x43, 0x68,
+	0x61, 0x6e, 0x67, 0x65, 0x44, 0x65, 0x73, 0x6b, 0x52, 0x65, 0x71, 0x1a, 0x11, 0x2e, 0x70, 0x62,
+	0x2e, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x44, 0x65, 0x73, 0x6b, 0x52, 0x65, 0x73, 0x12, 0x2f,
+	0x0a, 0x09, 0x43, 0x6c, 0x6f, 0x73, 0x65, 0x44, 0x65, 0x73, 0x6b, 0x12, 0x10, 0x2e, 0x70, 0x62,
+	0x2e, 0x43, 0x6c, 0x6f, 0x73, 0x65, 0x44, 0x65, 0x73, 0x6b, 0x52, 0x65, 0x71, 0x1a, 0x10, 0x2e,
+	0x70, 0x62, 0x2e, 0x43, 0x6c, 0x6f, 0x73, 0x65, 0x44, 0x65, 0x73, 0x6b, 0x52, 0x65, 0x73, 0x12,
+	0x2c, 0x0a, 0x08, 0x47, 0x65, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x12, 0x0f, 0x2e, 0x70, 0x62,
+	0x2e, 0x47, 0x65, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x52, 0x65, 0x71, 0x1a, 0x0f, 0x2e, 0x70,
+	0x62, 0x2e, 0x47, 0x65, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x52, 0x65, 0x73, 0x12, 0x2c, 0x0a,
+	0x08, 0x43, 0x68, 0x65, 0x63, 0x6b, 0x4f, 0x75, 0x74, 0x12, 0x0f, 0x2e, 0x70, 0x62, 0x2e, 0x43,
+	0x68, 0x65, 0x63, 0x6b, 0x4f, 0x75, 0x74, 0x52, 0x65, 0x71, 0x1a, 0x0f, 0x2e, 0x70, 0x62, 0x2e,
+	0x43, 0x68, 0x65, 0x63, 0x6b, 0x4f, 0x75, 0x74, 0x52, 0x65, 0x73, 0x12, 0x41, 0x0a, 0x0f, 0x41,
+	0x64, 0x64, 0x46, 0x61, 0x76, 0x6f, 0x72, 0x46, 0x6f, 0x72, 0x47, 0x6f, 0x6f, 0x64, 0x12, 0x16,
+	0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x46, 0x61, 0x76, 0x6f, 0x72, 0x46, 0x6f, 0x72, 0x47,
+	0x6f, 0x6f, 0x64, 0x52, 0x65, 0x71, 0x1a, 0x16, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x46,
+	0x61, 0x76, 0x6f, 0x72, 0x46, 0x6f, 0x72, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x73, 0x12, 0x4a,
+	0x0a, 0x12, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x46, 0x61, 0x76, 0x6f, 0x72, 0x46, 0x6f, 0x72,
+	0x47, 0x6f, 0x6f, 0x64, 0x12, 0x19, 0x2e, 0x70, 0x62, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65,
+	0x46, 0x61, 0x76, 0x6f, 0x72, 0x46, 0x6f, 0x72, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x71, 0x1a,
+	0x19, 0x2e, 0x70, 0x62, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x46, 0x61, 0x76, 0x6f, 0x72,
+	0x46, 0x6f, 0x72, 0x47, 0x6f, 0x6f, 0x64, 0x52, 0x65, 0x73, 0x12, 0x47, 0x0a, 0x11, 0x47, 0x65,
+	0x74, 0x41, 0x6c, 0x6c, 0x44, 0x65, 0x73, 0x6b, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x65, 0x73, 0x12,
+	0x18, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x44, 0x65, 0x73, 0x6b, 0x43,
+	0x6c, 0x61, 0x73, 0x73, 0x65, 0x73, 0x52, 0x65, 0x71, 0x1a, 0x18, 0x2e, 0x70, 0x62, 0x2e, 0x47,
+	0x65, 0x74, 0x41, 0x6c, 0x6c, 0x44, 0x65, 0x73, 0x6b, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x65, 0x73,
+	0x52, 0x65, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -2798,7 +2892,7 @@ func file_common_pb_mvp_proto_rawDescGZIP() []byte {
 }
 
 var file_common_pb_mvp_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_common_pb_mvp_proto_msgTypes = make([]protoimpl.MessageInfo, 46)
+var file_common_pb_mvp_proto_msgTypes = make([]protoimpl.MessageInfo, 48)
 var file_common_pb_mvp_proto_goTypes = []interface{}{
 	(FavorType)(0),                // 0: pb.FavorType
 	(ElementType)(0),              // 1: pb.ElementType
@@ -2809,114 +2903,118 @@ var file_common_pb_mvp_proto_goTypes = []interface{}{
 	(*Good)(nil),                  // 6: pb.Good
 	(*Space)(nil),                 // 7: pb.Space
 	(*GoodClass)(nil),             // 8: pb.GoodClass
-	(*Element)(nil),               // 9: pb.Element
-	(*SizeInfo)(nil),              // 10: pb.SizeInfo
-	(*Favor)(nil),                 // 11: pb.Favor
-	(*AddFavorForGoodReq)(nil),    // 12: pb.AddFavorForGoodReq
-	(*AddFavorForGoodRes)(nil),    // 13: pb.AddFavorForGoodRes
-	(*AddGoodReq)(nil),            // 14: pb.AddGoodReq
-	(*AddGoodRes)(nil),            // 15: pb.AddGoodRes
-	(*AddGoodClassReq)(nil),       // 16: pb.AddGoodClassReq
-	(*AddGoodClassRes)(nil),       // 17: pb.AddGoodClassRes
-	(*AddSpaceReq)(nil),           // 18: pb.AddSpaceReq
-	(*AddSpaceRes)(nil),           // 19: pb.AddSpaceRes
-	(*OrderGoodReq)(nil),          // 20: pb.OrderGoodReq
-	(*OrderGoodRes)(nil),          // 21: pb.OrderGoodRes
-	(*OrderDeskReq)(nil),          // 22: pb.OrderDeskReq
-	(*OrderDeskRes)(nil),          // 23: pb.OrderDeskRes
-	(*OrderReq)(nil),              // 24: pb.OrderReq
-	(*OrderRes)(nil),              // 25: pb.OrderRes
-	(*CloseDeskReq)(nil),          // 26: pb.CloseDeskReq
-	(*CloseDeskRes)(nil),          // 27: pb.CloseDeskRes
-	(*CancelGoodReq)(nil),         // 28: pb.CancelGoodReq
-	(*CancelGoodRes)(nil),         // 29: pb.CancelGoodRes
-	(*GetAllGoodClassesReq)(nil),  // 30: pb.GetAllGoodClassesReq
-	(*GetAllGoodClassesRes)(nil),  // 31: pb.GetAllGoodClassesRes
-	(*GetOrderReq)(nil),           // 32: pb.GetOrderReq
-	(*GetOrderRes)(nil),           // 33: pb.GetOrderRes
-	(*CheckOutReq)(nil),           // 34: pb.CheckOutReq
-	(*CheckOutRes)(nil),           // 35: pb.CheckOutRes
-	(*AddElementReq)(nil),         // 36: pb.AddElementReq
-	(*AddElementRes)(nil),         // 37: pb.AddElementRes
-	(*ChangeDeskReq)(nil),         // 38: pb.ChangeDeskReq
-	(*ChangeDeskRes)(nil),         // 39: pb.ChangeDeskRes
-	(*DeleteFavorForGoodReq)(nil), // 40: pb.DeleteFavorForGoodReq
-	(*DeleteFavorForGoodRes)(nil), // 41: pb.DeleteFavorForGoodRes
-	(*DeskClass)(nil),             // 42: pb.DeskClass
-	(*GetAllDeskClassesReq)(nil),  // 43: pb.GetAllDeskClassesReq
-	(*GetAllDeskClassesRes)(nil),  // 44: pb.GetAllDeskClassesRes
-	(*GetAllGoodsReq)(nil),        // 45: pb.GetAllGoodsReq
-	(*GetAllGoodsRes)(nil),        // 46: pb.GetAllGoodsRes
-	(*GetAllGoodOptionsReq)(nil),  // 47: pb.GetAllGoodOptionsReq
-	(*GetAllGoodOptionsRes)(nil),  // 48: pb.GetAllGoodOptionsRes
+	(*DeskClass)(nil),             // 9: pb.DeskClass
+	(*Element)(nil),               // 10: pb.Element
+	(*SizeInfo)(nil),              // 11: pb.SizeInfo
+	(*Favor)(nil),                 // 12: pb.Favor
+	(*AddFavorForGoodReq)(nil),    // 13: pb.AddFavorForGoodReq
+	(*AddFavorForGoodRes)(nil),    // 14: pb.AddFavorForGoodRes
+	(*AddGoodReq)(nil),            // 15: pb.AddGoodReq
+	(*AddGoodRes)(nil),            // 16: pb.AddGoodRes
+	(*AddGoodClassReq)(nil),       // 17: pb.AddGoodClassReq
+	(*AddGoodClassRes)(nil),       // 18: pb.AddGoodClassRes
+	(*AddDeskClassReq)(nil),       // 19: pb.AddDeskClassReq
+	(*AddDeskClassRes)(nil),       // 20: pb.AddDeskClassRes
+	(*AddSpaceReq)(nil),           // 21: pb.AddSpaceReq
+	(*AddSpaceRes)(nil),           // 22: pb.AddSpaceRes
+	(*OrderGoodReq)(nil),          // 23: pb.OrderGoodReq
+	(*OrderGoodRes)(nil),          // 24: pb.OrderGoodRes
+	(*OrderDeskReq)(nil),          // 25: pb.OrderDeskReq
+	(*OrderDeskRes)(nil),          // 26: pb.OrderDeskRes
+	(*OrderReq)(nil),              // 27: pb.OrderReq
+	(*OrderRes)(nil),              // 28: pb.OrderRes
+	(*CloseDeskReq)(nil),          // 29: pb.CloseDeskReq
+	(*CloseDeskRes)(nil),          // 30: pb.CloseDeskRes
+	(*CancelGoodReq)(nil),         // 31: pb.CancelGoodReq
+	(*CancelGoodRes)(nil),         // 32: pb.CancelGoodRes
+	(*GetAllGoodClassesReq)(nil),  // 33: pb.GetAllGoodClassesReq
+	(*GetAllGoodClassesRes)(nil),  // 34: pb.GetAllGoodClassesRes
+	(*GetOrderReq)(nil),           // 35: pb.GetOrderReq
+	(*GetOrderRes)(nil),           // 36: pb.GetOrderRes
+	(*CheckOutReq)(nil),           // 37: pb.CheckOutReq
+	(*CheckOutRes)(nil),           // 38: pb.CheckOutRes
+	(*AddElementReq)(nil),         // 39: pb.AddElementReq
+	(*AddElementRes)(nil),         // 40: pb.AddElementRes
+	(*ChangeDeskReq)(nil),         // 41: pb.ChangeDeskReq
+	(*ChangeDeskRes)(nil),         // 42: pb.ChangeDeskRes
+	(*DeleteFavorForGoodReq)(nil), // 43: pb.DeleteFavorForGoodReq
+	(*DeleteFavorForGoodRes)(nil), // 44: pb.DeleteFavorForGoodRes
+	(*GetAllDeskClassesReq)(nil),  // 45: pb.GetAllDeskClassesReq
+	(*GetAllDeskClassesRes)(nil),  // 46: pb.GetAllDeskClassesRes
+	(*GetAllGoodsReq)(nil),        // 47: pb.GetAllGoodsReq
+	(*GetAllGoodsRes)(nil),        // 48: pb.GetAllGoodsRes
+	(*GetAllGoodOptionsReq)(nil),  // 49: pb.GetAllGoodOptionsReq
+	(*GetAllGoodOptionsRes)(nil),  // 50: pb.GetAllGoodOptionsRes
 }
 var file_common_pb_mvp_proto_depIdxs = []int32{
 	5,  // 0: pb.Order.desk:type_name -> pb.Desk
 	6,  // 1: pb.Order.goods:type_name -> pb.Good
-	11, // 2: pb.Order.favors:type_name -> pb.Favor
+	12, // 2: pb.Order.favors:type_name -> pb.Favor
 	3,  // 3: pb.Order.expenseInfo:type_name -> pb.ExpenseInfo
 	7,  // 4: pb.Desk.space:type_name -> pb.Space
-	11, // 5: pb.Desk.favors:type_name -> pb.Favor
+	12, // 5: pb.Desk.favors:type_name -> pb.Favor
 	3,  // 6: pb.Desk.expenseInfo:type_name -> pb.ExpenseInfo
-	9,  // 7: pb.Good.mainElement:type_name -> pb.Element
-	9,  // 8: pb.Good.attachElements:type_name -> pb.Element
-	11, // 9: pb.Good.favors:type_name -> pb.Favor
+	10, // 7: pb.Good.mainElement:type_name -> pb.Element
+	10, // 8: pb.Good.attachElements:type_name -> pb.Element
+	12, // 9: pb.Good.favors:type_name -> pb.Favor
 	3,  // 10: pb.Good.expenseInfo:type_name -> pb.ExpenseInfo
 	2,  // 11: pb.Space.billingType:type_name -> pb.BillingType
 	1,  // 12: pb.Element.type:type_name -> pb.ElementType
-	10, // 13: pb.Element.sizeInfos:type_name -> pb.SizeInfo
+	11, // 13: pb.Element.sizeInfos:type_name -> pb.SizeInfo
 	0,  // 14: pb.Favor.FavorType:type_name -> pb.FavorType
-	11, // 15: pb.AddFavorForGoodReq.favors:type_name -> pb.Favor
+	12, // 15: pb.AddFavorForGoodReq.favors:type_name -> pb.Favor
 	6,  // 16: pb.AddGoodReq.good:type_name -> pb.Good
 	8,  // 17: pb.AddGoodClassReq.goodClass:type_name -> pb.GoodClass
-	7,  // 18: pb.AddSpaceReq.space:type_name -> pb.Space
-	6,  // 19: pb.OrderGoodReq.goods:type_name -> pb.Good
-	5,  // 20: pb.OrderDeskReq.desk:type_name -> pb.Desk
-	4,  // 21: pb.OrderReq.order:type_name -> pb.Order
-	8,  // 22: pb.GetAllGoodClassesRes.goodClasses:type_name -> pb.GoodClass
-	4,  // 23: pb.GetOrderRes.order:type_name -> pb.Order
-	9,  // 24: pb.AddElementReq.element:type_name -> pb.Element
-	11, // 25: pb.DeleteFavorForGoodReq.favor:type_name -> pb.Favor
-	5,  // 26: pb.DeskClass.desks:type_name -> pb.Desk
-	42, // 27: pb.GetAllDeskClassesRes.deskClasses:type_name -> pb.DeskClass
+	9,  // 18: pb.AddDeskClassReq.deskClass:type_name -> pb.DeskClass
+	7,  // 19: pb.AddSpaceReq.space:type_name -> pb.Space
+	6,  // 20: pb.OrderGoodReq.goods:type_name -> pb.Good
+	5,  // 21: pb.OrderDeskReq.desk:type_name -> pb.Desk
+	4,  // 22: pb.OrderReq.order:type_name -> pb.Order
+	8,  // 23: pb.GetAllGoodClassesRes.goodClasses:type_name -> pb.GoodClass
+	4,  // 24: pb.GetOrderRes.order:type_name -> pb.Order
+	10, // 25: pb.AddElementReq.element:type_name -> pb.Element
+	12, // 26: pb.DeleteFavorForGoodReq.favor:type_name -> pb.Favor
+	9,  // 27: pb.GetAllDeskClassesRes.deskClasses:type_name -> pb.DeskClass
 	6,  // 28: pb.GetAllGoodsRes.goods:type_name -> pb.Good
-	9,  // 29: pb.GetAllGoodOptionsRes.elements:type_name -> pb.Element
-	30, // 30: pb.Mvp.GetAllGoodClasses:input_type -> pb.GetAllGoodClassesReq
-	45, // 31: pb.Mvp.GetAllGoods:input_type -> pb.GetAllGoodsReq
-	47, // 32: pb.Mvp.GetAllGoodOptions:input_type -> pb.GetAllGoodOptionsReq
-	16, // 33: pb.Mvp.AddGoodClass:input_type -> pb.AddGoodClassReq
-	14, // 34: pb.Mvp.AddGood:input_type -> pb.AddGoodReq
-	28, // 35: pb.Mvp.CancelGood:input_type -> pb.CancelGoodReq
-	36, // 36: pb.Mvp.AddElement:input_type -> pb.AddElementReq
-	18, // 37: pb.Mvp.AddSpace:input_type -> pb.AddSpaceReq
-	20, // 38: pb.Mvp.OrderGood:input_type -> pb.OrderGoodReq
-	22, // 39: pb.Mvp.OrderDesk:input_type -> pb.OrderDeskReq
-	38, // 40: pb.Mvp.ChangeDesk:input_type -> pb.ChangeDeskReq
-	26, // 41: pb.Mvp.CloseDesk:input_type -> pb.CloseDeskReq
-	32, // 42: pb.Mvp.GetOrder:input_type -> pb.GetOrderReq
-	34, // 43: pb.Mvp.CheckOut:input_type -> pb.CheckOutReq
-	12, // 44: pb.Mvp.AddFavorForGood:input_type -> pb.AddFavorForGoodReq
-	40, // 45: pb.Mvp.DeleteFavorForGood:input_type -> pb.DeleteFavorForGoodReq
-	43, // 46: pb.Mvp.GetAllDeskClasses:input_type -> pb.GetAllDeskClassesReq
-	31, // 47: pb.Mvp.GetAllGoodClasses:output_type -> pb.GetAllGoodClassesRes
-	46, // 48: pb.Mvp.GetAllGoods:output_type -> pb.GetAllGoodsRes
-	48, // 49: pb.Mvp.GetAllGoodOptions:output_type -> pb.GetAllGoodOptionsRes
-	17, // 50: pb.Mvp.AddGoodClass:output_type -> pb.AddGoodClassRes
-	15, // 51: pb.Mvp.AddGood:output_type -> pb.AddGoodRes
-	29, // 52: pb.Mvp.CancelGood:output_type -> pb.CancelGoodRes
-	37, // 53: pb.Mvp.AddElement:output_type -> pb.AddElementRes
-	19, // 54: pb.Mvp.AddSpace:output_type -> pb.AddSpaceRes
-	21, // 55: pb.Mvp.OrderGood:output_type -> pb.OrderGoodRes
-	23, // 56: pb.Mvp.OrderDesk:output_type -> pb.OrderDeskRes
-	39, // 57: pb.Mvp.ChangeDesk:output_type -> pb.ChangeDeskRes
-	27, // 58: pb.Mvp.CloseDesk:output_type -> pb.CloseDeskRes
-	33, // 59: pb.Mvp.GetOrder:output_type -> pb.GetOrderRes
-	35, // 60: pb.Mvp.CheckOut:output_type -> pb.CheckOutRes
-	13, // 61: pb.Mvp.AddFavorForGood:output_type -> pb.AddFavorForGoodRes
-	41, // 62: pb.Mvp.DeleteFavorForGood:output_type -> pb.DeleteFavorForGoodRes
-	44, // 63: pb.Mvp.GetAllDeskClasses:output_type -> pb.GetAllDeskClassesRes
-	47, // [47:64] is the sub-list for method output_type
-	30, // [30:47] is the sub-list for method input_type
+	10, // 29: pb.GetAllGoodOptionsRes.elements:type_name -> pb.Element
+	33, // 30: pb.Mvp.GetAllGoodClasses:input_type -> pb.GetAllGoodClassesReq
+	47, // 31: pb.Mvp.GetAllGoods:input_type -> pb.GetAllGoodsReq
+	49, // 32: pb.Mvp.GetAllGoodOptions:input_type -> pb.GetAllGoodOptionsReq
+	17, // 33: pb.Mvp.AddGoodClass:input_type -> pb.AddGoodClassReq
+	19, // 34: pb.Mvp.AddDeskClass:input_type -> pb.AddDeskClassReq
+	15, // 35: pb.Mvp.AddGood:input_type -> pb.AddGoodReq
+	31, // 36: pb.Mvp.CancelGood:input_type -> pb.CancelGoodReq
+	39, // 37: pb.Mvp.AddElement:input_type -> pb.AddElementReq
+	21, // 38: pb.Mvp.AddSpace:input_type -> pb.AddSpaceReq
+	23, // 39: pb.Mvp.OrderGood:input_type -> pb.OrderGoodReq
+	25, // 40: pb.Mvp.OrderDesk:input_type -> pb.OrderDeskReq
+	41, // 41: pb.Mvp.ChangeDesk:input_type -> pb.ChangeDeskReq
+	29, // 42: pb.Mvp.CloseDesk:input_type -> pb.CloseDeskReq
+	35, // 43: pb.Mvp.GetOrder:input_type -> pb.GetOrderReq
+	37, // 44: pb.Mvp.CheckOut:input_type -> pb.CheckOutReq
+	13, // 45: pb.Mvp.AddFavorForGood:input_type -> pb.AddFavorForGoodReq
+	43, // 46: pb.Mvp.DeleteFavorForGood:input_type -> pb.DeleteFavorForGoodReq
+	45, // 47: pb.Mvp.GetAllDeskClasses:input_type -> pb.GetAllDeskClassesReq
+	34, // 48: pb.Mvp.GetAllGoodClasses:output_type -> pb.GetAllGoodClassesRes
+	48, // 49: pb.Mvp.GetAllGoods:output_type -> pb.GetAllGoodsRes
+	50, // 50: pb.Mvp.GetAllGoodOptions:output_type -> pb.GetAllGoodOptionsRes
+	18, // 51: pb.Mvp.AddGoodClass:output_type -> pb.AddGoodClassRes
+	20, // 52: pb.Mvp.AddDeskClass:output_type -> pb.AddDeskClassRes
+	16, // 53: pb.Mvp.AddGood:output_type -> pb.AddGoodRes
+	32, // 54: pb.Mvp.CancelGood:output_type -> pb.CancelGoodRes
+	40, // 55: pb.Mvp.AddElement:output_type -> pb.AddElementRes
+	22, // 56: pb.Mvp.AddSpace:output_type -> pb.AddSpaceRes
+	24, // 57: pb.Mvp.OrderGood:output_type -> pb.OrderGoodRes
+	26, // 58: pb.Mvp.OrderDesk:output_type -> pb.OrderDeskRes
+	42, // 59: pb.Mvp.ChangeDesk:output_type -> pb.ChangeDeskRes
+	30, // 60: pb.Mvp.CloseDesk:output_type -> pb.CloseDeskRes
+	36, // 61: pb.Mvp.GetOrder:output_type -> pb.GetOrderRes
+	38, // 62: pb.Mvp.CheckOut:output_type -> pb.CheckOutRes
+	14, // 63: pb.Mvp.AddFavorForGood:output_type -> pb.AddFavorForGoodRes
+	44, // 64: pb.Mvp.DeleteFavorForGood:output_type -> pb.DeleteFavorForGoodRes
+	46, // 65: pb.Mvp.GetAllDeskClasses:output_type -> pb.GetAllDeskClassesRes
+	48, // [48:66] is the sub-list for method output_type
+	30, // [30:48] is the sub-list for method input_type
 	30, // [30:30] is the sub-list for extension type_name
 	30, // [30:30] is the sub-list for extension extendee
 	0,  // [0:30] is the sub-list for field type_name
@@ -3001,402 +3099,6 @@ func file_common_pb_mvp_proto_init() {
 			}
 		}
 		file_common_pb_mvp_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Element); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SizeInfo); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Favor); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AddFavorForGoodReq); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AddFavorForGoodRes); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AddGoodReq); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AddGoodRes); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AddGoodClassReq); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AddGoodClassRes); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AddSpaceReq); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AddSpaceRes); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*OrderGoodReq); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*OrderGoodRes); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[19].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*OrderDeskReq); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[20].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*OrderDeskRes); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[21].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*OrderReq); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[22].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*OrderRes); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[23].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CloseDeskReq); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[24].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CloseDeskRes); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[25].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CancelGoodReq); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[26].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CancelGoodRes); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[27].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetAllGoodClassesReq); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[28].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetAllGoodClassesRes); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[29].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetOrderReq); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[30].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetOrderRes); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[31].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CheckOutReq); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[32].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CheckOutRes); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[33].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AddElementReq); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[34].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AddElementRes); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[35].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ChangeDeskReq); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[36].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ChangeDeskRes); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[37].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteFavorForGoodReq); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[38].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteFavorForGoodRes); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_common_pb_mvp_proto_msgTypes[39].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DeskClass); i {
 			case 0:
 				return &v.state
@@ -3408,8 +3110,404 @@ func file_common_pb_mvp_proto_init() {
 				return nil
 			}
 		}
+		file_common_pb_mvp_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Element); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SizeInfo); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Favor); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AddFavorForGoodReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AddFavorForGoodRes); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AddGoodReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AddGoodRes); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AddGoodClassReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AddGoodClassRes); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AddDeskClassReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AddDeskClassRes); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AddSpaceReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[19].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AddSpaceRes); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[20].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*OrderGoodReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[21].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*OrderGoodRes); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[22].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*OrderDeskReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[23].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*OrderDeskRes); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[24].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*OrderReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[25].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*OrderRes); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[26].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CloseDeskReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[27].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CloseDeskRes); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[28].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CancelGoodReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[29].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CancelGoodRes); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[30].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetAllGoodClassesReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[31].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetAllGoodClassesRes); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[32].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetOrderReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[33].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetOrderRes); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[34].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CheckOutReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[35].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CheckOutRes); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[36].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AddElementReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[37].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AddElementRes); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[38].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ChangeDeskReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[39].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ChangeDeskRes); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 		file_common_pb_mvp_proto_msgTypes[40].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetAllDeskClassesReq); i {
+			switch v := v.(*DeleteFavorForGoodReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3421,7 +3519,7 @@ func file_common_pb_mvp_proto_init() {
 			}
 		}
 		file_common_pb_mvp_proto_msgTypes[41].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetAllDeskClassesRes); i {
+			switch v := v.(*DeleteFavorForGoodRes); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3433,7 +3531,7 @@ func file_common_pb_mvp_proto_init() {
 			}
 		}
 		file_common_pb_mvp_proto_msgTypes[42].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetAllGoodsReq); i {
+			switch v := v.(*GetAllDeskClassesReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3445,7 +3543,7 @@ func file_common_pb_mvp_proto_init() {
 			}
 		}
 		file_common_pb_mvp_proto_msgTypes[43].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetAllGoodsRes); i {
+			switch v := v.(*GetAllDeskClassesRes); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3457,7 +3555,7 @@ func file_common_pb_mvp_proto_init() {
 			}
 		}
 		file_common_pb_mvp_proto_msgTypes[44].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetAllGoodOptionsReq); i {
+			switch v := v.(*GetAllGoodsReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3469,6 +3567,30 @@ func file_common_pb_mvp_proto_init() {
 			}
 		}
 		file_common_pb_mvp_proto_msgTypes[45].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetAllGoodsRes); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[46].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetAllGoodOptionsReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_mvp_proto_msgTypes[47].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetAllGoodOptionsRes); i {
 			case 0:
 				return &v.state
@@ -3487,7 +3609,7 @@ func file_common_pb_mvp_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_common_pb_mvp_proto_rawDesc,
 			NumEnums:      3,
-			NumMessages:   46,
+			NumMessages:   48,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -72,3 +72,13 @@ func (d *Desk) IsOpening() bool {
 func (d *Desk) GetID() int64 {
 	return int64(d.ID)
 }
+
+type DeskClass struct {
+	gorm.Model
+	Name             string `json:"name"`
+	PictureStorePath string `json:"picture_store_path"`
+}
+
+func (d *DeskClass) TableName() string {
+	return "desk_class"
+}

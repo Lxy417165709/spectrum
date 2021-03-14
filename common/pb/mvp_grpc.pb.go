@@ -21,6 +21,7 @@ type MvpClient interface {
 	GetAllGoods(ctx context.Context, in *GetAllGoodsReq, opts ...grpc.CallOption) (*GetAllGoodsRes, error)
 	GetAllGoodOptions(ctx context.Context, in *GetAllGoodOptionsReq, opts ...grpc.CallOption) (*GetAllGoodOptionsRes, error)
 	AddGoodClass(ctx context.Context, in *AddGoodClassReq, opts ...grpc.CallOption) (*AddGoodClassRes, error)
+	AddDeskClass(ctx context.Context, in *AddDeskClassReq, opts ...grpc.CallOption) (*AddDeskClassRes, error)
 	AddGood(ctx context.Context, in *AddGoodReq, opts ...grpc.CallOption) (*AddGoodRes, error)
 	CancelGood(ctx context.Context, in *CancelGoodReq, opts ...grpc.CallOption) (*CancelGoodRes, error)
 	AddElement(ctx context.Context, in *AddElementReq, opts ...grpc.CallOption) (*AddElementRes, error)
@@ -74,6 +75,15 @@ func (c *mvpClient) GetAllGoodOptions(ctx context.Context, in *GetAllGoodOptions
 func (c *mvpClient) AddGoodClass(ctx context.Context, in *AddGoodClassReq, opts ...grpc.CallOption) (*AddGoodClassRes, error) {
 	out := new(AddGoodClassRes)
 	err := c.cc.Invoke(ctx, "/pb.Mvp/AddGoodClass", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *mvpClient) AddDeskClass(ctx context.Context, in *AddDeskClassReq, opts ...grpc.CallOption) (*AddDeskClassRes, error) {
+	out := new(AddDeskClassRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/AddDeskClass", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -205,6 +215,7 @@ type MvpServer interface {
 	GetAllGoods(context.Context, *GetAllGoodsReq) (*GetAllGoodsRes, error)
 	GetAllGoodOptions(context.Context, *GetAllGoodOptionsReq) (*GetAllGoodOptionsRes, error)
 	AddGoodClass(context.Context, *AddGoodClassReq) (*AddGoodClassRes, error)
+	AddDeskClass(context.Context, *AddDeskClassReq) (*AddDeskClassRes, error)
 	AddGood(context.Context, *AddGoodReq) (*AddGoodRes, error)
 	CancelGood(context.Context, *CancelGoodReq) (*CancelGoodRes, error)
 	AddElement(context.Context, *AddElementReq) (*AddElementRes, error)
@@ -236,6 +247,9 @@ func (UnimplementedMvpServer) GetAllGoodOptions(context.Context, *GetAllGoodOpti
 }
 func (UnimplementedMvpServer) AddGoodClass(context.Context, *AddGoodClassReq) (*AddGoodClassRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddGoodClass not implemented")
+}
+func (UnimplementedMvpServer) AddDeskClass(context.Context, *AddDeskClassReq) (*AddDeskClassRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddDeskClass not implemented")
 }
 func (UnimplementedMvpServer) AddGood(context.Context, *AddGoodReq) (*AddGoodRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddGood not implemented")
@@ -357,6 +371,24 @@ func _Mvp_AddGoodClass_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MvpServer).AddGoodClass(ctx, req.(*AddGoodClassReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Mvp_AddDeskClass_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddDeskClassReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).AddDeskClass(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/AddDeskClass",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).AddDeskClass(ctx, req.(*AddDeskClassReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -614,6 +646,10 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddGoodClass",
 			Handler:    _Mvp_AddGoodClass_Handler,
+		},
+		{
+			MethodName: "AddDeskClass",
+			Handler:    _Mvp_AddDeskClass_Handler,
 		},
 		{
 			MethodName: "AddGood",

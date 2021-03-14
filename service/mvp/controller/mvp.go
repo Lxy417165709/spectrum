@@ -151,6 +151,25 @@ func (MvpServer) AddGoodClass(ctx context.Context, req *pb.AddGoodClassReq) (*pb
 	return &res, nil
 }
 
+func (MvpServer) AddDeskClass(ctx context.Context, req *pb.AddDeskClassReq) (*pb.AddDeskClassRes, error) {
+	logger.Info("AddGoodClass", zap.Any("ctx", ctx), zap.Any("req", req))
+
+	var res pb.AddDeskClassRes
+	// todo: 判断类名是否为空、是否存在
+
+	// 1. 创建商品类
+	if err := dao.DeskClassDao.Create(&model.DeskClass{
+		Name:             req.DeskClass.Name,
+		PictureStorePath: req.DeskClass.PictureStorePath,
+	}); err != nil {
+		logger.Error("Fail to finish DeskClassDao.Create",
+			zap.Any("req", req),
+			zap.Error(err))
+		return nil, err
+	}
+	return &res, nil
+}
+
 func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.OrderGoodRes, error) {
 	logger.Info("OrderGood", zap.Any("ctx", ctx), zap.Any("req", req))
 	// todo: 这里可以点单记录
@@ -392,8 +411,8 @@ func (s MvpServer) GetAllDeskClasses(ctx context.Context, req *pb.GetAllDeskClas
 			}
 		}
 		deskClasses = append(deskClasses, &pb.DeskClass{
-			Name:  name,
-			Desks: desks,
+			Name: name,
+			//Desks: desks,
 		})
 	}
 
