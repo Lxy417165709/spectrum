@@ -7,7 +7,7 @@
       <good-option-card :goodOption="goodOption"></good-option-card>
     </el-col>
 
-    <!--    1. 添加 商品选项 部分-->
+    <!--    2. 添加 商品选项 部分-->
     <el-col v-if="props_isAdminView" style="height: 300px; width: 202px; margin-left: 10px; border: none">
       <good-option-special-card @click.native="tryToAddGoodOption()"></good-option-special-card>
     </el-col>
@@ -21,6 +21,7 @@ import GoodSpacialCard from "../card/GoodSpacialCard";
 import test from "../../common/test/test"
 import GoodOptionCard from "../card/GoodOptionCard";
 import GoodOptionSpecialCard from "../card/GoodOptionSpecialCard";
+import cst from "../../common/cst";
 
 export default {
   components: {GoodOptionSpecialCard, GoodOptionCard, GoodSpacialCard, GoodCard},
@@ -29,16 +30,16 @@ export default {
   },
   data() {
     return {
-      goodOptions: [],
+      goodOptions: [],// todo: 这里的 goodOption 含义包括了 附属选项、附属商品，之后要加以区分呀！
       className: "",
     };
   },
   methods: {
     tryToAddGoodOption() {
-      if (this.className === "附属选项类") {
+      if (this.className === cst.ATTACH_CLASS_NAME.GOOD_OPTION_CLASS_NAME) {
         this.openGoodOptionEditorOfAdmin(test.blankGoodOption)
       }
-      if (this.className === "附属商品类") {
+      if (this.className === cst.ATTACH_CLASS_NAME.GOOD_INGREDIENT_CLASS_NAME) {
         this.openGoodOptionEditorOfAdmin(test.blankGoodIngredient)
       }
     },

@@ -172,7 +172,6 @@ export default {
           this.$refs.GoodOptionList.className = this.db_goodOptionClasses[this.curGoodOptionClassIndex].name
         })
       })
-
     },
     async turnToGoodListMode(goodClassIndex) {
       let model = utils.getRequestModel("mvp", "GetAllGoods", {

@@ -1,5 +1,7 @@
 /* eslint-disable */
 
+import cst from "../cst";
+
 export default {
   deskClasses: [
     {
@@ -1020,20 +1022,22 @@ export default {
   },
   blankGoodOption: {
     name: "请输入",
-    type: 1,
+    type: cst.ELEMENT_TYPE.OPTION,
     sizeInfos: []
   },
   blankGoodIngredient: {
     name: "请输入",
-    type: 2,
+    type: cst.ELEMENT_TYPE.INGREDIENT,
     sizeInfos: []
   },
   goodOptionClasses: [
     {
-      name: "附属选项类",
+      name: cst.ATTACH_CLASS_NAME.GOOD_OPTION_CLASS_NAME,
+      pictureStorePath: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2186952895,3925242332&fm=26&gp=0.jpg",
     },
     {
-      name: "附属商品类"
+      name: cst.ATTACH_CLASS_NAME.GOOD_INGREDIENT_CLASS_NAME,
+      pictureStorePath: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2186952895,3925242332&fm=26&gp=0.jpg",
     }
   ],
 }
