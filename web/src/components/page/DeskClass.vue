@@ -33,7 +33,7 @@
       title="桌类添加/编辑"
       :visible.sync="deskClassEditorVisible"
       width="30%">
-      <desk-class-editor></desk-class-editor>
+      <desk-class-editor ref="DeskClassEditor"></desk-class-editor>
     </el-dialog>
   </el-container>
 </template>
@@ -69,7 +69,7 @@ export default {
 
       this.viewMode = cst.VIEW_MODE.DESK_LIST_MODE
       this.curDeskIndex = cst.INDEX.INVALID_INDEX
-      this.$refs.ref_goodClass.viewMode = cst.VIEW_MODE.CLASS_LIST_MODE; // 父传子
+      this.$refs.ref_goodClass.viewMode = cst.VIEW_MODE.CLASS_LIST_MODE;
     },
     turnToClassListMode(deskIndex) {
       this.viewMode = cst.VIEW_MODE.CLASS_LIST_MODE
@@ -77,6 +77,9 @@ export default {
     },
     handleDeskButtonClick() {
       this.deskClassEditorVisible = true
+      this.$nextTick(() => {
+        this.$refs.DeskClassEditor.deskClass = test.blankDeskClass
+      })
     },
     turnToDeskListMode() {
       this.viewMode = cst.VIEW_MODE.DESK_LIST_MODE

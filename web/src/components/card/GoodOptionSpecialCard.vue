@@ -12,8 +12,6 @@
 /* eslint-disable */
 export default {
   props: {
-    name: String,
-    pictureStorePath: String,
   },
   data() {
     return {};

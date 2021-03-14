@@ -11,18 +11,21 @@ export default {
           space: {
             name: "台球桌",
             num: 1,
+            pictureStorePath: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fm.360buyimg.com%2Fn12%2Fjfs%2Ft2440%2F78%2F2092083351%2F370204%2Fdb6cceea%2F56f10ac8N67e4606d.jpg%21q70.jpg&refer=http%3A%2F%2Fm.360buyimg.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1618311491&t=ce24f11c3bcb0c94d6e1e90d7b0c2621"
           },
         },
         {
           space: {
             name: "台球桌",
             num: 2,
+            pictureStorePath: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fm.360buyimg.com%2Fn12%2Fjfs%2Ft2440%2F78%2F2092083351%2F370204%2Fdb6cceea%2F56f10ac8N67e4606d.jpg%21q70.jpg&refer=http%3A%2F%2Fm.360buyimg.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1618311491&t=ce24f11c3bcb0c94d6e1e90d7b0c2621"
           },
         },
         {
           space: {
             name: "台球桌",
             num: 3,
+            pictureStorePath: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fm.360buyimg.com%2Fn12%2Fjfs%2Ft2440%2F78%2F2092083351%2F370204%2Fdb6cceea%2F56f10ac8N67e4606d.jpg%21q70.jpg&refer=http%3A%2F%2Fm.360buyimg.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1618311491&t=ce24f11c3bcb0c94d6e1e90d7b0c2621"
           },
         }
       ],
@@ -34,12 +37,14 @@ export default {
           space: {
             name: "麻将桌",
             num: 1,
+            pictureStorePath: "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1560594160,2147412050&fm=26&gp=0.jpg"
           },
         },
         {
           space: {
             name: "麻将桌",
             num: 2,
+            pictureStorePath: "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1560594160,2147412050&fm=26&gp=0.jpg"
           },
         }
       ],
@@ -907,56 +912,56 @@ export default {
       ]
     }
   ],
-  selectableElement: {
-    curFavorName: "",
-    curAttachElementName: "",
-    attachElements: [
-      {
-        name: "冰量",
-        curSizeIndex: 0,
-        sizeInfos: [
-          {
-            name: "少冰",
-            price: 0.0,
-          },
-          {
-            name: "多冰",
-            price: 0.0,
-          }
-        ]
-      },
-      {
-        name: "温度",
-        curSizeIndex: 0,
-        sizeInfos: [
-          {
-            name: "常温",
-            price: 0.0,
-          },
-          {
-            name: "热饮",
-            price: 0.0,
-          }
-        ]
-      },
-    ],
-    favors: [
-      {
-        name: "珍珠",
-        curSizeIndex: 0,
-        sizeInfos: [
-          {
-            name: "少量",
-            price: 1,
-          },
-          {
-            name: "大量",
-            price: 2,
-          }
-        ]
-      }
-    ]
-  },
+  // selectableElement: {
+  //   curFavorName: "",
+  //   curAttachElementName: "",
+  //   attachElements: [
+  //     {
+  //       name: "冰量",
+  //       curSizeIndex: 0,
+  //       sizeInfos: [
+  //         {
+  //           name: "少冰",
+  //           price: 0.0,
+  //         },
+  //         {
+  //           name: "多冰",
+  //           price: 0.0,
+  //         }
+  //       ]
+  //     },
+  //     {
+  //       name: "温度",
+  //       curSizeIndex: 0,
+  //       sizeInfos: [
+  //         {
+  //           name: "常温",
+  //           price: 0.0,
+  //         },
+  //         {
+  //           name: "热饮",
+  //           price: 0.0,
+  //         }
+  //       ]
+  //     },
+  //   ],
+  //   favors: [
+  //     {
+  //       name: "珍珠",
+  //       curSizeIndex: 0,
+  //       sizeInfos: [
+  //         {
+  //           name: "少量",
+  //           price: 1,
+  //         },
+  //         {
+  //           name: "大量",
+  //           price: 2,
+  //         }
+  //       ]
+  //     }
+  //   ]
+  // },
   order: {
     deskInfos: [
       {
@@ -1040,4 +1045,12 @@ export default {
       pictureStorePath: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2186952895,3925242332&fm=26&gp=0.jpg",
     }
   ],
+  blankDeskClass: {
+    name: "请输入",
+    desks: [{
+      space:{
+        name:"1号桌",
+      }
+    }]
+  }
 }

@@ -10,7 +10,7 @@
 
 <script>
 /* eslint-disable */
-import DeskSizeInfoEditor from "./DeskSizeInfoEditor";
+import DeskSizeInfoEditor from "./_DeskSizeInfoEditor";
 import utils from "../../common/utils";
 // todo: 这里变量名、变量内容需要改变下
 export default {
