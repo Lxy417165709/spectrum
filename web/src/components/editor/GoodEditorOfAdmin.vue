@@ -75,12 +75,11 @@
 
 <script>
 /* eslint-disable */
-import GoodSizeEditor from "./_GoodSizeEditor";
 import utils from "../../common/utils";
 
 export default {
   name: "GoodEditorOfAdmin",
-  components: {GoodSizeEditor},
+  components: {},
   async mounted() {
     let model = utils.getRequestModel("mvp", "GetAllGoodOptions", {})
     await utils.sendRequestModel(model).then(res => {
@@ -124,11 +123,7 @@ export default {
       this.addTabCount++
       // todo: name 应该是可以编辑的
       let name = "未设定规格" + this.addTabCount
-      // todo: sizeInfo 应该是一个对象，要有构造函数
-      this.good.mainElement.sizeInfos.push({
-        size: name,
-        price: 30
-      })
+      this.good.mainElement.sizeInfos.push(utils.NewBlankSizeInfo(name))
     },
     handleTabsEdit(name, event) {
       this.good.mainElement.sizeInfos = utils.removeElementByField(this.good.mainElement.sizeInfos, "name", name)

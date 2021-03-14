@@ -59,25 +59,18 @@ export default {
     console.log("goodClassToPbGoodClass", "goodClass:", goodClass)
     let pbGoodClass = {
       name: goodClass.name,
-      pictureStorePath:goodClass.pictureStorePath,
+      pictureStorePath: goodClass.pictureStorePath,
       // goods: this.goodsToPbGoods(goodClass.goods)
     }
     console.log("goodClassToPbGoodClass", "pbGoodClass:", pbGoodClass)
     return pbGoodClass
   },
-  // goodsToPbGoods(goods) {
-  //   let pbGoods = []
-  //   for (let i = 0; i < goods.length; i++) {
-  //     pbGoods.push(this.goodToPbGood(goods[i]))
-  //   }
-  //   return pbGoods
-  // },
 
   PbGoodToGood(pbGood) {
     console.log("utils.pbGoodToGood", "pbGood:", pbGood)
     let good = {
-      id:pbGood.id,
-      name:pbGood.mainElement.name,
+      id: pbGood.id,
+      name: pbGood.mainElement.name,
     }
 
   },
@@ -150,4 +143,12 @@ export default {
       isSelected: defaultSelectIndex === curIndex,
     }
   },
+
+  NewBlankSizeInfo(name) {
+    return {
+      size: name,
+      price: "0"
+    }
+  }
+
 }

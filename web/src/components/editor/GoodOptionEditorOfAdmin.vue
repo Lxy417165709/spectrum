@@ -40,14 +40,13 @@
 
 <script>
 /* eslint-disable */
-import GoodSizeEditor from "./_GoodSizeEditor";
 import test from "../../common/test/test";
 import utils from "../../common/utils";
 import global from "../../common/global_object/global";
 
 export default {
   name: "GoodOptionEditorOfAdmin",
-  components: {GoodSizeEditor},
+  components: {},
   mounted() {
     this.selectableElement = test.selectableElement
   },
@@ -63,10 +62,7 @@ export default {
     handleClick(tab, event) {
       this.addTabCount++
       let name = "未设定规格" + this.addTabCount
-      this.option.sizeInfos.push({
-        size: name,
-        price: "0",
-      })
+      this.option.sizeInfos.push(utils.NewBlankSizeInfo(name))
     },
     handleTabsEdit(name, event) {
       this.option.sizeInfos = utils.removeElementByField(this.option.sizeInfos, "size", name)
