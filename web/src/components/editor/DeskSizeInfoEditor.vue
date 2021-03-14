@@ -23,7 +23,7 @@
 /* eslint-disable */
 export default {
   props: {
-    price: Number,
+    price: String,
   },
   name: "DeskSizeInfoEditor",
   data(){
