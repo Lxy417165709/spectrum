@@ -5,16 +5,16 @@
     <el-col v-for="(desk,deskIndex) in desks" :key="deskIndex"
             style="height: 300px; width: 202px; margin-left: 10px; border: none">
       <span @click="handleDeskCardClick(deskIndex)">
-        <desk-card :num="desk.space.num"
+        <desk-card :name="desk.space.name"
                    :pictureStorePath="desk.space.pictureStorePath"></desk-card>
       </span>
     </el-col>
 
 
     <!--    2. 添加 桌位 部分-->
-<!--    <el-col style="height: 300px; width: 202px; margin-left: 10px; border: none">-->
-<!--      <desk-spacial-card @click.native="openDeskEditorOfAdmin"></desk-spacial-card>-->
-<!--    </el-col>-->
+    <el-col style="height: 300px; width: 202px; margin-left: 10px; border: none">
+      <desk-spacial-card @click.native="openDeskEditorOfAdmin"></desk-spacial-card>
+    </el-col>
   </el-row>
 </template>
 
@@ -27,18 +27,20 @@ import test from "../../common/test/test";
 export default {
   components: {DeskSpacialCard, DeskCard},
   props: {
-    desks: Array
+    className: String,
   },
   data() {
-    return {};
+    return {
+      desks: [],
+    };
   },
   methods: {
     handleDeskCardClick(deskIndex) {
       this.$emit("turnToClassListMode", deskIndex)
     },
-    // openDeskEditorOfAdmin() {
-    //   this.$emit("openDeskEditorOfAdmin", test.blankDesk)
-    // },
+    openDeskEditorOfAdmin() {
+      this.$emit("openDeskEditorOfAdmin", test.blankDesk, this.className)
+    },
   }
 }
 </script>

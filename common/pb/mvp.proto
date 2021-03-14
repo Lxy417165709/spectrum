@@ -58,8 +58,8 @@ message Good{
 
 message Space {
     string name = 1;
-    int64 num = 2;
-    double price = 3;
+    string className = 2;
+    string price = 3;
     BillingType billingType = 4;
     string  pictureStorePath = 5;
 }
@@ -123,6 +123,13 @@ message AddDeskClassRes{}
 message AddSpaceReq{
     Space space = 1;
 }
+
+message AddDeskReq{
+    Desk desk = 1;
+    string className = 2;
+}
+
+message AddDeskRes{}
 
 message AddSpaceRes{}
 
@@ -236,9 +243,18 @@ message GetAllGoodOptionsRes{
     repeated Element elements = 1;
 }
 
+message GetAllDesksReq{
+    string className = 1;
+}
+
+message GetAllDesksRes{
+    repeated Desk desks = 1;
+}
+
 service Mvp {
     rpc GetAllGoodClasses(GetAllGoodClassesReq) returns (GetAllGoodClassesRes); // 获得所有商品类
 
+    rpc GetAllDesks(GetAllDesksReq) returns (GetAllDesksRes);   // 获取类名下的所有桌
     rpc GetAllGoods(GetAllGoodsReq) returns (GetAllGoodsRes);   // 获取类名下的所有商品
     rpc GetAllGoodOptions(GetAllGoodOptionsReq) returns (GetAllGoodOptionsRes);    // 获取附属选项
 
@@ -248,7 +264,8 @@ service Mvp {
     rpc CancelGood(CancelGoodReq) returns(CancelGoodRes);    // 取消货物
 
     rpc AddElement(AddElementReq) returns(AddElementRes);       // 添加元素
-    rpc AddSpace(AddSpaceReq) returns (AddSpaceRes);            // 添加桌位
+    rpc AddSpace(AddSpaceReq) returns (AddSpaceRes);
+    rpc AddDesk(AddDeskReq) returns (AddDeskRes);            // 添加桌位
 
     rpc OrderGood(OrderGoodReq) returns (OrderGoodRes);         // 预定货物
     rpc OrderDesk(OrderDeskReq) returns (OrderDeskRes);          // 预定桌位

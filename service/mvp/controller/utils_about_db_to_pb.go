@@ -22,7 +22,7 @@ func getClassGoods(className string) []*pb.Good {
 // 已结账时: 返回结账的金额信息
 // 未结账时: 返回最新的金额信息
 func getPbDesk(desk *model.Desk) *pb.Desk {
-	space, err := dao.SpaceDao.Get(desk.SpaceName, desk.SpaceNum)
+	space, err := dao.SpaceDao.Get(desk.SpaceName, desk.SpaceClassName)
 	if err != nil {
 		// todo: log
 		return nil

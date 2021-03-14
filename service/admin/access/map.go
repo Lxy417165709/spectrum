@@ -82,12 +82,32 @@ var objectFunctionToRpcUnit = map[string]map[string]*model.RpcUnit{
 			SuccessMsg: "获取成功",
 			FailMsg:    "获取失败",
 		},
+		"GetAllDesks": {
+			ReqFunc: func() interface{} {
+				return &pb.GetAllDesksReq{}
+			},
+			ResFunc: func() interface{} {
+				return &pb.GetAllDesksRes{}
+			},
+			SuccessMsg: "获取成功",
+			FailMsg:    "获取失败",
+		},
 		"AddDeskClass": {
 			ReqFunc: func() interface{} {
 				return &pb.AddDeskClassReq{}
 			},
 			ResFunc: func() interface{} {
 				return &pb.AddDeskClassRes{}
+			},
+			SuccessMsg: "添加成功",
+			FailMsg:    "添加失败",
+		},
+		"AddDesk": {
+			ReqFunc: func() interface{} {
+				return &pb.AddDeskReq{}
+			},
+			ResFunc: func() interface{} {
+				return &pb.AddDeskRes{}
 			},
 			SuccessMsg: "添加成功",
 			FailMsg:    "添加失败",

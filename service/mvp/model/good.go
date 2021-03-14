@@ -48,7 +48,7 @@ func (g *Good) getNonFavorExpense(elements []*pb.Element) float64 {
 	expense := 0.0
 	for _, element := range elements {
 		priceString := GetSelectSizeInfo(element.SizeInfos).Price
-		expense += GetPbPrice(priceString)
+		expense += GetDbPrice(priceString)
 	}
 	return expense
 }

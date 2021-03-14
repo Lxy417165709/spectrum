@@ -60,7 +60,7 @@ func GetSizeInfos(selectSize string, sameNameElements []*Element) []*pb.SizeInfo
 	for _, element := range sameNameElements {
 		sizeInfos = append(sizeInfos, &pb.SizeInfo{
 			Size:             element.Size,
-			Price:            fmt.Sprintf("%0.2f",element.Price),
+			Price:            GetPbPrice(element.Price),
 			PictureStorePath: element.PictureStorePath,
 			IsSelected:       selectSize == element.Size,
 		})
@@ -68,12 +68,15 @@ func GetSizeInfos(selectSize string, sameNameElements []*Element) []*pb.SizeInfo
 	return sizeInfos
 }
 
-
-func GetPbPrice(priceString string) float64{
+func GetDbPrice(priceString string) float64 {
 	price, err := strconv.ParseFloat(priceString, 64)
 	if err != nil {
 		logger.Error("Fail to finish strconv.ParseFloat", zap.String("priceString", priceString))
 		// 这里不返回
 	}
 	return price
+}
+
+func GetPbPrice(price float64) string {
+	return fmt.Sprintf("%0.2f", price)
 }

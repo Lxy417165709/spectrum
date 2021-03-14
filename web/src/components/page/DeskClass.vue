@@ -18,8 +18,14 @@
       <div v-show="cpt_canDeskListShow">
         <el-row style="height: 40px;margin-left:10px;margin-bottom: 10px">
         </el-row>
-        <el-divider content-position="left">{{ db_deskClasses[curDeskClassIndex].name }}</el-divider>
-        <desk-list :desks="db_deskClasses[curDeskClassIndex].desks"
+        <el-divider content-position="left" v-if="cpt_canDeskListShow">{{
+            db_deskClasses[curDeskClassIndex].name
+          }}
+        </el-divider>
+        <desk-list v-if="cpt_canDeskListShow"
+                   ref="DeskList"
+                   :className="db_deskClasses[curDeskClassIndex].name"
+                   @openDeskEditorOfAdmin="openDeskEditorOfAdmin"
                    @turnToClassListMode="turnToClassListMode"></desk-list>
       </div>
       <div v-show="cpt_canClassListShow">
@@ -28,7 +34,15 @@
       </div>
     </el-main>
 
-    <!--    3. 桌类添加、编辑-->
+    <!--    3. 桌子添加、编辑-->
+    <el-dialog
+      title="桌类添加/编辑"
+      :visible.sync="deskEditorOfAdminVisible"
+      width="30%">
+      <desk-editor-of-admin ref="DeskEditorOfAdmin"></desk-editor-of-admin>
+    </el-dialog>
+
+    <!--    4. 桌类添加、编辑-->
     <el-dialog
       title="桌类添加/编辑"
       :visible.sync="deskClassEditorVisible"
@@ -45,12 +59,12 @@ import DeskClassEditor from "../editor/DeskClassEditor";
 import test from "../../common/test/test";
 import cst from "../../common/cst";
 import utils from "../../common/utils";
+import DeskEditorOfAdmin from "../editor/DeskEditorOfAdmin";
 
 export default {
   name: 'DeskClass',
-  components: {DeskClassEditor, GoodClass, DeskList},
+  components: {DeskEditorOfAdmin, DeskClassEditor, GoodClass, DeskList},
   async created() {
-    // this.db_deskClasses = test.deskClasses
     await this.getAllDeskClasses()
   },
   data() {
@@ -58,8 +72,9 @@ export default {
       viewMode: cst.VIEW_MODE.DESK_LIST_MODE,
 
       deskClassEditorVisible: false,
+      deskEditorOfAdminVisible: false,
 
-      curDeskClassIndex: cst.INDEX.FIRST_INDEX,
+      curDeskClassIndex: cst.INDEX.INVALID_INDEX,
       curDeskIndex: cst.INDEX.INVALID_INDEX,
 
       db_deskClasses: [],
@@ -78,13 +93,36 @@ export default {
         this.db_deskClasses = res.data.data.deskClasses
       })
     },
+    async getAllDesks(className) {
+      let model = utils.getRequestModel("mvp", "GetAllDesks", {
+        className: className
+      })
+      await utils.sendRequestModel(model).then(res => {
+        console.log("GetAllDesks.res", res)
+        if (!utils.hasRequestSuccess(res)) {
+          this.$message.error(res.data.err)
+          return
+        }
+        this.$message.success(res.data.msg)
+
+        this.$nextTick(() => {
+          this.$refs.DeskList.desks = res.data.data.desks
+        })
+      })
+    },
 
     handleDeskClassClick(deskClassIndex) {
       this.curDeskClassIndex = deskClassIndex
 
-      this.viewMode = cst.VIEW_MODE.DESK_LIST_MODE
       this.curDeskIndex = cst.INDEX.INVALID_INDEX
-      this.$refs.ref_goodClass.viewMode = cst.VIEW_MODE.CLASS_LIST_MODE;
+
+      this.viewMode = cst.VIEW_MODE.DESK_LIST_MODE
+
+      this.$nextTick(() => {
+        this.$refs.ref_goodClass.viewMode = cst.VIEW_MODE.CLASS_LIST_MODE;
+      })
+
+      this.getAllDesks(this.db_deskClasses[this.curDeskClassIndex].name)
     },
     turnToClassListMode(deskIndex) {
       this.viewMode = cst.VIEW_MODE.CLASS_LIST_MODE
@@ -98,6 +136,15 @@ export default {
     },
     turnToDeskListMode() {
       this.viewMode = cst.VIEW_MODE.DESK_LIST_MODE
+      this.getAllDesks(this.db_deskClasses[this.curDeskClassIndex].name)
+    },
+
+    openDeskEditorOfAdmin(desk, className) {
+      this.deskEditorOfAdminVisible = true
+      this.$nextTick(() => {
+        this.$refs.DeskEditorOfAdmin.desk = desk
+        this.$refs.DeskEditorOfAdmin.className = className
+      })
     }
   },
   computed: {
@@ -105,7 +152,7 @@ export default {
       return this.viewMode === cst.VIEW_MODE.CLASS_LIST_MODE
     },
     cpt_canDeskListShow() {
-      return this.viewMode === cst.VIEW_MODE.DESK_LIST_MODE
+      return this.viewMode === cst.VIEW_MODE.DESK_LIST_MODE && this.curDeskClassIndex !== cst.INDEX.INVALID_INDEX
     }
   }
 }

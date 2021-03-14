@@ -1045,11 +1045,20 @@ export default {
       pictureStorePath: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2186952895,3925242332&fm=26&gp=0.jpg",
     }
   ],
+
+
+  blankDesk: {
+    space: {
+      className: "",
+      name: "请输入",
+      price: "10",
+    }
+  },
   blankDeskClass: {
     name: "请输入",
     desks: [{
-      space:{
-        name:"1号桌",
+      space: {
+        name: "1号桌",
       }
     }]
   }

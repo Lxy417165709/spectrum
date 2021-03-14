@@ -120,7 +120,7 @@ func getDbElements(pbElement *pb.Element, className string) []*model.Element {
 			Type:             pbElement.Type,
 			ClassName:        className,
 			Size:             sizeInfo.Size,
-			Price:            model.GetPbPrice(sizeInfo.Price),
+			Price:            model.GetDbPrice(sizeInfo.Price),
 			PictureStorePath: sizeInfo.PictureStorePath,
 		})
 	}
@@ -128,10 +128,11 @@ func getDbElements(pbElement *pb.Element, className string) []*model.Element {
 }
 
 func getDbSpace(pbSpace *pb.Space) *model.Space {
+
 	return &model.Space{
 		Name:             pbSpace.Name,
-		Num:              pbSpace.Num,
-		Price:            pbSpace.Price,
+		ClassName:        pbSpace.ClassName,
+		Price:            model.GetDbPrice(pbSpace.Price),
 		BillingType:      pbSpace.BillingType,
 		PictureStorePath: pbSpace.PictureStorePath,
 	}

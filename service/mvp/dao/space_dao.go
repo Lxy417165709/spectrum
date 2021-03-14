@@ -35,18 +35,31 @@ func (spaceDao) GetAll() ([]*model.Space, error) {
 	return result, nil
 }
 
-func (spaceDao) Get(name string, num int64) (*model.Space, error) {
+func (spaceDao) GetByClassName(className string) ([]*model.Space, error) {
+	var table model.Space
+	createTableWhenNotExist(&table)
+
+	var result []*model.Space
+	if err := mainDB.Where("class_name = ?", className).Find(&result).Error; err != nil {
+		logger.Error("Fail to finish mainDB.Find",
+			zap.Error(err))
+		return nil, err
+	}
+	return result, nil
+}
+
+func (spaceDao) Get(name string, className string) (*model.Space, error) {
 	var table model.Space
 	createTableWhenNotExist(&table)
 
 	var result model.Space
-	if err := mainDB.First(&result, "name = ? and num = ?", name, num).Error; err != nil {
+	if err := mainDB.First(&result, "name = ? and class_name = ?", name, className).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, nil
 		}
 		logger.Error("Fail to finish mainDB.First",
 			zap.String("name", name),
-			zap.Int64("num", num),
+			zap.String("className", className),
 			zap.Error(err))
 		return nil, err
 	}

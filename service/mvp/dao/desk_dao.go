@@ -33,18 +33,18 @@ func (deskDao) Update(to map[string]interface{}) error {
 	return nil
 }
 
-func (deskDao) GetNonCheckOutDesk(spaceName string, spaceNum int64) (*model.Desk, error) {
+func (deskDao) GetNonCheckOutDesk(spaceName string, spaceClassName string) (*model.Desk, error) {
 	var table model.Desk
 	createTableWhenNotExist(&table)
 
 	var result model.Desk
-	if err := mainDB.First(&result, "space_name = ? and space_num = ? and check_out_timestamp = 0", spaceName, spaceNum).Error; err != nil {
+	if err := mainDB.First(&result, "space_name = ? and space_class_name = ? and check_out_timestamp = 0", spaceName, spaceClassName).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, nil
 		}
 		logger.Error("Fail to finish mainDB.First",
 			zap.String("spaceName", spaceName),
-			zap.Int64("spaceNum", spaceNum),
+			zap.String("spaceClassName", spaceClassName),
 			zap.Error(err))
 		return nil, err
 	}

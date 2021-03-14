@@ -18,6 +18,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MvpClient interface {
 	GetAllGoodClasses(ctx context.Context, in *GetAllGoodClassesReq, opts ...grpc.CallOption) (*GetAllGoodClassesRes, error)
+	GetAllDesks(ctx context.Context, in *GetAllDesksReq, opts ...grpc.CallOption) (*GetAllDesksRes, error)
 	GetAllGoods(ctx context.Context, in *GetAllGoodsReq, opts ...grpc.CallOption) (*GetAllGoodsRes, error)
 	GetAllGoodOptions(ctx context.Context, in *GetAllGoodOptionsReq, opts ...grpc.CallOption) (*GetAllGoodOptionsRes, error)
 	AddGoodClass(ctx context.Context, in *AddGoodClassReq, opts ...grpc.CallOption) (*AddGoodClassRes, error)
@@ -26,6 +27,7 @@ type MvpClient interface {
 	CancelGood(ctx context.Context, in *CancelGoodReq, opts ...grpc.CallOption) (*CancelGoodRes, error)
 	AddElement(ctx context.Context, in *AddElementReq, opts ...grpc.CallOption) (*AddElementRes, error)
 	AddSpace(ctx context.Context, in *AddSpaceReq, opts ...grpc.CallOption) (*AddSpaceRes, error)
+	AddDesk(ctx context.Context, in *AddDeskReq, opts ...grpc.CallOption) (*AddDeskRes, error)
 	OrderGood(ctx context.Context, in *OrderGoodReq, opts ...grpc.CallOption) (*OrderGoodRes, error)
 	OrderDesk(ctx context.Context, in *OrderDeskReq, opts ...grpc.CallOption) (*OrderDeskRes, error)
 	ChangeDesk(ctx context.Context, in *ChangeDeskReq, opts ...grpc.CallOption) (*ChangeDeskRes, error)
@@ -48,6 +50,15 @@ func NewMvpClient(cc grpc.ClientConnInterface) MvpClient {
 func (c *mvpClient) GetAllGoodClasses(ctx context.Context, in *GetAllGoodClassesReq, opts ...grpc.CallOption) (*GetAllGoodClassesRes, error) {
 	out := new(GetAllGoodClassesRes)
 	err := c.cc.Invoke(ctx, "/pb.Mvp/GetAllGoodClasses", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *mvpClient) GetAllDesks(ctx context.Context, in *GetAllDesksReq, opts ...grpc.CallOption) (*GetAllDesksRes, error) {
+	out := new(GetAllDesksRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/GetAllDesks", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -120,6 +131,15 @@ func (c *mvpClient) AddElement(ctx context.Context, in *AddElementReq, opts ...g
 func (c *mvpClient) AddSpace(ctx context.Context, in *AddSpaceReq, opts ...grpc.CallOption) (*AddSpaceRes, error) {
 	out := new(AddSpaceRes)
 	err := c.cc.Invoke(ctx, "/pb.Mvp/AddSpace", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *mvpClient) AddDesk(ctx context.Context, in *AddDeskReq, opts ...grpc.CallOption) (*AddDeskRes, error) {
+	out := new(AddDeskRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/AddDesk", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -212,6 +232,7 @@ func (c *mvpClient) GetAllDeskClasses(ctx context.Context, in *GetAllDeskClasses
 // for forward compatibility
 type MvpServer interface {
 	GetAllGoodClasses(context.Context, *GetAllGoodClassesReq) (*GetAllGoodClassesRes, error)
+	GetAllDesks(context.Context, *GetAllDesksReq) (*GetAllDesksRes, error)
 	GetAllGoods(context.Context, *GetAllGoodsReq) (*GetAllGoodsRes, error)
 	GetAllGoodOptions(context.Context, *GetAllGoodOptionsReq) (*GetAllGoodOptionsRes, error)
 	AddGoodClass(context.Context, *AddGoodClassReq) (*AddGoodClassRes, error)
@@ -220,6 +241,7 @@ type MvpServer interface {
 	CancelGood(context.Context, *CancelGoodReq) (*CancelGoodRes, error)
 	AddElement(context.Context, *AddElementReq) (*AddElementRes, error)
 	AddSpace(context.Context, *AddSpaceReq) (*AddSpaceRes, error)
+	AddDesk(context.Context, *AddDeskReq) (*AddDeskRes, error)
 	OrderGood(context.Context, *OrderGoodReq) (*OrderGoodRes, error)
 	OrderDesk(context.Context, *OrderDeskReq) (*OrderDeskRes, error)
 	ChangeDesk(context.Context, *ChangeDeskReq) (*ChangeDeskRes, error)
@@ -238,6 +260,9 @@ type UnimplementedMvpServer struct {
 
 func (UnimplementedMvpServer) GetAllGoodClasses(context.Context, *GetAllGoodClassesReq) (*GetAllGoodClassesRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllGoodClasses not implemented")
+}
+func (UnimplementedMvpServer) GetAllDesks(context.Context, *GetAllDesksReq) (*GetAllDesksRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllDesks not implemented")
 }
 func (UnimplementedMvpServer) GetAllGoods(context.Context, *GetAllGoodsReq) (*GetAllGoodsRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllGoods not implemented")
@@ -262,6 +287,9 @@ func (UnimplementedMvpServer) AddElement(context.Context, *AddElementReq) (*AddE
 }
 func (UnimplementedMvpServer) AddSpace(context.Context, *AddSpaceReq) (*AddSpaceRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddSpace not implemented")
+}
+func (UnimplementedMvpServer) AddDesk(context.Context, *AddDeskReq) (*AddDeskRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddDesk not implemented")
 }
 func (UnimplementedMvpServer) OrderGood(context.Context, *OrderGoodReq) (*OrderGoodRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OrderGood not implemented")
@@ -317,6 +345,24 @@ func _Mvp_GetAllGoodClasses_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MvpServer).GetAllGoodClasses(ctx, req.(*GetAllGoodClassesReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Mvp_GetAllDesks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllDesksReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).GetAllDesks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/GetAllDesks",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).GetAllDesks(ctx, req.(*GetAllDesksReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -461,6 +507,24 @@ func _Mvp_AddSpace_Handler(srv interface{}, ctx context.Context, dec func(interf
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MvpServer).AddSpace(ctx, req.(*AddSpaceReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Mvp_AddDesk_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddDeskReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).AddDesk(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/AddDesk",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).AddDesk(ctx, req.(*AddDeskReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -636,6 +700,10 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Mvp_GetAllGoodClasses_Handler,
 		},
 		{
+			MethodName: "GetAllDesks",
+			Handler:    _Mvp_GetAllDesks_Handler,
+		},
+		{
 			MethodName: "GetAllGoods",
 			Handler:    _Mvp_GetAllGoods_Handler,
 		},
@@ -666,6 +734,10 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddSpace",
 			Handler:    _Mvp_AddSpace_Handler,
+		},
+		{
+			MethodName: "AddDesk",
+			Handler:    _Mvp_AddDesk_Handler,
 		},
 		{
 			MethodName: "OrderGood",

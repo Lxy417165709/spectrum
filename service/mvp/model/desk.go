@@ -13,7 +13,7 @@ type Desk struct {
 
 	SessionCount int64  `json:"session_count"`
 	SpaceName    string `json:"space_name"`
-	SpaceNum     int64  `json:"space_num"`
+	SpaceClassName   string `json:"space_class_name"`
 
 	Expense           float64 `json:"expense"`
 	CheckOutTimestamp int64   `json:"check_out_timestamp"`
