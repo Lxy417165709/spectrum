@@ -37,15 +37,15 @@ func checkOutIfNot(chargeableObj model.Chargeable) error {
 }
 
 func writeGoodSizeToDB(good *pb.Good) error {
-	if good == nil{
+	if good == nil {
 		logger.Warn("Good is nil")
 		return nil
 	}
-	if  good.MainElement == nil {
+	if good.MainElement == nil {
 		logger.Warn("Good's main element is nil")
 		return nil
 	}
-	if len(good.MainElement.SizeInfos) == 0{
+	if len(good.MainElement.SizeInfos) == 0 {
 		logger.Warn("Good main element's size infos is empty")
 		return nil
 	}
@@ -120,7 +120,7 @@ func getDbElements(pbElement *pb.Element, className string) []*model.Element {
 			Type:             pbElement.Type,
 			ClassName:        className,
 			Size:             sizeInfo.Size,
-			Price:            sizeInfo.Price,
+			Price:            model.GetPbPrice(sizeInfo.Price),
 			PictureStorePath: sizeInfo.PictureStorePath,
 		})
 	}

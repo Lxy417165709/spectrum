@@ -7,9 +7,9 @@ import (
 
 type Good struct {
 	gorm.Model
-	Name   string `json:"name"`
-	DeskID int64  `json:"desk_id"`
-	OrderID int64 `json:"order_id"`
+	Name    string `json:"name"`
+	DeskID  int64  `json:"desk_id"`
+	OrderID int64  `json:"order_id"`
 
 	Expense           float64 `json:"expense"`
 	CheckOutTimestamp int64   `json:"check_out_timestamp"`
@@ -47,7 +47,9 @@ func (g *Good) GetExpenseInfo(mainElement *pb.Element, attachElement []*pb.Eleme
 func (g *Good) getNonFavorExpense(elements []*pb.Element) float64 {
 	expense := 0.0
 	for _, element := range elements {
-		expense += GetSelectSizeInfo(element.SizeInfos).Price
+		priceString := GetSelectSizeInfo(element.SizeInfos).Price
+		expense += GetPbPrice(priceString)
 	}
 	return expense
 }
+

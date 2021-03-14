@@ -1,8 +1,12 @@
 package model
 
 import (
+	"fmt"
+	"go.uber.org/zap"
 	"sort"
+	"spectrum/common/logger"
 	"spectrum/common/pb"
+	"strconv"
 )
 
 func GetSelectSizeInfo(infos []*pb.SizeInfo) *pb.SizeInfo {
@@ -52,13 +56,24 @@ func GetFavor(favor *pb.Favor) Favor {
 
 func GetSizeInfos(selectSize string, sameNameElements []*Element) []*pb.SizeInfo {
 	var sizeInfos []*pb.SizeInfo
+
 	for _, element := range sameNameElements {
 		sizeInfos = append(sizeInfos, &pb.SizeInfo{
 			Size:             element.Size,
-			Price:            element.Price,
+			Price:            fmt.Sprintf("%0.2f",element.Price),
 			PictureStorePath: element.PictureStorePath,
 			IsSelected:       selectSize == element.Size,
 		})
 	}
 	return sizeInfos
+}
+
+
+func GetPbPrice(priceString string) float64{
+	price, err := strconv.ParseFloat(priceString, 64)
+	if err != nil {
+		logger.Error("Fail to finish strconv.ParseFloat", zap.String("priceString", priceString))
+		// 这里不返回
+	}
+	return price
 }

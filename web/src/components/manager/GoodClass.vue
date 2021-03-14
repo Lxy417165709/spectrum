@@ -13,11 +13,13 @@
 
     <!--    2. 商品类展示-->
     <div v-show="cpt_canClassListShow">
+      <!--      普通商品类-->
       <el-divider content-position="left">普通商品类</el-divider>
       <good-class-list :goodClasses="db_goodClasses" :props_isAdminView="props_isAdminView"
                        @turnToGoodListMode="turnToGoodListMode"
                        @openGoodClassEditor="openGoodClassEditor"></good-class-list>
 
+      <!--      附属类-->
       <el-divider content-position="left" v-if="props_isAdminView">附属类</el-divider>
       <good-option-class-list :goodOptionClasses="db_goodOptionClasses" :props_isAdminView="props_isAdminView"
                               @turnToGoodOptionListMode="turnToGoodOptionListMode"
@@ -46,7 +48,7 @@
                         @openGoodOptionEditorOfAdmin="openGoodOptionEditorOfAdmin"
       ></good-option-list>
     </div>
-    <!--    :goodOptions="db_goodOptionClasses[curGoodOptionClassIndex].goodOptions"-->
+
 
     <!--    4. 商品添加、编辑框-->
     <el-dialog
@@ -152,7 +154,7 @@ export default {
     },
     async turnToGoodOptionListMode(goodOptionClassIndex) {
       let model = utils.getRequestModel("mvp", "GetAllGoodOptions", {
-        // className: this.db_goodOptionClasses[goodOptionClassIndex].name,
+        className: this.db_goodOptionClasses[goodOptionClassIndex].name,
       })
       await utils.sendRequestModel(model).then(res => {
         console.log("GetAllGoodOptions.res", res)
@@ -167,6 +169,7 @@ export default {
 
         this.$nextTick(() => {
           this.$refs.GoodOptionList.goodOptions = res.data.data.elements
+          this.$refs.GoodOptionList.className = this.db_goodOptionClasses[this.curGoodOptionClassIndex].name
         })
       })
 
@@ -176,6 +179,7 @@ export default {
         className: this.db_goodClasses[goodClassIndex].name,
       })
       await utils.sendRequestModel(model).then(res => {
+        console.log("GetAllGoods.res", res)
         if (!utils.hasRequestSuccess(res)) {
           this.$message.error(res.data.err)
           return
@@ -184,7 +188,6 @@ export default {
 
         this.curGoodClassIndex = goodClassIndex
         this.viewMode = cst.VIEW_MODE.GOOD_LIST_MODE
-        console.log("res.data.data.goods", res.data.data.goods)
         this.$nextTick(() => {
           this.$refs.GoodList.goods = res.data.data.goods
         })

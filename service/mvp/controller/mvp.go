@@ -105,7 +105,7 @@ func (MvpServer) GetAllGoodOptions(ctx context.Context, req *pb.GetAllGoodOption
 
 	var res pb.GetAllGoodOptionsRes
 
-	dbElements, err := dao.ElementDao.GetAll()
+	dbElements, err := dao.ElementDao.GetAllAttachElements(req.ClassName)
 	if err != nil {
 		logger.Error("Fail to finish ElementDao.GetAll",
 			zap.Any("req", req),

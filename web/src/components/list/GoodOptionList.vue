@@ -26,16 +26,21 @@ export default {
   components: {GoodOptionSpecialCard, GoodOptionCard, GoodSpacialCard, GoodCard},
   props: {
     props_isAdminView: Boolean,
-    className: String
   },
   data() {
     return {
       goodOptions: [],
+      className: "",
     };
   },
   methods: {
     tryToAddGoodOption() {
-      this.openGoodOptionEditorOfAdmin(test.blankGoodOption)
+      if (this.className === "附属选项类") {
+        this.openGoodOptionEditorOfAdmin(test.blankGoodOption)
+      }
+      if (this.className === "附属商品类") {
+        this.openGoodOptionEditorOfAdmin(test.blankGoodIngredient)
+      }
     },
     openGoodOptionEditorOfAdmin(option) {
       this.$emit("openGoodOptionEditorOfAdmin", option, this.className)

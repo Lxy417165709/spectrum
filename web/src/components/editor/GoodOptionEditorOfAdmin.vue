@@ -62,19 +62,16 @@ export default {
   methods: {
     handleClick(tab, event) {
       this.addTabCount++
-      // todo: name 应该是可以编辑的
       let name = "未设定规格" + this.addTabCount
-      // todo: sizeInfo 应该是一个对象，要有构造函数
       this.option.sizeInfos.push({
         size: name,
-        price: 30
+        price: "0",
       })
     },
     handleTabsEdit(name, event) {
       this.option.sizeInfos = utils.removeElementByField(this.option.sizeInfos, "size", name)
     },
     handleChangeDefaultSizeInfo(index) {
-      // todo: 将其他的默认选中置为false
       for (let i = 0; i < this.option.sizeInfos.length; i++) {
         this.option.sizeInfos[i].isSelected = false
       }
@@ -86,6 +83,7 @@ export default {
         className: this.className,
       })
       await utils.sendRequestModel(model).then(res => {
+        console.log("addGoodOption.res", res)
         if (!utils.hasRequestSuccess(res)) {
           this.$message.error(res.data.err)
           return

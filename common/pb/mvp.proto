@@ -78,7 +78,7 @@ message Element {
 
 message SizeInfo {
     string size = 1;
-    double price = 2;
+    string price = 2;
     string pictureStorePath = 3;
     bool isSelected = 4;
 }
@@ -217,7 +217,9 @@ message GetAllGoodsRes{
     repeated Good goods = 1;
 }
 
-message GetAllGoodOptionsReq{}
+message GetAllGoodOptionsReq{
+    string className = 1;
+}
 
 message GetAllGoodOptionsRes{
     repeated Element elements = 1;

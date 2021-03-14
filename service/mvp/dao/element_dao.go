@@ -62,12 +62,23 @@ func (elementDao) GetByClassName(className string) ([]*model.Element, error) {
 	return result, nil
 }
 
-func (elementDao) GetAll() ([]*model.Element, error) {
+func (elementDao) GetAllAttachElements(className string) ([]*model.Element, error) {
 	var table model.Element
 	createTableWhenNotExist(&table)
 
+	var whereClause string
+	var whereValues []interface{}
+
+	whereClause = " type != ? "
+	whereValues = append(whereValues, pb.ElementType_Main)
+
+	if className != "" {
+		whereClause += " and class_name = ? "
+		whereValues = append(whereValues, className)
+	}
+
 	var elements []*model.Element
-	db := mainDB.Where("type != ?", pb.ElementType_Main).Find(&elements)
+	db := mainDB.Where(whereClause, whereValues...).Find(&elements)
 	if err := db.Error; err != nil {
 		logs.Error("Fail to finish mainDB.Find", zap.Error(err))
 		return nil, err
