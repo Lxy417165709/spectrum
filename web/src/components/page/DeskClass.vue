@@ -44,12 +44,14 @@ import GoodClass from "../manager/GoodClass";
 import DeskClassEditor from "../editor/DeskClassEditor";
 import test from "../../common/test/test";
 import cst from "../../common/cst";
+import utils from "../../common/utils";
 
 export default {
   name: 'DeskClass',
   components: {DeskClassEditor, GoodClass, DeskList},
-  created() {
-    this.db_deskClasses = test.deskClasses
+  async created() {
+    // this.db_deskClasses = test.deskClasses
+    await this.getAllDeskClasses()
   },
   data() {
     return {
@@ -64,6 +66,19 @@ export default {
     }
   },
   methods: {
+    async getAllDeskClasses() {
+      let model = utils.getRequestModel("mvp", "GetAllDeskClasses", {})
+      await utils.sendRequestModel(model).then(res => {
+        console.log("GetAllDeskClasses.res", res)
+        if (!utils.hasRequestSuccess(res)) {
+          this.$message.error(res.data.err)
+          return
+        }
+        this.$message.success(res.data.msg)
+        this.db_deskClasses = res.data.data.deskClasses
+      })
+    },
+
     handleDeskClassClick(deskClassIndex) {
       this.curDeskClassIndex = deskClassIndex
 

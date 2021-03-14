@@ -82,3 +82,10 @@ type DeskClass struct {
 func (d *DeskClass) TableName() string {
 	return "desk_class"
 }
+
+func (d *DeskClass) ToPb() *pb.DeskClass {
+	return &pb.DeskClass{
+		Name:             d.Name,
+		PictureStorePath: d.PictureStorePath,
+	}
+}

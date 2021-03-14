@@ -377,46 +377,58 @@ func (s MvpServer) GetAllDeskClasses(ctx context.Context, req *pb.GetAllDeskClas
 	logger.Info("GetAllDeskClasses", zap.Any("ctx", ctx), zap.Any("req", req))
 
 	var res pb.GetAllDeskClassesRes
-	spaces, err := dao.SpaceDao.GetAll()
+	//spaces, err := dao.SpaceDao.GetAll()
+	//if err != nil {
+	//	// todo: log
+	//	return nil, err
+	//}
+	//
+	//nameToSpaces := make(map[string][]*model.Space)
+	//for _, space := range spaces {
+	//	nameToSpaces[space.Name] = append(nameToSpaces[space.Name], space)
+	//}
+
+	//deskClasses := make([]*pb.DeskClass, 0)
+	//for name, spaces := range nameToSpaces {
+	//	desks := make([]*pb.Desk, 0)
+	//	for _, space := range spaces {
+	//		desk, err := dao.DeskDao.GetNonCheckOutDesk(space.Name, space.Num)
+	//		if err != nil {
+	//			// todo:log
+	//			return nil, err
+	//		}
+	//		if desk == nil {
+	//			desks = append(desks, &pb.Desk{
+	//				Id:             0,
+	//				Space:          space.ToPb(),
+	//				StartTimestamp: 0,
+	//				EndTimestamp:   0,
+	//				Favors:         nil,
+	//				ExpenseInfo:    nil,
+	//			})
+	//		} else {
+	//			desks = append(desks, getPbDesk(desk)) // todo: 这里会和 getPbDesk 有部分冗余
+	//		}
+	//	}
+	//	deskClasses = append(deskClasses, &pb.DeskClass{
+	//		Name: name,
+	//		//Desks: desks,
+	//	})
+	//}
+
+	deskClasses, err := dao.DeskClassDao.GetAllClasses()
 	if err != nil {
 		// todo: log
 		return nil, err
 	}
 
-	nameToSpaces := make(map[string][]*model.Space)
-	for _, space := range spaces {
-		nameToSpaces[space.Name] = append(nameToSpaces[space.Name], space)
+	var pbDeskClass []*pb.DeskClass
+
+	for _, deskClass := range deskClasses {
+		pbDeskClass = append(pbDeskClass, deskClass.ToPb())
 	}
 
-	deskClasses := make([]*pb.DeskClass, 0)
-	for name, spaces := range nameToSpaces {
-		desks := make([]*pb.Desk, 0)
-		for _, space := range spaces {
-			desk, err := dao.DeskDao.GetNonCheckOutDesk(space.Name, space.Num)
-			if err != nil {
-				// todo:log
-				return nil, err
-			}
-			if desk == nil {
-				desks = append(desks, &pb.Desk{
-					Id:             0,
-					Space:          space.ToPb(),
-					StartTimestamp: 0,
-					EndTimestamp:   0,
-					Favors:         nil,
-					ExpenseInfo:    nil,
-				})
-			} else {
-				desks = append(desks, getPbDesk(desk)) // todo: 这里会和 getPbDesk 有部分冗余
-			}
-		}
-		deskClasses = append(deskClasses, &pb.DeskClass{
-			Name: name,
-			//Desks: desks,
-		})
-	}
-
-	res.DeskClasses = deskClasses
+	res.DeskClasses = pbDeskClass
 
 	return &res, nil
 }
