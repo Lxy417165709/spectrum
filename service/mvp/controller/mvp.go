@@ -123,7 +123,7 @@ func (MvpServer) GetAllGoodOptions(ctx context.Context, req *pb.GetAllGoodOption
 		pbElements = append(pbElements, &pb.Element{
 			Name:      name,
 			Type:      elements[0].Type,
-			SizeInfos: model.GetSizeInfos(elements[0].Size, elements),
+			SizeInfos: model.GetSizeInfos(elements),
 		})
 	}
 

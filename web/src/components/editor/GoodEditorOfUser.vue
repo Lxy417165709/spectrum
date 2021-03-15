@@ -9,14 +9,14 @@
       <span v-if="good.mainElement!==undefined">{{ good.mainElement.name }}</span>
     </el-form-item>
     <el-form-item label="规格">
-      <el-radio v-model="curMainElementSizeIndex" v-for="(sizeInfo,index) in good.mainElement.sizeInfos" :label="index"
+      <el-radio v-if="good.mainElement!==undefined" v-model="good.mainElement.selectedIndex" v-for="(sizeInfo,index) in good.mainElement.sizeInfos" :label="index"
                 :key="index">
         {{ sizeInfo.size }}
       </el-radio>
     </el-form-item>
-    <el-form-item v-for="(attachElement,index) in selectableElements" :key="index" :label="attachElement.name"
+    <el-form-item v-for="(attachElement,index) in good.attachElements" :key="index" :label="attachElement.name"
                   v-if="attachElement.type===1">
-      <el-radio v-model="attachElement.curSizeIndex" v-for="(sizeInfo,index) in attachElement.sizeInfos" :label="index"
+      <el-radio v-model="attachElement.selectedIndex" v-for="(sizeInfo,index) in attachElement.sizeInfos" :label="index"
                 :key="index">
         {{ sizeInfo.size }}
       </el-radio>
@@ -24,9 +24,9 @@
     <el-form-item v-if="!needAttachGood">
       <el-button @click="needAddAttachGood">需要加料</el-button>
     </el-form-item>
-    <el-form-item v-for="(attachElement,index) in selectableElements" :key="index" :label="attachElement.name"
+    <el-form-item v-for="(attachElement,index) in good.attachElements" :key="index" :label="attachElement.name"
                   v-if="attachElement.type===2 && needAttachGood">
-      <el-radio v-model="attachElement.curSizeIndex" v-for="(sizeInfo,index) in attachElement.sizeInfos" :label="index"
+      <el-radio v-model="attachElement.selectedIndex" v-for="(sizeInfo,index) in attachElement.sizeInfos" :label="index"
                 :key="index">
         {{ sizeInfo.size }}
       </el-radio>
@@ -56,18 +56,17 @@ export default {
   components: {DiscountEditor},
   props: {},
   async mounted() {
-    await utils.GetAllGoodOptions(this, {}, (res) => {
-      this.selectableElements = res.data.data.elements
-      console.log("this.selectableElements", this.selectableElements)
-    })
+    // await utils.GetAllGoodOptions(this, {}, (res) => {
+    //   this.selectableElements = res.data.data.elements
+    //   console.log("this.selectableElements", this.selectableElements)
+    // })
   },
   data() {
     return {
       needAttachGood: false,
       good: {},
-      curMainElementSizeIndex: cst.INDEX.FIRST_INDEX,
       countPrice: 0,
-      selectableElements: []
+      // selectableElements: []
     }
   },
   methods: {

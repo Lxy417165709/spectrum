@@ -11,9 +11,16 @@ import (
 func getClassGoods(className string) []*pb.Good {
 	var goods []*pb.Good
 	for _, mainElementName := range getElementNames(className) {
-		goods = append(goods, getPbGood(&model.Good{
-			Name: mainElementName,
-		}))
+		pbGood := getPbGood(&model.Good{
+			Name:              mainElementName,
+			DeskID:            0,
+			OrderID:           0,
+			Expense:           0,
+			CheckOutTimestamp: 0,
+			NonFavorExpense:   0,
+		})
+		goods = append(goods, pbGood)
+		logger.Info("Get pb good", zap.Any("pbGood", pbGood))
 	}
 	return goods
 }
@@ -102,14 +109,34 @@ func getMainElement(goodID int64, mainElementName string) *pb.Element {
 		return nil
 	}
 	if sizeRecord == nil {
-		// todo: log
+		logger.Warn("Size record is blank", zap.Any("goodID", goodID), zap.Any("mainElementName", mainElementName))
 		return nil
 	}
+	sizeInfos := model.GetSizeInfos(mainElements)
+	selectedSizeInfoIndex := int32(GetSelectedIndex(sizeInfos, sizeRecord.SelectSize))
+	logger.Info("GetSelectedIndex",
+		zap.Any("mainElementName", mainElementName),
+		zap.Any("selectedSizeInfoIndex", selectedSizeInfoIndex),
+		zap.Any("sizeInfos", sizeInfos),
+		zap.Any("selectSize", sizeRecord.SelectSize))
 	return &pb.Element{
-		Name:      mainElementName,
-		Type:      pb.ElementType_Main,
-		SizeInfos: model.GetSizeInfos(sizeRecord.SelectSize, mainElements),
+		Name:                  mainElementName,
+		Type:                  pb.ElementType_Main,
+		SelectedIndex: selectedSizeInfoIndex,
+		SizeInfos:             sizeInfos,
 	}
+}
+
+// todo: 2021年03月16日00:41:27 这里有问题
+func GetSelectedIndex(sizeInfos []*pb.SizeInfo, selectSize string) int {
+
+	for index, sizeInfo := range sizeInfos {
+		if sizeInfo.Size == selectSize {
+			return index
+		}
+	}
+	logger.Warn("Can not get selected Index", zap.Any("sizeInfos", sizeInfos), zap.Any("selectSize", selectSize))
+	return 0
 }
 
 func getAttachElements(goodID int64, mainElementName string) []*pb.Element {
@@ -135,7 +162,7 @@ func getAttachElements(goodID int64, mainElementName string) []*pb.Element {
 		attachElements = append(attachElements, &pb.Element{
 			Name:      attachRecord.AttachElementName, // 这里也等于 elements[0].Name
 			Type:      elements[0].Type,               // 这里的元素包括了规格，但它们的 Type 是一样的
-			SizeInfos: model.GetSizeInfos(attachRecord.SelectSize, elements),
+			SizeInfos: model.GetSizeInfos(elements),
 		})
 	}
 	return attachElements

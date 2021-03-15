@@ -1016,7 +1016,12 @@ export default {
   blankGood: {
     mainElement: {
       name: "请输入",
-      sizeInfos: [],
+      selectedIndex: 0,
+      sizeInfos: [{
+        size: "小规格",
+        price: "10.0",
+        pictureStorePath:""
+      }],
     },
     attachElements: [],
   },

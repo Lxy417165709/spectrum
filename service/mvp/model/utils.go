@@ -9,14 +9,8 @@ import (
 	"strconv"
 )
 
-func GetSelectSizeInfo(infos []*pb.SizeInfo) *pb.SizeInfo {
-	for _, sizeInfo := range infos {
-		if sizeInfo.IsSelected {
-			return sizeInfo
-		}
-	}
-	//return nil
-	panic("No default selected size info")
+func GetSelectSizeInfo(element *pb.Element) *pb.SizeInfo {
+	return element.SizeInfos[element.SelectedIndex]
 }
 
 func GetFavorExpense(nonFavorExpense float64, pbFavors []*pb.Favor) float64 {
@@ -54,7 +48,7 @@ func GetFavor(favor *pb.Favor) Favor {
 	return &None{}
 }
 
-func GetSizeInfos(selectSize string, sameNameElements []*Element) []*pb.SizeInfo {
+func GetSizeInfos(sameNameElements []*Element) []*pb.SizeInfo {
 	var sizeInfos []*pb.SizeInfo
 
 	for _, element := range sameNameElements {
@@ -62,7 +56,6 @@ func GetSizeInfos(selectSize string, sameNameElements []*Element) []*pb.SizeInfo
 			Size:             element.Size,
 			Price:            GetPbPrice(element.Price),
 			PictureStorePath: element.PictureStorePath,
-			IsSelected:       selectSize == element.Size,
 		})
 	}
 	return sizeInfos

@@ -54,7 +54,7 @@ func writeGoodSizeToDB(good *pb.Good) error {
 	if err := dao.MainElementSizeRecordDao.Create(&model.MainElementSizeRecord{
 		GoodID:          good.Id,
 		MainElementName: good.MainElement.Name,
-		SelectSize:      good.MainElement.SizeInfos[0].Size,
+		SelectSize:      good.MainElement.SizeInfos[good.MainElement.SelectedIndex].Size,
 	}); err != nil {
 		logger.Error("Fail to finish MainElementSizeRecordDao.Create", zap.Error(err))
 		return err
@@ -66,7 +66,7 @@ func writeGoodSizeToDB(good *pb.Good) error {
 			GoodID:            good.Id,
 			MainElementName:   good.MainElement.Name,
 			AttachElementName: attachElement.Name,
-			SelectSize:        model.GetSelectSizeInfo(attachElement.SizeInfos).Size,
+			SelectSize:        model.GetSelectSizeInfo(attachElement).Size,
 		}); err != nil {
 			logger.Error("Fail to finish MainElementAttachElementDao.Create", zap.Error(err))
 			return err

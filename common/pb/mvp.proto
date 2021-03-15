@@ -78,13 +78,13 @@ message Element {
     string name = 1;
     ElementType type = 2;
     repeated SizeInfo sizeInfos = 3;
+    int32 selectedIndex = 4;
 }
 
 message SizeInfo {
     string size = 1;
     string price = 2;
     string pictureStorePath = 3;
-    bool isSelected = 4;
 }
 
 message Favor {

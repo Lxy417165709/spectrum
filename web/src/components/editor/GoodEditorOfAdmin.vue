@@ -24,7 +24,7 @@
           <el-form-item label="价格">
             <el-input v-model="sizeInfo.price" style="width: 70%"></el-input>
           </el-form-item>
-          <el-form-item label="默认选中" v-if="sizeInfo.isSelected===false">
+          <el-form-item label="默认选中" v-if="index!==good.mainElement.selectedIndex">
             <el-button @click="handleChangeDefaultSizeInfo(index)">确定</el-button>
           </el-form-item>
         </el-form>
@@ -122,10 +122,11 @@ export default {
       this.good.mainElement.sizeInfos = utils.removeElementByField(this.good.mainElement.sizeInfos, "name", name)
     },
     handleChangeDefaultSizeInfo(index) {
-      for (let i = 0; i < this.good.mainElement.sizeInfos.length; i++) {
-        this.good.mainElement.sizeInfos[i] = false
-      }
-      this.good.mainElement.sizeInfos[index].isSelected = true
+      // for (let i = 0; i < this.good.mainElement.sizeInfos.length; i++) {
+      //   this.good.mainElement.sizeInfos[i] = false
+      // }
+      // this.good.mainElement.sizeInfos[index].isSelected = true
+      this.good.mainElement.selectedIndex = index
     },
     async addGood(good) {
       let model = utils.getRequestModel("mvp", "AddGood", {
