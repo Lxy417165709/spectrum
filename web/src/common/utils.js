@@ -49,5 +49,27 @@ export default {
       size: name,
       price: "0"
     }
+  },
+  async GetAllGoodOptions(obj,par, then) {
+    let model = this.getRequestModel("mvp", "GetAllGoodOptions", par)
+    await this.sendRequestModel(model).then((res) => {
+      console.log("GetAllGoodOptions.res", res.data)
+      if (!this.hasRequestSuccess(res)) {
+        obj.$message.error(res.data.err)
+        return
+      }
+      obj.$message.success(res.data.msg)
+      then(res)
+    })
+
+    // await this.sendRequestModel(model).then(res => {
+    //   console.log("GetAllGoodOptions.res", res.data)
+    //   if (!this.hasRequestSuccess(res)) {
+    //     // this.$message.error(res.data.err)
+    //     return
+    //   }
+    //   // this.$message.success(res.data.msg)
+    //   return res
+    // })
   }
 }

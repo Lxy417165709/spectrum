@@ -81,14 +81,7 @@ export default {
   name: "GoodEditorOfAdmin",
   components: {},
   async mounted() {
-    let model = utils.getRequestModel("mvp", "GetAllGoodOptions", {})
-    await utils.sendRequestModel(model).then(res => {
-      console.log("GetAllGoodOptions res", res.data)
-      if (!utils.hasRequestSuccess(res)) {
-        this.$message.error(res.data.err)
-        return
-      }
-      this.$message.success(res.data.msg)
+    await utils.GetAllGoodOptions(this, {}, (res) => {
       this.selectableElements = res.data.data.elements
     })
   },
