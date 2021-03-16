@@ -1,9 +1,12 @@
 <!-- eslint-disable -->
 <template>
   <el-card :body-style="{ padding: '0px' }" shadow="hover" style="position:relative;">
-    <img style="height:200px;width:200px; border: none" :src="pictureStorePath">
-    <div style="width: 200px;height: 30px;position:relative;padding: 0;margin: 0; border: none">
-      <span style="position:absolute; left:5px">{{ name }}</span>
+    <img style="height:200px;width:200px; border: none" :src="desk.space.pictureStorePath"
+         v-if="desk.space!==undefined">
+    <div
+      style="width: 200px;height: 30px;position:relative;padding: 0;margin: 0; border: none;"
+      :class="{'isOpening':desk.id!==0}">
+      <span style="position:absolute; left:5px" v-if="desk.space!==undefined">{{ desk.space.name }}</span>
     </div>
   </el-card>
 </template>
@@ -12,8 +15,7 @@
 /* eslint-disable */
 export default {
   props: {
-    name: String,
-    pictureStorePath: String,
+    desk: {}
   },
   data() {
     return {};
@@ -21,3 +23,9 @@ export default {
   methods: {}
 }
 </script>
+
+<style>
+.isOpening {
+  background-color: red;
+}
+</style>

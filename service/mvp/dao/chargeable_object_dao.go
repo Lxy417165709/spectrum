@@ -15,7 +15,7 @@ type chargeableObjectDao struct{}
 func (chargeableObjectDao) Create(obj model.Chargeable) error {
 	createTableWhenNotExist(obj)
 
-	if err := mainDB.Create(&obj).Error; err != nil {
+	if err := mainDB.Table(obj.GetName()).Create(&obj).Error; err != nil {
 		logger.Error("Fail to finish mainDB.Create", zap.Any("obj", obj), zap.Error(err))
 		return err
 	}

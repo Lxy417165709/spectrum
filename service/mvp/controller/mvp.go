@@ -242,7 +242,12 @@ func (MvpServer) OrderDesk(ctx context.Context, req *pb.OrderDeskReq) (*pb.Order
 		// todo: log
 		return nil, err
 	}
-
+	if req.Desk.ExpenseInfo == nil {
+		req.Desk.ExpenseInfo = &pb.ExpenseInfo{}
+	}
+	if req.Desk.Space == nil {
+		req.Desk.Space = &pb.Space{}
+	}
 	dbDesk := &model.Desk{
 		StartTimestamp:    time.Now().Unix(),
 		EndTimestamp:      0,
@@ -253,7 +258,7 @@ func (MvpServer) OrderDesk(ctx context.Context, req *pb.OrderDeskReq) (*pb.Order
 		NonFavorExpense:   req.Desk.ExpenseInfo.NonFavorExpense,
 		OrderID:           int64(dbOrder.ID),
 	}
-	if err := dao.ChargeableObjectDao.Create(dbDesk); err != nil {
+	if err := dao.DeskDao.Create(dbDesk); err != nil {
 		// todo: log
 		return nil, err
 	}

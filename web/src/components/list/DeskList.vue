@@ -4,10 +4,8 @@
     <!--    1. 展示 桌位 部分-->
     <el-col v-for="(desk,deskIndex) in desks" :key="deskIndex"
             style="height: 300px; width: 202px; margin-left: 10px; border: none">
-      <span @click="handleDeskCardClick(deskIndex)">
-        <desk-card :name="desk.space.name"
-                   :pictureStorePath="desk.space.pictureStorePath"></desk-card>
-      </span>
+      <desk-card :desk="desk"
+                 @click.native="handleDeskCardClick(deskIndex)"></desk-card>
     </el-col>
 
 
@@ -23,6 +21,7 @@
 import DeskCard from "../card/DeskCard";
 import DeskSpacialCard from "../card/DeskSpacialCard";
 import test from "../../common/test/test";
+import utils from "../../common/utils"
 
 export default {
   components: {DeskSpacialCard, DeskCard},
@@ -35,8 +34,24 @@ export default {
     };
   },
   methods: {
-    handleDeskCardClick(deskIndex) {
-      this.$emit("turnToClassListMode", deskIndex)
+    async handleDeskCardClick(deskIndex) {
+      if (this.desks[deskIndex].id !== 0) {
+        this.$emit("turnToClassListMode", deskIndex)
+        return
+      }
+      // 进行点单
+      await utils.OrderDesk(this, {
+        desk: this.desks[deskIndex],
+      }, (res) => {
+        this.desks[deskIndex].id = res.data.data.deskID;
+      })
+
+      // int64 id = 1;
+      // Space space = 2;
+      // int64 startTimestamp = 3;
+      // int64 endTimestamp = 4;
+      // repeated Favor favors = 5;
+      // ExpenseInfo expenseInfo = 6;
     },
     openDeskEditorOfAdmin() {
       this.$emit("openDeskEditorOfAdmin", test.blankDesk, this.className)
