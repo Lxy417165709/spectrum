@@ -8,14 +8,14 @@
     <el-form-item label="名字">
       <span v-if="good.mainElement!==undefined">{{ good.mainElement.name }}</span>
     </el-form-item>
-    <el-form-item label="规格">
-      <el-radio v-if="good.mainElement!==undefined" v-model="good.mainElement.selectedIndex" v-for="(sizeInfo,index) in good.mainElement.sizeInfos" :label="index"
+    <el-form-item label="规格" v-if="good.mainElement!==undefined">
+      <el-radio  v-model="good.mainElement.selectedIndex" v-for="(sizeInfo,index) in good.mainElement.sizeInfos" :label="index"
                 :key="index">
         {{ sizeInfo.size }}
       </el-radio>
     </el-form-item>
     <el-form-item v-for="(attachElement,index) in good.attachElements" :key="index" :label="attachElement.name"
-                  v-if="attachElement.type===1">
+                  v-if="attachElement!==undefined  && attachElement.type===1">
       <el-radio v-model="attachElement.selectedIndex" v-for="(sizeInfo,index) in attachElement.sizeInfos" :label="index"
                 :key="index">
         {{ sizeInfo.size }}
@@ -25,7 +25,7 @@
       <el-button @click="needAddAttachGood">需要加料</el-button>
     </el-form-item>
     <el-form-item v-for="(attachElement,index) in good.attachElements" :key="index" :label="attachElement.name"
-                  v-if="attachElement.type===2 && needAttachGood">
+                  v-if="attachElement!==undefined && attachElement.type===2 && needAttachGood">
       <el-radio v-model="attachElement.selectedIndex" v-for="(sizeInfo,index) in attachElement.sizeInfos" :label="index"
                 :key="index">
         {{ sizeInfo.size }}
