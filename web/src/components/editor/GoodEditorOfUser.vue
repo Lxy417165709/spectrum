@@ -9,7 +9,8 @@
       <span v-if="good.mainElement!==undefined">{{ good.mainElement.name }}</span>
     </el-form-item>
     <el-form-item label="规格" v-if="good.mainElement!==undefined">
-      <el-radio  v-model="good.mainElement.selectedIndex" v-for="(sizeInfo,index) in good.mainElement.sizeInfos" :label="index"
+      <el-radio v-model="good.mainElement.selectedIndex" v-for="(sizeInfo,index) in good.mainElement.sizeInfos"
+                :label="index"
                 :key="index">
         {{ sizeInfo.size }}
       </el-radio>
@@ -40,7 +41,7 @@
       <el-input style="width: 70%"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary">确定</el-button>
+      <el-button type="primary" @click="orderGood">确定</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -67,12 +68,23 @@ export default {
       good: {},
       countPrice: 0,
       // selectableElements: []
+
+      orderID: 0,
     }
   },
   methods: {
     needAddAttachGood() {
       this.needAttachGood = true
     },
+    orderGood() {
+      utils.OrderGood(this, {
+        goods: [
+          this.good,
+        ],
+        orderID: this.orderID
+      }, (res) => {
+      })
+    }
   }
 }
 </script>

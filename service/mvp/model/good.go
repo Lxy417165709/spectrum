@@ -8,7 +8,6 @@ import (
 type Good struct {
 	gorm.Model
 	Name    string `json:"name"`
-	DeskID  int64  `json:"desk_id"`
 	OrderID int64  `json:"order_id"`
 
 	Expense           float64 `json:"expense"`

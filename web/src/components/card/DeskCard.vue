@@ -13,6 +13,8 @@
 
 <script>
 /* eslint-disable */
+
+// todo: desk.id === undefined 时，此时 desk.id !== 0 也成立..
 export default {
   props: {
     desk: {}
@@ -26,6 +28,6 @@ export default {
 
 <style>
 .isOpening {
-  background-color: red;
+  background-color: #ff0000;
 }
 </style>

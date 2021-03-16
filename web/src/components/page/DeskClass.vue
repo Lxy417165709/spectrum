@@ -26,7 +26,8 @@
                    ref="DeskList"
                    :className="db_deskClasses[curDeskClassIndex].name"
                    @openDeskEditorOfAdmin="openDeskEditorOfAdmin"
-                   @turnToClassListMode="turnToClassListMode"></desk-list>
+                   @turnToClassListMode="turnToClassListMode"
+                   @attachOrderID="attachOrderID"></desk-list>
       </div>
       <div v-show="cpt_canClassListShow">
         <good-class :props_isAdminView="false" :props_haveParentComponent="true" ref="ref_goodClass"
@@ -134,6 +135,15 @@ export default {
         this.$refs.DeskClassEditor.deskClass = test.blankDeskClass
       })
     },
+    attachOrderID(orderID) {
+      this.viewMode = cst.VIEW_MODE.CLASS_LIST_MODE
+      this.$nextTick(() => {
+        this.$refs.ref_goodClass.orderID = orderID
+        console.log("attachOrderID", this.$refs.ref_goodClass.orderID)
+      })
+    },
+
+
     turnToDeskListMode() {
       this.viewMode = cst.VIEW_MODE.DESK_LIST_MODE
       this.getAllDesks(this.db_deskClasses[this.curDeskClassIndex].name)

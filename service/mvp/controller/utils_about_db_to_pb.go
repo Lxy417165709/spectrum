@@ -13,7 +13,6 @@ func getClassGoods(className string) []*pb.Good {
 	for _, mainElementName := range getElementNames(className) {
 		pbGood := getPbGood(&model.Good{
 			Name:              mainElementName,
-			DeskID:            0,
 			OrderID:           0,
 			Expense:           0,
 			CheckOutTimestamp: 0,

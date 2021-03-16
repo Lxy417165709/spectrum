@@ -133,6 +133,8 @@ export default {
 
       db_goodClasses: [],
       db_goodOptionClasses: [],
+
+      orderID: 0,
     }
   },
   methods: {
@@ -220,6 +222,7 @@ export default {
       this.GoodEditorOfUserVisible = true
       this.$nextTick(() => {
         this.$refs.GoodEditorOfUser.good = good
+        this.$refs.GoodEditorOfUser.orderID = this.orderID
       })
     },
     openGoodClassEditor(goodClass) {

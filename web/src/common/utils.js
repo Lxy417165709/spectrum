@@ -73,5 +73,17 @@ export default {
       obj.$message.success(res.data.msg)
       then(res)
     })
+  },
+  async OrderGood(obj, par, then) {
+    let model = this.getRequestModel("mvp", "OrderGood", par)
+    await this.sendRequestModel(model).then((res) => {
+      console.log("OrderGood.res", res.data)
+      if (!this.hasRequestSuccess(res)) {
+        obj.$message.error(res.data.err)
+        return
+      }
+      obj.$message.success(res.data.msg)
+      then(res)
+    })
   }
 }

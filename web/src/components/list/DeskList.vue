@@ -35,6 +35,7 @@ export default {
   },
   methods: {
     async handleDeskCardClick(deskIndex) {
+      // todo: this.desks[deskIndex].id === undefined 时，此时 this.desks[deskIndex].id !== 0 也成立..
       if (this.desks[deskIndex].id !== 0) {
         this.$emit("turnToClassListMode", deskIndex)
         return
@@ -44,14 +45,8 @@ export default {
         desk: this.desks[deskIndex],
       }, (res) => {
         this.desks[deskIndex].id = res.data.data.deskID;
+        this.$emit("attachOrderID", res.data.data.orderID)
       })
-
-      // int64 id = 1;
-      // Space space = 2;
-      // int64 startTimestamp = 3;
-      // int64 endTimestamp = 4;
-      // repeated Favor favors = 5;
-      // ExpenseInfo expenseInfo = 6;
     },
     openDeskEditorOfAdmin() {
       this.$emit("openDeskEditorOfAdmin", test.blankDesk, this.className)

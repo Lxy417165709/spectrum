@@ -135,9 +135,8 @@ message AddSpaceRes{}
 
 
 message OrderGoodReq{
-    int64 deskID = 1;
-    int64 orderID = 2;
-    repeated Good goods = 3;
+    int64 orderID = 1;
+    repeated Good goods = 2;
 }
 
 message OrderGoodRes{
@@ -150,6 +149,7 @@ message OrderDeskReq{
 
 message OrderDeskRes{
     int64 deskID = 1;
+    int64 orderID = 2;
 }
 
 message OrderReq{

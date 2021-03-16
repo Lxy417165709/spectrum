@@ -175,30 +175,34 @@ func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.Order
 	// todo: 这里可以点单记录
 	var res pb.OrderGoodRes
 
-	var orderID int64
-	if req.OrderID == 0 {
-		// 这里表示用户首次点单
-		dbOrder := &model.Order{}
-		if err := dao.OrderDao.Create(dbOrder); err != nil {
-			// todo: log
-			return nil, err
-		}
-		orderID = int64(dbOrder.ID)
-	} else {
-		// 表示之前有点单了，在点单的基础上再点商品
-		orderID = req.OrderID
-	}
+	// 正常情况能来到这里的，orderID 不为0
+
+	//var orderID int64
+	//if req.OrderID == 0 {
+	//	// 这里表示用户首次点单
+	//	dbOrder := &model.Order{}
+	//	if err := dao.OrderDao.Create(dbOrder); err != nil {
+	//		// todo: log
+	//		return nil, err
+	//	}
+	//	orderID = int64(dbOrder.ID)
+	//} else {
+	//	// 表示之前有点单了，在点单的基础上再点商品
+	//	orderID = req.OrderID
+	//}
 
 	for _, good := range req.Goods {
+		if good.ExpenseInfo == nil {
+			good.ExpenseInfo = &pb.ExpenseInfo{}
+		}
 		dbGood := &model.Good{
 			Name:              good.MainElement.Name,
-			DeskID:            req.DeskID,
 			Expense:           good.ExpenseInfo.Expense,
 			CheckOutTimestamp: good.ExpenseInfo.CheckOutTimestamp,
 			NonFavorExpense:   good.ExpenseInfo.NonFavorExpense,
-			OrderID:           orderID,
+			OrderID:           req.OrderID,
 		}
-		if err := dao.ChargeableObjectDao.Create(dbGood); err != nil {
+		if err := dao.GoodDao.Create(dbGood); err != nil {
 			// todo: log
 			return nil, err
 		}
@@ -206,6 +210,7 @@ func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.Order
 			// todo: log
 			return nil, err
 		}
+		good.Id = int64(dbGood.ID)
 		if err := writeGoodSizeToDB(good); err != nil {
 			logger.Error("Fail to finish createGood",
 				zap.Any("req", req),
@@ -267,6 +272,7 @@ func (MvpServer) OrderDesk(ctx context.Context, req *pb.OrderDeskReq) (*pb.Order
 		return nil, err
 	}
 	res.DeskID = int64(dbDesk.ID)
+	res.OrderID = int64(dbOrder.ID)
 	return &res, nil
 }
 
