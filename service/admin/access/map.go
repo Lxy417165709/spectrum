@@ -127,7 +127,7 @@ var objectFunctionToRpcUnit = map[string]map[string]*model.RpcUnit{
 				return &pb.OrderGoodReq{}
 			},
 			ResFunc: func() interface{} {
-				return &pb.OrderDeskRes{}
+				return &pb.OrderGoodRes{}
 			},
 			SuccessMsg: "点单成功",
 			FailMsg:    "点单失败",

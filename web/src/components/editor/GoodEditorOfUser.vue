@@ -55,21 +55,14 @@ import utils from "../../common/utils";
 export default {
   name: "GoodEditorOfUser",
   components: {DiscountEditor},
-  props: {},
-  async mounted() {
-    // await utils.GetAllGoodOptions(this, {}, (res) => {
-    //   this.selectableElements = res.data.data.elements
-    //   console.log("this.selectableElements", this.selectableElements)
-    // })
+  props: {
   },
   data() {
     return {
       needAttachGood: false,
       good: {},
       countPrice: 0,
-      // selectableElements: []
-
-      orderID: 0,
+      orderID:0,
     }
   },
   methods: {

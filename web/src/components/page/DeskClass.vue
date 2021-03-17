@@ -94,40 +94,36 @@ export default {
         this.db_deskClasses = res.data.data.deskClasses
       })
     },
-    async getAllDesks(className) {
-      let model = utils.getRequestModel("mvp", "GetAllDesks", {
-        className: className
-      })
-      await utils.sendRequestModel(model).then(res => {
-        console.log("GetAllDesks.res", res)
-        if (!utils.hasRequestSuccess(res)) {
-          this.$message.error(res.data.err)
-          return
-        }
-        this.$message.success(res.data.msg)
 
-        this.$nextTick(() => {
-          this.$refs.DeskList.desks = res.data.data.desks
-        })
-      })
-    },
-
-    handleDeskClassClick(deskClassIndex) {
+    async handleDeskClassClick(deskClassIndex) {
       this.curDeskClassIndex = deskClassIndex
 
       this.curDeskIndex = cst.INDEX.INVALID_INDEX
 
       this.viewMode = cst.VIEW_MODE.DESK_LIST_MODE
 
-      this.$nextTick(() => {
+      this.$nextTick(async () => {
         this.$refs.ref_goodClass.viewMode = cst.VIEW_MODE.CLASS_LIST_MODE;
+        await this.GetAllDesks()
       })
-
-      this.getAllDesks(this.db_deskClasses[this.curDeskClassIndex].name)
     },
-    turnToClassListMode(deskIndex) {
+
+    async GetAllDesks() {
+      await utils.GetAllDesks(this, {
+        className: this.db_deskClasses[this.curDeskClassIndex].name
+      }, (res) => {
+        this.$refs.DeskList.desks = res.data.data.desks
+        console.log("this.$refs.DeskList.desks", this.$refs.DeskList.desks)
+      })
+    },
+
+
+    turnToClassListMode(deskIndex, deskID, orderID) {
       this.viewMode = cst.VIEW_MODE.CLASS_LIST_MODE
       this.curDeskIndex = deskIndex
+      this.$refs.ref_goodClass.orderID = orderID
+      console.log("turnToClassListMode", "deskIndex", deskIndex, "deskID", deskID, "orderID", orderID,
+        "this.$refs.ref_goodClass.orderID",this.$refs.ref_goodClass.orderID)
     },
     handleDeskButtonClick() {
       this.deskClassEditorVisible = true
@@ -142,11 +138,11 @@ export default {
         console.log("attachOrderID", this.$refs.ref_goodClass.orderID)
       })
     },
-
-
     turnToDeskListMode() {
       this.viewMode = cst.VIEW_MODE.DESK_LIST_MODE
-      this.getAllDesks(this.db_deskClasses[this.curDeskClassIndex].name)
+      this.$nextTick(async () => {
+        await this.GetAllDesks()
+      })
     },
 
     openDeskEditorOfAdmin(desk, className) {

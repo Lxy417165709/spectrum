@@ -46,6 +46,7 @@ message Desk{
     int64 endTimestamp = 4;
     repeated Favor favors = 5;
     ExpenseInfo expenseInfo = 6;
+    int64 orderID = 7;
 }
 
 message Good{
@@ -140,7 +141,6 @@ message OrderGoodReq{
 }
 
 message OrderGoodRes{
-    // 这里可以返回 goods, 这些goods 有 goodID
 }
 
 message OrderDeskReq{

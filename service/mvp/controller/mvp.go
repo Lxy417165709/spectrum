@@ -177,20 +177,6 @@ func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.Order
 
 	// 正常情况能来到这里的，orderID 不为0
 
-	//var orderID int64
-	//if req.OrderID == 0 {
-	//	// 这里表示用户首次点单
-	//	dbOrder := &model.Order{}
-	//	if err := dao.OrderDao.Create(dbOrder); err != nil {
-	//		// todo: log
-	//		return nil, err
-	//	}
-	//	orderID = int64(dbOrder.ID)
-	//} else {
-	//	// 表示之前有点单了，在点单的基础上再点商品
-	//	orderID = req.OrderID
-	//}
-
 	for _, good := range req.Goods {
 		if good.ExpenseInfo == nil {
 			good.ExpenseInfo = &pb.ExpenseInfo{}
@@ -410,72 +396,30 @@ func (s MvpServer) GetAllDesks(ctx context.Context, req *pb.GetAllDesksReq) (*pb
 		// todo: log
 		return nil, err
 	}
-
-	//nameToSpaces := make(map[string][]*model.Space)
-	//for _, space := range spaces {
-	//	nameToSpaces[space.Name] = append(nameToSpaces[space.Name], space)
-	//}
-
 	desks := make([]*pb.Desk, 0)
 	for _, space := range spaces {
-		desks = append(desks, &pb.Desk{
-			Id:             0,
-			Space:          space.ToPb(),
-			StartTimestamp: 0,
-			EndTimestamp:   0,
-			Favors:         nil,
-			ExpenseInfo:    nil,
-		})
-		//desk, err := dao.DeskDao.GetNonCheckOutDesk(space.Name, space.ClassName)
-		//if err != nil {
-		//	// todo:log
-		//	return nil, err
-		//}
-		//if desk == nil {
-		//	desks = append(desks, &pb.Desk{
-		//		Id:             0,
-		//		Space:          space.ToPb(),
-		//		StartTimestamp: 0,
-		//		EndTimestamp:   0,
-		//		Favors:         nil,
-		//		ExpenseInfo:    nil,
-		//	})
-		//} else {
-		//	desks = append(desks, getPbDesk(desk)) // todo: 这里会和 getPbDesk 有部分冗余
-		//}
+		desk, err := dao.DeskDao.GetNonCheckOutDesk(space.Name, space.ClassName)
+		if err != nil {
+			// todo:log
+			return nil, err
+		}
+		if desk == nil {
+			desks = append(desks, &pb.Desk{
+				Id:             0,
+				Space:          space.ToPb(),
+				StartTimestamp: 0,
+				EndTimestamp:   0,
+				Favors:         nil,
+				ExpenseInfo:    nil,
+				OrderID:        0,
+			})
+		} else {
+			desks = append(desks, getPbDesk(desk))
+		}
 	}
 
 	res.Desks = desks
 	return &res, nil
-
-	//for name, spaces := range nameToSpaces {
-	//	desks := make([]*pb.Desk, 0)
-	//	for _, space := range spaces {
-	//
-	//		desk, err := dao.DeskDao.GetNonCheckOutDesk(space.Name, space.ClassName)
-	//		if err != nil {
-	//			// todo:log
-	//			return nil, err
-	//		}
-	//		if desk == nil {
-	//			desks = append(desks, &pb.Desk{
-	//				Id:             0,
-	//				Space:          space.ToPb(),
-	//				StartTimestamp: 0,
-	//				EndTimestamp:   0,
-	//				Favors:         nil,
-	//				ExpenseInfo:    nil,
-	//			})
-	//		} else {
-	//			desks = append(desks, getPbDesk(desk)) // todo: 这里会和 getPbDesk 有部分冗余
-	//		}
-	//	}
-	//	deskClasses = append(deskClasses, &pb.DeskClass{
-	//		Name: name,
-	//		//Desks: desks,
-	//	})
-	//}
-
 }
 
 func (s MvpServer) GetAllDeskClasses(ctx context.Context, req *pb.GetAllDeskClassesReq) (*pb.GetAllDeskClassesRes, error) {

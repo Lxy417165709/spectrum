@@ -53,7 +53,7 @@ export default {
   async GetAllGoodOptions(obj, par, then) {
     let model = this.getRequestModel("mvp", "GetAllGoodOptions", par)
     await this.sendRequestModel(model).then((res) => {
-      console.log("GetAllGoodOptions.res", res.data)
+      console.log("GetAllGoodOptions.res", res)
       if (!this.hasRequestSuccess(res)) {
         obj.$message.error(res.data.err)
         return
@@ -65,7 +65,7 @@ export default {
   async OrderDesk(obj, par, then) {
     let model = this.getRequestModel("mvp", "OrderDesk", par)
     await this.sendRequestModel(model).then((res) => {
-      console.log("OrderDesk.res", res.data)
+      console.log("OrderDesk.res", res)
       if (!this.hasRequestSuccess(res)) {
         obj.$message.error(res.data.err)
         return
@@ -77,7 +77,7 @@ export default {
   async OrderGood(obj, par, then) {
     let model = this.getRequestModel("mvp", "OrderGood", par)
     await this.sendRequestModel(model).then((res) => {
-      console.log("OrderGood.res", res.data)
+      console.log("OrderGood.res", res)
       if (!this.hasRequestSuccess(res)) {
         obj.$message.error(res.data.err)
         return
@@ -85,5 +85,18 @@ export default {
       obj.$message.success(res.data.msg)
       then(res)
     })
-  }
+  },
+  async GetAllDesks(obj, par, then) {
+    let model = this.getRequestModel("mvp", "GetAllDesks", par)
+    await this.sendRequestModel(model).then((res) => {
+      console.log("GetAllDesks.res", res)
+      if (!this.hasRequestSuccess(res)) {
+        obj.$message.error(res.data.err)
+        return
+      }
+      obj.$message.success(res.data.msg)
+      then(res)
+    })
+  },
+
 }

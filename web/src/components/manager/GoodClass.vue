@@ -70,6 +70,7 @@
     <el-dialog
       title="商品点单"
       :visible.sync="GoodEditorOfUserVisible"
+      :orderID="orderID"
       width="30%">
       <good-editor-of-user ref="GoodEditorOfUser"></good-editor-of-user>
     </el-dialog>
@@ -151,8 +152,8 @@ export default {
       })
     },
     turnToClassListMode(deskIndex) {
-      this.viewMode = cst.VIEW_MODE.CLASS_LIST_MODE
       this.curDeskIndex = deskIndex
+      this.viewMode = cst.VIEW_MODE.CLASS_LIST_MODE
     },
     async turnToGoodOptionListMode(goodOptionClassIndex) {
       let model = utils.getRequestModel("mvp", "GetAllGoodOptions", {

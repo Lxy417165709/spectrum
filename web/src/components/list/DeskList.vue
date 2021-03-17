@@ -36,8 +36,10 @@ export default {
   methods: {
     async handleDeskCardClick(deskIndex) {
       // todo: this.desks[deskIndex].id === undefined 时，此时 this.desks[deskIndex].id !== 0 也成立..
+
+      console.log("handleDeskCardClick",deskIndex,"deskIndex","this.desks[deskIndex]",this.desks[deskIndex])
       if (this.desks[deskIndex].id !== 0) {
-        this.$emit("turnToClassListMode", deskIndex)
+        this.$emit("turnToClassListMode", deskIndex, this.desks[deskIndex].id, this.desks[deskIndex].orderID)
         return
       }
       // 进行点单
@@ -45,7 +47,7 @@ export default {
         desk: this.desks[deskIndex],
       }, (res) => {
         this.desks[deskIndex].id = res.data.data.deskID;
-        this.$emit("attachOrderID", res.data.data.orderID)
+        this.desks[deskIndex].orderID = res.data.data.orderID;
       })
     },
     openDeskEditorOfAdmin() {

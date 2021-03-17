@@ -41,6 +41,7 @@ func getPbDesk(desk *model.Desk) *pb.Desk {
 		EndTimestamp:   desk.EndTimestamp,
 		Favors:         favor,
 		ExpenseInfo:    desk.GetExpenseInfo(space.BillingType, space.Price, favor),
+		OrderID:        desk.OrderID,
 	}
 }
 
@@ -119,10 +120,10 @@ func getMainElement(goodID int64, mainElementName string) *pb.Element {
 		zap.Any("sizeInfos", sizeInfos),
 		zap.Any("selectSize", sizeRecord.SelectSize))
 	return &pb.Element{
-		Name:                  mainElementName,
-		Type:                  pb.ElementType_Main,
+		Name:          mainElementName,
+		Type:          pb.ElementType_Main,
 		SelectedIndex: selectedSizeInfoIndex,
-		SizeInfos:             sizeInfos,
+		SizeInfos:     sizeInfos,
 	}
 }
 
