@@ -98,5 +98,28 @@ export default {
       then(res)
     })
   },
-
+  async GetAllDeskClasses(obj, par, then) {
+    let model = this.getRequestModel("mvp", "GetAllDeskClasses", par)
+    await this.sendRequestModel(model).then((res) => {
+      console.log("GetAllDeskClasses.res", res)
+      if (!this.hasRequestSuccess(res)) {
+        obj.$message.error(res.data.err)
+        return
+      }
+      obj.$message.success(res.data.msg)
+      then(res)
+    })
+  },
+  async GetAllGoodClasses(obj, par, then) {
+    let model = this.getRequestModel("mvp", "GetAllGoodClasses", par)
+    await this.sendRequestModel(model).then((res) => {
+      console.log("GetAllGoodClasses.res", res)
+      if (!this.hasRequestSuccess(res)) {
+        obj.$message.error(res.data.err)
+        return
+      }
+      obj.$message.success(res.data.msg)
+      then(res)
+    })
+  },
 }

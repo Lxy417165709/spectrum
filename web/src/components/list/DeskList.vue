@@ -28,16 +28,31 @@ export default {
   props: {
     className: String,
   },
+  watch: {
+    async className() {
+      await this.getAllDesks()
+    }
+  },
   data() {
     return {
       desks: [],
     };
   },
+  async created() {
+    await this.getAllDesks()
+  },
   methods: {
+    async getAllDesks() {
+      await utils.GetAllDesks(this, {
+        className: this.className
+      }, (res) => {
+        this.desks = res.data.data.desks
+      })
+    },
+
+
     async handleDeskCardClick(deskIndex) {
       // todo: this.desks[deskIndex].id === undefined 时，此时 this.desks[deskIndex].id !== 0 也成立..
-
-      console.log("handleDeskCardClick",deskIndex,"deskIndex","this.desks[deskIndex]",this.desks[deskIndex])
       if (this.desks[deskIndex].id !== 0) {
         this.$emit("turnToClassListMode", deskIndex, this.desks[deskIndex].id, this.desks[deskIndex].orderID)
         return
@@ -54,5 +69,7 @@ export default {
       this.$emit("openDeskEditorOfAdmin", test.blankDesk, this.className)
     },
   }
+
+
 }
 </script>

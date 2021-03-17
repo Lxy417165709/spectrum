@@ -56,13 +56,13 @@ export default {
   name: "GoodEditorOfUser",
   components: {DiscountEditor},
   props: {
+    orderID: Number,
   },
   data() {
     return {
       needAttachGood: false,
       good: {},
       countPrice: 0,
-      orderID:0,
     }
   },
   methods: {

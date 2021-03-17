@@ -16,8 +16,7 @@
       <!--      普通商品类-->
       <el-divider content-position="left">普通商品类</el-divider>
       <good-class-list :goodClasses="db_goodClasses" :props_isAdminView="props_isAdminView"
-                       @turnToGoodListMode="turnToGoodListMode"
-                       @openGoodClassEditor="openGoodClassEditor"></good-class-list>
+                       @turnToGoodListMode="turnToGoodListMode"></good-class-list>
 
       <!--      附属类-->
       <el-divider content-position="left" v-if="props_isAdminView">附属类</el-divider>
@@ -31,12 +30,10 @@
       <el-divider content-position="left">元素</el-divider>
       <good-list v-if="cpt_isGoodListExist"
                  ref="GoodList"
-
                  :props_isAdminView="props_isAdminView"
-                 :className="db_goodClasses[curGoodClassIndex].name"
+                 :className="cpt_curGoodClass.name"
                  @turnToClassListMode="turnToClassListMode"
-                 @openGoodEditorOfAdmin="openGoodEditorOfAdmin"
-                 @openGoodEditorOfUser="openGoodEditorOfUser"></good-list>
+      ></good-list>
     </div>
 
     <!--    4. 附属选项类内的附属选项展示-->
@@ -44,44 +41,12 @@
       <el-divider content-position="left">元素</el-divider>
       <good-option-list v-if="cpt_isGoodOptionListExist"
                         ref="GoodOptionList"
+                        @turnToGoodOptionListMode="turnToGoodOptionListMode"
                         :props_isAdminView="props_isAdminView"
-                        @openGoodOptionEditorOfAdmin="openGoodOptionEditorOfAdmin"
-      ></good-option-list>
+                        :className="cpt_curGoodOptionClass.name">
+      </good-option-list>
     </div>
 
-
-    <!--    4. 商品添加、编辑框-->
-    <el-dialog
-      title="商品添加/编辑"
-      :visible.sync="GoodEditorOfAdminVisible"
-      width="30%">
-      <good-editor-of-admin ref="GoodEditorOfAdmin"></good-editor-of-admin>
-    </el-dialog>
-
-    <!--    4. 商品选项添加、编辑框-->
-    <el-dialog
-      title="商品选项添加/编辑"
-      :visible.sync="GoodOptionEditorOfAdminVisible"
-      width="30%">
-      <good-option-editor-of-admin ref="GoodOptionEditorOfAdmin"></good-option-editor-of-admin>
-    </el-dialog>
-
-    <!--    5. 商品下单框-->
-    <el-dialog
-      title="商品点单"
-      :visible.sync="GoodEditorOfUserVisible"
-      :orderID="orderID"
-      width="30%">
-      <good-editor-of-user ref="GoodEditorOfUser"></good-editor-of-user>
-    </el-dialog>
-
-    <!--    6. 商品类添加、编辑框-->
-    <el-dialog
-      title="商品类添加/编辑"
-      :visible.sync="GoodClassEditorVisible"
-      width="30%">
-      <good-class-editor ref="GoodClassEditor"></good-class-editor>
-    </el-dialog>
   </div>
 </template>
 
@@ -115,22 +80,21 @@ export default {
     props_isAdminView: Boolean,
     props_haveParentComponent: Boolean,
   },
-  async mounted() {
+  async created() {
     this.db_goodOptionClasses = test.goodOptionClasses
-    await this.getAllGoodClasses()
+    await utils.GetAllGoodClasses(this, {}, (res) => {
+      this.db_goodClasses = res.data.data.goodClasses
+    })
   },
   data() {
     return {
       viewMode: cst.VIEW_MODE.CLASS_LIST_MODE,
 
-      GoodEditorOfAdminVisible: false,
       GoodClassEditorVisible: false,
-      GoodEditorOfUserVisible: false,
       GoodOptionEditorOfAdminVisible: false,
 
       curGoodClassIndex: cst.INDEX.INVALID_INDEX,
       curGoodOptionClassIndex: cst.INDEX.INVALID_INDEX,
-      curDeskIndex: cst.INDEX.INVALID_INDEX,
 
       db_goodClasses: [],
       db_goodOptionClasses: [],
@@ -139,18 +103,6 @@ export default {
     }
   },
   methods: {
-    async getAllGoodClasses() {
-      let model = utils.getRequestModel("mvp", "GetAllGoodClasses", {})
-      await utils.sendRequestModel(model).then(res => {
-        if (!utils.hasRequestSuccess(res)) {
-          console.log("getAllGoodClasses.res", res)
-          this.$message.error(res.data.err)
-          return
-        }
-        this.db_goodClasses = res.data.data.goodClasses
-        this.$message.success(res.data.msg)
-      })
-    },
     turnToClassListMode(deskIndex) {
       this.curDeskIndex = deskIndex
       this.viewMode = cst.VIEW_MODE.CLASS_LIST_MODE
@@ -172,7 +124,6 @@ export default {
 
         this.$nextTick(() => {
           this.$refs.GoodOptionList.goodOptions = res.data.data.elements
-          this.$refs.GoodOptionList.className = this.db_goodOptionClasses[this.curGoodOptionClassIndex].name
         })
       })
     },
@@ -203,35 +154,6 @@ export default {
         this.viewMode = cst.VIEW_MODE.CLASS_LIST_MODE
       }
     },
-    openGoodEditorOfAdmin(good, className) {
-      this.GoodEditorOfAdminVisible = true
-      this.$nextTick(() => {
-        console.log("openGoodEditorOfAdmin", good)
-        this.$refs.GoodEditorOfAdmin.good = good
-        this.$refs.GoodEditorOfAdmin.className = className
-        console.log("openGoodEditorOfAdmin,this.$refs.GoodEditorOfAdmin", this.$refs.GoodEditorOfAdmin.good)
-      })
-    },
-    openGoodOptionEditorOfAdmin(option, className) {
-      this.GoodOptionEditorOfAdminVisible = true
-      this.$nextTick(() => {
-        this.$refs.GoodOptionEditorOfAdmin.option = option
-        this.$refs.GoodOptionEditorOfAdmin.className = className
-      })
-    },
-    openGoodEditorOfUser(good) {
-      this.GoodEditorOfUserVisible = true
-      this.$nextTick(() => {
-        this.$refs.GoodEditorOfUser.good = good
-        this.$refs.GoodEditorOfUser.orderID = this.orderID
-      })
-    },
-    openGoodClassEditor(goodClass) {
-      this.GoodClassEditorVisible = true
-      this.$nextTick(() => {
-        this.$refs.GoodClassEditor.goodClass = goodClass
-      })
-    },
   },
   computed: {
     cpt_canBackButtonShow() {
@@ -253,6 +175,12 @@ export default {
     },
     cpt_isGoodOptionListExist() {
       return this.curGoodOptionClassIndex !== cst.INDEX.INVALID_INDEX
+    },
+    cpt_curGoodClass() {
+      return this.db_goodClasses[this.curGoodClassIndex]
+    },
+    cpt_curGoodOptionClass() {
+      return this.db_goodOptionClasses[this.curGoodOptionClassIndex]
     }
   },
 

@@ -11,6 +11,15 @@
     <el-col v-if="props_isAdminView" style="height: 300px; width: 202px; margin-left: 10px; border: none">
       <good-option-special-card @click.native="tryToAddGoodOption()"></good-option-special-card>
     </el-col>
+
+    <!--    3. 商品选项添加、编辑框-->
+    <el-dialog
+      title="商品选项添加/编辑"
+      :visible.sync="GoodOptionEditorOfAdminVisible"
+      width="30%">
+      <good-option-editor-of-admin ref="GoodOptionEditorOfAdmin" :className="className"></good-option-editor-of-admin>
+    </el-dialog>
+
   </el-row>
 </template>
 
@@ -22,16 +31,18 @@ import test from "../../common/test/test"
 import GoodOptionCard from "../card/GoodOptionCard";
 import GoodOptionSpecialCard from "../card/GoodOptionSpecialCard";
 import cst from "../../common/cst";
+import GoodOptionEditorOfAdmin from "../editor/GoodOptionEditorOfAdmin";
 
 export default {
-  components: {GoodOptionSpecialCard, GoodOptionCard, GoodSpacialCard, GoodCard},
+  components: {GoodOptionSpecialCard, GoodOptionCard, GoodSpacialCard, GoodCard, GoodOptionEditorOfAdmin},
   props: {
     props_isAdminView: Boolean,
+    className: String,
   },
   data() {
     return {
-      goodOptions: [],// todo: 这里的 goodOption 含义包括了 附属选项、附属商品，之后要加以区分呀！
-      className: "",
+      GoodOptionEditorOfAdminVisible: false,
+      goodOptions: []
     };
   },
   methods: {
@@ -44,8 +55,12 @@ export default {
       }
     },
     openGoodOptionEditorOfAdmin(option) {
-      this.$emit("openGoodOptionEditorOfAdmin", option, this.className)
+      this.GoodOptionEditorOfAdminVisible = true
+      this.$nextTick(() => {
+        this.$refs.GoodOptionEditorOfAdmin.option = option
+      })
     },
+
   }
 }
 </script>

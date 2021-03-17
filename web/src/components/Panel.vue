@@ -2,12 +2,12 @@
 <template>
   <el-tabs v-model="activeName" @tab-click="handleClick">
     <el-tab-pane label="桌位管理" name="1">
-      <OrderPage/>
+      <ManageDeskPage/>
     </el-tab-pane>
     <el-tab-pane label="商品管理" name="2">
       <ManageGoodPage :props_isAdminView="true" :props_haveParentComponent="false"/>
     </el-tab-pane>
-    <el-tab-pane label="订单" name="3">
+    <el-tab-pane label="订单管理" name="3">
       <ManageOrderPage/>
     </el-tab-pane>
   </el-tabs>
@@ -15,7 +15,7 @@
 <script>
 
 /* eslint-disable */
-import OrderPage from "./page/OrderPage";
+import ManageDeskPage from "./page/ManageDeskPage";
 import ManageGoodPage from "./page/ManageGoodPage";
 import ManageOrderPage from "./page/ManageOrderPage";
 
@@ -24,7 +24,7 @@ export default {
   components: {
     ManageOrderPage,
     ManageGoodPage,
-    OrderPage,
+    ManageDeskPage,
   },
   mounted() {
   },

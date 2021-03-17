@@ -14,8 +14,16 @@
 
     <!--    2. 添加 商品类 部分-->
     <el-col v-if="props_isAdminView" style="height: 300px; width: 202px; margin-left: 10px; border: none">
-      <good-class-spacial-card @click.native="openGoodClassEditor"></good-class-spacial-card>
+      <good-class-spacial-card @click.native="tryToAddGoodClass"></good-class-spacial-card>
     </el-col>
+
+    <!--    3. 商品类添加、编辑-->
+    <el-dialog
+      title="商品添加/编辑"
+      :visible.sync="GoodClassEditorVisible"
+      width="30%">
+      <good-class-editor ref="GoodClassEditor"></good-class-editor>
+    </el-dialog>
   </el-row>
 </template>
 
@@ -24,22 +32,31 @@
 import GoodClassCard from "../card/GoodClassCard";
 import GoodClassSpacialCard from "../card/GoodClassSpacialCard";
 import test from "../../common/test/test";
+import GoodClassEditor from "../editor/GoodClassEditor";
 
 export default {
-  components: {GoodClassSpacialCard, GoodClassCard},
+  components: {GoodClassEditor, GoodClassSpacialCard, GoodClassCard},
   props: {
     goodClasses: Array,
     props_isAdminView: Boolean,
   },
   data() {
-    return {};
+    return {
+      GoodClassEditorVisible: false
+    };
   },
   methods: {
     handleGoodClassCardClick(goodClassIndex) {
       this.$emit("turnToGoodListMode", goodClassIndex)
     },
-    openGoodClassEditor() {
-      this.$emit("openGoodClassEditor", test.blankGoodClass)
+    tryToAddGoodClass() {
+      this.openGoodClassEditor(test.blankGoodClass)
+    },
+    openGoodClassEditor(goodClass) {
+      this.GoodClassEditorVisible = true
+      this.$nextTick(() => {
+        this.$refs.GoodClassEditor.goodClass = goodClass
+      })
     }
   }
 }

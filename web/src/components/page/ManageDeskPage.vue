@@ -1,30 +1,27 @@
 <!-- eslint-disable -->
 <template>
   <el-container style="height: 800px; border: 1px solid #eee">
-    <!--    1. 桌类选择-->
+    <!--    1. 桌类选择、添加-->
     <el-aside width="200px">
       <el-menu>
         <el-menu-item v-for="(deskClass,deskClassIndex) in db_deskClasses" :key="deskClassIndex"
-                      @click="handleDeskClassClick(deskClassIndex)">
+                      @click="showDeskClassDetail(deskClassIndex)">
           <template slot="title"><i class="el-icon-message"></i><span>{{ deskClass.name }}</span></template>
         </el-menu-item>
       </el-menu>
       <el-button style="margin-left: 20px;margin-top: 10px" type="primary" @click="handleDeskButtonClick">添加桌位
       </el-button>
     </el-aside>
-
     <!--    2. 桌类详情-->
     <el-main>
       <div v-show="cpt_canDeskListShow">
         <el-row style="height: 40px;margin-left:10px;margin-bottom: 10px">
         </el-row>
-        <el-divider content-position="left" v-if="cpt_canDeskListShow">{{
-            db_deskClasses[curDeskClassIndex].name
-          }}
+        <el-divider content-position="left" v-if="cpt_canDeskListShow">
+          {{ cpt_curDeskClass.name }}
         </el-divider>
         <desk-list v-if="cpt_canDeskListShow"
-                   ref="DeskList"
-                   :className="db_deskClasses[curDeskClassIndex].name"
+                   :className="cpt_curDeskClass.name"
                    @openDeskEditorOfAdmin="openDeskEditorOfAdmin"
                    @turnToClassListMode="turnToClassListMode"
                    @attachOrderID="attachOrderID"></desk-list>
@@ -37,7 +34,7 @@
 
     <!--    3. 桌子添加、编辑-->
     <el-dialog
-      title="桌类添加/编辑"
+      title="桌子添加/编辑"
       :visible.sync="deskEditorOfAdminVisible"
       width="30%">
       <desk-editor-of-admin ref="DeskEditorOfAdmin"></desk-editor-of-admin>
@@ -63,10 +60,12 @@ import utils from "../../common/utils";
 import DeskEditorOfAdmin from "../editor/DeskEditorOfAdmin";
 
 export default {
-  name: 'OrderPage',
+  name: 'ManageDeskPage',
   components: {DeskEditorOfAdmin, DeskClassEditor, GoodClass, DeskList},
   async created() {
-    await this.getAllDeskClasses()
+    await utils.GetAllDeskClasses(this, {}, (res) => {
+      this.db_deskClasses = res.data.data.deskClasses
+    })
   },
   data() {
     return {
@@ -82,48 +81,15 @@ export default {
     }
   },
   methods: {
-    async getAllDeskClasses() {
-      let model = utils.getRequestModel("mvp", "GetAllDeskClasses", {})
-      await utils.sendRequestModel(model).then(res => {
-        console.log("GetAllDeskClasses.res", res)
-        if (!utils.hasRequestSuccess(res)) {
-          this.$message.error(res.data.err)
-          return
-        }
-        this.$message.success(res.data.msg)
-        this.db_deskClasses = res.data.data.deskClasses
-      })
-    },
-
-    async handleDeskClassClick(deskClassIndex) {
+    async showDeskClassDetail(deskClassIndex) {
       this.curDeskClassIndex = deskClassIndex
-
       this.curDeskIndex = cst.INDEX.INVALID_INDEX
-
       this.viewMode = cst.VIEW_MODE.DESK_LIST_MODE
-
-      this.$nextTick(async () => {
-        this.$refs.ref_goodClass.viewMode = cst.VIEW_MODE.CLASS_LIST_MODE;
-        await this.GetAllDesks()
-      })
     },
-
-    async GetAllDesks() {
-      await utils.GetAllDesks(this, {
-        className: this.db_deskClasses[this.curDeskClassIndex].name
-      }, (res) => {
-        this.$refs.DeskList.desks = res.data.data.desks
-        console.log("this.$refs.DeskList.desks", this.$refs.DeskList.desks)
-      })
-    },
-
-
     turnToClassListMode(deskIndex, deskID, orderID) {
       this.viewMode = cst.VIEW_MODE.CLASS_LIST_MODE
       this.curDeskIndex = deskIndex
       this.$refs.ref_goodClass.orderID = orderID
-      console.log("turnToClassListMode", "deskIndex", deskIndex, "deskID", deskID, "orderID", orderID,
-        "this.$refs.ref_goodClass.orderID",this.$refs.ref_goodClass.orderID)
     },
     handleDeskButtonClick() {
       this.deskClassEditorVisible = true
@@ -140,9 +106,6 @@ export default {
     },
     turnToDeskListMode() {
       this.viewMode = cst.VIEW_MODE.DESK_LIST_MODE
-      this.$nextTick(async () => {
-        await this.GetAllDesks()
-      })
     },
 
     openDeskEditorOfAdmin(desk, className) {
@@ -159,6 +122,9 @@ export default {
     },
     cpt_canDeskListShow() {
       return this.viewMode === cst.VIEW_MODE.DESK_LIST_MODE && this.curDeskClassIndex !== cst.INDEX.INVALID_INDEX
+    },
+    cpt_curDeskClass() {
+      return this.db_deskClasses[this.curDeskClassIndex]
     }
   }
 }
