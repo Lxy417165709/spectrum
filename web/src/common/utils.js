@@ -122,4 +122,28 @@ export default {
       then(res)
     })
   },
+  async GetAllGoods(obj, par, then) {
+    let model = this.getRequestModel("mvp", "GetAllGoods", par)
+    await this.sendRequestModel(model).then((res) => {
+      console.log("GetAllGoods.res", res)
+      if (!this.hasRequestSuccess(res)) {
+        obj.$message.error(res.data.err)
+        return
+      }
+      obj.$message.success(res.data.msg)
+      then(res)
+    })
+  },
+  async AddDesk(obj, par, then) {
+    let model = this.getRequestModel("mvp", "AddDesk", par)
+    await this.sendRequestModel(model).then((res) => {
+      console.log("AddDesk", res)
+      if (!this.hasRequestSuccess(res)) {
+        obj.$message.error(res.data.err)
+        return
+      }
+      obj.$message.success(res.data.msg)
+      then(res)
+    })
+  },
 }

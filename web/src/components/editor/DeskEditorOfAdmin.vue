@@ -32,26 +32,21 @@ import utils from "../../common/utils";
 export default {
   name: "DeskEditorOfAdmin",
   components: {},
-
+  props: {
+    className: String,
+  },
   data() {
     return {
       desk: {},
-      className: "",
     }
   },
   methods: {
-    async addDesk(desk) {
-      let model = utils.getRequestModel("mvp", "AddDesk", {
-        desk: desk,
+    async addDesk() {
+      await utils.AddDesk(this, {
+        desk: this.desk,
         className: this.className,
-      })
-      await utils.sendRequestModel(model).then(res => {
-        console.log("AddDesk.res", res)
-        if (!utils.hasRequestSuccess(res)) {
-          this.$message.error(res.data.err)
-          return
-        }
-        this.$message.success(res.data.msg)
+      }, (res) => {
+
       })
     }
   }

@@ -22,7 +22,6 @@
         </el-divider>
         <desk-list v-if="cpt_canDeskListShow"
                    :className="cpt_curDeskClass.name"
-                   @openDeskEditorOfAdmin="openDeskEditorOfAdmin"
                    @turnToClassListMode="turnToClassListMode"
                    @attachOrderID="attachOrderID"></desk-list>
       </div>
@@ -31,14 +30,6 @@
                     @turnToParentComponentMode="turnToDeskListMode"></good-class>
       </div>
     </el-main>
-
-    <!--    3. 桌子添加、编辑-->
-    <el-dialog
-      title="桌子添加/编辑"
-      :visible.sync="deskEditorOfAdminVisible"
-      width="30%">
-      <desk-editor-of-admin ref="DeskEditorOfAdmin"></desk-editor-of-admin>
-    </el-dialog>
 
     <!--    4. 桌类添加、编辑-->
     <el-dialog
@@ -107,14 +98,6 @@ export default {
     turnToDeskListMode() {
       this.viewMode = cst.VIEW_MODE.DESK_LIST_MODE
     },
-
-    openDeskEditorOfAdmin(desk, className) {
-      this.deskEditorOfAdminVisible = true
-      this.$nextTick(() => {
-        this.$refs.DeskEditorOfAdmin.desk = desk
-        this.$refs.DeskEditorOfAdmin.className = className
-      })
-    }
   },
   computed: {
     cpt_canClassListShow() {

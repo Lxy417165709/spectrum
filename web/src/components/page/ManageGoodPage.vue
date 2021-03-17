@@ -108,44 +108,28 @@ export default {
       this.viewMode = cst.VIEW_MODE.CLASS_LIST_MODE
     },
     async turnToGoodOptionListMode(goodOptionClassIndex) {
-      let model = utils.getRequestModel("mvp", "GetAllGoodOptions", {
+      await utils.GetAllGoodOptions(this, {
         className: this.db_goodOptionClasses[goodOptionClassIndex].name,
-      })
-      await utils.sendRequestModel(model).then(res => {
-        console.log("GetAllGoodOptions.res", res)
-        if (!utils.hasRequestSuccess(res)) {
-          this.$message.error(res.data.err)
-          return
-        }
-        this.$message.success(res.data.msg)
-
+      }, (res) => {
         this.viewMode = cst.VIEW_MODE.GOOD_OPTION_LIST_MODE
         this.curGoodOptionClassIndex = goodOptionClassIndex
-
         this.$nextTick(() => {
           this.$refs.GoodOptionList.goodOptions = res.data.data.elements
         })
       })
     },
     async turnToGoodListMode(goodClassIndex) {
-      let model = utils.getRequestModel("mvp", "GetAllGoods", {
+      await utils.GetAllGoods(this, {
         className: this.db_goodClasses[goodClassIndex].name,
-      })
-      await utils.sendRequestModel(model).then(res => {
-        console.log("GetAllGoods.res", res)
-        if (!utils.hasRequestSuccess(res)) {
-          this.$message.error(res.data.err)
-          return
-        }
-        this.$message.success(res.data.msg)
-
-        this.curGoodClassIndex = goodClassIndex
+      }, (res) => {
         this.viewMode = cst.VIEW_MODE.GOOD_LIST_MODE
+        this.curGoodClassIndex = goodClassIndex
         this.$nextTick(() => {
           this.$refs.GoodList.goods = res.data.data.goods
         })
       })
     },
+
     turnToParentComponentMode() {
       if (this.viewMode === cst.VIEW_MODE.CLASS_LIST_MODE) {
         this.$emit("turnToParentComponentMode")
