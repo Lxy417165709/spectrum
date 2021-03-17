@@ -100,7 +100,7 @@ import cst from "../../common/cst";
 import GoodOptionEditorOfAdmin from "../editor/GoodOptionEditorOfAdmin";
 
 export default {
-  name: "GoodClass",
+  name: "ManageGoodPage",
   components: {
     GoodOptionEditorOfAdmin,
     GoodOptionClassList,

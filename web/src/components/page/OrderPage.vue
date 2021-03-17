@@ -55,7 +55,7 @@
 <script>
 /* eslint-disable */
 import DeskList from "../list/DeskList";
-import GoodClass from "../manager/GoodClass";
+import GoodClass from "./ManageGoodPage";
 import DeskClassEditor from "../editor/DeskClassEditor";
 import test from "../../common/test/test";
 import cst from "../../common/cst";
@@ -63,7 +63,7 @@ import utils from "../../common/utils";
 import DeskEditorOfAdmin from "../editor/DeskEditorOfAdmin";
 
 export default {
-  name: 'DeskClass',
+  name: 'OrderPage',
   components: {DeskEditorOfAdmin, DeskClassEditor, GoodClass, DeskList},
   async created() {
     await this.getAllDeskClasses()

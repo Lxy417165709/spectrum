@@ -168,7 +168,7 @@ import DiscountEditor from "../editor/DiscountEditor";
 import test from "../../common/test/test";
 
 export default {
-  name: "Order",
+  name: "ManageOrderPage",
   components: {DiscountEditor},
   mounted() {
     this.order = test.order
