@@ -8,7 +8,6 @@
                  @click.native="handleDeskCardClick(deskIndex)"></desk-card>
     </el-col>
 
-
     <!--    2. 添加 桌位 部分-->
     <el-col style="height: 300px; width: 202px; margin-left: 10px; border: none">
       <desk-spacial-card @click.native="tryToAddDesk"></desk-spacial-card>
@@ -38,8 +37,8 @@ export default {
     className: String,
   },
   watch: {
-    async className(n,o) {
-      console.log(n,o)
+    async className(n, o) {
+      console.log(n, o)
       await this.getAllDesks()
     }
   },
@@ -86,7 +85,5 @@ export default {
       })
     }
   }
-
-
 }
 </script>
