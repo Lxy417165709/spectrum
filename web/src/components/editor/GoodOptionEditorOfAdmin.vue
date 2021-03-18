@@ -8,19 +8,31 @@
     </el-form-item>
 
     <!-- 2. 规格编辑器 -->
-    <el-tabs type="border-card" @tab-click="" editable @edit="handleTabsEdit"
+    <el-tabs type="border-card" @tab-click="tabClick" editable @edit="handleTabsEdit"
              @tab-add="handleClick" style="margin-bottom: 10px">
       <el-tab-pane v-for="(sizeInfo,index) in option.sizeInfos" :label="sizeInfo.size"
                    :name="index.toString()"
                    :key="index">
         <el-form label-width="80px">
+
+
           <el-form-item label="照片">
             <el-upload
+              v-if="sizeInfo.pictureStorePath===''"
               action="/api/upload"
-              list-type="picture-card">
+              :on-success="imageUploadSuccess"
+              list-type="picture-card" >
+
               <i class="el-icon-plus"></i>
             </el-upload>
+            <el-image
+              v-if="sizeInfo.pictureStorePath!==''"
+              @dblclick.native="cleanSizeInfoPictureStorePath"
+              :src="'api/file/' + sizeInfo.pictureStorePath"
+              style="width: 148px; height: 148px;"></el-image>
           </el-form-item>
+
+
           <el-form-item label="价格">
             <el-input v-model="sizeInfo.price" style="width: 70%"></el-input>
           </el-form-item>
@@ -42,20 +54,22 @@
 /* eslint-disable */
 import test from "../../common/test/test";
 import utils from "../../common/utils";
-import global from "../../common/global_object/global";
 
 export default {
   name: "GoodOptionEditorOfAdmin",
   components: {},
+  props: {
+    className: String,
+  },
   mounted() {
     this.selectableElement = test.selectableElement
   },
   data() {
     return {
       option: {},
-      className: "",
 
       addTabCount: 0,
+      curTableIndex: 0,
     }
   },
   methods: {
@@ -86,11 +100,36 @@ export default {
         }
         this.$message.success(res.data.msg)
       })
-    }
+    },
   }
 }
 </script>
 
-<style scoped>
+<style>
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
 
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
 </style>

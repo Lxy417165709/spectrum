@@ -47,7 +47,8 @@ export default {
   NewBlankSizeInfo(name) {
     return {
       size: name,
-      price: "0"
+      price: "0",
+      pictureStorePath:""
     }
   },
   async GetAllGoodOptions(obj, par, then) {

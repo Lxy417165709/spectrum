@@ -8,7 +8,7 @@
     </el-form-item>
 
     <!-- 2. 规格编辑器 -->
-    <el-tabs type="border-card" @tab-click="" editable @edit="handleTabsEdit"
+    <el-tabs type="border-card" @tab-click="tabClick" editable @edit="handleTabsEdit"
              @tab-add="handleClick" style="margin-bottom: 10px" v-if="good.mainElement!==undefined">
       <el-tab-pane v-for="(sizeInfo,index) in good.mainElement.sizeInfos" :label="sizeInfo.size"
                    :name="index.toString()"
@@ -17,13 +17,24 @@
           <el-form-item label="规格名">
             <el-input v-model="sizeInfo.size" style="width: 70%"></el-input>
           </el-form-item>
+
           <el-form-item label="照片">
             <el-upload
+              v-if="sizeInfo.pictureStorePath===''"
               action="/api/upload"
+              :on-success="imageUploadSuccess"
               list-type="picture-card">
+
               <i class="el-icon-plus"></i>
             </el-upload>
+            <el-image
+              v-if="sizeInfo.pictureStorePath!==''"
+              @dblclick.native="cleanSizeInfoPictureStorePath"
+              :src="'api/file/' + sizeInfo.pictureStorePath"
+              style="width: 148px; height: 148px;"></el-image>
           </el-form-item>
+
+
           <el-form-item label="价格">
             <el-input v-model="sizeInfo.price" style="width: 70%"></el-input>
           </el-form-item>
@@ -96,9 +107,12 @@ export default {
       good: {},
       curGoodOptionName: "",
       curGoodIngredientName: "",
+      curTableIndex: 0,
 
       selectableElements: [],
       addTabCount: 0,
+
+
     }
   },
   methods: {
@@ -141,7 +155,17 @@ export default {
         }
         this.$message.success(res.data.msg)
       })
-    }
+    },
+    tabClick(tab) {
+      this.curTableIndex = tab.index
+    },
+    cleanSizeInfoPictureStorePath() {
+      this.good.mainElement.sizeInfos[this.curTableIndex].pictureStorePath = ""
+    },
+    imageUploadSuccess(res, file, fileList) {
+      this.good.mainElement.sizeInfos[this.curTableIndex].pictureStorePath = res.data.fileStorePath;
+    },
+
   }
 }
 </script>
