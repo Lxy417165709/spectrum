@@ -107,7 +107,7 @@ export default {
       good: {},
       curGoodOptionName: "",
       curGoodIngredientName: "",
-      curTableIndex: 0,
+      curSizeInfoIndex: 0,
 
       selectableElements: [],
       addTabCount: 0,
@@ -119,6 +119,9 @@ export default {
     addGoodOption() {
       for (let i = 0; i < this.selectableElements.length; i++) {
         if (this.selectableElements[i].name === this.curGoodOptionName) {
+          if (this.good.attachElements === null){
+            this.good.attachElements = []
+          }
           this.good.attachElements.push(this.selectableElements[i])
           break
         }
@@ -127,7 +130,12 @@ export default {
     addGoodIngredient() {
       for (let i = 0; i < this.selectableElements.length; i++) {
         if (this.selectableElements[i].name === this.curGoodIngredientName) {
+          if (this.good.attachElements === null){
+            this.good.attachElements = []
+          }
+          console.log(this.selectableElements[i])
           this.good.attachElements.push(this.selectableElements[i])
+          break
         }
       }
     },
@@ -157,13 +165,13 @@ export default {
       })
     },
     tabClick(tab) {
-      this.curTableIndex = tab.index
+      this.curSizeInfoIndex = tab.index
     },
     cleanSizeInfoPictureStorePath() {
-      this.good.mainElement.sizeInfos[this.curTableIndex].pictureStorePath = ""
+      this.good.mainElement.sizeInfos[this.curSizeInfoIndex].pictureStorePath = ""
     },
     imageUploadSuccess(res, file, fileList) {
-      this.good.mainElement.sizeInfos[this.curTableIndex].pictureStorePath = res.data.fileStorePath;
+      this.good.mainElement.sizeInfos[this.curSizeInfoIndex].pictureStorePath = res.data.fileStorePath;
     },
 
   }

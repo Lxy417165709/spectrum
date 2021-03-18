@@ -69,7 +69,7 @@ export default {
       option: {},
 
       addTabCount: 0,
-      curTableIndex: 0,
+      curSizeInfoIndex: 0,
     }
   },
   methods: {
