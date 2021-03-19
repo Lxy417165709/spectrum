@@ -20,19 +20,12 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 	logger.Info("AddGood", zap.Any("ctx", ctx), zap.Any("req", req))
 
 	var res pb.AddGoodRes
-	if err := createElement(req.Good.MainElement, req.ClassName); err != nil {
-		logger.Error("Fail to finish createElement",
-			zap.Any("req", req),
-			zap.Error(err))
-		return nil, err
+	if errResult := createElement(req.Good.MainElement, req.ClassName); errResult != nil {
+		return nil, errResult
 	}
-	if err := writeGoodSizeToDB(req.Good); err != nil {
-		logger.Error("Fail to finish writeGoodSizeToDB",
-			zap.Any("req", req),
-			zap.Error(err))
-		return nil, err
+	if errResult := writeGoodSizeToDB(req.Good); errResult != nil {
+		return nil, errResult
 	}
-
 	return &res, nil
 }
 

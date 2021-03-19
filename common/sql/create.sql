@@ -77,7 +77,7 @@ CREATE TABLE `main_element_attach_element_record`
   COLLATE = utf8mb4_0900_ai_ci;
 
 # 主元素尺寸记录表
-CREATE TABLE `main_element_size_records`
+CREATE TABLE `main_element_size_record`
 (
     `id`                int unsigned NOT NULL AUTO_INCREMENT,
     `created_at`        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,

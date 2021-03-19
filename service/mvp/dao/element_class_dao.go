@@ -26,7 +26,7 @@ func (goodClassDao) Create(obj *model.GoodClass) (int64, error) {
 	result, err := mainDB.CommonDB().Exec(sql, values...)
 	if err != nil {
 		logger.Error("Fail to finish create", zap.Any("obj", obj), zap.Error(err))
-		return 0, ers.New("操作失败，可能存在同名的商品类。")
+		return 0, ers.New("操作失败，可能存在同名的商品类(%s)。", obj.Name)
 	}
 	id, err := result.LastInsertId()
 	if err != nil {

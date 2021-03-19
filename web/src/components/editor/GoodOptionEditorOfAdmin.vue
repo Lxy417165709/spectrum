@@ -4,7 +4,9 @@
 
     <!-- 1. 选项名编辑器 -->
     <el-form-item label="选项名">
-      <el-input style="width: 70%" v-model="option.name"></el-input>
+      <el-input style="width: 70%" v-if="option!==undefined && canModifyName"
+                v-model="option.name"></el-input>
+      <span v-if="option!==undefined && !canModifyName">{{ option.name }}</span>
     </el-form-item>
 
     <!-- 2. 规格编辑器 -->
@@ -13,15 +15,21 @@
       <el-tab-pane v-for="(sizeInfo,index) in option.sizeInfos" :label="sizeInfo.size"
                    :name="index.toString()"
                    :key="index">
+
+        <el-form-item label="规格名">
+          <el-input style="width: 70%" v-if="sizeInfo.size!==undefined && canModifyName"
+                    v-model="sizeInfo.size"></el-input>
+          <span v-if="sizeInfo.size!==undefined && !canModifyName">{{ sizeInfo.size }}</span>
+        </el-form-item>
+
+
         <el-form label-width="80px">
-
-
           <el-form-item label="照片">
             <el-upload
               v-if="sizeInfo.pictureStorePath===''"
               action="/api/upload"
               :on-success="imageUploadSuccess"
-              list-type="picture-card" >
+              list-type="picture-card">
 
               <i class="el-icon-plus"></i>
             </el-upload>
@@ -36,7 +44,7 @@
           <el-form-item label="价格">
             <el-input v-model="sizeInfo.price" style="width: 70%"></el-input>
           </el-form-item>
-          <el-form-item label="默认选中" v-if="sizeInfo.isSelected===false">
+          <el-form-item label="默认选中" v-if="option.selectedIndex !== index">
             <el-button @click="handleChangeDefaultSizeInfo(index)">确定</el-button>
           </el-form-item>
         </el-form>
@@ -70,6 +78,8 @@ export default {
 
       addTabCount: 0,
       curSizeInfoIndex: 0,
+
+      canModifyName: false,
     }
   },
   methods: {
@@ -82,10 +92,7 @@ export default {
       this.option.sizeInfos = utils.removeElementByField(this.option.sizeInfos, "size", name)
     },
     handleChangeDefaultSizeInfo(index) {
-      for (let i = 0; i < this.option.sizeInfos.length; i++) {
-        this.option.sizeInfos[i].isSelected = false
-      }
-      this.option.sizeInfos[index].isSelected = true
+      this.option.selectedIndex = index
     },
     async addGoodOption(option) {
       let model = utils.getRequestModel("mvp", "AddElement", {
@@ -100,6 +107,15 @@ export default {
         }
         this.$message.success(res.data.msg)
       })
+    },
+    tabClick(tab) {
+      this.curSizeInfoIndex = tab.index
+    },
+    cleanSizeInfoPictureStorePath() {
+      this.option.sizeInfos[this.curSizeInfoIndex].pictureStorePath = ""
+    },
+    imageUploadSuccess(res, file, fileList) {
+      this.option.sizeInfos[this.curSizeInfoIndex].pictureStorePath = res.data.fileStorePath;
     },
   }
 }

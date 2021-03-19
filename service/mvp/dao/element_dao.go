@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/astaxie/beego/logs"
 	"go.uber.org/zap"
+	"spectrum/common/ers"
 	"spectrum/common/logger"
 	"spectrum/common/pb"
 	"spectrum/service/mvp/model"
@@ -13,7 +14,7 @@ var ElementDao elementDao
 
 type elementDao struct{}
 
-func (elementDao) Create(obj *model.Element) error {
+func (elementDao) Create(obj *model.Element) (int64, error) {
 	values := []interface{}{
 		obj.Name, obj.Type, obj.ClassName, obj.Size, obj.Price, obj.PictureStorePath,
 	}
@@ -27,11 +28,17 @@ func (elementDao) Create(obj *model.Element) error {
 			price = values(price),
 			picture_store_path = values(picture_store_path);
 	`, obj.TableName(), GetPlaceholderClause(len(values)))
-	if err := mainDB.Exec(sql, values...).Error; err != nil {
+	result, err := mainDB.CommonDB().Exec(sql, values...)
+	if err != nil {
 		logger.Error("Fail to finish create", zap.Any("obj", obj), zap.Error(err))
-		return err
+		return 0, ers.New("操作失败，可能存在同名的元素(%s)。", obj.Name)
 	}
-	return nil
+	id, err := result.LastInsertId()
+	if err != nil {
+		logger.Error("Fail to get id", zap.Any("obj", obj), zap.Error(err))
+		return 0, ers.MysqlError
+	}
+	return id, nil
 }
 
 func (elementDao) GetByName(name string) ([]*model.Element, error) {

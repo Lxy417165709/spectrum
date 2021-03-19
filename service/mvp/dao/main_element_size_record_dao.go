@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/jinzhu/gorm"
 	"go.uber.org/zap"
+	"spectrum/common/ers"
 	"spectrum/common/logger"
 	"spectrum/service/mvp/model"
 )
@@ -12,7 +13,7 @@ var MainElementSizeRecordDao mainElementSizeRecordDao
 
 type mainElementSizeRecordDao struct{}
 
-func (mainElementSizeRecordDao) Create(obj *model.MainElementSizeRecord) error {
+func (mainElementSizeRecordDao) Create(obj *model.MainElementSizeRecord) (int64, error) {
 	values := []interface{}{
 		obj.GoodID, obj.MainElementName, obj.SelectSize,
 	}
@@ -23,11 +24,17 @@ func (mainElementSizeRecordDao) Create(obj *model.MainElementSizeRecord) error {
 			main_element_name = values(main_element_name),
 			select_size = values(select_size);
 	`, obj.TableName(), GetPlaceholderClause(len(values)))
-	if err := mainDB.Exec(sql, values...).Error; err != nil {
+	result, err := mainDB.CommonDB().Exec(sql, values...)
+	if err != nil {
 		logger.Error("Fail to finish create", zap.Any("obj", obj), zap.Error(err))
-		return err
+		return 0, ers.New("数据库执行出错，添加主元素(%v)默认选项(%v)失败。", obj.MainElementName, obj.SelectSize)
 	}
-	return nil
+	id, err := result.LastInsertId()
+	if err != nil {
+		logger.Error("Fail to get id", zap.Any("obj", obj), zap.Error(err))
+		return 0, ers.MysqlError
+	}
+	return id, nil
 }
 
 func (mainElementSizeRecordDao) GetByGoodIdAndMainElementName(goodID int64, mainElementName string) (*model.MainElementSizeRecord, error) {

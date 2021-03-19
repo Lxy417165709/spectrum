@@ -56,19 +56,20 @@ export default {
   methods: {
     openGoodEditor(good) {
       if (this.props_isAdminView) {
-        this.openGoodEditorOfAdmin(good)
+        this.openGoodEditorOfAdmin(good, false)
       } else {
         this.openGoodEditorOfUser(good)
       }
     },
     tryToAddGood() {
-      this.openGoodEditorOfAdmin(test.blankGood)
+      this.openGoodEditorOfAdmin(test.blankGood, true)
     },
-    openGoodEditorOfAdmin(good) {
+    openGoodEditorOfAdmin(good, canModifyGoodName) {
       // 商品信息编辑(管理人员视图)
       this.GoodEditorOfAdminVisible = true
       this.$nextTick(() => {
         this.$refs.GoodEditorOfAdmin.good = good
+        this.$refs.GoodEditorOfAdmin.canModifyGoodName = canModifyGoodName
       })
     },
     openGoodEditorOfUser(good) {

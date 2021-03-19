@@ -4,7 +4,8 @@
 
     <!-- 1. 商品名编辑器 -->
     <el-form-item label="商品名">
-      <el-input style="width: 70%" v-if="good.mainElement!==undefined" v-model="good.mainElement.name"></el-input>
+      <el-input style="width: 70%" v-if="good.mainElement!==undefined && canModifyGoodName" v-model="good.mainElement.name"></el-input>
+      <span v-if="good.mainElement!==undefined && !canModifyGoodName" >{{ good.mainElement.name }}</span>
     </el-form-item>
 
     <!-- 2. 规格编辑器 -->
@@ -112,14 +113,14 @@ export default {
       selectableElements: [],
       addTabCount: 0,
 
-
+      canModifyGoodName:false,
     }
   },
   methods: {
     addGoodOption() {
       for (let i = 0; i < this.selectableElements.length; i++) {
         if (this.selectableElements[i].name === this.curGoodOptionName) {
-          if (this.good.attachElements === null){
+          if (this.good.attachElements === null) {
             this.good.attachElements = []
           }
           this.good.attachElements.push(this.selectableElements[i])
@@ -130,7 +131,7 @@ export default {
     addGoodIngredient() {
       for (let i = 0; i < this.selectableElements.length; i++) {
         if (this.selectableElements[i].name === this.curGoodIngredientName) {
-          if (this.good.attachElements === null){
+          if (this.good.attachElements === null) {
             this.good.attachElements = []
           }
           console.log(this.selectableElements[i])
@@ -141,7 +142,6 @@ export default {
     },
     handleClick(tab, event) {
       this.addTabCount++
-      // todo: name 应该是可以编辑的
       let name = "未设定规格" + this.addTabCount
       this.good.mainElement.sizeInfos.push(utils.NewBlankSizeInfo(name))
     },

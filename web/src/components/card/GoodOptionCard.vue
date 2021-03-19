@@ -1,7 +1,7 @@
 <!-- eslint-disable -->
 <template>
   <el-card :body-style="{ padding: '0px' }" shadow="hover" style="position:relative;">
-    <img style="height:200px;width:200px; border: none" :src="goodOption.pictureStorePath">
+    <img style="height:200px;width:200px; border: none" :src="'api/file/' + goodOption.sizeInfos[goodOption.selectedIndex].pictureStorePath">
     <div style="width: 200px;height: 30px;position:relative;padding: 0;margin: 0; border: none">
       <span style="position:absolute; left:5px">{{ goodOption.name }}</span>
     </div>
@@ -12,7 +12,7 @@
 /* eslint-disable */
 export default {
   props: {
-    goodOption:Object,
+    goodOption: Object,
   },
   data() {
     return {};

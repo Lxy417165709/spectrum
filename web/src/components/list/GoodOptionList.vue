@@ -4,7 +4,8 @@
     <!--    1. 展示 商品选项 部分-->
     <el-col v-for="(goodOption,goodOptionIndex) in goodOptions" :key="goodOptionIndex"
             style="height: 300px; width: 202px; margin-left: 10px; border: none">
-      <good-option-card :goodOption="goodOption"></good-option-card>
+      <good-option-card :goodOption="goodOption"
+                        @dblclick.native="openGoodOptionEditorOfAdmin(goodOption,false)"></good-option-card>
     </el-col>
 
     <!--    2. 添加 商品选项 部分-->
@@ -48,16 +49,18 @@ export default {
   methods: {
     tryToAddGoodOption() {
       if (this.className === cst.ATTACH_CLASS_NAME.GOOD_OPTION_CLASS_NAME) {
-        this.openGoodOptionEditorOfAdmin(test.blankGoodOption)
+        this.openGoodOptionEditorOfAdmin(test.blankGoodOption, true)
       }
       if (this.className === cst.ATTACH_CLASS_NAME.GOOD_INGREDIENT_CLASS_NAME) {
-        this.openGoodOptionEditorOfAdmin(test.blankGoodIngredient)
+        this.openGoodOptionEditorOfAdmin(test.blankGoodIngredient, true)
       }
     },
-    openGoodOptionEditorOfAdmin(option) {
+    openGoodOptionEditorOfAdmin(option, canModifyName) {
       this.GoodOptionEditorOfAdminVisible = true
       this.$nextTick(() => {
         this.$refs.GoodOptionEditorOfAdmin.option = option
+        this.$refs.GoodOptionEditorOfAdmin.curSizeInfoIndex = option.selectedIndex
+        this.$refs.GoodOptionEditorOfAdmin.canModifyName = canModifyName
       })
     },
 

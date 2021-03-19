@@ -43,15 +43,9 @@ export default {
   },
   methods: {
     async addGoodClass(goodClass) {
-      let model = utils.getRequestModel("mvp", "AddGoodClass", {
+      await utils.AddGoodClass(this, {
         goodClass: goodClass,
-      })
-      await utils.sendRequestModel(model).then(res => {
-        if (!utils.hasRequestSuccess(res)) {
-          this.$message.error(res.data.err)
-          return
-        }
-        this.$message.success(res.data.msg)
+      }, (res) => {
         this.goodClass = res.data.data.goodClass
       })
     },
@@ -65,7 +59,6 @@ export default {
       return obj.pictureStorePath !== undefined && obj.pictureStorePath !== ''
     }
   },
-  computed: {}
 }
 </script>
 

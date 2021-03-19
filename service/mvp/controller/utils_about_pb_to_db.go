@@ -2,6 +2,7 @@ package controller
 
 import (
 	"go.uber.org/zap"
+	"spectrum/common/ers"
 	"spectrum/common/logger"
 	"spectrum/common/pb"
 	"spectrum/service/mvp/dao"
@@ -38,40 +39,43 @@ func checkOutIfNot(chargeableObj model.Chargeable) error {
 
 func writeGoodSizeToDB(good *pb.Good) error {
 	if good == nil {
-		logger.Warn("Good is nil")
-		return nil
+		return ers.New("商品为空。")
 	}
 	if good.MainElement == nil {
-		logger.Warn("Good's main element is nil")
-		return nil
+		return ers.New("商品没有主元素。")
 	}
 	if len(good.MainElement.SizeInfos) == 0 {
-		logger.Warn("Good main element's size infos is empty")
-		return nil
+		return ers.New("商品没有默认选项。")
+	}
+	if good.MainElement.SelectedIndex < 0 {
+		return ers.New("商品默认选项索引非法，不能小于0。")
+	}
+	if good.MainElement.SelectedIndex >= int32(len(good.MainElement.SizeInfos)) {
+		return ers.New("商品默认选项索引非法，不能超过主元素可选尺寸数组的最大索引。")
 	}
 
 	// 1. 创建主元素、主元素尺寸的对应关系
-	if err := dao.MainElementSizeRecordDao.Create(&model.MainElementSizeRecord{
+	if _, errResult := dao.MainElementSizeRecordDao.Create(&model.MainElementSizeRecord{
 		GoodID:          good.Id,
 		MainElementName: good.MainElement.Name,
 		SelectSize:      good.MainElement.SizeInfos[good.MainElement.SelectedIndex].Size,
-	}); err != nil {
-		logger.Error("Fail to finish MainElementSizeRecordDao.Create", zap.Error(err))
-		return err
+	}); errResult != nil {
+		return errResult
 	}
 
 	// 2. 创建主元素、附属元素、附属元素尺寸的对应关系
 	for _, attachElement := range good.AttachElements {
-		if err := dao.MainElementAttachElementRecordDao.Create(&model.MainElementAttachElementRecord{
+		if _, errResult := dao.MainElementAttachElementRecordDao.Create(&model.MainElementAttachElementRecord{
 			GoodID:            good.Id,
 			MainElementName:   good.MainElement.Name,
 			AttachElementName: attachElement.Name,
 			SelectSize:        model.GetSelectSizeInfo(attachElement).Size,
-		}); err != nil {
-			logger.Error("Fail to finish MainElementAttachElementDao.Create", zap.Error(err))
-			return err
+		}); errResult != nil {
+			return errResult
 		}
 	}
+
+	// 3. 返回
 	return nil
 }
 
@@ -100,9 +104,9 @@ func closeDeskIfOpening(deskID int64, endTimestamp int64) error {
 func createElement(pbElement *pb.Element, className string) error {
 	dbElements := getDbElements(pbElement, className)
 	for _, dbElement := range dbElements {
-		if err := dao.ElementDao.Create(dbElement); err != nil {
-			logger.Error("Fail to finish ElementDao.Create", zap.Error(err))
-			return err
+		_, errResult := dao.ElementDao.Create(dbElement)
+		if errResult!=nil{
+			return errResult
 		}
 	}
 	return nil

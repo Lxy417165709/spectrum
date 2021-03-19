@@ -48,7 +48,7 @@ export default {
     return {
       size: name,
       price: "0",
-      pictureStorePath:""
+      pictureStorePath: ""
     }
   },
   async GetAllGoodOptions(obj, par, then) {
@@ -139,6 +139,18 @@ export default {
     let model = this.getRequestModel("mvp", "AddDesk", par)
     await this.sendRequestModel(model).then((res) => {
       console.log("AddDesk", res)
+      if (!this.hasRequestSuccess(res)) {
+        obj.$message.error(res.data.err)
+        return
+      }
+      obj.$message.success(res.data.msg)
+      then(res)
+    })
+  },
+  async AddGoodClass(obj, par, then) {
+    let model = this.getRequestModel("mvp", "AddGoodClass", par)
+    await this.sendRequestModel(model).then((res) => {
+      console.log("AddGoodClass", res)
       if (!this.hasRequestSuccess(res)) {
         obj.$message.error(res.data.err)
         return
