@@ -6,9 +6,9 @@
     <el-col v-for="(goodClass,goodClassIndex) in goodClasses" :key="goodClassIndex"
             style="height: 300px; width: 202px; margin-left: 10px; border: none">
 
-      <good-class-card :name="goodClass.name"
-                       :pictureStorePath="goodClass.pictureStorePath"
-                       @click.native="handleGoodClassCardClick(goodClassIndex)"></good-class-card>
+      <good-class-card :goodClass="goodClass"
+                       @click.native="handleClick(goodClassIndex)"
+                       @dblclick.native="handleDbClick(goodClass)"></good-class-card>
 
     </el-col>
 
@@ -34,6 +34,7 @@ import GoodClassSpacialCard from "../card/GoodClassSpacialCard";
 import test from "../../common/test/test";
 import GoodClassEditor from "../editor/GoodClassEditor";
 
+let time = null;  //  在这里定义time 为null
 export default {
   components: {GoodClassEditor, GoodClassSpacialCard, GoodClassCard},
   props: {
@@ -57,6 +58,18 @@ export default {
       this.$nextTick(() => {
         this.$refs.GoodClassEditor.goodClass = goodClass
       })
+    },
+    // 单击事件函数
+    handleClick(goodClassIndex) {
+      clearTimeout(time);  //首先清除计时器
+      time = setTimeout(() => {
+        this.handleGoodClassCardClick(goodClassIndex)
+      }, 300);   //大概时间300ms
+    },
+    // 双击事件函数
+    handleDbClick(goodClass) {
+      clearTimeout(time);  //清除
+      this.openGoodClassEditor(goodClass)
     }
   }
 }

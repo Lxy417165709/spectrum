@@ -31,14 +31,3 @@ func (MainElementSizeRecord) TableName() string {
 	return "main_element_size_record"
 }
 
-type ElementClass struct {
-	ID               uint      `gorm:"id"`
-	CreatedAt        time.Time `gorm:"created_at"`
-	UpdatedAt        time.Time `gorm:"updated_at"`
-	Name             string    `gorm:"name"`
-	PictureStorePath string    `gorm:"picture_store_path"`
-}
-
-func (ElementClass) TableName() string {
-	return "element_class"
-}

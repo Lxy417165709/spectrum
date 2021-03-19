@@ -70,9 +70,9 @@ func (MvpServer) GetAllGoodClasses(ctx context.Context, req *pb.GetAllGoodClasse
 	var res pb.GetAllGoodClassesRes
 
 	// 1. 获得主元素的所有类
-	classes, err := dao.ElementClassDao.GetAllClasses()
+	classes, err := dao.GoodClassDao.GetAllClasses()
 	if err != nil {
-		logger.Error("Fail to finish ElementClassDao.GetMainElementClass",
+		logger.Error("Fail to finish GoodClassDao.GetMainElementClass",
 			zap.Any("req", req),
 			zap.Error(err))
 		return nil, err
@@ -80,11 +80,7 @@ func (MvpServer) GetAllGoodClasses(ctx context.Context, req *pb.GetAllGoodClasse
 
 	// 2. 形成 GoodClasses
 	for _, class := range classes {
-		res.GoodClasses = append(res.GoodClasses, &pb.GoodClass{
-			Name:             class.Name,
-			PictureStorePath: class.PictureStorePath,
-			//Goods: getClassGoods(class.Name),
-		})
+		res.GoodClasses = append(res.GoodClasses, class.ToPb())
 	}
 
 	return &res, nil
@@ -139,15 +135,19 @@ func (MvpServer) AddGoodClass(ctx context.Context, req *pb.AddGoodClassReq) (*pb
 	// todo: 判断类名是否为空、是否存在
 
 	// 1. 创建商品类
-	if err := dao.ElementClassDao.Create(&model.ElementClass{
+	dbGoodClass := &model.GoodClass{
+		ID:               uint(req.GoodClass.Id),
 		Name:             req.GoodClass.Name,
 		PictureStorePath: req.GoodClass.PictureStorePath,
-	}); err != nil {
-		logger.Error("Fail to finish ElementDao.Create",
-			zap.Any("req", req),
-			zap.Error(err))
-		return nil, err
 	}
+	id, errResult := dao.GoodClassDao.Create(dbGoodClass)
+	if errResult != nil {
+		return nil, errResult
+	}
+
+	dbGoodClass.ID = uint(id)
+	res.GoodClass = dbGoodClass.ToPb()
+
 	return &res, nil
 }
 

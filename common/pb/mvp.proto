@@ -66,8 +66,9 @@ message Space {
 }
 
 message GoodClass {
-    string name = 1;
-    string pictureStorePath = 2;
+    int64 id = 1;
+    string name = 2;
+    string pictureStorePath = 3;
 }
 
 message DeskClass {
@@ -112,8 +113,9 @@ message AddGoodClassReq{
     GoodClass goodClass = 1;
 }
 
-message AddGoodClassRes{}
-
+message AddGoodClassRes{
+    GoodClass goodClass = 1;
+}
 
 message AddDeskClassReq{
     DeskClass deskClass = 1;

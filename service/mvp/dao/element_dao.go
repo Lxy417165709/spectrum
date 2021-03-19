@@ -27,7 +27,7 @@ func (elementDao) Create(obj *model.Element) error {
 			price = values(price),
 			picture_store_path = values(picture_store_path);
 	`, obj.TableName(), GetPlaceholderClause(len(values)))
-	if err := mainDB.Raw(sql, values...).Error; err != nil {
+	if err := mainDB.Exec(sql, values...).Error; err != nil {
 		logger.Error("Fail to finish create", zap.Any("obj", obj), zap.Error(err))
 		return err
 	}

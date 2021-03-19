@@ -1,9 +1,9 @@
 <!-- eslint-disable -->
 <template>
   <el-card :body-style="{ padding: '0px' }" shadow="hover" style="position:relative;">
-    <img style="height:200px;width:200px; border: none" :src="pictureStorePath">
+    <img style="height:200px;width:200px; border: none" :src="'api/file/' + goodClass.pictureStorePath">
     <div style="width: 200px;height: 30px;position:relative;padding: 0;margin: 0; border: none">
-      <span style="position:absolute; left:5px">{{ name }}</span>
+      <span style="position:absolute; left:5px">{{ goodClass.name }}</span>
     </div>
   </el-card>
 </template>
@@ -12,8 +12,7 @@
 /* eslint-disable */
 export default {
   props: {
-    name: String,
-    pictureStorePath: String,
+    goodClass: Object
   },
   data() {
     return {};

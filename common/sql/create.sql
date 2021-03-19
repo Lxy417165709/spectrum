@@ -40,24 +40,25 @@ CREATE TABLE `good_class`
     `updated_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `name`       varchar(255) NOT NULL DEFAULT '',
     `class_type` int          NOT NULL DEFAULT 0,
+    `picture_store_path` varchar(255) NOT NULL DEFAULT '',
     PRIMARY KEY (`id`),
     UNIQUE KEY (`name`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
-# 元素类表
-CREATE TABLE `element_class`
-(
-    `id`         int unsigned NOT NULL AUTO_INCREMENT,
-    `created_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `name`       varchar(255) NOT NULL DEFAULT '',
-    PRIMARY KEY (`id`),
-    UNIQUE KEY (`name`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
+-- # 元素类表
+-- CREATE TABLE `element_class`
+-- (
+--     `id`         int unsigned NOT NULL AUTO_INCREMENT,
+--     `created_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--     `updated_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+--     `name`       varchar(255) NOT NULL DEFAULT '',
+--     PRIMARY KEY (`id`),
+--     UNIQUE KEY (`name`)
+-- ) ENGINE = InnoDB
+--   DEFAULT CHARSET = utf8mb4
+--   COLLATE = utf8mb4_0900_ai_ci;
 
 # 主元素的附属元素记录表
 CREATE TABLE `main_element_attach_element_record`

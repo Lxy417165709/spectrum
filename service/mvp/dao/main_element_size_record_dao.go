@@ -23,7 +23,7 @@ func (mainElementSizeRecordDao) Create(obj *model.MainElementSizeRecord) error {
 			main_element_name = values(main_element_name),
 			select_size = values(select_size);
 	`, obj.TableName(), GetPlaceholderClause(len(values)))
-	if err := mainDB.Raw(sql, values...).Error; err != nil {
+	if err := mainDB.Exec(sql, values...).Error; err != nil {
 		logger.Error("Fail to finish create", zap.Any("obj", obj), zap.Error(err))
 		return err
 	}

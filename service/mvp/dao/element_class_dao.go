@@ -3,40 +3,41 @@ package dao
 import (
 	"fmt"
 	"go.uber.org/zap"
+	"spectrum/common/ers"
 	"spectrum/common/logger"
 	"spectrum/service/mvp/model"
 )
 
-var ElementClassDao elementClassDao
+var GoodClassDao goodClassDao
 
-type elementClassDao struct{}
+type goodClassDao struct{}
 
-// 	ID               uint      `gorm:"id"`
-//	CreatedAt        time.Time `gorm:"created_at"`
-//	UpdatedAt        time.Time `gorm:"updated_at"`
-//	Name             string    `gorm:"name"`
-//	PictureStorePath string    `gorm:"picture_store_path"`
-func (elementClassDao) Create(obj *model.ElementClass) error {
+func (goodClassDao) Create(obj *model.GoodClass) (int64, error) {
 	values := []interface{}{
-		obj.Name, obj.PictureStorePath,
+		obj.ID, obj.Name, obj.PictureStorePath,
 	}
 	sql := fmt.Sprintf(`
-		insert into %s(name, picture_store_path) values(%s)
+		insert into %s(id, name, picture_store_path) values(%s)
 		on duplicate key update
 			name = values(name),
 			picture_store_path = values(picture_store_path);
 	`, obj.TableName(), GetPlaceholderClause(len(values)))
-	if err := mainDB.Raw(sql, values...).Error; err != nil {
+
+	result, err := mainDB.CommonDB().Exec(sql, values...)
+	if err != nil {
 		logger.Error("Fail to finish create", zap.Any("obj", obj), zap.Error(err))
-		return err
+		return 0, ers.New("操作失败，可能存在同名的商品类。")
 	}
-	return nil
+	id, err := result.LastInsertId()
+	if err != nil {
+		logger.Error("Fail to get id", zap.Any("obj", obj), zap.Error(err))
+		return 0, ers.MysqlError
+	}
+	return id, nil
 }
 
-func (elementClassDao) GetAllClasses() ([]*model.ElementClass, error) {
-	var table model.ElementClass
-	createTableWhenNotExist(&table)
-	var result []*model.ElementClass
+func (goodClassDao) GetAllClasses() ([]*model.GoodClass, error) {
+	var result []*model.GoodClass
 	if err := mainDB.Find(&result).Error; err != nil {
 		logger.Error("Fail to finish mainDB.Find", zap.Error(err))
 		return nil, err

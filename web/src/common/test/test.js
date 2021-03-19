@@ -1028,7 +1028,6 @@ export default {
   blankGoodClass: {
     name: "请输入",
     pictureStorePath: "",
-    goods: [],
   },
   blankGoodOption: {
     name: "请输入",
