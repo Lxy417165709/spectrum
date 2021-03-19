@@ -1,19 +1,21 @@
 package model
 
 import (
-	"github.com/jinzhu/gorm"
 	"spectrum/common/pb"
+	"time"
 )
 
 type Element struct {
-	gorm.Model
-	Name      string         `json:"name"`
-	Type      pb.ElementType `json:"type"`
-	ClassName string         `json:"class_name"`
+	ID               uint           `gorm:"id"`
+	CreatedAt        time.Time      `gorm:"created_at"`
+	UpdatedAt        time.Time      `gorm:"updated_at"`
 
-	Size             string  `json:"size"`
-	Price            float64 `json:"price"`
-	PictureStorePath string  `json:"picture_store_path"`
+	Name             string         `gorm:"name"`
+	Type             pb.ElementType `gorm:"type"`
+	ClassName        string         `gorm:"class_name"`
+	Size             string         `gorm:"size"`
+	Price            float64        `gorm:"price"`
+	PictureStorePath string         `gorm:"picture_store_path"`
 }
 
 func (Element) TableName() string {

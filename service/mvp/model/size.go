@@ -1,14 +1,17 @@
 package model
 
-import "github.com/jinzhu/gorm"
+import (
+	"time"
+)
 
 type MainElementAttachElementRecord struct {
-	gorm.Model
-	MainElementName string `json:"main_element_name"`
-	GoodID          int64  `json:"good_id"`
-
-	AttachElementName string `json:"attach_element_name"`
-	SelectSize        string `json:"select_size"`
+	ID                uint      `gorm:"id"`
+	CreatedAt         time.Time `gorm:"created_at"`
+	UpdatedAt         time.Time `gorm:"updated_at"`
+	GoodID            int64     `gorm:"good_id"`
+	MainElementName   string    `gorm:"main_element_name"`
+	AttachElementName string    `gorm:"attach_element_name"`
+	SelectSize        string    `gorm:"select_size"`
 }
 
 func (MainElementAttachElementRecord) TableName() string {
@@ -16,17 +19,24 @@ func (MainElementAttachElementRecord) TableName() string {
 }
 
 type MainElementSizeRecord struct {
-	gorm.Model
-	GoodID          int64  `json:"good_id"`
-	MainElementName string `json:"main_element_name"`
+	ID              uint      `gorm:"id"`
+	CreatedAt       time.Time `gorm:"created_at"`
+	UpdatedAt       time.Time `gorm:"updated_at"`
+	GoodID          int64     `gorm:"good_id"`
+	MainElementName string    `gorm:"main_element_name"`
+	SelectSize      string    `gorm:"select_size"`
+}
 
-	SelectSize string `json:"select_size"`
+func (MainElementSizeRecord) TableName() string {
+	return "main_element_size_record"
 }
 
 type ElementClass struct {
-	gorm.Model
-	Name string `json:"name"`
-	PictureStorePath string `json:"picture_store_path"`
+	ID               uint      `gorm:"id"`
+	CreatedAt        time.Time `gorm:"created_at"`
+	UpdatedAt        time.Time `gorm:"updated_at"`
+	Name             string    `gorm:"name"`
+	PictureStorePath string    `gorm:"picture_store_path"`
 }
 
 func (ElementClass) TableName() string {

@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"fmt"
 	"github.com/jinzhu/gorm"
 	"go.uber.org/zap"
 	"spectrum/common/logger"
@@ -12,11 +13,18 @@ var MainElementSizeRecordDao mainElementSizeRecordDao
 type mainElementSizeRecordDao struct{}
 
 func (mainElementSizeRecordDao) Create(obj *model.MainElementSizeRecord) error {
-	var table model.MainElementSizeRecord
-	createTableWhenNotExist(&table)
-
-	if err := mainDB.Create(obj).Error; err != nil {
-		logger.Error("Fail to finish mainDB.Create", zap.Any("obj", obj), zap.Error(err))
+	values := []interface{}{
+		obj.GoodID, obj.MainElementName, obj.SelectSize,
+	}
+	sql := fmt.Sprintf(`
+		insert into %s(good_id,main_element_name,select_size) values(%s)
+		on duplicate key update
+			good_id = values(good_id),
+			main_element_name = values(main_element_name),
+			select_size = values(select_size);
+	`, obj.TableName(), GetPlaceholderClause(len(values)))
+	if err := mainDB.Raw(sql, values...).Error; err != nil {
+		logger.Error("Fail to finish create", zap.Any("obj", obj), zap.Error(err))
 		return err
 	}
 	return nil
