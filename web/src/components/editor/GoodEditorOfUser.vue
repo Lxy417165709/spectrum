@@ -37,7 +37,7 @@
     </el-form-item>
     <discount-editor></discount-editor>
 
-    <el-form-item label="价格">
+    <el-form-item label="价格" v-if="good.mainElement!==undefined">
       <span style="font-size: 1.4em;color: red;">{{ cpt_price }} 元</span>
     </el-form-item>
     <el-form-item label="备注">
@@ -83,9 +83,9 @@ export default {
   },
   computed: {
     cpt_price() {
-      let price = this.good.mainElement.sizeInfos[this.good.mainElement.selectedIndex].price-0
+      let price = this.good.mainElement.sizeInfos[this.good.mainElement.selectedIndex].price - 0
       for (let i = 0; i < this.good.attachElements.length; i++) {
-        price += this.good.attachElements[i].sizeInfos[this.good.attachElements[i].selectedIndex].price-0
+        price += this.good.attachElements[i].sizeInfos[this.good.attachElements[i].selectedIndex].price - 0
       }
       return price
     }
