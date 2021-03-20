@@ -179,7 +179,7 @@ type ExpenseInfo struct {
 	unknownFields protoimpl.UnknownFields
 
 	NonFavorExpense   float64 `protobuf:"fixed64,1,opt,name=nonFavorExpense,proto3" json:"nonFavorExpense"`    // 未打折费用
-	CheckOutTimestamp int64   `protobuf:"varint,2,opt,name=checkOutTimestamp,proto3" json:"checkOutTimestamp"` // 结账时间
+	CheckOutAt int64   `protobuf:"varint,2,opt,name=checkOutTimestamp,proto3" json:"checkOutTimestamp"` // 结账时间
 	Expense           float64 `protobuf:"fixed64,3,opt,name=expense,proto3" json:"expense"`                    // 打折后费用
 }
 
@@ -222,9 +222,9 @@ func (x *ExpenseInfo) GetNonFavorExpense() float64 {
 	return 0
 }
 
-func (x *ExpenseInfo) GetCheckOutTimestamp() int64 {
+func (x *ExpenseInfo) GetCheckOutAt() int64 {
 	if x != nil {
-		return x.CheckOutTimestamp
+		return x.CheckOutAt
 	}
 	return 0
 }

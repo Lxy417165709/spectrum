@@ -16,7 +16,7 @@ type Desk struct {
 	SpaceClassName   string `json:"space_class_name"`
 
 	Expense           float64 `json:"expense"`
-	CheckOutTimestamp int64   `json:"check_out_timestamp"`
+	CheckOutAt time.Time   `gorm:"check_out_at"`
 	NonFavorExpense   float64 `json:"non_favor_expense"`
 
 	OrderID int64 `json:"order_id"`
@@ -31,10 +31,10 @@ func (*Desk) GetName() string {
 }
 
 func (d *Desk) GetExpenseInfo(billingType pb.BillingType, price float64, favors []*pb.Favor) *pb.ExpenseInfo {
-	if d.CheckOutTimestamp != 0 {
+	if d.CheckOutAt.Unix() != 0 {
 		return &pb.ExpenseInfo{
 			NonFavorExpense:   d.NonFavorExpense,
-			CheckOutTimestamp: d.CheckOutTimestamp,
+			CheckOutAt: d.CheckOutAt.Unix(),
 			Expense:           d.Expense,
 		}
 	}
@@ -49,7 +49,7 @@ func (d *Desk) GetExpenseInfo(billingType pb.BillingType, price float64, favors 
 
 	return &pb.ExpenseInfo{
 		NonFavorExpense:   nonFavorExpense,
-		CheckOutTimestamp: 0,
+		CheckOutAt: 0,
 		Expense:           GetFavorExpense(nonFavorExpense, favors),
 	}
 }

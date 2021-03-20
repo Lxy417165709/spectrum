@@ -3,6 +3,7 @@ package model
 import (
 	"github.com/jinzhu/gorm"
 	"spectrum/common/pb"
+	"time"
 )
 
 type Good struct {
@@ -10,9 +11,9 @@ type Good struct {
 	Name    string `json:"name"`
 	OrderID int64  `json:"order_id"`
 
-	Expense           float64 `json:"expense"`
-	CheckOutTimestamp int64   `json:"check_out_timestamp"`
-	NonFavorExpense   float64 `json:"non_favor_expense"`
+	Expense         float64   `json:"expense"`
+	CheckOutAt      time.Time `gorm:"check_out_at"`
+	NonFavorExpense float64   `json:"non_favor_expense"`
 }
 
 func (g *Good) GetID() int64 {
@@ -28,18 +29,18 @@ func (*Good) GetName() string {
 }
 
 func (g *Good) GetExpenseInfo(mainElement *pb.Element, attachElement []*pb.Element, favors []*pb.Favor) *pb.ExpenseInfo {
-	if g.CheckOutTimestamp != 0 {
+	if g.CheckOutAt.Unix() != 0 {
 		return &pb.ExpenseInfo{
-			NonFavorExpense:   g.NonFavorExpense,
-			CheckOutTimestamp: g.CheckOutTimestamp,
-			Expense:           g.Expense,
+			NonFavorExpense: g.NonFavorExpense,
+			CheckOutAt:      g.CheckOutAt.Unix(),
+			Expense:         g.Expense,
 		}
 	}
 	nonFavorExpense := g.getNonFavorExpense(append(attachElement, mainElement))
 	return &pb.ExpenseInfo{
-		NonFavorExpense:   nonFavorExpense,
-		CheckOutTimestamp: 0,
-		Expense:           GetFavorExpense(nonFavorExpense, favors),
+		NonFavorExpense: nonFavorExpense,
+		CheckOutAt:      0,
+		Expense:         GetFavorExpense(nonFavorExpense, favors),
 	}
 }
 

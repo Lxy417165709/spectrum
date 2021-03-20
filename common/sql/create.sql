@@ -4,12 +4,12 @@ CREATE TABLE `element`
     `id`                 int unsigned NOT NULL AUTO_INCREMENT,
     `created_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `name`               varchar(255) NOT NULL DEFAULT '',
+    `name`               varchar(30)  NOT NULL DEFAULT '',
     `type`               int          NOT NULL DEFAULT 0,
-    `class_name`         varchar(255) NOT NULL DEFAULT '未分类',
-    `size`               varchar(255) NOT NULL DEFAULT '小规格',
+    `class_name`         varchar(30)  NOT NULL DEFAULT '未分类',
+    `size`               varchar(30)  NOT NULL DEFAULT '小规格',
     `price`              double       NOT NULL DEFAULT 0,
-    `picture_store_path` varchar(255) NOT NULL DEFAULT '',
+    `picture_store_path` varchar(20)  NOT NULL DEFAULT '',
     PRIMARY KEY (`id`),
     UNIQUE KEY (`class_name`, `name`, `size`)
 ) ENGINE = InnoDB
@@ -22,7 +22,7 @@ CREATE TABLE `good`
     `id`                int unsigned NOT NULL AUTO_INCREMENT,
     `created_at`        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `name`              varchar(255) NOT NULL DEFAULT '',
+    `name`              varchar(30)  NOT NULL DEFAULT '',
     `order_id`          bigint       NOT NULL DEFAULT 0,
     `expense`           double       NOT NULL DEFAULT 0,
     `check_out_at`      timestamp    NOT NULL,
@@ -38,9 +38,9 @@ CREATE TABLE `good_class`
     `id`                 int unsigned NOT NULL AUTO_INCREMENT,
     `created_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `name`               varchar(255) NOT NULL DEFAULT '',
+    `name`               varchar(30)  NOT NULL DEFAULT '',
     `class_type`         int          NOT NULL DEFAULT 0,
-    `picture_store_path` varchar(255) NOT NULL DEFAULT '',
+    `picture_store_path` varchar(20)  NOT NULL DEFAULT '',
     PRIMARY KEY (`id`),
     UNIQUE KEY (`name`)
 ) ENGINE = InnoDB
@@ -53,7 +53,7 @@ CREATE TABLE `good_class`
 --     `id`         int unsigned NOT NULL AUTO_INCREMENT,
 --     `created_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
 --     `updated_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
---     `name`       varchar(255) NOT NULL DEFAULT '',
+--     `name`       varchar(30) NOT NULL DEFAULT '',
 --     PRIMARY KEY (`id`),
 --     UNIQUE KEY (`name`)
 -- ) ENGINE = InnoDB
@@ -66,12 +66,12 @@ CREATE TABLE `main_element_attach_element_record`
     `id`                        int unsigned NOT NULL AUTO_INCREMENT,
     `created_at`                timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`                timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `main_element_name`         varchar(255) NOT NULL DEFAULT '',
-    `main_element_class_name`   varchar(255) NOT NULL DEFAULT '',
+    `main_element_name`         varchar(30)  NOT NULL DEFAULT '',
+    `main_element_class_name`   varchar(30)  NOT NULL DEFAULT '',
     `good_id`                   bigint       NOT NULL DEFAULT 0,
-    `attach_element_name`       varchar(255) NOT NULL DEFAULT '',
-    `attach_element_class_name` varchar(255) NOT NULL DEFAULT '',
-    `select_size`               varchar(255) NOT NULL DEFAULT '',
+    `attach_element_name`       varchar(30)  NOT NULL DEFAULT '',
+    `attach_element_class_name` varchar(30)  NOT NULL DEFAULT '',
+    `select_size`               varchar(30)  NOT NULL DEFAULT '',
     PRIMARY KEY (`id`),
     UNIQUE KEY (`good_id`, `main_element_class_name`, `main_element_name`, `attach_element_class_name`,
                 `attach_element_name`)
@@ -85,10 +85,10 @@ CREATE TABLE `element_size_record`
     `id`                 int unsigned NOT NULL AUTO_INCREMENT,
     `created_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `element_class_name` varchar(255) NOT NULL DEFAULT '',
-    `element_name`       varchar(255) NOT NULL DEFAULT '',
+    `element_class_name` varchar(30)  NOT NULL DEFAULT '',
+    `element_name`       varchar(30)  NOT NULL DEFAULT '',
     `good_id`            bigint       NOT NULL DEFAULT 0,
-    `select_size`        varchar(255) NOT NULL DEFAULT '',
+    `select_size`        varchar(30)  NOT NULL DEFAULT '',
     PRIMARY KEY (`id`),
     UNIQUE KEY (`good_id`, `element_class_name`, `element_name`)
 ) ENGINE = InnoDB
@@ -104,8 +104,8 @@ CREATE TABLE `desk`
     `start_at`          timestamp    NOT NULL,
     `end_at`            timestamp    NOT NULL,
     `session_count`     bigint       NOT NULL DEFAULT 0,
-    `space_name`        varchar(255) NOT NULL DEFAULT '',
-    `space_class_name`  varchar(255) NOT NULL DEFAULT '',
+    `space_name`        varchar(30)  NOT NULL DEFAULT '',
+    `space_class_name`  varchar(30)  NOT NULL DEFAULT '',
     `expense`           double       NOT NULL DEFAULT 0,
     `check_out_at`      timestamp    NOT NULL,
     `non_favor_expense` double       NOT NULL DEFAULT 0,
@@ -121,11 +121,11 @@ CREATE TABLE `space`
     `id`                 int unsigned NOT NULL AUTO_INCREMENT,
     `created_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `name`               varchar(255) NOT NULL DEFAULT '',
-    `class_name`         varchar(255) NOT NULL DEFAULT '',
+    `name`               varchar(30)  NOT NULL DEFAULT '',
+    `class_name`         varchar(30)  NOT NULL DEFAULT '',
     `price`              double       NOT NULL DEFAULT 0,
     `billing_type`       int          NOT NULL DEFAULT 0,
-    `picture_store_path` varchar(255) NOT NULL DEFAULT '',
+    `picture_store_path` varchar(20)  NOT NULL DEFAULT '',
     PRIMARY KEY (`id`),
     UNIQUE KEY (`class_name`, `name`)
 ) ENGINE = InnoDB
@@ -152,10 +152,10 @@ CREATE TABLE `favor_record`
     `id`                     int unsigned NOT NULL AUTO_INCREMENT,
     `created_at`             timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`             timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `chargeable_object_name` varchar(255)          DEFAULT NULL,
+    `chargeable_object_name` varchar(30)           DEFAULT NULL,
     `chargeable_object_id`   bigint       NOT NULL DEFAULT 0,
     `favor_type`             int                   DEFAULT NULL,
-    `favor_parameters`       varchar(255) NOT NULL DEFAULT 0,
+    `favor_parameters`       varchar(30)  NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4

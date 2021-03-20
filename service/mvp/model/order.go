@@ -3,13 +3,14 @@ package model
 import (
 	"github.com/jinzhu/gorm"
 	"spectrum/common/pb"
+	"time"
 )
 
 type Order struct {
 	gorm.Model
 
 	Expense           float64 `json:"expense"`
-	CheckOutTimestamp int64   `json:"check_out_timestamp"`
+	CheckOutAt time.Time   `gorm:"check_out_at"`
 	NonFavorExpense   float64 `json:"non_favor_expense"`
 }
 
@@ -25,10 +26,10 @@ func (o *Order) TableName() string {
 }
 
 func (o *Order) GetExpenseInfo(desk *pb.Desk, goods []*pb.Good, favors []*pb.Favor) *pb.ExpenseInfo {
-	if o.CheckOutTimestamp != 0 {
+	if o.CheckOutAt.Unix() != 0 {
 		return &pb.ExpenseInfo{
 			NonFavorExpense:   o.NonFavorExpense,
-			CheckOutTimestamp: o.CheckOutTimestamp,
+			CheckOutAt: o.CheckOutAt.Unix(),
 			Expense:           o.Expense,
 		}
 	}
@@ -41,7 +42,7 @@ func (o *Order) GetExpenseInfo(desk *pb.Desk, goods []*pb.Good, favors []*pb.Fav
 	}
 	return &pb.ExpenseInfo{
 		NonFavorExpense:   deskExpense + goodsExpense,
-		CheckOutTimestamp: 0,
+		CheckOutAt: 0,
 		Expense:           GetFavorExpense(deskExpense+goodsExpense, favors),
 	}
 }

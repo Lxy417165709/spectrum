@@ -28,7 +28,7 @@ func (chargeableObjectDao) UpdateExpenseInfo(obj model.Chargeable, expenseInfo *
 	// todo: 这三个字段名是约定，但这容易出错
 	to := map[string]interface{}{
 		"id":                  obj.GetID(),
-		"check_out_timestamp": expenseInfo.CheckOutTimestamp,
+		"check_out_timestamp": expenseInfo.CheckOutAt,
 		"expense":             expenseInfo.Expense,
 		"non_favor_expense":   expenseInfo.NonFavorExpense,
 	}

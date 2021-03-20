@@ -13,12 +13,12 @@ import (
 func checkOutIfNot(chargeableObj model.Chargeable) error {
 
 	expenseInfo := getExpenseInfo(chargeableObj)
-	if expenseInfo.CheckOutTimestamp != 0 {
+	if expenseInfo.CheckOutAt != 0 {
 		// todo: 警告
 		// 这里表示商品已结账过了
 		return nil
 	}
-	expenseInfo.CheckOutTimestamp = time.Now().Unix()
+	expenseInfo.CheckOutAt = time.Now().Unix()
 	if err := dao.ChargeableObjectDao.UpdateExpenseInfo(chargeableObj, expenseInfo); err != nil {
 		logger.Error("Fail to finish chargeableDao.Update", zap.Error(err))
 		return err
@@ -28,7 +28,7 @@ func checkOutIfNot(chargeableObj model.Chargeable) error {
 	if err := dao.CheckOutRecordDao.Create(&model.CheckOutRecord{
 		ChargeableObjectName: chargeableObj.GetName(),
 		ChargeableObjectID:   chargeableObj.GetID(),
-		CheckOutTimestamp:    expenseInfo.CheckOutTimestamp,
+		CheckOutAt:    expenseInfo.CheckOutAt,
 	}); err != nil {
 		logger.Error("Fail to finish CheckOutRecordDao.Create", zap.Error(err))
 		return err

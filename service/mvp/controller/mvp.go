@@ -189,11 +189,11 @@ func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.Order
 			good.ExpenseInfo = &pb.ExpenseInfo{}
 		}
 		dbGood := &model.Good{
-			Name:              good.MainElement.Name,
-			Expense:           good.ExpenseInfo.Expense,
-			CheckOutTimestamp: good.ExpenseInfo.CheckOutTimestamp,
-			NonFavorExpense:   good.ExpenseInfo.NonFavorExpense,
-			OrderID:           req.OrderID,
+			Name:            good.MainElement.Name,
+			Expense:         good.ExpenseInfo.Expense,
+			CheckOutAt:      time.Unix(good.ExpenseInfo.CheckOutAt, 0),
+			NonFavorExpense: good.ExpenseInfo.NonFavorExpense,
+			OrderID:         req.OrderID,
 		}
 		if err := dao.GoodDao.Create(dbGood); err != nil {
 			// todo: log
@@ -247,14 +247,14 @@ func (MvpServer) OrderDesk(ctx context.Context, req *pb.OrderDeskReq) (*pb.Order
 		req.Desk.Space = &pb.Space{}
 	}
 	dbDesk := &model.Desk{
-		StartTimestamp:    time.Now().Unix(),
-		EndTimestamp:      0,
-		SpaceName:         req.Desk.Space.Name,
-		SpaceClassName:    req.Desk.Space.ClassName,
-		Expense:           req.Desk.ExpenseInfo.Expense,
-		CheckOutTimestamp: req.Desk.ExpenseInfo.CheckOutTimestamp,
-		NonFavorExpense:   req.Desk.ExpenseInfo.NonFavorExpense,
-		OrderID:           int64(dbOrder.ID),
+		StartTimestamp:  time.Now().Unix(),
+		EndTimestamp:    0,
+		SpaceName:       req.Desk.Space.Name,
+		SpaceClassName:  req.Desk.Space.ClassName,
+		Expense:         req.Desk.ExpenseInfo.Expense,
+		CheckOutAt:      time.Unix(req.Desk.ExpenseInfo.CheckOutAt, 0),
+		NonFavorExpense: req.Desk.ExpenseInfo.NonFavorExpense,
+		OrderID:         int64(dbOrder.ID),
 	}
 	if err := dao.DeskDao.Create(dbDesk); err != nil {
 		// todo: log

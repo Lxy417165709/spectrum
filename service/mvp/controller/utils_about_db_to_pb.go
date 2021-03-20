@@ -6,18 +6,19 @@ import (
 	"spectrum/common/pb"
 	"spectrum/service/mvp/dao"
 	"spectrum/service/mvp/model"
+	"time"
 )
 
 func getClassGoods(className string) []*pb.Good {
 	var goods []*pb.Good
 	for _, mainElementName := range getElementNames(className) {
 		pbGood := getPbGood(&model.Good{
-			Name:              mainElementName,
-			OrderID:           0,
-			Expense:           0,
-			CheckOutTimestamp: 0,
-			NonFavorExpense:   0,
-		},className)
+			Name:            mainElementName,
+			OrderID:         0,
+			Expense:         0,
+			CheckOutAt:      time.Unix(0, 0),
+			NonFavorExpense: 0,
+		}, className)
 		goods = append(goods, pbGood)
 		logger.Info("Get pb good", zap.Any("pbGood", pbGood))
 	}
@@ -76,7 +77,7 @@ func getOrderPbGoods(orderID int64) []*pb.Good {
 	}
 	var goods []*pb.Good
 	for _, dbGood := range dbGoods {
-		goods = append(goods, getPbGood(dbGood,"todo"))
+		goods = append(goods, getPbGood(dbGood, "todo"))
 	}
 	return goods
 }
@@ -84,8 +85,8 @@ func getOrderPbGoods(orderID int64) []*pb.Good {
 // 返回的 good:
 // 已结账时: 返回结账的金额信息
 // 未结账时: 返回最新的金额信息
-func getPbGood(good *model.Good,goodClassName string) *pb.Good {
-	mainElement := getElement(int64(good.ID), good.Name,goodClassName)
+func getPbGood(good *model.Good, goodClassName string) *pb.Good {
+	mainElement := getElement(int64(good.ID), good.Name, goodClassName)
 	attachElements := getAttachElements(int64(good.ID), good.Name)
 	favors := getFavors(good)
 	return &pb.Good{

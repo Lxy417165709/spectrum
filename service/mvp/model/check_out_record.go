@@ -6,7 +6,7 @@ type CheckOutRecord struct {
 	gorm.Model
 	ChargeableObjectName string `json:"chargeable_object_name"`
 	ChargeableObjectID   int64  `json:"chargeable_object_id"`
-	CheckOutTimestamp    int64  `json:"check_out_timestamp"`
+	CheckOutAt    int64  `json:"check_out_timestamp"`
 }
 
 func (c *CheckOutRecord) TableName() string {
