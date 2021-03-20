@@ -80,7 +80,7 @@ func (MvpServer) AddSpace(ctx context.Context, req *pb.AddSpaceReq) (*pb.AddSpac
 }
 
 func (MvpServer) GetAllGoodClasses(ctx context.Context, req *pb.GetAllGoodClassesReq) (*pb.GetAllGoodClassesRes, error) {
-	logger.Info("GetClasses", zap.Any("ctx", ctx), zap.Any("req", req))
+	logger.Info("GetAllGoodClasses", zap.Any("ctx", ctx), zap.Any("req", req))
 
 	var res pb.GetAllGoodClassesRes
 

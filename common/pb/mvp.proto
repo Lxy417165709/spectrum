@@ -26,7 +26,7 @@ enum BillingType {
 // ---------------------- instance 相关 ----------------------
 message ExpenseInfo {
     double nonFavorExpense = 1;  // 未打折费用
-    int64 checkOutTimestamp = 2; // 结账时间
+    int64 checkOutAt = 2; // 结账时间
     double expense = 3; // 打折后费用
 }
 
@@ -177,10 +177,10 @@ message CancelGoodRes{
 }
 
 message GetAllGoodClassesReq{}
+
 message GetAllGoodClassesRes{
     repeated GoodClass goodClasses = 1;
 }
-
 
 message GetOrderReq{
     int64 orderID = 1;

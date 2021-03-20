@@ -12,7 +12,7 @@ var objectMap = map[string]interface{}{
 
 var objectFunctionToRpcUnit = map[string]map[string]*model.RpcUnit{
 	"mvp": {
-		"GetClasses": {
+		"GetAllGoodClasses": {
 			ReqFunc: func() interface{} {
 				return &pb.GetAllGoodClassesReq{}
 			},

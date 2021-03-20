@@ -59,7 +59,7 @@ func (c *mvpClient) DeleteElementSizeInfo(ctx context.Context, in *DeleteElement
 
 func (c *mvpClient) GetAllGoodClasses(ctx context.Context, in *GetAllGoodClassesReq, opts ...grpc.CallOption) (*GetAllGoodClassesRes, error) {
 	out := new(GetAllGoodClassesRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/GetClasses", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/GetAllGoodClasses", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -273,7 +273,7 @@ func (UnimplementedMvpServer) DeleteElementSizeInfo(context.Context, *DeleteElem
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteElementSizeInfo not implemented")
 }
 func (UnimplementedMvpServer) GetAllGoodClasses(context.Context, *GetAllGoodClassesReq) (*GetAllGoodClassesRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetClasses not implemented")
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllGoodClasses not implemented")
 }
 func (UnimplementedMvpServer) GetAllDesks(context.Context, *GetAllDesksReq) (*GetAllDesksRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllDesks not implemented")
@@ -373,7 +373,7 @@ func _Mvp_GetAllGoodClasses_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.Mvp/GetClasses",
+		FullMethod: "/pb.Mvp/GetAllGoodClasses",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MvpServer).GetAllGoodClasses(ctx, req.(*GetAllGoodClassesReq))
@@ -732,7 +732,7 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Mvp_DeleteElementSizeInfo_Handler,
 		},
 		{
-			MethodName: "GetClasses",
+			MethodName: "GetAllGoodClasses",
 			Handler:    _Mvp_GetAllGoodClasses_Handler,
 		},
 		{
