@@ -41,10 +41,23 @@ func (elementDao) Create(obj *model.Element) (int64, error) {
 	return id, nil
 }
 
-func (elementDao) GetByName(name string) ([]*model.Element, error) {
+func (elementDao) Del(name string, size string) error {
+	obj := &model.Element{}
+	values := []interface{}{
+		name, size,
+	}
+	sql := fmt.Sprintf(`delete from %s where name = ? and size = ?;`, obj.TableName())
+	if err := mainDB.Exec(sql, values...).Error; err != nil {
+		logger.Error("Fail to finish delete", zap.Any("name", name), zap.Any("size", size), zap.Error(err))
+		return ers.MysqlError
+	}
+	return nil
+}
+
+func (elementDao) GetByName(name string, className string) ([]*model.Element, error) {
 	var result []*model.Element
-	if err := mainDB.Find(&result, "name = ?", name).Error; err != nil {
-		logger.Error("Fail to finish mainDB.Find", zap.String("name", name), zap.Error(err))
+	if err := mainDB.Find(&result, "name = ? and class_name = ?", name, className).Error; err != nil {
+		logger.Error("Fail to finish mainDB.Find", zap.String("name", name), zap.String("className", className), zap.Error(err))
 		return nil, err
 	}
 	return result, nil

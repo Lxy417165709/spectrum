@@ -1018,6 +1018,7 @@ export default {
             name: "请输入",
             selectedIndex: 0,
             sizeInfos: [{
+                id: 0,
                 size: "小规格",
                 price: "10.0",
                 pictureStorePath: ""
@@ -1034,6 +1035,7 @@ export default {
         type: cst.ELEMENT_TYPE.OPTION,
         selectedIndex: 0,
         sizeInfos: [{
+            id: 0,
             size: "",
             price: "0.0",
             pictureStorePath: ""
@@ -1044,6 +1046,7 @@ export default {
         type: cst.ELEMENT_TYPE.INGREDIENT,
         selectedIndex: 0,
         sizeInfos: [{
+            id: 0,
             size: "",
             price: "0.0",
             pictureStorePath: ""
@@ -1075,5 +1078,11 @@ export default {
                 name: "1号桌",
             }
         }]
+    },
+    blankSizeInfo: {
+        id: 0,
+        size: "规格名",
+        price: "0",
+        pictureStorePath: ""
     }
 }

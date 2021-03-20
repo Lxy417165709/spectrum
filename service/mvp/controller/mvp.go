@@ -29,6 +29,16 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 	return &res, nil
 }
 
+func (MvpServer) DeleteElementSizeInfo(ctx context.Context, req *pb.DeleteElementSizeInfoReq) (*pb.DeleteElementSizeInfoRes, error) {
+	logger.Info("DeleteElementSizeInfo", zap.Any("ctx", ctx), zap.Any("req", req))
+
+	var res pb.DeleteElementSizeInfoRes
+	if errResult := dao.ElementDao.Del(req.ElementName, req.SizeInfoSize); errResult != nil {
+		return nil, errResult
+	}
+	return &res, nil
+}
+
 func (MvpServer) AddElement(ctx context.Context, req *pb.AddElementReq) (*pb.AddElementRes, error) {
 	logger.Info("AddElement", zap.Any("ctx", ctx), zap.Any("req", req))
 
@@ -40,6 +50,14 @@ func (MvpServer) AddElement(ctx context.Context, req *pb.AddElementReq) (*pb.Add
 			zap.Error(err))
 		return nil, err
 	}
+	if _, errResult := dao.ElementSizeRecordDao.Create(&model.ElementSizeRecord{
+		GoodID:      0,
+		ElementName: req.Element.Name,
+		SelectSize:  req.Element.SizeInfos[req.Element.SelectedIndex].Size,
+	}); errResult != nil {
+		return nil, errResult
+	}
+
 	return &res, nil
 }
 
@@ -108,12 +126,8 @@ func (MvpServer) GetAllGoodOptions(ctx context.Context, req *pb.GetAllGoodOption
 	}
 
 	pbElements := make([]*pb.Element, 0)
-	for name, elements := range nameToElements {
-		pbElements = append(pbElements, &pb.Element{
-			Name:      name,
-			Type:      elements[0].Type,
-			SizeInfos: model.GetSizeInfos(elements),
-		})
+	for name := range nameToElements {
+		pbElements = append(pbElements, getElement(0, name,className))
 	}
 
 	res.Elements = pbElements
@@ -344,7 +358,7 @@ func (s MvpServer) CancelGood(ctx context.Context, req *pb.CancelGoodReq) (*pb.C
 		// todo: log
 		return nil, err
 	}
-	if err := dao.MainElementSizeRecordDao.BatchDelete(req.GoodIDs); err != nil {
+	if err := dao.ElementSizeRecordDao.BatchDelete(req.GoodIDs); err != nil {
 		// todo: log
 		return nil, err
 	}

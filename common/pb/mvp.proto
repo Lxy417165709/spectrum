@@ -84,9 +84,10 @@ message Element {
 }
 
 message SizeInfo {
-    string size = 1;
-    string price = 2;
-    string pictureStorePath = 3;
+    int64 id = 1;
+    string size = 2;
+    string price = 3;
+    string pictureStorePath = 4;
 }
 
 message Favor {
@@ -253,7 +254,15 @@ message GetAllDesksRes{
     repeated Desk desks = 1;
 }
 
+message DeleteElementSizeInfoReq{
+    string elementName = 1;
+    string sizeInfoSize = 2;
+}
+message DeleteElementSizeInfoRes{}
+
 service Mvp {
+    rpc DeleteElementSizeInfo(DeleteElementSizeInfoReq) returns(DeleteElementSizeInfoRes);
+
     rpc GetAllGoodClasses(GetAllGoodClassesReq) returns (GetAllGoodClassesRes); // 获得所有商品类
 
     rpc GetAllDesks(GetAllDesksReq) returns (GetAllDesksRes);   // 获取类名下的所有桌

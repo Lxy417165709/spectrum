@@ -132,6 +132,16 @@ var objectFunctionToRpcUnit = map[string]map[string]*model.RpcUnit{
 			SuccessMsg: "点单成功",
 			FailMsg:    "点单失败",
 		},
+		"DeleteElementSizeInfo": {
+			ReqFunc: func() interface{} {
+				return &pb.DeleteElementSizeInfoReq{}
+			},
+			ResFunc: func() interface{} {
+				return &pb.DeleteElementSizeInfoRes{}
+			},
+			SuccessMsg: "删除成功",
+			FailMsg:    "删除失败",
+		},
 	},
 	//"AddOptionClass": {
 	//	ReqFunc: func() interface{} {

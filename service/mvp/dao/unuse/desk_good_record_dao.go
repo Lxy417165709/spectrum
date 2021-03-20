@@ -5,7 +5,7 @@ package unuse
 //	gorm.Model
 //	DeskID          int    `json:"desk_id"`
 //	GoodID          int    `json:"good_id"`
-//	MainElementName string `json:"main_element_name"`
+//	ElementName string `json:"main_element_name"`
 //}
 //
 //func (*DeskGoodRecord) TableName() string {

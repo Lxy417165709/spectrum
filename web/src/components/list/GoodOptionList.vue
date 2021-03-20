@@ -59,7 +59,7 @@ export default {
       this.GoodOptionEditorOfAdminVisible = true
       this.$nextTick(() => {
         this.$refs.GoodOptionEditorOfAdmin.option = option
-        this.$refs.GoodOptionEditorOfAdmin.curSizeInfoIndex = option.selectedIndex
+        this.$refs.GoodOptionEditorOfAdmin.curSizeInfoIndexString = option.selectedIndex.toString()
         this.$refs.GoodOptionEditorOfAdmin.canModifyName = canModifyName
       })
     },

@@ -46,6 +46,7 @@ export default {
   },
   NewBlankSizeInfo(name) {
     return {
+      id: 0,
       size: name,
       price: "0",
       pictureStorePath: ""
@@ -151,6 +152,18 @@ export default {
     let model = this.getRequestModel("mvp", "AddGoodClass", par)
     await this.sendRequestModel(model).then((res) => {
       console.log("AddGoodClass", res)
+      if (!this.hasRequestSuccess(res)) {
+        obj.$message.error(res.data.err)
+        return
+      }
+      obj.$message.success(res.data.msg)
+      then(res)
+    })
+  },
+  async DeleteElementSizeInfo(obj, par, then) {
+    let model = this.getRequestModel("mvp", "DeleteElementSizeInfo", par)
+    await this.sendRequestModel(model).then((res) => {
+      console.log("DeleteElementSizeInfo", res)
       if (!this.hasRequestSuccess(res)) {
         obj.$message.error(res.data.err)
         return

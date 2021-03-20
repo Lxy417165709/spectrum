@@ -55,10 +55,10 @@ func writeGoodSizeToDB(good *pb.Good) error {
 	}
 
 	// 1. 创建主元素、主元素尺寸的对应关系
-	if _, errResult := dao.MainElementSizeRecordDao.Create(&model.MainElementSizeRecord{
-		GoodID:          good.Id,
-		MainElementName: good.MainElement.Name,
-		SelectSize:      good.MainElement.SizeInfos[good.MainElement.SelectedIndex].Size,
+	if _, errResult := dao.ElementSizeRecordDao.Create(&model.ElementSizeRecord{
+		GoodID:      good.Id,
+		ElementName: good.MainElement.Name,
+		SelectSize:  good.MainElement.SizeInfos[good.MainElement.SelectedIndex].Size,
 	}); errResult != nil {
 		return errResult
 	}
@@ -78,6 +78,9 @@ func writeGoodSizeToDB(good *pb.Good) error {
 	// 3. 返回
 	return nil
 }
+
+
+
 
 func closeDeskIfOpening(deskID int64, endTimestamp int64) error {
 	desk, err := dao.DeskDao.Get(deskID)

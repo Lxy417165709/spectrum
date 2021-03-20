@@ -17,6 +17,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MvpClient interface {
+	DeleteElementSizeInfo(ctx context.Context, in *DeleteElementSizeInfoReq, opts ...grpc.CallOption) (*DeleteElementSizeInfoRes, error)
 	GetAllGoodClasses(ctx context.Context, in *GetAllGoodClassesReq, opts ...grpc.CallOption) (*GetAllGoodClassesRes, error)
 	GetAllDesks(ctx context.Context, in *GetAllDesksReq, opts ...grpc.CallOption) (*GetAllDesksRes, error)
 	GetAllGoods(ctx context.Context, in *GetAllGoodsReq, opts ...grpc.CallOption) (*GetAllGoodsRes, error)
@@ -45,6 +46,15 @@ type mvpClient struct {
 
 func NewMvpClient(cc grpc.ClientConnInterface) MvpClient {
 	return &mvpClient{cc}
+}
+
+func (c *mvpClient) DeleteElementSizeInfo(ctx context.Context, in *DeleteElementSizeInfoReq, opts ...grpc.CallOption) (*DeleteElementSizeInfoRes, error) {
+	out := new(DeleteElementSizeInfoRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/DeleteElementSizeInfo", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *mvpClient) GetAllGoodClasses(ctx context.Context, in *GetAllGoodClassesReq, opts ...grpc.CallOption) (*GetAllGoodClassesRes, error) {
@@ -231,6 +241,7 @@ func (c *mvpClient) GetAllDeskClasses(ctx context.Context, in *GetAllDeskClasses
 // All implementations must embed UnimplementedMvpServer
 // for forward compatibility
 type MvpServer interface {
+	DeleteElementSizeInfo(context.Context, *DeleteElementSizeInfoReq) (*DeleteElementSizeInfoRes, error)
 	GetAllGoodClasses(context.Context, *GetAllGoodClassesReq) (*GetAllGoodClassesRes, error)
 	GetAllDesks(context.Context, *GetAllDesksReq) (*GetAllDesksRes, error)
 	GetAllGoods(context.Context, *GetAllGoodsReq) (*GetAllGoodsRes, error)
@@ -258,6 +269,9 @@ type MvpServer interface {
 type UnimplementedMvpServer struct {
 }
 
+func (UnimplementedMvpServer) DeleteElementSizeInfo(context.Context, *DeleteElementSizeInfoReq) (*DeleteElementSizeInfoRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteElementSizeInfo not implemented")
+}
 func (UnimplementedMvpServer) GetAllGoodClasses(context.Context, *GetAllGoodClassesReq) (*GetAllGoodClassesRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllGoodClasses not implemented")
 }
@@ -329,6 +343,24 @@ type UnsafeMvpServer interface {
 
 func RegisterMvpServer(s grpc.ServiceRegistrar, srv MvpServer) {
 	s.RegisterService(&_Mvp_serviceDesc, srv)
+}
+
+func _Mvp_DeleteElementSizeInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteElementSizeInfoReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).DeleteElementSizeInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/DeleteElementSizeInfo",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).DeleteElementSizeInfo(ctx, req.(*DeleteElementSizeInfoReq))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Mvp_GetAllGoodClasses_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -695,6 +727,10 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.Mvp",
 	HandlerType: (*MvpServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "DeleteElementSizeInfo",
+			Handler:    _Mvp_DeleteElementSizeInfo_Handler,
+		},
 		{
 			MethodName: "GetAllGoodClasses",
 			Handler:    _Mvp_GetAllGoodClasses_Handler,

@@ -10,16 +10,16 @@
     </el-form-item>
 
     <!-- 2. 规格编辑器 -->
-    <el-tabs type="border-card" @tab-click="tabClick" editable @edit="handleTabsEdit"
+    <el-tabs type="border-card" @tab-click="tabClick" addable v-model="curSizeInfoIndexString"
              @tab-add="handleClick" style="margin-bottom: 10px">
       <el-tab-pane v-for="(sizeInfo,index) in option.sizeInfos" :label="sizeInfo.size"
                    :name="index.toString()"
                    :key="index">
 
         <el-form-item label="规格名">
-          <el-input style="width: 70%" v-if="sizeInfo.size!==undefined && canModifyName"
+          <el-input style="width: 70%" v-if="sizeInfo.id === 0"
                     v-model="sizeInfo.size"></el-input>
-          <span v-if="sizeInfo.size!==undefined && !canModifyName">{{ sizeInfo.size }}</span>
+          <span v-if="sizeInfo.id !== 0">{{ sizeInfo.size }}</span>
         </el-form-item>
 
 
@@ -44,10 +44,16 @@
           <el-form-item label="价格">
             <el-input v-model="sizeInfo.price" style="width: 70%"></el-input>
           </el-form-item>
-          <el-form-item label="默认选中" v-if="option.selectedIndex !== index">
-            <el-button @click="handleChangeDefaultSizeInfo(index)">确定</el-button>
+          <el-form-item label="默认选中" v-if="option.selectedIndex !== index && sizeInfo.id !== 0">
+            <el-button @click="handleChangeDefaultSizeInfo(index)" type="primary">选中</el-button>
+          </el-form-item>
+          <el-form-item label="是否删除"
+                        v-if="option.selectedIndex !== index && option.sizeInfos.length>1">
+            <el-button @click="deleteElementSizeInfo(index)" type="danger">删除</el-button>
           </el-form-item>
         </el-form>
+
+
       </el-tab-pane>
     </el-tabs>
 
@@ -77,16 +83,14 @@ export default {
       option: {},
 
       addTabCount: 0,
-      curSizeInfoIndex: 0,
+      curSizeInfoIndexString: '0',
 
       canModifyName: false,
     }
   },
   methods: {
     handleClick(tab, event) {
-      this.addTabCount++
-      let name = "未设定规格" + this.addTabCount
-      this.option.sizeInfos.push(utils.NewBlankSizeInfo(name))
+      this.option.sizeInfos.push(utils.deepCopy(test.blankSizeInfo))
     },
     handleTabsEdit(name, event) {
       this.option.sizeInfos = utils.removeElementByField(this.option.sizeInfos, "size", name)
@@ -94,6 +98,30 @@ export default {
     handleChangeDefaultSizeInfo(index) {
       this.option.selectedIndex = index
     },
+    deleteElementSizeInfo(index) {
+      if (this.option.sizeInfos[this.curSizeInfoIndexInt].id === 0) {
+        this.option.sizeInfos = utils.removeIndex(this.option.sizeInfos, index)
+        if (this.curSizeInfoIndexInt >= this.option.sizeInfos.length) {
+          this.curSizeInfoIndexString = (this.option.sizeInfos.length - 1).toString()
+        }
+        return
+      }
+
+      utils.DeleteElementSizeInfo(this, {
+        elementName: this.option.name,
+        sizeInfoSize: this.option.sizeInfos[index].size,
+      }, (res) => {
+        this.option.sizeInfos = utils.removeIndex(this.option.sizeInfos, index)
+        // if (this.option.selectedIndex > this.curSizeInfoIndexInt) {
+        //   this.option.selectedIndex--
+        // }  // todo: 这个 默认选中应该要调整下，防止删除后默认选中也跟着改变
+        if (this.curSizeInfoIndexInt >= this.option.sizeInfos.length) {
+          this.curSizeInfoIndexString = (this.option.sizeInfos.length - 1).toString()
+        }
+      })
+    },
+
+
     async addGoodOption(option) {
       let model = utils.getRequestModel("mvp", "AddElement", {
         element: option,
@@ -109,14 +137,20 @@ export default {
       })
     },
     tabClick(tab) {
-      this.curSizeInfoIndex = tab.index
+      // this.curSizeInfoIndex = tab.index
+      // console.log(this.curSizeInfoIndex)
     },
     cleanSizeInfoPictureStorePath() {
-      this.option.sizeInfos[this.curSizeInfoIndex].pictureStorePath = ""
+      this.option.sizeInfos[this.curSizeInfoIndexInt].pictureStorePath = ""
     },
     imageUploadSuccess(res, file, fileList) {
-      this.option.sizeInfos[this.curSizeInfoIndex].pictureStorePath = res.data.fileStorePath;
+      this.option.sizeInfos[this.curSizeInfoIndexInt].pictureStorePath = res.data.fileStorePath;
     },
+  },
+  computed: {
+    curSizeInfoIndexInt() {
+      return this.curSizeInfoIndexString - 0
+    }
   }
 }
 </script>

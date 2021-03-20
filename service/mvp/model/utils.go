@@ -56,6 +56,7 @@ func GetSizeInfos(sameNameElements []*Element) []*pb.SizeInfo {
 			Size:             element.Size,
 			Price:            GetPbPrice(element.Price),
 			PictureStorePath: element.PictureStorePath,
+			Id:               int64(element.ID),
 		})
 	}
 	return sizeInfos

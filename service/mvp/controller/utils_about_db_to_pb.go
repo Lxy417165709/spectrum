@@ -85,7 +85,7 @@ func getOrderPbGoods(orderID int64) []*pb.Good {
 // 已结账时: 返回结账的金额信息
 // 未结账时: 返回最新的金额信息
 func getPbGood(good *model.Good) *pb.Good {
-	mainElement := getMainElement(int64(good.ID), good.Name)
+	mainElement := getElement(int64(good.ID), good.Name)
 	attachElements := getAttachElements(int64(good.ID), good.Name)
 	favors := getFavors(good)
 	return &pb.Good{
@@ -97,31 +97,31 @@ func getPbGood(good *model.Good) *pb.Good {
 	}
 }
 
-func getMainElement(goodID int64, mainElementName string) *pb.Element {
-	mainElements, err := dao.ElementDao.GetByName(mainElementName)
+func getElement(goodID int64, elementName,className string) *pb.Element {
+	elements, err := dao.ElementDao.GetByName(elementName,className)
 	if err != nil {
 		// todo: log
 		return nil
 	}
-	sizeRecord, err := dao.MainElementSizeRecordDao.GetByGoodIdAndMainElementName(goodID, mainElementName)
+	sizeRecord, err := dao.ElementSizeRecordDao.GetByGoodIdAndElementName(goodID, elementName)
 	if err != nil {
 		// todo: log
 		return nil
 	}
 	if sizeRecord == nil {
-		logger.Warn("Size record is blank", zap.Any("goodID", goodID), zap.Any("mainElementName", mainElementName))
+		logger.Warn("Size record is blank", zap.Any("goodID", goodID), zap.Any("elementName", elementName))
 		return nil
 	}
-	sizeInfos := model.GetSizeInfos(mainElements)
+	sizeInfos := model.GetSizeInfos(elements)
 	selectedSizeInfoIndex := int32(GetSelectedIndex(sizeInfos, sizeRecord.SelectSize))
 	logger.Info("GetSelectedIndex",
-		zap.Any("mainElementName", mainElementName),
+		zap.Any("elementName", elementName),
 		zap.Any("selectedSizeInfoIndex", selectedSizeInfoIndex),
 		zap.Any("sizeInfos", sizeInfos),
 		zap.Any("selectSize", sizeRecord.SelectSize))
 	return &pb.Element{
-		Name:          mainElementName,
-		Type:          pb.ElementType_Main,
+		Name:          elementName,
+		Type:          elements[0].Type,
 		SelectedIndex: selectedSizeInfoIndex,
 		SizeInfos:     sizeInfos,
 	}
@@ -143,13 +143,13 @@ func getAttachElements(goodID int64, mainElementName string) []*pb.Element {
 	var attachElements []*pb.Element
 	attachRecords, err := dao.MainElementAttachElementRecordDao.GetByGoodIdAndMainElementName(goodID, mainElementName)
 	if err != nil {
-		logger.Error("Fail to finish MainElementAttachElementRecordDao.GetByGoodIdAndMainElementName", zap.Error(err))
+		logger.Error("Fail to finish MainElementAttachElementRecordDao.GetByGoodIdAndElementName", zap.Error(err))
 		return nil
 	}
 	logger.Info("Success to get attachRecords", zap.Any("attachRecords", attachRecords))
 
 	for _, attachRecord := range attachRecords {
-		elements, err := dao.ElementDao.GetByName(attachRecord.AttachElementName)
+		elements, err := dao.ElementDao.GetByName(attachRecord.AttachElementName,attachRecord.ClassName)
 		if err != nil {
 			logger.Error("Fail to finish ElementDao.GetByName", zap.Error(err))
 			return nil
