@@ -40,9 +40,6 @@ func (spaceDao) Create(obj *model.Space) (int64, error) {
 }
 
 func (spaceDao) GetAll() ([]*model.Space, error) {
-	var table model.Space
-	createTableWhenNotExist(&table)
-
 	var result []*model.Space
 	if err := mainDB.Find(&result).Error; err != nil {
 		logger.Error("Fail to finish mainDB.Find",
@@ -52,12 +49,9 @@ func (spaceDao) GetAll() ([]*model.Space, error) {
 	return result, nil
 }
 
-func (spaceDao) GetByClassName(className string) ([]*model.Space, error) {
-	var table model.Space
-	createTableWhenNotExist(&table)
-
+func (spaceDao) GetByClassName(classID int64) ([]*model.Space, error) {
 	var result []*model.Space
-	if err := mainDB.Where("class_name = ?", className).Find(&result).Error; err != nil {
+	if err := mainDB.Where("class_id = ?", classID).Find(&result).Error; err != nil {
 		logger.Error("Fail to finish mainDB.Find",
 			zap.Error(err))
 		return nil, err

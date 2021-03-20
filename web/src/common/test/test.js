@@ -1074,11 +1074,7 @@ export default {
   },
   blankDeskClass: {
     name: "请输入",
-    desks: [{
-      space: {
-        name: "1号桌",
-      }
-    }]
+    pictureStorePath: "",
   },
   blankSizeInfo: {
     id: 0,

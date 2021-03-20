@@ -429,7 +429,12 @@ func (s MvpServer) GetAllDesks(ctx context.Context, req *pb.GetAllDesksReq) (*pb
 
 	var res pb.GetAllDesksRes
 
-	spaces, err := dao.SpaceDao.GetByClassName(req.ClassName)
+	spaceClass := getDbSpaceClassByName(req.ClassName)
+	if spaceClass == nil {
+		return &res, nil
+	}
+
+	spaces, err := dao.SpaceDao.GetByClassName(spaceClass.ID)
 	if err != nil {
 		// todo: log
 		return nil, err
