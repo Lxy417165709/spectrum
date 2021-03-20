@@ -9,7 +9,7 @@ CREATE TABLE `element`
     `class_name`         varchar(30)  NOT NULL DEFAULT '未分类',
     `size`               varchar(30)  NOT NULL DEFAULT '小规格',
     `price`              double       NOT NULL DEFAULT 0,
-    `picture_store_path` varchar(20)  NOT NULL DEFAULT '',
+    `picture_store_path` varchar(255) NOT NULL DEFAULT '',
     PRIMARY KEY (`id`),
     UNIQUE KEY (`class_name`, `name`, `size`)
 ) ENGINE = InnoDB
@@ -33,14 +33,14 @@ CREATE TABLE `good`
   COLLATE = utf8mb4_0900_ai_ci;
 
 # 商品类表
-CREATE TABLE `good_class`
+CREATE TABLE `element_class`
 (
     `id`                 int unsigned NOT NULL AUTO_INCREMENT,
     `created_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `name`               varchar(30)  NOT NULL DEFAULT '',
     `class_type`         int          NOT NULL DEFAULT 0,
-    `picture_store_path` varchar(20)  NOT NULL DEFAULT '',
+    `picture_store_path` varchar(255) NOT NULL DEFAULT '',
     PRIMARY KEY (`id`),
     UNIQUE KEY (`name`)
 ) ENGINE = InnoDB
@@ -125,7 +125,7 @@ CREATE TABLE `space`
     `class_name`         varchar(30)  NOT NULL DEFAULT '',
     `price`              double       NOT NULL DEFAULT 0,
     `billing_type`       int          NOT NULL DEFAULT 0,
-    `picture_store_path` varchar(20)  NOT NULL DEFAULT '',
+    `picture_store_path` varchar(255) NOT NULL DEFAULT '',
     PRIMARY KEY (`id`),
     UNIQUE KEY (`class_name`, `name`)
 ) ENGINE = InnoDB
@@ -159,4 +159,4 @@ CREATE TABLE `favor_record`
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci
+  COLLATE = utf8mb4_0900_ai_ci;

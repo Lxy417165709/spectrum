@@ -20,10 +20,14 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 	logger.Info("AddGood", zap.Any("ctx", ctx), zap.Any("req", req))
 
 	var res pb.AddGoodRes
-	if errResult := createElement(req.Good.MainElement, req.ClassName); errResult != nil {
+	good, className, errResult := CheckAddGoodParameter(req)
+	if errResult != nil {
 		return nil, errResult
 	}
-	if errResult := writeGoodSizeToDB(req.Good); errResult != nil {
+	if errResult := storePbElementToDB(good.MainElement, className); errResult != nil {
+		return nil, errResult
+	}
+	if errResult := writePbGoodSizeToDB(good); errResult != nil {
 		return nil, errResult
 	}
 	return &res, nil
@@ -44,8 +48,8 @@ func (MvpServer) AddElement(ctx context.Context, req *pb.AddElementReq) (*pb.Add
 
 	var res pb.AddElementRes
 
-	if err := createElement(req.Element, req.ClassName); err != nil {
-		logger.Error("Fail to finish createElement",
+	if err := storePbElementToDB(req.Element, req.ClassName); err != nil {
+		logger.Error("Fail to finish storePbElementToDB",
 			zap.Any("req", req),
 			zap.Error(err))
 		return nil, err
@@ -76,14 +80,14 @@ func (MvpServer) AddSpace(ctx context.Context, req *pb.AddSpaceReq) (*pb.AddSpac
 }
 
 func (MvpServer) GetAllGoodClasses(ctx context.Context, req *pb.GetAllGoodClassesReq) (*pb.GetAllGoodClassesRes, error) {
-	logger.Info("GetAllGoodClasses", zap.Any("ctx", ctx), zap.Any("req", req))
+	logger.Info("GetClasses", zap.Any("ctx", ctx), zap.Any("req", req))
 
 	var res pb.GetAllGoodClassesRes
 
 	// 1. 获得主元素的所有类
-	classes, err := dao.GoodClassDao.GetAllClasses()
+	classes, err := dao.ElementClassDao.GetClasses(pb.ElementType_Main)
 	if err != nil {
-		logger.Error("Fail to finish GoodClassDao.GetMainElementClass",
+		logger.Error("Fail to finish ElementClassDao.GetMainElementClass",
 			zap.Any("req", req),
 			zap.Error(err))
 		return nil, err
@@ -138,23 +142,29 @@ func (MvpServer) GetAllGoodOptions(ctx context.Context, req *pb.GetAllGoodOption
 func (MvpServer) AddGoodClass(ctx context.Context, req *pb.AddGoodClassReq) (*pb.AddGoodClassRes, error) {
 	logger.Info("AddGoodClass", zap.Any("ctx", ctx), zap.Any("req", req))
 
-	var res pb.AddGoodClassRes
-	// todo: 判断类名是否为空、是否存在
-
-	// 1. 创建商品类
-	dbGoodClass := &model.GoodClass{
-		ID:               uint(req.GoodClass.Id),
-		Name:             req.GoodClass.Name,
-		PictureStorePath: req.GoodClass.PictureStorePath,
-	}
-	id, errResult := dao.GoodClassDao.Create(dbGoodClass)
+	// 1. 参数校验、获取
+	goodClass, errResult := CheckAddGoodClassParameter(req)
 	if errResult != nil {
 		return nil, errResult
 	}
 
+	// 2. 创建商品类、获取生成商品类ID
+	dbGoodClass := &model.ElementClass{
+		ID:               uint(goodClass.Id),
+		Name:             goodClass.Name,
+		PictureStorePath: goodClass.PictureStorePath,
+	}
+	id, errResult := dao.ElementClassDao.Create(dbGoodClass)
+	if errResult != nil {
+		return nil, errResult
+	}
+
+	// 3. 写响应
+	var res pb.AddGoodClassRes
 	dbGoodClass.ID = uint(id)
 	res.GoodClass = dbGoodClass.ToPb()
 
+	// 4. 返回响应
 	return &res, nil
 }
 
@@ -204,7 +214,7 @@ func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.Order
 			return nil, err
 		}
 		good.Id = int64(dbGood.ID)
-		if err := writeGoodSizeToDB(good); err != nil {
+		if err := writePbGoodSizeToDB(good); err != nil {
 			logger.Error("Fail to finish createGood",
 				zap.Any("req", req),
 				zap.Error(err))

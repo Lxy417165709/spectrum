@@ -5,19 +5,20 @@ import (
 	"go.uber.org/zap"
 	"spectrum/common/ers"
 	"spectrum/common/logger"
+	"spectrum/common/pb"
 	"spectrum/service/mvp/model"
 )
 
-var GoodClassDao goodClassDao
+var ElementClassDao elementClassDao
 
-type goodClassDao struct{}
+type elementClassDao struct{}
 
-func (goodClassDao) Create(obj *model.GoodClass) (int64, error) {
+func (elementClassDao) Create(obj *model.ElementClass) (int64, error) {
 	values := []interface{}{
-		obj.ID, obj.Name, obj.PictureStorePath,
+		obj.ID, obj.Name, obj.PictureStorePath, obj.ClassType,
 	}
 	sql := fmt.Sprintf(`
-		insert into %s(id, name, picture_store_path) values(%s)
+		insert into %s(id, name, picture_store_path,class_type) values(%s)
 		on duplicate key update
 			name = values(name),
 			picture_store_path = values(picture_store_path);
@@ -36,9 +37,9 @@ func (goodClassDao) Create(obj *model.GoodClass) (int64, error) {
 	return id, nil
 }
 
-func (goodClassDao) GetAllClasses() ([]*model.GoodClass, error) {
-	var result []*model.GoodClass
-	if err := mainDB.Find(&result).Error; err != nil {
+func (elementClassDao) GetClasses(classType pb.ElementType) ([]*model.ElementClass, error) {
+	var result []*model.ElementClass
+	if err := mainDB.Find(&result, "class_type = ?", classType).Error; err != nil {
 		logger.Error("Fail to finish mainDB.Find", zap.Error(err))
 		return nil, err
 	}

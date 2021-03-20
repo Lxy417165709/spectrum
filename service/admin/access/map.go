@@ -12,7 +12,7 @@ var objectMap = map[string]interface{}{
 
 var objectFunctionToRpcUnit = map[string]map[string]*model.RpcUnit{
 	"mvp": {
-		"GetAllGoodClasses": {
+		"GetClasses": {
 			ReqFunc: func() interface{} {
 				return &pb.GetAllGoodClassesReq{}
 			},
@@ -203,7 +203,7 @@ var objectFunctionToRpcUnit = map[string]map[string]*model.RpcUnit{
 	//	SuccessMsg: "删除选项类成功",
 	//	FailMsg:    "删除选项类失败",
 	//},
-	//"GetAllGoodClasses": {
+	//"GetClasses": {
 	//	ReqFunc: func() interface{} {
 	//		return &pb.GetAllGoodClassesReq{}
 	//	},

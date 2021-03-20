@@ -66,7 +66,6 @@ func GetDbPrice(priceString string) float64 {
 	price, err := strconv.ParseFloat(priceString, 64)
 	if err != nil {
 		logger.Error("Fail to finish strconv.ParseFloat", zap.String("priceString", priceString))
-		// 这里不返回
 	}
 	return price
 }

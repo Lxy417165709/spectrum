@@ -3339,7 +3339,7 @@ var file_common_pb_mvp_proto_depIdxs = []int32{
 	10, // 31: pb.GetAllGoodOptionsRes.elements:type_name -> pb.Element
 	5,  // 32: pb.GetAllDesksRes.desks:type_name -> pb.Desk
 	55, // 33: pb.Mvp.DeleteElementSizeInfo:input_type -> pb.DeleteElementSizeInfoReq
-	35, // 34: pb.Mvp.GetAllGoodClasses:input_type -> pb.GetAllGoodClassesReq
+	35, // 34: pb.Mvp.GetClasses:input_type -> pb.GetAllGoodClassesReq
 	53, // 35: pb.Mvp.GetAllDesks:input_type -> pb.GetAllDesksReq
 	49, // 36: pb.Mvp.GetAllGoods:input_type -> pb.GetAllGoodsReq
 	51, // 37: pb.Mvp.GetAllGoodOptions:input_type -> pb.GetAllGoodOptionsReq
@@ -3360,7 +3360,7 @@ var file_common_pb_mvp_proto_depIdxs = []int32{
 	45, // 52: pb.Mvp.DeleteFavorForGood:input_type -> pb.DeleteFavorForGoodReq
 	47, // 53: pb.Mvp.GetAllDeskClasses:input_type -> pb.GetAllDeskClassesReq
 	56, // 54: pb.Mvp.DeleteElementSizeInfo:output_type -> pb.DeleteElementSizeInfoRes
-	36, // 55: pb.Mvp.GetAllGoodClasses:output_type -> pb.GetAllGoodClassesRes
+	36, // 55: pb.Mvp.GetClasses:output_type -> pb.GetAllGoodClassesRes
 	54, // 56: pb.Mvp.GetAllDesks:output_type -> pb.GetAllDesksRes
 	50, // 57: pb.Mvp.GetAllGoods:output_type -> pb.GetAllGoodsRes
 	52, // 58: pb.Mvp.GetAllGoodOptions:output_type -> pb.GetAllGoodOptionsRes
