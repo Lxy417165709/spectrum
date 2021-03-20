@@ -36,3 +36,13 @@ func getExpenseInfo(chargeableObj model.Chargeable) *pb.ExpenseInfo {
 		panic("unfix type")
 	}
 }
+
+func getSelectedIndex(sizeInfos []*pb.SizeInfo, selectSize string) int {
+	for index, sizeInfo := range sizeInfos {
+		if sizeInfo.Size == selectSize {
+			return index
+		}
+	}
+	logger.Warn("Can not get selected Index", zap.Any("sizeInfos", sizeInfos), zap.Any("selectSize", selectSize))
+	return 0
+}

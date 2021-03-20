@@ -36,23 +36,32 @@ func checkOutIfNot(chargeableObj model.Chargeable) error {
 	return nil
 }
 
-func writePbGoodSizeToDB(good *pb.Good) error {
+func GetDbElementSelectSizeRecord(element *pb.Element, goodId int64, elementClassName string) *model.ElementSelectSizeRecord {
+	return &model.ElementSelectSizeRecord{
+		GoodID:           goodId,
+		ElementClassName: elementClassName,
+		ElementName:      element.Name,
+		SelectSize:       element.SizeInfos[element.SelectedIndex].Size,
+	}
+}
+
+func writePbGoodSizeToDB(good *pb.Good, className string) error {
 	// 1. 创建主元素、主元素尺寸的对应关系
-	if _, errResult := dao.ElementSizeRecordDao.Create(&model.ElementSizeRecord{
-		GoodID:      good.Id,
-		ElementName: good.MainElement.Name,
-		SelectSize:  good.MainElement.SizeInfos[good.MainElement.SelectedIndex].Size,
-	}); errResult != nil {
+	if _, errResult := dao.ElementSelectSizeRecordDao.Create(GetDbElementSelectSizeRecord(good.MainElement, good.Id, className)); errResult != nil {
 		return errResult
 	}
 
 	// 2. 创建主元素、附属元素、附属元素尺寸的对应关系
 	for _, attachElement := range good.AttachElements {
 		if _, errResult := dao.MainElementAttachElementRecordDao.Create(&model.MainElementAttachElementRecord{
-			GoodID:            good.Id,
-			MainElementName:   good.MainElement.Name,
-			AttachElementName: attachElement.Name,
-			SelectSize:        model.GetSelectSizeInfo(attachElement).Size,
+			CreatedAt:              time.Time{},
+			UpdatedAt:              time.Time{},
+			GoodID:                 good.Id,
+			AttachElementClassName: "", // todo: 这里还缺少一些字段
+			MainElementClassName:   className,
+			MainElementName:        good.MainElement.Name,
+			AttachElementName:      attachElement.Name,
+			SelectSize:             model.GetSelectSizeInfo(attachElement).Size,
 		}); errResult != nil {
 			return errResult
 		}
@@ -85,35 +94,39 @@ func closeDeskIfOpening(deskID int64, endTimestamp int64) error {
 }
 
 func storePbElementToDB(pbElement *pb.Element, className string) error {
-	dbElements := getDbElements(pbElement, className)
-	for _, dbElement := range dbElements {
-		if _, errResult := dao.ElementDao.Create(dbElement); errResult != nil {
+	dbElement := getDbElement(pbElement, className)
+	if _, errResult := dao.ElementDao.Create(dbElement); errResult != nil {
+		return errResult
+	}
+	for _, pbSizeInfo := range pbElement.SizeInfos {
+		if _, errResult := dao.ElementSizeInfoRecordDao.Create(getDbElementSizeInfo(pbSizeInfo, pbElement.Name, className)); errResult != nil {
 			return errResult
 		}
 	}
 	return nil
 }
 
-func getDbElements(pbElement *pb.Element, className string) []*model.Element {
-	if pbElement == nil {
-		return nil
+func getDbElementSizeInfo(pbSizeInfo *pb.SizeInfo, elementName, className string) *model.ElementSizeInfoRecord {
+	return &model.ElementSizeInfoRecord{
+		ID:               uint(pbSizeInfo.Id),
+		Price:            model.GetDbPrice(pbSizeInfo.Price),
+		PictureStorePath: pbSizeInfo.PictureStorePath,
+		Size:             pbSizeInfo.Size,
+		ClassName:        className,
+		Name:             elementName,
 	}
-	var result []*model.Element
-	for _, sizeInfo := range pbElement.SizeInfos {
-		result = append(result, &model.Element{
-			ClassName:        className,
-			Name:             pbElement.Name,
-			Type:             pbElement.Type,
-			Price:            model.GetDbPrice(sizeInfo.Price),
-			Size:             sizeInfo.Size,
-			PictureStorePath: sizeInfo.PictureStorePath,
-		})
+}
+
+func getDbElement(pbElement *pb.Element, className string) *model.Element {
+	return &model.Element{
+		ID:        uint(pbElement.Id),
+		ClassName: className,
+		Name:      pbElement.Name,
+		Type:      pbElement.Type,
 	}
-	return result
 }
 
 func getDbSpace(pbSpace *pb.Space) *model.Space {
-
 	return &model.Space{
 		Name:             pbSpace.Name,
 		ClassName:        pbSpace.ClassName,

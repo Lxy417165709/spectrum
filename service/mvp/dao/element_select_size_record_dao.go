@@ -9,11 +9,11 @@ import (
 	"spectrum/service/mvp/model"
 )
 
-var ElementSizeRecordDao elementSizeRecordDao
+var ElementSelectSizeRecordDao elementSelectSizeRecordDao
 
-type elementSizeRecordDao struct{}
+type elementSelectSizeRecordDao struct{}
 
-func (elementSizeRecordDao) Create(obj *model.ElementSizeRecord) (int64, error) {
+func (elementSelectSizeRecordDao) Create(obj *model.ElementSelectSizeRecord) (int64, error) {
 	values := []interface{}{
 		obj.GoodID, obj.ElementClassName, obj.ElementName, obj.SelectSize,
 	}
@@ -38,11 +38,9 @@ func (elementSizeRecordDao) Create(obj *model.ElementSizeRecord) (int64, error) 
 	return id, nil
 }
 
-func (elementSizeRecordDao) GetByGoodIdAndElementName(goodID int64, elementName, className string) (*model.ElementSizeRecord, error) {
-	var table model.ElementSizeRecord
-	createTableWhenNotExist(&table)
+func (elementSelectSizeRecordDao) GetOne(goodID int64, elementName, className string) (*model.ElementSelectSizeRecord, error) {
 
-	var result model.ElementSizeRecord
+	var result model.ElementSelectSizeRecord
 	var whereClause string
 	var parameters []interface{}
 	if goodID == 0 {
@@ -63,8 +61,8 @@ func (elementSizeRecordDao) GetByGoodIdAndElementName(goodID int64, elementName,
 	return &result, nil
 }
 
-func (elementSizeRecordDao) BatchDelete(goodIDs []int64) error {
-	var table model.ElementSizeRecord
+func (elementSelectSizeRecordDao) BatchDelete(goodIDs []int64) error {
+	var table model.ElementSelectSizeRecord
 	createTableWhenNotExist(&table)
 
 	// todo: 这里要测试

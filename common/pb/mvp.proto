@@ -77,10 +77,11 @@ message DeskClass {
 }
 
 message Element {
-    string name = 1;
-    ElementType type = 2;
-    repeated SizeInfo sizeInfos = 3;
-    int32 selectedIndex = 4;
+    int64 id = 1;
+    string name = 2;
+    ElementType type = 3;
+    repeated SizeInfo sizeInfos = 4;
+    int32 selectedIndex = 5;
 }
 
 message SizeInfo {

@@ -1,17 +1,32 @@
 # 元素表
 CREATE TABLE `element`
 (
+    `id`         int unsigned NOT NULL AUTO_INCREMENT,
+    `created_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `class_name` varchar(30)  NOT NULL DEFAULT '未分类',
+    `name`       varchar(30)  NOT NULL DEFAULT '',
+    `type`       int          NOT NULL DEFAULT 0,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY (`class_name`, `name`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
+
+# 元素尺寸记录表
+CREATE TABLE `element_size_info_record`
+(
     `id`                 int unsigned NOT NULL AUTO_INCREMENT,
     `created_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `name`               varchar(30)  NOT NULL DEFAULT '',
-    `type`               int          NOT NULL DEFAULT 0,
-    `class_name`         varchar(30)  NOT NULL DEFAULT '未分类',
+    `good_id`            bigint       NOT NULL DEFAULT 0,
+    `element_class_name`         varchar(30)  NOT NULL DEFAULT '未分类',
+    `element_name`               varchar(30)  NOT NULL DEFAULT '',
     `size`               varchar(30)  NOT NULL DEFAULT '小规格',
     `price`              double       NOT NULL DEFAULT 0,
     `picture_store_path` varchar(255) NOT NULL DEFAULT '',
     PRIMARY KEY (`id`),
-    UNIQUE KEY (`class_name`, `name`, `size`)
+    UNIQUE KEY (`good_id`, `element_class_name`, `element_name`, `size`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
@@ -79,8 +94,9 @@ CREATE TABLE `main_element_attach_element_record`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
-# 元素尺寸记录表
-CREATE TABLE `element_size_record`
+
+# 元素尺寸选择记录表
+CREATE TABLE `element_select_size_record`
 (
     `id`                 int unsigned NOT NULL AUTO_INCREMENT,
     `created_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -94,6 +110,7 @@ CREATE TABLE `element_size_record`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
+
 
 # 桌子表
 CREATE TABLE `desk`

@@ -16,17 +16,14 @@ type elementDao struct{}
 
 func (elementDao) Create(obj *model.Element) (int64, error) {
 	values := []interface{}{
-		obj.Name, obj.Type, obj.ClassName, obj.Size, obj.Price, obj.PictureStorePath,
+		obj.ClassName, obj.Name, obj.Type,
 	}
 	sql := fmt.Sprintf(`
-		insert into %s(name, type, class_name, size, price, picture_store_path) values(%s)
+		insert into %s(class_name,name, type) values(%s)
 		on duplicate key update
-			name = values(name),
-			type = values(type),
 			class_name = values(class_name),
-			size = values(size),
-			price = values(price),
-			picture_store_path = values(picture_store_path);
+			name = values(name),
+			type = values(type);
 	`, obj.TableName(), GetPlaceholderClause(len(values)))
 	result, err := mainDB.CommonDB().Exec(sql, values...)
 	if err != nil {
@@ -41,26 +38,26 @@ func (elementDao) Create(obj *model.Element) (int64, error) {
 	return id, nil
 }
 
-func (elementDao) Del(name string, size string) error {
-	obj := &model.Element{}
-	values := []interface{}{
-		name, size,
-	}
-	sql := fmt.Sprintf(`delete from %s where name = ? and size = ?;`, obj.TableName())
-	if err := mainDB.Exec(sql, values...).Error; err != nil {
-		logger.Error("Fail to finish delete", zap.Any("name", name), zap.Any("size", size), zap.Error(err))
-		return ers.MysqlError
-	}
-	return nil
-}
+//func (elementDao) Del(name string, size string) error {
+//	obj := &model.Element{}
+//	values := []interface{}{
+//		name, size,
+//	}
+//	sql := fmt.Sprintf(`delete from %s where name = ? and size = ?;`, obj.TableName())
+//	if err := mainDB.Exec(sql, values...).Error; err != nil {
+//		logger.Error("Fail to finish delete", zap.Any("name", name), zap.Any("size", size), zap.Error(err))
+//		return ers.MysqlError
+//	}
+//	return nil
+//}
 
-func (elementDao) GetByName(name string, className string) ([]*model.Element, error) {
-	var result []*model.Element
-	if err := mainDB.Find(&result, "name = ? and class_name = ?", name, className).Error; err != nil {
+func (elementDao) GetOne(name string, className string) (*model.Element, error) {
+	var result model.Element
+	if err := mainDB.First(&result, "name = ? and class_name = ?", name, className).Error; err != nil {
 		logger.Error("Fail to finish mainDB.Find", zap.String("name", name), zap.String("className", className), zap.Error(err))
 		return nil, err
 	}
-	return result, nil
+	return &result, nil
 }
 
 func (elementDao) GetByClassName(className string) ([]*model.Element, error) {

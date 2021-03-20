@@ -27,7 +27,7 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 	if errResult := storePbElementToDB(good.MainElement, className); errResult != nil {
 		return nil, errResult
 	}
-	if errResult := writePbGoodSizeToDB(good); errResult != nil {
+	if errResult := writePbGoodSizeToDB(good, className); errResult != nil {
 		return nil, errResult
 	}
 	return &res, nil
@@ -37,9 +37,7 @@ func (MvpServer) DeleteElementSizeInfo(ctx context.Context, req *pb.DeleteElemen
 	logger.Info("DeleteElementSizeInfo", zap.Any("ctx", ctx), zap.Any("req", req))
 
 	var res pb.DeleteElementSizeInfoRes
-	if errResult := dao.ElementDao.Del(req.ElementName, req.SizeInfoSize); errResult != nil {
-		return nil, errResult
-	}
+
 	return &res, nil
 }
 
@@ -48,17 +46,11 @@ func (MvpServer) AddElement(ctx context.Context, req *pb.AddElementReq) (*pb.Add
 
 	var res pb.AddElementRes
 
-	if err := storePbElementToDB(req.Element, req.ClassName); err != nil {
-		logger.Error("Fail to finish storePbElementToDB",
-			zap.Any("req", req),
-			zap.Error(err))
-		return nil, err
+	if errResult := storePbElementToDB(req.Element, req.ClassName); errResult != nil {
+		return nil, errResult
 	}
-	if _, errResult := dao.ElementSizeRecordDao.Create(&model.ElementSizeRecord{
-		GoodID:      0,
-		ElementName: req.Element.Name,
-		SelectSize:  req.Element.SizeInfos[req.Element.SelectedIndex].Size,
-	}); errResult != nil {
+	if _, errResult := dao.ElementSelectSizeRecordDao.Create(GetDbElementSelectSizeRecord(req.Element, 0, req.ClassName));
+		errResult != nil {
 		return nil, errResult
 	}
 
@@ -125,16 +117,10 @@ func (MvpServer) GetAllGoodOptions(ctx context.Context, req *pb.GetAllGoodOption
 		return nil, err
 	}
 
-	// 2. 按元素名分组 (目的只是获取元素名)
-	nameToElements := make(map[string][]*model.Element)
-	for _, dbElement := range dbElements {
-		nameToElements[dbElement.Name] = append(nameToElements[dbElement.Name], dbElement)
-	}
-
-	// 3. 获取 pbElement
+	// 2. 获取 pbElement
 	pbElements := make([]*pb.Element, 0)
-	for name := range nameToElements {
-		pbElements = append(pbElements, getElement(0, name, req.ClassName))
+	for _, dbElement := range dbElements {
+		pbElements = append(pbElements, getPbElement(0, dbElement.Name, req.ClassName)) // todo: 这goodId 其实也可以传入吧
 	}
 
 	// 4. 写入
@@ -219,7 +205,7 @@ func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.Order
 			return nil, err
 		}
 		good.Id = int64(dbGood.ID)
-		if err := writePbGoodSizeToDB(good); err != nil {
+		if err := writePbGoodSizeToDB(good, "todo"); err != nil {
 			logger.Error("Fail to finish createGood",
 				zap.Any("req", req),
 				zap.Error(err))
@@ -373,7 +359,7 @@ func (s MvpServer) CancelGood(ctx context.Context, req *pb.CancelGoodReq) (*pb.C
 		// todo: log
 		return nil, err
 	}
-	if err := dao.ElementSizeRecordDao.BatchDelete(req.GoodIDs); err != nil {
+	if err := dao.ElementSelectSizeRecordDao.BatchDelete(req.GoodIDs); err != nil {
 		// todo: log
 		return nil, err
 	}

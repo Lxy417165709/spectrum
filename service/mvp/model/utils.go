@@ -48,19 +48,6 @@ func GetFavor(favor *pb.Favor) Favor {
 	return &None{}
 }
 
-func GetSizeInfos(sameNameElements []*Element) []*pb.SizeInfo {
-	var sizeInfos []*pb.SizeInfo
-	for _, element := range sameNameElements {
-		sizeInfos = append(sizeInfos, &pb.SizeInfo{
-			Size:             element.Size,
-			Price:            GetPbPrice(element.Price),
-			PictureStorePath: element.PictureStorePath,
-			Id:               int64(element.ID),
-		})
-	}
-	return sizeInfos
-}
-
 func GetDbPrice(priceString string) float64 {
 	price, err := strconv.ParseFloat(priceString, 64)
 	if err != nil {
