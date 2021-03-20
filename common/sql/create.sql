@@ -49,11 +49,11 @@ CREATE TABLE `element`
     `id`         int unsigned NOT NULL AUTO_INCREMENT,
     `created_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `class_name` varchar(30)  NOT NULL DEFAULT '未分类',
+    `class_id`   bigint       NOT NULL DEFAULT 0,
     `name`       varchar(30)  NOT NULL DEFAULT '',
     `type`       int          NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
-    UNIQUE KEY (`class_name`, `name`)
+    UNIQUE KEY (`class_id`, `name`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
@@ -161,13 +161,13 @@ CREATE TABLE `space`
     `id`                 int unsigned NOT NULL AUTO_INCREMENT,
     `created_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `class_name`         varchar(30)  NOT NULL DEFAULT '',
+    `class_id`           bigint       NOT NULL DEFAULT 0,
     `name`               varchar(30)  NOT NULL DEFAULT '',
     `price`              double       NOT NULL DEFAULT 0,
     `billing_type`       int          NOT NULL DEFAULT 0,
     `picture_store_path` varchar(255) NOT NULL DEFAULT '',
     PRIMARY KEY (`id`),
-    UNIQUE KEY (`class_name`, `name`)
+    UNIQUE KEY (`class_id`, `name`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
@@ -212,10 +212,14 @@ insert into element_class(name, picture_store_path, class_type)
 values ('小吃类', 'static/upload/温热1.jpeg', 0);
 insert into element_class(name, picture_store_path, class_type)
 values ('饮料类', 'static/upload/温热1.jpeg', 0);
+insert into element_class(name, picture_store_path, class_type)
+values ('附属选项类', 'static/upload/温热1.jpeg', 0);
+insert into element_class(name, picture_store_path, class_type)
+values ('附属商品类', 'static/upload/温热1.jpeg', 0);
 
 # 创建商品, 选项记录, 附属记录
-insert into element(name, type, class_name)
-values ('波霸奶茶', 0, '奶茶类');
+insert into element(name, type, class_id)
+values ('波霸奶茶', 0, 1);
 insert into element_size_info_record(good_id, element_id, size, price, picture_store_path)
 values (0, 1, '小杯', 10, 'static/upload/奶茶1.jpeg');
 insert into element_size_info_record(good_id, element_id, size, price, picture_store_path)
@@ -230,8 +234,8 @@ insert into main_element_attach_element_record(good_id, main_element_id, attach_
 values (0, 1, 3, 8);
 
 # 创建附属选项元素, 选项记录
-insert into element(name, type, class_name)
-values ('温度', 1, '附属选项类');
+insert into element(name, type, class_id)
+values ('温度', 1, 5);
 insert into element_size_info_record(good_id, element_id, size, price, picture_store_path)
 values (0, 2, '冷饮', 0, 'static/upload/温热1.jpeg');
 insert into element_size_info_record(good_id, element_id, size, price, picture_store_path)
@@ -242,8 +246,8 @@ insert into element_select_size_record(good_id, element_id, select_size_info_id)
 values (0, 2, 4);
 
 # 创建附属商品元素, 选项记录
-insert into element(name, type, class_name)
-values ('珍珠', 2, '附属商品类');
+insert into element(name, type, class_id)
+values ('珍珠', 2, 6);
 insert into element_size_info_record(good_id, element_id, size, price, picture_store_path)
 values (0, 3, '少量', 1, 'static/upload/珍珠1.jpeg');
 insert into element_size_info_record(good_id, element_id, size, price, picture_store_path)

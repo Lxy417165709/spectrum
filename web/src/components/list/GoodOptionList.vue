@@ -49,18 +49,17 @@ export default {
   methods: {
     tryToAddGoodOption() {
       if (this.className === cst.ATTACH_CLASS_NAME.GOOD_OPTION_CLASS_NAME) {
-        this.openGoodOptionEditorOfAdmin(test.blankGoodOption, true)
+        this.openGoodOptionEditorOfAdmin(test.blankGoodOption)
       }
       if (this.className === cst.ATTACH_CLASS_NAME.GOOD_INGREDIENT_CLASS_NAME) {
-        this.openGoodOptionEditorOfAdmin(test.blankGoodIngredient, true)
+        this.openGoodOptionEditorOfAdmin(test.blankGoodIngredient)
       }
     },
-    openGoodOptionEditorOfAdmin(option, canModifyName) {
+    openGoodOptionEditorOfAdmin(option) {
       this.GoodOptionEditorOfAdminVisible = true
       this.$nextTick(() => {
         this.$refs.GoodOptionEditorOfAdmin.option = option
         this.$refs.GoodOptionEditorOfAdmin.curSizeInfoIndexString = option.selectedIndex.toString()
-        this.$refs.GoodOptionEditorOfAdmin.canModifyName = canModifyName
       })
     },
 

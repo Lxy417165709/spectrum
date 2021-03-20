@@ -45,3 +45,21 @@ func (elementClassDao) GetClasses(classType pb.ElementType) ([]*model.ElementCla
 	}
 	return result, nil
 }
+
+func (elementClassDao) GetByName(name string) (*model.ElementClass, error) {
+	var result model.ElementClass
+	if err := mainDB.First(&result, "name = ?", name).Error; err != nil {
+		logger.Error("Fail to finish mainDB.First", zap.Error(err))
+		return nil, ers.MysqlError
+	}
+	return &result, nil
+}
+
+func (elementClassDao) Get(id int64) (*model.ElementClass, error) {
+	var result model.ElementClass
+	if err := mainDB.First(&result, "id = ?", id).Error; err != nil {
+		logger.Error("Fail to finish mainDB.First", zap.Error(err))
+		return nil, ers.MysqlError
+	}
+	return &result, nil
+}

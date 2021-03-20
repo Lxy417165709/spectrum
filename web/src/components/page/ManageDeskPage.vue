@@ -5,11 +5,12 @@
     <el-aside width="200px">
       <el-menu>
         <el-menu-item v-for="(deskClass,deskClassIndex) in db_deskClasses" :key="deskClassIndex"
-                      @click="showDeskClassDetail(deskClassIndex)">
+                      @click.native="handleDeskClassItemClick(deskClassIndex)"
+                      @dblclick.native="handleDeskClassItemDbClick(deskClass)">
           <template slot="title"><i class="el-icon-message"></i><span>{{ deskClass.name }}</span></template>
         </el-menu-item>
       </el-menu>
-      <el-button style="margin-left: 20px;margin-top: 10px" type="primary" @click="handleDeskButtonClick">添加桌位
+      <el-button style="margin-left: 20px;margin-top: 10px" type="primary" @click="tryToAddDeskClass">添加桌位
       </el-button>
     </el-aside>
     <!--    2. 桌类详情-->
@@ -50,6 +51,7 @@ import cst from "../../common/cst";
 import utils from "../../common/utils";
 import DeskEditorOfAdmin from "../editor/DeskEditorOfAdmin";
 
+let time = null;
 export default {
   name: 'ManageDeskPage',
   components: {DeskEditorOfAdmin, DeskClassEditor, GoodClass, DeskList},
@@ -82,10 +84,10 @@ export default {
       this.curDeskIndex = deskIndex
       this.$refs.ref_goodClass.orderID = orderID
     },
-    handleDeskButtonClick() {
+    openDeskClassEditor(deskClass) {
       this.deskClassEditorVisible = true
       this.$nextTick(() => {
-        this.$refs.DeskClassEditor.deskClass = test.blankDeskClass
+        this.$refs.DeskClassEditor.deskClass = deskClass
       })
     },
     attachOrderID(orderID) {
@@ -98,6 +100,21 @@ export default {
     turnToDeskListMode() {
       this.viewMode = cst.VIEW_MODE.DESK_LIST_MODE
     },
+    // 单击事件函数
+    handleDeskClassItemClick(deskClassIndex) {
+      clearTimeout(time);
+      time = setTimeout(() => {
+        this.showDeskClassDetail(deskClassIndex)
+      }, 500);
+    },
+    // 双击事件函数
+    handleDeskClassItemDbClick(deskClass) {
+      clearTimeout(time);
+      this.openDeskClassEditor(deskClass)
+    },
+    tryToAddDeskClass() {
+      this.openDeskClassEditor(test.blankDeskClass)
+    }
   },
   computed: {
     cpt_canClassListShow() {

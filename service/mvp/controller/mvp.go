@@ -23,7 +23,7 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 	if errResult != nil {
 		return nil, errResult
 	}
-	if errResult := writePbElementToDbAndUpdateID(good.MainElement, goodClassName); errResult != nil {
+	if errResult := writePbElementToDbAndUpdateID(good.MainElement, getDbElementClassByName(goodClassName).ID); errResult != nil {
 		return nil, errResult
 	}
 	if errResult := writePbGoodSizeInfoToDB(good); errResult != nil {
@@ -36,7 +36,8 @@ func (MvpServer) AddElement(ctx context.Context, req *pb.AddElementReq) (*pb.Add
 	logger.Info("AddElement", zap.Any("ctx", ctx), zap.Any("req", req))
 
 	var res pb.AddElementRes
-	if errResult := writePbElementToDbAndUpdateID(req.Element, req.ClassName); errResult != nil {
+
+	if errResult := writePbElementToDbAndUpdateID(req.Element, getDbElementClassByName(req.ClassName).ID); errResult != nil {
 		return nil, errResult
 	}
 	if _, errResult := dao.ElementSelectSizeRecordDao.Create(toDbElementSelectSizeRecord(0, req.Element.Id, model.GetPbElementSelectSizeInfo(req.Element).Id));
@@ -96,7 +97,7 @@ func (MvpServer) GetAllGoods(ctx context.Context, req *pb.GetAllGoodsReq) (*pb.G
 
 	var res pb.GetAllGoodsRes
 
-	res.Goods = getClassGoods(req.ClassName)
+	res.Goods = getClassGoods(getDbElementClassByName(req.ClassName).ID)
 
 	return &res, nil
 }
@@ -107,7 +108,7 @@ func (MvpServer) GetAllGoodOptions(ctx context.Context, req *pb.GetAllGoodOption
 	var res pb.GetAllGoodOptionsRes
 
 	// 1. 从数据库中获取所有附属元素
-	dbElements, err := dao.ElementDao.GetAllAttachElements(req.ClassName)
+	dbElements, err := dao.ElementDao.GetAllAttachElements(0)
 	if err != nil {
 		logger.Error("Fail to finish ElementDao.GetAll",
 			zap.Any("req", req),
@@ -139,7 +140,7 @@ func (MvpServer) AddGoodClass(ctx context.Context, req *pb.AddGoodClassReq) (*pb
 
 	// 2. 创建商品类、获取生成商品类ID
 	dbGoodClass := &model.ElementClass{
-		ID:               uint(goodClass.Id),
+		ID:               goodClass.Id,
 		Name:             goodClass.Name,
 		PictureStorePath: goodClass.PictureStorePath,
 	}
@@ -150,7 +151,7 @@ func (MvpServer) AddGoodClass(ctx context.Context, req *pb.AddGoodClassReq) (*pb
 
 	// 3. 写响应
 	var res pb.AddGoodClassRes
-	dbGoodClass.ID = uint(id)
+	dbGoodClass.ID = id
 	res.GoodClass = dbGoodClass.ToPb()
 
 	// 4. 返回响应
@@ -218,10 +219,7 @@ func (MvpServer) AddDesk(ctx context.Context, req *pb.AddDeskReq) (*pb.AddDeskRe
 	logger.Info("AddDesk", zap.Any("ctx", ctx), zap.Any("req", req))
 	// todo: 这里可以点单记录
 	var res pb.AddDeskRes
-
-	req.Desk.Space.ClassName = req.ClassName
-
-	if _, err := dao.SpaceDao.Create(toDbSpace(req.Desk.Space)); err != nil {
+	if _, err := dao.SpaceDao.Create(toDbSpace(req.Desk.Space, getDbSpaceClassByName(req.ClassName).ID)); err != nil {
 		logger.Error("Fail to finish SpaceDao.Create",
 			zap.Any("req", req),
 			zap.Error(err))
@@ -393,6 +391,39 @@ func (s MvpServer) DeleteFavorForGood(ctx context.Context, req *pb.DeleteFavorFo
 	return &res, nil
 }
 
+func getDbSpaceClassByID(classID int64) *model.SpaceClass {
+	spaceClass, errResult := dao.SpaceClassDao.Get(classID)
+	if errResult != nil {
+		// todo: log
+		return nil
+	}
+	return spaceClass
+}
+func getDbElementClassByID(classID int64) *model.ElementClass {
+	elementClass, errResult := dao.ElementClassDao.Get(classID)
+	if errResult != nil {
+		// todo: log
+		return nil
+	}
+	return elementClass
+}
+func getDbSpaceClassByName(className string) *model.SpaceClass {
+	spaceClass, errResult := dao.SpaceClassDao.GetByName(className)
+	if errResult != nil {
+		// todo: log
+		return nil
+	}
+	return spaceClass
+}
+func getDbElementClassByName(className string) *model.ElementClass {
+	elementClass, errResult := dao.ElementClassDao.GetByName(className)
+	if errResult != nil {
+		// todo: log
+		return nil
+	}
+	return elementClass
+}
+
 func (s MvpServer) GetAllDesks(ctx context.Context, req *pb.GetAllDesksReq) (*pb.GetAllDesksRes, error) {
 	logger.Info("GetAllDesks", zap.Any("ctx", ctx), zap.Any("req", req))
 
@@ -410,15 +441,16 @@ func (s MvpServer) GetAllDesks(ctx context.Context, req *pb.GetAllDesksReq) (*pb
 			// todo:log
 			return nil, err
 		}
+
 		if desk == nil {
 			desks = append(desks, &pb.Desk{
-				Id:             0,
-				Space:          space.ToPb(),
-				StartAt: 0,
-				EndAt:   0,
-				Favors:         nil,
-				ExpenseInfo:    nil,
-				OrderID:        0,
+				Id:          0,
+				Space:       space.ToPb(getDbSpaceClassByID(space.ClassID).Name),
+				StartAt:     0,
+				EndAt:       0,
+				Favors:      nil,
+				ExpenseInfo: nil,
+				OrderID:     0,
 			})
 		} else {
 			desks = append(desks, getPbDesk(desk))

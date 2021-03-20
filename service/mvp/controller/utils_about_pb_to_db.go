@@ -90,9 +90,9 @@ func closeDeskIfOpening(deskID int64, endTimestamp int64) error {
 }
 
 // 将Pb元素写入数据库，并更新其ID字段
-func writePbElementToDbAndUpdateID(pbElement *pb.Element, className string) error {
+func writePbElementToDbAndUpdateID(pbElement *pb.Element, classID int64) error {
 	// 1. 将元素写入数据库，如果先前该元素不存在，则更新元素ID
-	elementID, errResult := dao.ElementDao.Create(toDbElement(pbElement, className))
+	elementID, errResult := dao.ElementDao.Create(toDbElement(pbElement, classID))
 	if errResult != nil {
 		return errResult
 	}
@@ -125,19 +125,19 @@ func toDbElementSizeInfo(pbSizeInfo *pb.SizeInfo, elementID int64) *model.Elemen
 	}
 }
 
-func toDbElement(pbElement *pb.Element, className string) *model.Element {
+func toDbElement(pbElement *pb.Element, classID int64) *model.Element {
 	return &model.Element{
-		ID:        pbElement.Id,
-		Name:      pbElement.Name,
-		Type:      pbElement.Type,
-		ClassName: className,
+		ID:      pbElement.Id,
+		Name:    pbElement.Name,
+		Type:    pbElement.Type,
+		ClassID: classID,
 	}
 }
 
-func toDbSpace(pbSpace *pb.Space) *model.Space {
+func toDbSpace(pbSpace *pb.Space, classID int64) *model.Space {
 	return &model.Space{
 		Name:             pbSpace.Name,
-		ClassName:        pbSpace.ClassName,
+		ClassID:          classID,
 		Price:            model.GetDbPrice(pbSpace.Price),
 		BillingType:      pbSpace.BillingType,
 		PictureStorePath: pbSpace.PictureStorePath,

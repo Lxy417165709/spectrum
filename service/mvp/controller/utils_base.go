@@ -4,26 +4,8 @@ import (
 	"go.uber.org/zap"
 	"spectrum/common/logger"
 	"spectrum/common/pb"
-	"spectrum/service/mvp/dao"
 )
 
-func getElementNames(className string) []string {
-	var isLiving = make(map[string]bool)
-	elements, err := dao.ElementDao.GetByClassName(className)
-	var elementNames []string
-	if err != nil {
-		logger.Error("Fail to finish ElementDao.GetByClassName", zap.Error(err))
-		return nil
-	}
-	for _, element := range elements {
-		if isLiving[element.Name] {
-			continue
-		}
-		isLiving[element.Name] = true
-		elementNames = append(elementNames, element.Name)
-	}
-	return elementNames
-}
 
 //func getExpenseInfo(chargeableObj model.Chargeable) *pb.ExpenseInfo {
 //	switch chargeableObj.(type) {

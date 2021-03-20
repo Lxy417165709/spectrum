@@ -16,12 +16,12 @@ type elementDao struct{}
 
 func (elementDao) Create(obj *model.Element) (int64, error) {
 	values := []interface{}{
-		obj.ID, obj.ClassName, obj.Name, obj.Type,
+		obj.ID, obj.ClassID, obj.Name, obj.Type,
 	}
 	sql := fmt.Sprintf(`
-		insert into %s(id,class_name,name, type) values(%s)
+		insert into %s(id,class_id,name, type) values(%s)
 		on duplicate key update
-			class_name = values(class_name),
+			class_id = values(class_id),
 			name = values(name),
 			type = values(type);
 	`, obj.TableName(), GetPlaceholderClause(len(values)))
@@ -60,34 +60,34 @@ func (elementDao) Get(id int64) (*model.Element, error) {
 	return &result, nil
 }
 
-func (elementDao) GetOne(name string, className string) (*model.Element, error) {
+func (elementDao) GetOne(name string, classID int64) (*model.Element, error) {
 	var result model.Element
-	if err := mainDB.First(&result, "name = ? and class_name = ?", name, className).Error; err != nil {
-		logger.Error("Fail to finish mainDB.Find", zap.String("name", name), zap.String("className", className), zap.Error(err))
+	if err := mainDB.First(&result, "name = ? and class_id = ?", name, classID).Error; err != nil {
+		logger.Error("Fail to finish mainDB.Find", zap.String("name", name), zap.Any("classID", classID), zap.Error(err))
 		return nil, ers.MysqlError
 	}
 	return &result, nil
 }
 
-func (elementDao) GetByClassName(className string) ([]*model.Element, error) {
+func (elementDao) GetByClassID(classID int64) ([]*model.Element, error) {
 	var result []*model.Element
-	if err := mainDB.Find(&result, "class_name = ?", className).Error; err != nil {
-		logger.Error("Fail to finish mainDB.Find", zap.String("className", className), zap.Error(err))
+	if err := mainDB.Find(&result, "class_id = ?", classID).Error; err != nil {
+		logger.Error("Fail to finish mainDB.Find", zap.Any("classID", classID), zap.Error(err))
 		return nil, err
 	}
 	return result, nil
 }
 
-func (elementDao) GetAllAttachElements(className string) ([]*model.Element, error) {
+func (elementDao) GetAllAttachElements(classID int64) ([]*model.Element, error) {
 	var whereClause string
 	var whereValues []interface{}
 
 	whereClause = " type != ? "
 	whereValues = append(whereValues, pb.ElementType_Main)
 
-	if className != "" {
-		whereClause += " and class_name = ? "
-		whereValues = append(whereValues, className)
+	if classID != 0 {
+		whereClause += " and class_id = ? "
+		whereValues = append(whereValues, classID)
 	}
 
 	var elements []*model.Element

@@ -9,9 +9,9 @@ import (
 	"spectrum/service/mvp/model"
 )
 
-func getClassGoods(className string) []*pb.Good {
+func getClassGoods(classID int64) []*pb.Good {
 	var goods []*pb.Good
-	elements, errResult := dao.ElementDao.GetByClassName(className)
+	elements, errResult := dao.ElementDao.GetByClassID(classID)
 	if errResult != nil {
 		// todo:log
 		return nil
@@ -34,9 +34,14 @@ func getPbDesk(desk *model.Desk) *pb.Desk {
 		return nil
 	}
 	favor := getFavors(desk)
+
+	spaceClass, errResult := dao.SpaceClassDao.Get(space.ClassID)
+	if errResult != nil {
+		return nil
+	}
 	return &pb.Desk{
 		Id:          desk.ID,
-		Space:       space.ToPb(),
+		Space:       space.ToPb(spaceClass.Name),
 		StartAt:     desk.StartAt.Unix(),
 		EndAt:       desk.EndAt.Unix(),
 		Favors:      favor,

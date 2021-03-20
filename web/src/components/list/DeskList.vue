@@ -4,8 +4,7 @@
     <!--    1. 展示 桌位 部分-->
     <el-col v-for="(desk,deskIndex) in desks" :key="deskIndex"
             style="height: 300px; width: 202px; margin-left: 10px; border: none">
-      <desk-card :desk="desk"
-                 @click.native="handleDeskCardClick(deskIndex)"></desk-card>
+      <desk-card :desk="desk" @dblclick.native="handleDbClick(desk)" @click.native="handleClick(deskIndex)"></desk-card>
     </el-col>
 
     <!--    2. 添加 桌位 部分-->
@@ -31,6 +30,7 @@ import test from "../../common/test/test";
 import utils from "../../common/utils"
 import DeskEditorOfAdmin from "../editor/DeskEditorOfAdmin";
 
+let time = null
 export default {
   components: {DeskSpacialCard, DeskCard, DeskEditorOfAdmin},
   props: {
@@ -61,7 +61,7 @@ export default {
     },
 
 
-    async handleDeskCardClick(deskIndex) {
+    async turnToClassListMode(deskIndex) {
       // todo: this.desks[deskIndex].id === undefined 时，此时 this.desks[deskIndex].id !== 0 也成立..
       if (this.desks[deskIndex].id !== 0) {
         this.$emit("turnToClassListMode", deskIndex, this.desks[deskIndex].id, this.desks[deskIndex].orderID)
@@ -83,6 +83,18 @@ export default {
       this.$nextTick(() => {
         this.$refs.DeskEditorOfAdmin.desk = desk
       })
+    },
+    // 单击事件函数
+    handleClick(deskIndex) {
+      clearTimeout(time);
+      time = setTimeout(() => {
+        this.turnToClassListMode(deskIndex)
+      }, 500);
+    },
+    // 双击事件函数
+    handleDbClick(desk) {
+      clearTimeout(time);
+      this.openDeskEditorOfAdmin(desk)
     }
   }
 }

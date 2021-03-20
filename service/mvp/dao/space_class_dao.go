@@ -35,11 +35,28 @@ func (spaceClassDao) Create(obj *model.SpaceClass) (int64, error) {
 	return id, nil
 }
 
+func (spaceClassDao) Get(id int64) (*model.SpaceClass, error) {
+	var result model.SpaceClass
+	if err := mainDB.First(&result, "id = ?", id).Error; err != nil {
+		logger.Error("Fail to finish mainDB.First", zap.Error(err))
+		return nil, ers.MysqlError
+	}
+	return &result, nil
+}
+func (spaceClassDao) GetByName(name string) (*model.SpaceClass, error) {
+	var result model.SpaceClass
+	if err := mainDB.First(&result, "name = ?", name).Error; err != nil {
+		logger.Error("Fail to finish mainDB.First", zap.Error(err))
+		return nil, ers.MysqlError
+	}
+	return &result, nil
+}
+
 func (spaceClassDao) GetAllClasses() ([]*model.SpaceClass, error) {
 	var result []*model.SpaceClass
 	if err := mainDB.Find(&result).Error; err != nil {
 		logger.Error("Fail to finish mainDB.Find", zap.Error(err))
-		return nil, err
+		return nil, ers.MysqlError
 	}
 	return result, nil
 }

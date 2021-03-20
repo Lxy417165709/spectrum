@@ -6,7 +6,7 @@ import (
 )
 
 type ElementClass struct {
-	ID               uint           `gorm:"id"`
+	ID               int64           `gorm:"id"`
 	CreatedAt        time.Time      `gorm:"created_at"`
 	UpdatedAt        time.Time      `gorm:"updated_at"`
 	Name             string         `gorm:"name"`

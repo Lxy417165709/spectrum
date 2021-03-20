@@ -6,16 +6,15 @@ import (
 )
 
 type Element struct {
-	ID        int64      `gorm:"id"`
+	ID        int64     `gorm:"id"`
 	CreatedAt time.Time `gorm:"created_at"`
 	UpdatedAt time.Time `gorm:"updated_at"`
 
-	ClassName string         `gorm:"class_name"`
-	Name      string         `gorm:"name"`
-	Type      pb.ElementType `gorm:"type"`
+	ClassID int64          `gorm:"class_id"`
+	Name    string         `gorm:"name"`
+	Type    pb.ElementType `gorm:"type"`
 }
 
 func (Element) TableName() string {
 	return "element"
 }
-

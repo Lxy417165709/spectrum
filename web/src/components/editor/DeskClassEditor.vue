@@ -8,10 +8,18 @@
 
     <el-form-item label="照片">
       <el-upload
+        v-if="deskClass.pictureStorePath !== undefined && deskClass.pictureStorePath===''"
         action="/api/upload"
+        :on-success="imageUploadSuccess"
         list-type="picture-card">
+
         <i class="el-icon-plus"></i>
       </el-upload>
+      <el-image
+        v-if="deskClass.pictureStorePath !== undefined && deskClass.pictureStorePath!==''"
+        @dblclick.native="cleanSizeInfoPictureStorePath"
+        :src="'api/file/' + deskClass.pictureStorePath"
+        style="width: 148px; height: 148px;"></el-image>
     </el-form-item>
 
     <!--    @edit="handleTabsEdit"-->
@@ -70,7 +78,14 @@ export default {
         }
         this.$message.success(res.data.msg)
       })
-    }
+    },
+    cleanSizeInfoPictureStorePath() {
+      this.deskClass.pictureStorePath = ""
+    },
+    imageUploadSuccess(res, file, fileList) {
+      this.deskClass.pictureStorePath = res.data.fileStorePath;
+    },
+
   }
 }
 </script>

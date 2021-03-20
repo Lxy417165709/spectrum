@@ -6,9 +6,6 @@
     <el-form-item label="选项名">
       <el-input style="width: 70%" v-if="option!==undefined"
                 v-model="option.name"></el-input>
-<!--      <el-input style="width: 70%" v-if="option!==undefined && canModifyName"-->
-<!--                v-model="option.name"></el-input>-->
-<!--      <span v-if="option!==undefined && !canModifyName">{{ option.name }}</span>-->
     </el-form-item>
 
     <!-- 2. 规格编辑器 -->
@@ -19,9 +16,9 @@
                    :key="index">
 
         <el-form-item label="规格名">
-                    <el-input style="width: 70%" v-if="option.selectedIndex !== curSizeInfoIndexInt"
-                              v-model="sizeInfo.size"></el-input>
-                    <span v-if="option.selectedIndex === curSizeInfoIndexInt">{{ sizeInfo.size }}</span>
+          <el-input style="width: 70%" v-if="option.selectedIndex !== curSizeInfoIndexInt"
+                    v-model="sizeInfo.size"></el-input>
+          <span v-if="option.selectedIndex === curSizeInfoIndexInt">{{ sizeInfo.size }}</span>
         </el-form-item>
 
 
@@ -86,8 +83,6 @@ export default {
 
       addTabCount: 0,
       curSizeInfoIndexString: '0',
-
-      canModifyName: false,
     }
   },
   methods: {
@@ -137,10 +132,6 @@ export default {
         }
         this.$message.success(res.data.msg)
       })
-    },
-    tabClick(tab) {
-      // this.curSizeInfoIndex = tab.index
-      // console.log(this.curSizeInfoIndex)
     },
     cleanSizeInfoPictureStorePath() {
       this.option.sizeInfos[this.curSizeInfoIndexInt].pictureStorePath = ""

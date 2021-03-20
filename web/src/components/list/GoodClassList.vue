@@ -34,7 +34,7 @@ import GoodClassSpacialCard from "../card/GoodClassSpacialCard";
 import test from "../../common/test/test";
 import GoodClassEditor from "../editor/GoodClassEditor";
 
-let time = null;  //  在这里定义time 为null
+let time = null;
 export default {
   components: {GoodClassEditor, GoodClassSpacialCard, GoodClassCard},
   props: {
@@ -64,7 +64,7 @@ export default {
       clearTimeout(time);  //首先清除计时器
       time = setTimeout(() => {
         this.handleGoodClassCardClick(goodClassIndex)
-      }, 300);   //大概时间300ms
+      }, 500);   //大概时间500ms
     },
     // 双击事件函数
     handleDbClick(goodClass) {

@@ -15,12 +15,12 @@ type spaceDao struct{}
 
 func (spaceDao) Create(obj *model.Space) (int64, error) {
 	values := []interface{}{
-		obj.ID, obj.ClassName, obj.Name, obj.BillingType, obj.Price, obj.PictureStorePath,
+		obj.ID, obj.ClassID, obj.Name, obj.BillingType, obj.Price, obj.PictureStorePath,
 	}
 	sql := fmt.Sprintf(`
-		insert into %s(id,class_name,name, billing_type,price,picture_store_path) values(%s)
+		insert into %s(id,class_id,name, billing_type,price,picture_store_path) values(%s)
 		on duplicate key update
-			class_name = values(class_name),
+			class_id = values(class_id),
 			name = values(name),
 			billing_type = values(billing_type),
 			price = values(price),
