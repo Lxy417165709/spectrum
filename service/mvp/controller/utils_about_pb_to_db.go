@@ -6,62 +6,58 @@ import (
 	"spectrum/common/pb"
 	"spectrum/service/mvp/dao"
 	"spectrum/service/mvp/model"
-	"time"
 )
 
-func checkOutIfNot(chargeableObj model.Chargeable) error {
+//func checkOutIfNot(chargeableObj model.Chargeable) error {
+//
+//	expenseInfo := getExpenseInfo(chargeableObj)
+//	if expenseInfo.CheckOutAt != 0 {
+//		// todo: 警告
+//		// 这里表示商品已结账过了
+//		return nil
+//	}
+//	expenseInfo.CheckOutAt = time.Now().Unix()
+//	if err := dao.ChargeableObjectDao.UpdateExpenseInfo(chargeableObj, expenseInfo); err != nil {
+//		logger.Error("Fail to finish chargeableDao.Update", zap.Error(err))
+//		return err
+//	}
+//
+//	// 添加结账记录
+//	if err := dao.CheckOutRecordDao.Create(&model.CheckOutRecord{
+//		ChargeableObjectName: chargeableObj.GetName(),
+//		ChargeableObjectID:   chargeableObj.GetID(),
+//		CheckOutAt:           expenseInfo.CheckOutAt,
+//	}); err != nil {
+//		logger.Error("Fail to finish CheckOutRecordDao.Create", zap.Error(err))
+//		return err
+//	}
+//
+//	return nil
+//}
 
-	expenseInfo := getExpenseInfo(chargeableObj)
-	if expenseInfo.CheckOutAt != 0 {
-		// todo: 警告
-		// 这里表示商品已结账过了
-		return nil
-	}
-	expenseInfo.CheckOutAt = time.Now().Unix()
-	if err := dao.ChargeableObjectDao.UpdateExpenseInfo(chargeableObj, expenseInfo); err != nil {
-		logger.Error("Fail to finish chargeableDao.Update", zap.Error(err))
-		return err
-	}
-
-	// 添加结账记录
-	if err := dao.CheckOutRecordDao.Create(&model.CheckOutRecord{
-		ChargeableObjectName: chargeableObj.GetName(),
-		ChargeableObjectID:   chargeableObj.GetID(),
-		CheckOutAt:           expenseInfo.CheckOutAt,
-	}); err != nil {
-		logger.Error("Fail to finish CheckOutRecordDao.Create", zap.Error(err))
-		return err
-	}
-
-	return nil
-}
-
-func GetDbElementSelectSizeRecord(element *pb.Element, goodId int64, elementClassName string) *model.ElementSelectSizeRecord {
+func toDbElementSelectSizeRecord(goodID, elementID, elementSizeInfoID int64) *model.ElementSelectSizeRecord {
 	return &model.ElementSelectSizeRecord{
-		GoodID:           goodId,
-		ElementClassName: elementClassName,
-		ElementName:      element.Name,
-		SelectSize:       element.SizeInfos[element.SelectedIndex].Size,
+		GoodID:           goodID,
+		ElementID:        elementID,
+		SelectSizeInfoID: elementSizeInfoID,
 	}
 }
 
-func writePbGoodSizeToDB(good *pb.Good, className string) error {
+func writePbGoodSizeInfoToDB(good *pb.Good) error {
 	// 1. 创建主元素、主元素尺寸的对应关系
-	if _, errResult := dao.ElementSelectSizeRecordDao.Create(GetDbElementSelectSizeRecord(good.MainElement, good.Id, className)); errResult != nil {
+	mainElementSelectedSizeInfoID := model.GetPbElementSelectSizeInfo(good.MainElement).Id
+	if _, errResult := dao.ElementSelectSizeRecordDao.Create(toDbElementSelectSizeRecord(good.Id, good.MainElement.Id, mainElementSelectedSizeInfoID));
+		errResult != nil {
 		return errResult
 	}
 
 	// 2. 创建主元素、附属元素、附属元素尺寸的对应关系
 	for _, attachElement := range good.AttachElements {
 		if _, errResult := dao.MainElementAttachElementRecordDao.Create(&model.MainElementAttachElementRecord{
-			CreatedAt:              time.Time{},
-			UpdatedAt:              time.Time{},
-			GoodID:                 good.Id,
-			AttachElementClassName: "", // todo: 这里还缺少一些字段
-			MainElementClassName:   className,
-			MainElementName:        good.MainElement.Name,
-			AttachElementName:      attachElement.Name,
-			SelectSize:             model.GetSelectSizeInfo(attachElement).Size,
+			GoodID:           good.Id,
+			AttachElementID:  attachElement.Id,
+			MainElementID:    good.MainElement.Id,
+			SelectSizeInfoID: model.GetPbElementSelectSizeInfo(attachElement).Id,
 		}); errResult != nil {
 			return errResult
 		}
@@ -93,40 +89,52 @@ func closeDeskIfOpening(deskID int64, endTimestamp int64) error {
 	return nil
 }
 
-func storePbElementToDB(pbElement *pb.Element, className string) error {
-	dbElement := getDbElement(pbElement, className)
-	if _, errResult := dao.ElementDao.Create(dbElement); errResult != nil {
+// 将Pb元素写入数据库，并更新其ID字段
+func writePbElementToDbAndUpdateID(pbElement *pb.Element, className string) error {
+	// 1. 将元素写入数据库，如果先前该元素不存在，则更新元素ID
+	elementID, errResult := dao.ElementDao.Create(toDbElement(pbElement, className))
+	if errResult != nil {
 		return errResult
 	}
+	if pbElement.Id == 0 {
+		pbElement.Id = elementID
+	}
+
+	// 2. 将元素的尺寸信息写入数据库，如果先前尺寸不存在，则更新元素的尺寸ID
 	for _, pbSizeInfo := range pbElement.SizeInfos {
-		if _, errResult := dao.ElementSizeInfoRecordDao.Create(getDbElementSizeInfo(pbSizeInfo, pbElement.Name, className)); errResult != nil {
+		sizeInfoID, errResult := dao.ElementSizeInfoRecordDao.Create(toDbElementSizeInfo(pbSizeInfo, pbElement.Id))
+		if errResult != nil {
 			return errResult
 		}
+		if pbSizeInfo.Id == 0 {
+			pbSizeInfo.Id = sizeInfoID
+		}
 	}
+
+	// 3. 返回
 	return nil
 }
 
-func getDbElementSizeInfo(pbSizeInfo *pb.SizeInfo, elementName, className string) *model.ElementSizeInfoRecord {
+func toDbElementSizeInfo(pbSizeInfo *pb.SizeInfo, elementID int64) *model.ElementSizeInfoRecord {
 	return &model.ElementSizeInfoRecord{
-		ID:               uint(pbSizeInfo.Id),
+		ID:               pbSizeInfo.Id,
+		ElementID:        elementID,
+		Size:             pbSizeInfo.Size,
 		Price:            model.GetDbPrice(pbSizeInfo.Price),
 		PictureStorePath: pbSizeInfo.PictureStorePath,
-		Size:             pbSizeInfo.Size,
-		ClassName:        className,
-		Name:             elementName,
 	}
 }
 
-func getDbElement(pbElement *pb.Element, className string) *model.Element {
+func toDbElement(pbElement *pb.Element, className string) *model.Element {
 	return &model.Element{
-		ID:        uint(pbElement.Id),
-		ClassName: className,
+		ID:        pbElement.Id,
 		Name:      pbElement.Name,
 		Type:      pbElement.Type,
+		ClassName: className,
 	}
 }
 
-func getDbSpace(pbSpace *pb.Space) *model.Space {
+func toDbSpace(pbSpace *pb.Space) *model.Space {
 	return &model.Space{
 		Name:             pbSpace.Name,
 		ClassName:        pbSpace.ClassName,

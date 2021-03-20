@@ -51,11 +51,20 @@ func (elementDao) Create(obj *model.Element) (int64, error) {
 //	return nil
 //}
 
+func (elementDao) Get(id int64) (*model.Element, error) {
+	var result model.Element
+	if err := mainDB.First(&result, "id = ?", id).Error; err != nil {
+		logger.Error("Fail to finish mainDB.Find", zap.Any("id", id), zap.Error(err))
+		return nil, err
+	}
+	return &result, nil
+}
+
 func (elementDao) GetOne(name string, className string) (*model.Element, error) {
 	var result model.Element
 	if err := mainDB.First(&result, "name = ? and class_name = ?", name, className).Error; err != nil {
 		logger.Error("Fail to finish mainDB.Find", zap.String("name", name), zap.String("className", className), zap.Error(err))
-		return nil, err
+		return nil, ers.MysqlError
 	}
 	return &result, nil
 }

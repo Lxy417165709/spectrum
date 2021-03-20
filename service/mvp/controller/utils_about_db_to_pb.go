@@ -7,19 +7,17 @@ import (
 	"spectrum/common/pb"
 	"spectrum/service/mvp/dao"
 	"spectrum/service/mvp/model"
-	"time"
 )
 
 func getClassGoods(className string) []*pb.Good {
 	var goods []*pb.Good
-	for _, mainElementName := range getElementNames(className) {
-		pbGood := getPbGood(&model.Good{
-			Name:            mainElementName,
-			OrderID:         0,
-			Expense:         0,
-			CheckOutAt:      time.Unix(0, 0),
-			NonFavorExpense: 0,
-		}, className)
+	elements, errResult := dao.ElementDao.GetByClassName(className)
+	if errResult != nil {
+		// todo:log
+		return nil
+	}
+	for _, element := range elements {
+		pbGood := getPbGood(0, element.ID)
 		goods = append(goods, pbGood)
 		logger.Info("Get pb good", zap.Any("pbGood", pbGood))
 	}
@@ -47,66 +45,66 @@ func getPbDesk(desk *model.Desk) *pb.Desk {
 	}
 }
 
-func getPbOrder(orderID int64) *pb.Order {
-	order, err := dao.OrderDao.Get(orderID)
-	if err != nil {
-		// todo: log
-		return nil
-	}
-	desk, err := dao.DeskDao.GetByOrderID(orderID)
-	if err != nil {
-		// todo: log
-		return nil
-	}
-	pbDesk := getPbDesk(desk)
-	pbGoods := getOrderPbGoods(orderID)
-	favors := getFavors(order)
-	return &pb.Order{
-		Id:          orderID,
-		Desk:        pbDesk,
-		Goods:       pbGoods,
-		Favors:      favors,
-		ExpenseInfo: order.GetExpenseInfo(pbDesk, pbGoods, favors),
-	}
-}
+//func getPbOrder(orderID int64) *pb.Order {
+//	order, err := dao.OrderDao.Get(orderID)
+//	if err != nil {
+//		// todo: log
+//		return nil
+//	}
+//	desk, err := dao.DeskDao.GetByOrderID(orderID)
+//	if err != nil {
+//		// todo: log
+//		return nil
+//	}
+//	pbDesk := getPbDesk(desk)
+//	pbGoods := getOrderPbGoods(orderID)
+//	favors := getFavors(order)
+//	return &pb.Order{
+//		Id:          orderID,
+//		Desk:        pbDesk,
+//		Goods:       pbGoods,
+//		Favors:      favors,
+//		ExpenseInfo: order.GetExpenseInfo(pbDesk, pbGoods, favors),
+//	}
+//}
 
-func getOrderPbGoods(orderID int64) []*pb.Good {
-	dbGoods, err := dao.GoodDao.GetByOrderID(orderID)
-	if err != nil {
-		// todo: log
-		return nil
-	}
-	var goods []*pb.Good
-	for _, dbGood := range dbGoods {
-		goods = append(goods, getPbGood(dbGood, "todo"))
-	}
-	return goods
-}
+//func getOrderPbGoods(orderID int64) []*pb.Good {
+//	dbGoods, err := dao.GoodDao.GetByOrderID(orderID)
+//	if err != nil {
+//		// todo: log
+//		return nil
+//	}
+//	var goods []*pb.Good
+//	for _, dbGood := range dbGoods {
+//		goods = append(goods, getPbGood(dbGood, "todo"))
+//	}
+//	return goods
+//}
 
 // 返回的 good:
 // 已结账时: 返回结账的金额信息
 // 未结账时: 返回最新的金额信息
-func getPbGood(good *model.Good, goodClassName string) *pb.Good {
+func getPbGood(goodID int64, mainElementID int64) *pb.Good {
 	return &pb.Good{
-		Id:             int64(good.ID),
-		MainElement:    getPbElement(int64(good.ID), good.Name, goodClassName),
-		AttachElements: getPbAttachElements(int64(good.ID), good.Name),
-		Favors:         getFavors(good),
+		Id:             goodID,
+		MainElement:    getPbElement(goodID, mainElementID),
+		AttachElements: getPbAttachElements(goodID, mainElementID),
+		//Favors:         getFavors(good),
 		//ExpenseInfo:    good.GetExpenseInfo(mainElement, attachElements, favors),	// todo: 之后再说
 	}
 }
 
-func getPbAttachElements(goodID int64, mainElementName string) []*pb.Element {
+func getPbAttachElements(goodID, mainElementID int64) []*pb.Element {
 	var attachElements []*pb.Element
-	attachRecords, err := dao.MainElementAttachElementRecordDao.GetByGoodIdAndMainElementName(goodID, mainElementName)
-	if err != nil {
-		logger.Error("Fail to finish MainElementAttachElementRecordDao.GetOne", zap.Error(err))
+	attachRecords, errResult := dao.MainElementAttachElementRecordDao.GetByGoodIdAndMainElementName(goodID, mainElementID)
+	if errResult != nil {
+		logger.Error("Fail to finish MainElementAttachElementRecordDao.GetOne", zap.Error(errResult))
 		return nil
 	}
 	logger.Info("Success to get attachRecords", zap.Any("attachRecords", attachRecords))
 
 	for _, attachRecord := range attachRecords {
-		attachElements = append(attachElements, getPbElement(goodID, attachRecord.AttachElementName, attachRecord.AttachElementClassName))
+		attachElements = append(attachElements, getPbElement(goodID, attachRecord.AttachElementID))
 	}
 	return attachElements
 }
@@ -124,54 +122,45 @@ func getFavors(chargeableObj model.Chargeable) []*pb.Favor {
 	return result
 }
 
-func getPbElement(goodID int64, elementName, className string) *pb.Element {
-	// 1. 根据元素名，获取 dbElements
-	element, err := dao.ElementDao.GetOne(elementName, className)
-	if err != nil {
+func getPbElement(goodID int64, dbElementID int64) *pb.Element {
+	// 1. 形成 pbSizeInfos、并排序
+	dbSizeInfos, errResult := dao.ElementSizeInfoRecordDao.Get(goodID, dbElementID)
+	if errResult != nil {
 		// todo: log
 		return nil
 	}
-	logger.Info("Success to get db element", zap.Any("element", element))
+	var pbSizeInfos []*pb.SizeInfo
+	for _, dbSizeInfo := range dbSizeInfos {
+		pbSizeInfos = append(pbSizeInfos, dbSizeInfo.ToPb())
+	}
+	sort.Slice(pbSizeInfos, func(i, j int) bool {
+		return pbSizeInfos[i].Id < pbSizeInfos[j].Id
+	})
 
-	// 2. 形成 pbSizeInfos、并排序
-	dbSizeInfos, errResult := dao.ElementSizeInfoRecordDao.Get(goodID, elementName, className)
+	// 2. 获取默认选择记录
+	sizeRecord, errResult := dao.ElementSelectSizeRecordDao.GetOne(goodID, dbElementID)
+	if errResult != nil {
+		// todo: log
+		return nil
+	}
+	if sizeRecord == nil {
+		logger.Warn("Size record is blank", zap.Any("goodID", goodID), zap.Any("elementID", dbElementID))
+		return nil
+	}
+
+	// 4. 获取默认选择索引(需要查询数据库)
+	selectedSizeInfoIndex := int32(getSelectedIndex(pbSizeInfos, sizeRecord.SelectSizeInfoID))
+
+	// 5. 查询数据库
+	element, errResult := dao.ElementDao.Get(dbElementID)
 	if errResult != nil {
 		// todo: log
 		return nil
 	}
 
-	var pbSizeInfos []*pb.SizeInfo
-	for _, dbSizeInfo := range dbSizeInfos {
-		pbSizeInfos = append(pbSizeInfos, dbSizeInfo.ToPb())
-	}
-
-	sort.Slice(pbSizeInfos, func(i, j int) bool {
-		return pbSizeInfos[i].Id < pbSizeInfos[j].Id
-	})
-
-	// 3. 获取默认选择记录
-	sizeRecord, err := dao.ElementSelectSizeRecordDao.GetOne(goodID, elementName, className)
-	if err != nil {
-		// todo: log
-		return nil
-	}
-	if sizeRecord == nil {
-		logger.Warn("Size record is blank", zap.Any("goodID", goodID),
-			zap.Any("className", className), zap.Any("elementName", elementName))
-		return nil
-	}
-
-	// 4. 获取默认选择索引
-	selectedSizeInfoIndex := int32(getSelectedIndex(pbSizeInfos, sizeRecord.SelectSize))
-	logger.Info("getSelectedIndex",
-		zap.Any("elementName", elementName),
-		zap.Any("selectedSizeInfoIndex", selectedSizeInfoIndex),
-		zap.Any("pbSizeInfos", pbSizeInfos),
-		zap.Any("selectSize", sizeRecord.SelectSize))
-
 	// 5. 返回
 	return &pb.Element{
-		Id:            int64(element.ID),
+		Id:            element.ID,
 		Name:          element.Name,
 		Type:          element.Type,
 		SelectedIndex: selectedSizeInfoIndex,

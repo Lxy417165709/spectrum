@@ -1,15 +1,15 @@
 package model
 
 import (
-	"github.com/jinzhu/gorm"
 	"spectrum/common/pb"
 	"time"
 )
 
 type Good struct {
-	gorm.Model
-	Name    string `json:"name"`
-	OrderID int64  `json:"order_id"`
+	ID            int64     `gorm:"id"`
+	CreatedAt     time.Time `gorm:"created_at"`
+	UpdatedAt     time.Time `gorm:"updated_at"`
+	OrderID       int64     `json:"order_id"`
 
 	Expense         float64   `json:"expense"`
 	CheckOutAt      time.Time `gorm:"check_out_at"`
@@ -17,7 +17,7 @@ type Good struct {
 }
 
 func (g *Good) GetID() int64 {
-	return int64(g.ID)
+	return g.ID
 }
 
 func (g *Good) TableName() string {
@@ -47,7 +47,7 @@ func (g *Good) GetExpenseInfo(mainElement *pb.Element, attachElement []*pb.Eleme
 func (g *Good) getNonFavorExpense(elements []*pb.Element) float64 {
 	expense := 0.0
 	for _, element := range elements {
-		priceString := GetSelectSizeInfo(element).Price
+		priceString := GetPbElementSelectSizeInfo(element).Price
 		expense += GetDbPrice(priceString)
 	}
 	return expense

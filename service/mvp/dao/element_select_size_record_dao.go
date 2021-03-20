@@ -15,20 +15,19 @@ type elementSelectSizeRecordDao struct{}
 
 func (elementSelectSizeRecordDao) Create(obj *model.ElementSelectSizeRecord) (int64, error) {
 	values := []interface{}{
-		obj.GoodID, obj.ElementClassName, obj.ElementName, obj.SelectSize,
+		obj.ID, obj.GoodID, obj.ElementID, obj.SelectSizeInfoID,
 	}
 	sql := fmt.Sprintf(`
-		insert into %s(good_id,element_class_name,element_name,select_size) values(%s)
+		insert into %s(id,good_id,element_id,select_size_info_id) values(%s)
 		on duplicate key update
 			good_id = values(good_id),
-			element_name = values(element_name),
-			element_class_name = values(element_class_name),
-			select_size = values(select_size);
+			element_id = values(element_id),
+			select_size_info_id = values(select_size_info_id);
 	`, obj.TableName(), GetPlaceholderClause(len(values)))
 	result, err := mainDB.CommonDB().Exec(sql, values...)
 	if err != nil {
 		logger.Error("Fail to finish create", zap.Any("obj", obj), zap.Error(err))
-		return 0, ers.New("数据库执行出错，添加主元素(%v)默认选项(%v)失败。", obj.ElementName, obj.SelectSize)
+		return 0, ers.MysqlError
 	}
 	id, err := result.LastInsertId()
 	if err != nil {
@@ -38,24 +37,13 @@ func (elementSelectSizeRecordDao) Create(obj *model.ElementSelectSizeRecord) (in
 	return id, nil
 }
 
-func (elementSelectSizeRecordDao) GetOne(goodID int64, elementName, className string) (*model.ElementSelectSizeRecord, error) {
-
+func (elementSelectSizeRecordDao) GetOne(goodID, elementID int64) (*model.ElementSelectSizeRecord, error) {
 	var result model.ElementSelectSizeRecord
-	var whereClause string
-	var parameters []interface{}
-	if goodID == 0 {
-		whereClause = "good_id = ? and element_name = ? and element_class_name = ?"
-		parameters = []interface{}{goodID, elementName, className}
-	} else {
-		whereClause = "good_id = ? and element_class_name = ?"
-		parameters = []interface{}{goodID, className}
-	}
-
-	if err := mainDB.Where(whereClause, parameters...).First(&result).Error; err != nil {
+	if err := mainDB.Where("good_id = ? and element_id = ?", goodID, elementID).First(&result).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, nil
 		}
-		logger.Error("Fail to finish mainDB.first", zap.String("elementName", elementName), zap.Error(err))
+		logger.Error("Fail to finish mainDB.first", zap.Any("goodID", goodID), zap.Any("elementID", elementID), zap.Error(err))
 		return nil, ers.MysqlError
 	}
 	return &result, nil

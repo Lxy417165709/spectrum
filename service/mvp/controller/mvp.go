@@ -20,16 +20,31 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 	logger.Info("AddGood", zap.Any("ctx", ctx), zap.Any("req", req))
 
 	var res pb.AddGoodRes
-	good, className, errResult := CheckAddGoodParameter(req)
+	good, goodClassName, errResult := CheckAddGoodParameter(req)
 	if errResult != nil {
 		return nil, errResult
 	}
-	if errResult := storePbElementToDB(good.MainElement, className); errResult != nil {
+	if errResult := writePbElementToDbAndUpdateID(good.MainElement, goodClassName); errResult != nil {
 		return nil, errResult
 	}
-	if errResult := writePbGoodSizeToDB(good, className); errResult != nil {
+	if errResult := writePbGoodSizeInfoToDB(good); errResult != nil {
 		return nil, errResult
 	}
+	return &res, nil
+}
+
+func (MvpServer) AddElement(ctx context.Context, req *pb.AddElementReq) (*pb.AddElementRes, error) {
+	logger.Info("AddElement", zap.Any("ctx", ctx), zap.Any("req", req))
+
+	var res pb.AddElementRes
+	if errResult := writePbElementToDbAndUpdateID(req.Element, req.ClassName); errResult != nil {
+		return nil, errResult
+	}
+	if _, errResult := dao.ElementSelectSizeRecordDao.Create(toDbElementSelectSizeRecord(0, req.Element.Id, model.GetPbElementSelectSizeInfo(req.Element).Id));
+		errResult != nil {
+		return nil, errResult
+	}
+
 	return &res, nil
 }
 
@@ -41,28 +56,12 @@ func (MvpServer) DeleteElementSizeInfo(ctx context.Context, req *pb.DeleteElemen
 	return &res, nil
 }
 
-func (MvpServer) AddElement(ctx context.Context, req *pb.AddElementReq) (*pb.AddElementRes, error) {
-	logger.Info("AddElement", zap.Any("ctx", ctx), zap.Any("req", req))
-
-	var res pb.AddElementRes
-
-	if errResult := storePbElementToDB(req.Element, req.ClassName); errResult != nil {
-		return nil, errResult
-	}
-	if _, errResult := dao.ElementSelectSizeRecordDao.Create(GetDbElementSelectSizeRecord(req.Element, 0, req.ClassName));
-		errResult != nil {
-		return nil, errResult
-	}
-
-	return &res, nil
-}
-
 func (MvpServer) AddSpace(ctx context.Context, req *pb.AddSpaceReq) (*pb.AddSpaceRes, error) {
 	logger.Info("AddDesk", zap.Any("ctx", ctx), zap.Any("req", req))
 	var res pb.AddSpaceRes
 
 	// 1. 创建
-	if err := dao.SpaceDao.Create(getDbSpace(req.Space)); err != nil {
+	if err := dao.SpaceDao.Create(toDbSpace(req.Space)); err != nil {
 		logger.Error("Fail to finish SpaceDao.Create",
 			zap.Any("req", req),
 			zap.Error(err))
@@ -120,7 +119,7 @@ func (MvpServer) GetAllGoodOptions(ctx context.Context, req *pb.GetAllGoodOption
 	// 2. 获取 pbElement
 	pbElements := make([]*pb.Element, 0)
 	for _, dbElement := range dbElements {
-		pbElements = append(pbElements, getPbElement(0, dbElement.Name, req.ClassName)) // todo: 这goodId 其实也可以传入吧
+		pbElements = append(pbElements, getPbElement(0, dbElement.ID))
 	}
 
 	// 4. 写入
@@ -178,42 +177,42 @@ func (MvpServer) AddDeskClass(ctx context.Context, req *pb.AddDeskClassReq) (*pb
 	return &res, nil
 }
 
-func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.OrderGoodRes, error) {
-	logger.Info("OrderGood", zap.Any("ctx", ctx), zap.Any("req", req))
-	// todo: 这里可以点单记录
-	var res pb.OrderGoodRes
-
-	// 正常情况能来到这里的，orderID 不为0
-
-	for _, good := range req.Goods {
-		if good.ExpenseInfo == nil {
-			good.ExpenseInfo = &pb.ExpenseInfo{}
-		}
-		dbGood := &model.Good{
-			Name:            good.MainElement.Name,
-			Expense:         good.ExpenseInfo.Expense,
-			CheckOutAt:      time.Unix(good.ExpenseInfo.CheckOutAt, 0),
-			NonFavorExpense: good.ExpenseInfo.NonFavorExpense,
-			OrderID:         req.OrderID,
-		}
-		if err := dao.GoodDao.Create(dbGood); err != nil {
-			// todo: log
-			return nil, err
-		}
-		if err := dao.ChargeableObjectDao.CreateFavorRecord(dbGood.GetName(), int64(dbGood.ID), good.Favors); err != nil {
-			// todo: log
-			return nil, err
-		}
-		good.Id = int64(dbGood.ID)
-		if err := writePbGoodSizeToDB(good, "todo"); err != nil {
-			logger.Error("Fail to finish createGood",
-				zap.Any("req", req),
-				zap.Error(err))
-			return nil, err
-		}
-	}
-	return &res, nil
-}
+//func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.OrderGoodRes, error) {
+//	logger.Info("OrderGood", zap.Any("ctx", ctx), zap.Any("req", req))
+//	// todo: 这里可以点单记录
+//	var res pb.OrderGoodRes
+//
+//	// 正常情况能来到这里的，orderID 不为0
+//
+//	for _, good := range req.Goods {
+//		if good.ExpenseInfo == nil {
+//			good.ExpenseInfo = &pb.ExpenseInfo{}
+//		}
+//		dbGood := &model.Good{
+//			Name:            good.MainElement.Name,
+//			Expense:         good.ExpenseInfo.Expense,
+//			CheckOutAt:      time.Unix(good.ExpenseInfo.CheckOutAt, 0),
+//			NonFavorExpense: good.ExpenseInfo.NonFavorExpense,
+//			OrderID:         req.OrderID,
+//		}
+//		if err := dao.GoodDao.Create(dbGood); err != nil {
+//			// todo: log
+//			return nil, err
+//		}
+//		if err := dao.ChargeableObjectDao.CreateFavorRecord(dbGood.GetName(), int64(dbGood.ID), good.Favors); err != nil {
+//			// todo: log
+//			return nil, err
+//		}
+//		good.Id = int64(dbGood.ID)
+//		if err := writePbGoodSizeInfoToDB(good, "todo"); err != nil {
+//			logger.Error("Fail to finish createGood",
+//				zap.Any("req", req),
+//				zap.Error(err))
+//			return nil, err
+//		}
+//	}
+//	return &res, nil
+//}
 
 func (MvpServer) AddDesk(ctx context.Context, req *pb.AddDeskReq) (*pb.AddDeskRes, error) {
 	logger.Info("AddDesk", zap.Any("ctx", ctx), zap.Any("req", req))
@@ -222,7 +221,7 @@ func (MvpServer) AddDesk(ctx context.Context, req *pb.AddDeskReq) (*pb.AddDeskRe
 
 	req.Desk.Space.ClassName = req.ClassName
 
-	if err := dao.SpaceDao.Create(getDbSpace(req.Desk.Space)); err != nil {
+	if err := dao.SpaceDao.Create(toDbSpace(req.Desk.Space)); err != nil {
 		logger.Error("Fail to finish SpaceDao.Create",
 			zap.Any("req", req),
 			zap.Error(err))
@@ -270,13 +269,13 @@ func (MvpServer) OrderDesk(ctx context.Context, req *pb.OrderDeskReq) (*pb.Order
 	return &res, nil
 }
 
-func (MvpServer) GetOrder(ctx context.Context, req *pb.GetOrderReq) (*pb.GetOrderRes, error) {
-	logger.Info("GetOrder", zap.Any("ctx", ctx), zap.Any("req", req))
-	var res pb.GetOrderRes
-
-	res.Order = getPbOrder(req.OrderID)
-	return &res, nil
-}
+//func (MvpServer) GetOrder(ctx context.Context, req *pb.GetOrderReq) (*pb.GetOrderRes, error) {
+//	logger.Info("GetOrder", zap.Any("ctx", ctx), zap.Any("req", req))
+//	var res pb.GetOrderRes
+//
+//	res.Order = getPbOrder(req.OrderID)
+//	return &res, nil
+//}
 
 func (MvpServer) CloseDesk(ctx context.Context, req *pb.CloseDeskReq) (*pb.CloseDeskRes, error) {
 	logger.Info("CloseDesk", zap.Any("ctx", ctx), zap.Any("req", req))
@@ -290,44 +289,44 @@ func (MvpServer) CloseDesk(ctx context.Context, req *pb.CloseDeskReq) (*pb.Close
 	return &res, nil
 }
 
-func (MvpServer) CheckOut(ctx context.Context, req *pb.CheckOutReq) (*pb.CheckOutRes, error) {
-	logger.Info("CheckOut", zap.Any("ctx", ctx), zap.Any("req", req))
-	var res pb.CheckOutRes
-
-	for _, id := range req.GoodIDs {
-		good, err := dao.GoodDao.Get(id)
-		if err != nil {
-			// todo: log
-			return nil, err
-		}
-		if good == nil {
-			// todo: warning
-			continue
-		}
-		if err := checkOutIfNot(good); err != nil {
-			// todo: log
-			return nil, err
-		}
-	}
-
-	for _, id := range req.DeskIDs {
-		desk, err := dao.DeskDao.Get(id)
-		if err != nil {
-			// todo: log
-			return nil, err
-		}
-		if desk == nil {
-			// todo: warning
-			continue
-		}
-		if err := checkOutIfNot(desk); err != nil {
-			// todo: log
-			return nil, err
-		}
-	}
-
-	return &res, nil
-}
+//func (MvpServer) CheckOut(ctx context.Context, req *pb.CheckOutReq) (*pb.CheckOutRes, error) {
+//	logger.Info("CheckOut", zap.Any("ctx", ctx), zap.Any("req", req))
+//	var res pb.CheckOutRes
+//
+//	for _, id := range req.GoodIDs {
+//		good, err := dao.GoodDao.Get(id)
+//		if err != nil {
+//			// todo: log
+//			return nil, err
+//		}
+//		if good == nil {
+//			// todo: warning
+//			continue
+//		}
+//		if err := checkOutIfNot(good); err != nil {
+//			// todo: log
+//			return nil, err
+//		}
+//	}
+//
+//	for _, id := range req.DeskIDs {
+//		desk, err := dao.DeskDao.Get(id)
+//		if err != nil {
+//			// todo: log
+//			return nil, err
+//		}
+//		if desk == nil {
+//			// todo: warning
+//			continue
+//		}
+//		if err := checkOutIfNot(desk); err != nil {
+//			// todo: log
+//			return nil, err
+//		}
+//	}
+//
+//	return &res, nil
+//}
 
 func (s MvpServer) ChangeDesk(ctx context.Context, req *pb.ChangeDeskReq) (*pb.ChangeDeskRes, error) {
 	logger.Info("ChangeDesk", zap.Any("ctx", ctx), zap.Any("req", req))

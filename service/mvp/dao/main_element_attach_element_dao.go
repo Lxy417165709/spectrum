@@ -15,23 +15,20 @@ type mainElementAttachElementRecordDao struct{}
 
 func (mainElementAttachElementRecordDao) Create(obj *model.MainElementAttachElementRecord) (int64, error) {
 	values := []interface{}{
-		obj.GoodID, obj.MainElementClassName, obj.MainElementName, obj.AttachElementClassName, obj.AttachElementName, obj.SelectSize,
+		obj.GoodID, obj.MainElementID, obj.AttachElementID, obj.SelectSizeInfoID,
 	}
 	sql := fmt.Sprintf(`
-		insert into %s(good_id,main_element_class_name,main_element_name,attach_element_class_name,attach_element_name,select_size) values(%s)
+		insert into %s(good_id,main_element_id,attach_element_id,select_size_info_id) values(%s)
 		on duplicate key update
 			good_id = values(good_id),
-			main_element_class_name = values(main_element_class_name),
-			main_element_name = values(main_element_name),
-			attach_element_class_name = values(attach_element_class_name),
-			attach_element_name = values(attach_element_name),
-			select_size = values(select_size);
+			main_element_id = values(main_element_id),
+			attach_element_id = values(attach_element_id),
+			select_size_info_id = values(select_size_info_id);
 	`, obj.TableName(), GetPlaceholderClause(len(values)))
 	result, err := mainDB.CommonDB().Exec(sql, values...)
 	if err != nil {
 		logger.Error("Fail to finish create", zap.Any("obj", obj), zap.Error(err))
-		return 0, ers.New("数据库执行出错，添加主元素(%v)的附属元素(%v)默认选项(%v)失败。",
-			obj.MainElementName, obj.AttachElementName, obj.SelectSize)
+		return 0, ers.MysqlError
 	}
 	id, err := result.LastInsertId()
 	if err != nil {
@@ -41,24 +38,11 @@ func (mainElementAttachElementRecordDao) Create(obj *model.MainElementAttachElem
 	return id, nil
 }
 
-func (mainElementAttachElementRecordDao) GetByGoodIdAndMainElementName(goodID int64, mainElementName string) ([]*model.MainElementAttachElementRecord, error) {
-	var table model.MainElementAttachElementRecord
-	createTableWhenNotExist(&table)
+func (mainElementAttachElementRecordDao) GetByGoodIdAndMainElementName(goodID int64, mainElementID int64) ([]*model.MainElementAttachElementRecord, error) {
 	var result []*model.MainElementAttachElementRecord
-
-	var whereClause string
-	var parameters []interface{}
-	if goodID == 0 {
-		whereClause = "good_id = ? and main_element_name = ?"
-		parameters = []interface{}{goodID, mainElementName}
-	} else {
-		whereClause = "good_id = ?"
-		parameters = []interface{}{goodID}
-	}
-
-	if err := mainDB.Where(whereClause, parameters...).Find(&result).Error; err != nil {
-		logger.Error("Fail to finish mainDB.Find", zap.String("mainElementName", mainElementName), zap.Error(err))
-		return nil, err
+	if err := mainDB.Where("good_id = ? and main_element_id = ?", goodID, mainElementID).Find(&result).Error; err != nil {
+		logger.Error("Fail to finish mainDB.Find", zap.Any("goodID", goodID), zap.Any("mainElementID ", mainElementID), zap.Error(err))
+		return nil, ers.MysqlError
 	}
 	return result, nil
 }

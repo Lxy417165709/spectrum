@@ -4,8 +4,7 @@
 
     <!-- 1. 商品名编辑器 -->
     <el-form-item label="商品名">
-      <el-input style="width: 70%" v-if="good.mainElement!==undefined && canModifyGoodName" v-model="good.mainElement.name"></el-input>
-      <span v-if="good.mainElement!==undefined && !canModifyGoodName" >{{ good.mainElement.name }}</span>
+      <el-input style="width: 70%" v-if="good.mainElement!==undefined" v-model="good.mainElement.name"></el-input>
     </el-form-item>
 
     <!-- 2. 规格编辑器 -->
@@ -113,7 +112,7 @@ export default {
       selectableElements: [],
       addTabCount: 0,
 
-      canModifyGoodName:false,
+      canModifyGoodName: false,
     }
   },
   methods: {

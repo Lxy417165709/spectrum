@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-func GetSelectSizeInfo(element *pb.Element) *pb.SizeInfo {
+func GetPbElementSelectSizeInfo(element *pb.Element) *pb.SizeInfo {
 	return element.SizeInfos[element.SelectedIndex]
 }
 
