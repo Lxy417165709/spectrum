@@ -35,9 +35,6 @@ func (deskDao) Update(to map[string]interface{}) error {
 }
 
 func (deskDao) GetNonCheckOutDesk(spaceID int64) (*model.Desk, error) {
-	var table model.Desk
-	createTableWhenNotExist(&table)
-
 	var result model.Desk
 	if err := mainDB.First(&result, "space_id = ? and check_out_at = 0", spaceID).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {

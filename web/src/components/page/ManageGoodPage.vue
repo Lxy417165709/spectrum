@@ -27,7 +27,6 @@
 
     <!--    3. 商品类内的商品展示-->
     <div v-show="cpt_canGoodListShow">
-      <el-divider content-position="left">元素</el-divider>
       <good-list v-if="cpt_isGoodListExist"
                  ref="GoodList"
                  :props_isAdminView="props_isAdminView"
@@ -38,7 +37,6 @@
 
     <!--    4. 附属选项类内的附属选项展示-->
     <div v-show="cpt_canGoodOptionListShow">
-      <el-divider content-position="left">元素</el-divider>
       <good-option-list v-if="cpt_isGoodOptionListExist"
                         ref="GoodOptionList"
                         @turnToGoodOptionListMode="turnToGoodOptionListMode"

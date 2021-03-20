@@ -136,6 +136,7 @@ func toDbElement(pbElement *pb.Element, classID int64) *model.Element {
 
 func toDbSpace(pbSpace *pb.Space, classID int64) *model.Space {
 	return &model.Space{
+		ID:               pbSpace.Id,
 		Name:             pbSpace.Name,
 		ClassID:          classID,
 		Price:            model.GetDbPrice(pbSpace.Price),

@@ -1,6 +1,8 @@
 <!-- eslint-disable -->
 <template>
   <el-row>
+    <el-divider content-position="left">{{className}}</el-divider>
+
     <!--    1. 展示 商品选项 部分-->
     <el-col v-for="(goodOption,goodOptionIndex) in goodOptions" :key="goodOptionIndex"
             style="height: 300px; width: 202px; margin-left: 10px; border: none">
