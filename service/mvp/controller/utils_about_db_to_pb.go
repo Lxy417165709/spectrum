@@ -17,7 +17,7 @@ func getClassGoods(className string) []*pb.Good {
 			Expense:           0,
 			CheckOutTimestamp: 0,
 			NonFavorExpense:   0,
-		})
+		},className)
 		goods = append(goods, pbGood)
 		logger.Info("Get pb good", zap.Any("pbGood", pbGood))
 	}
@@ -76,7 +76,7 @@ func getOrderPbGoods(orderID int64) []*pb.Good {
 	}
 	var goods []*pb.Good
 	for _, dbGood := range dbGoods {
-		goods = append(goods, getPbGood(dbGood))
+		goods = append(goods, getPbGood(dbGood,"todo"))
 	}
 	return goods
 }
@@ -84,8 +84,8 @@ func getOrderPbGoods(orderID int64) []*pb.Good {
 // 返回的 good:
 // 已结账时: 返回结账的金额信息
 // 未结账时: 返回最新的金额信息
-func getPbGood(good *model.Good) *pb.Good {
-	mainElement := getElement(int64(good.ID), good.Name)
+func getPbGood(good *model.Good,goodClassName string) *pb.Good {
+	mainElement := getElement(int64(good.ID), good.Name,goodClassName)
 	attachElements := getAttachElements(int64(good.ID), good.Name)
 	favors := getFavors(good)
 	return &pb.Good{
@@ -97,8 +97,8 @@ func getPbGood(good *model.Good) *pb.Good {
 	}
 }
 
-func getElement(goodID int64, elementName,className string) *pb.Element {
-	elements, err := dao.ElementDao.GetByName(elementName,className)
+func getElement(goodID int64, elementName, className string) *pb.Element {
+	elements, err := dao.ElementDao.GetByName(elementName, className)
 	if err != nil {
 		// todo: log
 		return nil
@@ -149,7 +149,7 @@ func getAttachElements(goodID int64, mainElementName string) []*pb.Element {
 	logger.Info("Success to get attachRecords", zap.Any("attachRecords", attachRecords))
 
 	for _, attachRecord := range attachRecords {
-		elements, err := dao.ElementDao.GetByName(attachRecord.AttachElementName,attachRecord.ClassName)
+		elements, err := dao.ElementDao.GetByName(attachRecord.AttachElementName, attachRecord.AttachElementClassName)
 		if err != nil {
 			logger.Error("Fail to finish ElementDao.GetByName", zap.Error(err))
 			return nil

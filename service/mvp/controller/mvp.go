@@ -127,7 +127,7 @@ func (MvpServer) GetAllGoodOptions(ctx context.Context, req *pb.GetAllGoodOption
 
 	pbElements := make([]*pb.Element, 0)
 	for name := range nameToElements {
-		pbElements = append(pbElements, getElement(0, name,className))
+		pbElements = append(pbElements, getElement(0, name, req.ClassName))
 	}
 
 	res.Elements = pbElements

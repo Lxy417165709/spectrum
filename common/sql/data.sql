@@ -1,0 +1,1 @@
+insert into `good_class`

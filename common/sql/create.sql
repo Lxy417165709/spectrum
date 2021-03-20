@@ -35,11 +35,11 @@ CREATE TABLE `good`
 # 商品类表
 CREATE TABLE `good_class`
 (
-    `id`         int unsigned NOT NULL AUTO_INCREMENT,
-    `created_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `name`       varchar(255) NOT NULL DEFAULT '',
-    `class_type` int          NOT NULL DEFAULT 0,
+    `id`                 int unsigned NOT NULL AUTO_INCREMENT,
+    `created_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `name`               varchar(255) NOT NULL DEFAULT '',
+    `class_type`         int          NOT NULL DEFAULT 0,
     `picture_store_path` varchar(255) NOT NULL DEFAULT '',
     PRIMARY KEY (`id`),
     UNIQUE KEY (`name`)
@@ -63,16 +63,18 @@ CREATE TABLE `good_class`
 # 主元素的附属元素记录表
 CREATE TABLE `main_element_attach_element_record`
 (
-    `id`                  int unsigned NOT NULL AUTO_INCREMENT,
-    `created_at`          timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`          timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `main_element_name`   varchar(255) NOT NULL DEFAULT '',
-    `main_element_class_name`  varchar(255) NOT NULL DEFAULT '',
-    `good_id`             bigint       NOT NULL DEFAULT 0,
-    `attach_element_name` varchar(255) NOT NULL DEFAULT '',
-    `select_size`         varchar(255) NOT NULL DEFAULT '',
+    `id`                        int unsigned NOT NULL AUTO_INCREMENT,
+    `created_at`                timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`                timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `main_element_name`         varchar(255) NOT NULL DEFAULT '',
+    `main_element_class_name`   varchar(255) NOT NULL DEFAULT '',
+    `good_id`                   bigint       NOT NULL DEFAULT 0,
+    `attach_element_name`       varchar(255) NOT NULL DEFAULT '',
+    `attach_element_class_name` varchar(255) NOT NULL DEFAULT '',
+    `select_size`               varchar(255) NOT NULL DEFAULT '',
     PRIMARY KEY (`id`),
-    UNIQUE KEY (`good_id`, `main_element_class_name`,`main_element_name`, `attach_element_name`)
+    UNIQUE KEY (`good_id`, `main_element_class_name`, `main_element_name`, `attach_element_class_name`,
+                `attach_element_name`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
@@ -80,15 +82,15 @@ CREATE TABLE `main_element_attach_element_record`
 # 元素尺寸记录表
 CREATE TABLE `element_size_record`
 (
-    `id`                int unsigned NOT NULL AUTO_INCREMENT,
-    `created_at`        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `id`                 int unsigned NOT NULL AUTO_INCREMENT,
+    `created_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `element_class_name` varchar(255) NOT NULL DEFAULT '',
-    `element_name` varchar(255) NOT NULL DEFAULT '',
-    `good_id`           bigint       NOT NULL DEFAULT 0,
-    `select_size`       varchar(255) NOT NULL DEFAULT '',
+    `element_name`       varchar(255) NOT NULL DEFAULT '',
+    `good_id`            bigint       NOT NULL DEFAULT 0,
+    `select_size`        varchar(255) NOT NULL DEFAULT '',
     PRIMARY KEY (`id`),
-    UNIQUE KEY (`good_id`, `element_class_name`,`element_name`)
+    UNIQUE KEY (`good_id`, `element_class_name`, `element_name`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;

@@ -29,7 +29,7 @@ func getElementNames(className string) []string {
 func getExpenseInfo(chargeableObj model.Chargeable) *pb.ExpenseInfo {
 	switch chargeableObj.(type) {
 	case *model.Good:
-		return getPbGood(chargeableObj.(*model.Good)).ExpenseInfo
+		return getPbGood(chargeableObj.(*model.Good), "todo").ExpenseInfo
 	case *model.Desk:
 		return getPbDesk(chargeableObj.(*model.Desk)).ExpenseInfo
 	default:
