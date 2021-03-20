@@ -15,13 +15,15 @@ type mainElementAttachElementRecordDao struct{}
 
 func (mainElementAttachElementRecordDao) Create(obj *model.MainElementAttachElementRecord) (int64, error) {
 	values := []interface{}{
-		obj.GoodID, obj.MainElementName, obj.AttachElementName, obj.SelectSize,
+		obj.GoodID, obj.MainElementClassName, obj.MainElementName, obj.AttachElementClassName, obj.AttachElementName, obj.SelectSize,
 	}
 	sql := fmt.Sprintf(`
-		insert into %s(good_id,main_element_name,attach_element_name,select_size) values(%s)
+		insert into %s(good_id,main_element_class_name,main_element_name,attach_element_class_name,attach_element_name,select_size) values(%s)
 		on duplicate key update
 			good_id = values(good_id),
+			main_element_class_name = values(main_element_class_name),
 			main_element_name = values(main_element_name),
+			attach_element_class_name = values(attach_element_class_name),
 			attach_element_name = values(attach_element_name),
 			select_size = values(select_size);
 	`, obj.TableName(), GetPlaceholderClause(len(values)))
