@@ -8,6 +8,7 @@ import (
 	"spectrum/common/pb"
 	"spectrum/service/mvp/dao"
 	"spectrum/service/mvp/model"
+	"time"
 )
 
 // todo: GetOrder 可以设置为一个查询接口，可以以 ID 为条件 查询，以 是否已结账 为条件查询
@@ -238,44 +239,44 @@ func (MvpServer) AddDesk(ctx context.Context, req *pb.AddDeskReq) (*pb.AddDeskRe
 	return &res, nil
 }
 
-//func (MvpServer) OrderDesk(ctx context.Context, req *pb.OrderDeskReq) (*pb.OrderDeskRes, error) {
-//	logger.Info("OrderDesk", zap.Any("ctx", ctx), zap.Any("req", req))
-//	// todo: 这里可以点单记录
-//	var res pb.OrderDeskRes
-//
-//	dbOrder := &model.Order{}
-//	if err := dao.OrderDao.Create(dbOrder); err != nil {
-//		// todo: log
-//		return nil, err
-//	}
-//	if req.Desk.ExpenseInfo == nil {
-//		req.Desk.ExpenseInfo = &pb.ExpenseInfo{}
-//	}
-//	if req.Desk.Space == nil {
-//		req.Desk.Space = &pb.Space{}
-//	}
-//	dbDesk := &model.Desk{
-//		StartAt:  time.Now().Unix(),
-//		EndAt:    0,
-//		SpaceName:       req.Desk.Space.Name,
-//		SpaceClassName:  req.Desk.Space.ClassName,
-//		Expense:         req.Desk.ExpenseInfo.Expense,
-//		CheckOutAt:      time.Unix(req.Desk.ExpenseInfo.CheckOutAt, 0),
-//		NonFavorExpense: req.Desk.ExpenseInfo.NonFavorExpense,
-//		OrderID:         int64(dbOrder.ID),
-//	}
-//	if err := dao.DeskDao.Create(dbDesk); err != nil {
-//		// todo: log
-//		return nil, err
-//	}
-//	if err := dao.ChargeableObjectDao.CreateFavorRecord(dbDesk.GetName(), int64(dbDesk.ID), req.Desk.Favors); err != nil {
-//		// todo: log
-//		return nil, err
-//	}
-//	res.DeskID = int64(dbDesk.ID)
-//	res.OrderID = int64(dbOrder.ID)
-//	return &res, nil
-//}
+func (MvpServer) OrderDesk(ctx context.Context, req *pb.OrderDeskReq) (*pb.OrderDeskRes, error) {
+	logger.Info("OrderDesk", zap.Any("ctx", ctx), zap.Any("req", req))
+
+	var res pb.OrderDeskRes
+
+	dbOrder := &model.Order{
+		CheckOutAt: time.Unix(0, 0),
+	}
+	if errResult := dao.OrderDao.Create(dbOrder); errResult != nil {
+		return nil, errResult
+	}
+	if req.Desk.ExpenseInfo == nil {
+		req.Desk.ExpenseInfo = &pb.ExpenseInfo{}
+	}
+	if req.Desk.Space == nil {
+		req.Desk.Space = &pb.Space{}
+	}
+	dbDesk := &model.Desk{
+		ID:      req.Desk.Id,
+		StartAt: time.Now(),
+		EndAt:   model.NilTime,
+		//SessionCount:    0,
+		SpaceID:         req.Desk.Space.Id,
+		Expense:         req.Desk.ExpenseInfo.Expense,
+		CheckOutAt:      time.Unix(req.Desk.ExpenseInfo.CheckOutAt, 0),
+		NonFavorExpense: req.Desk.ExpenseInfo.NonFavorExpense,
+		OrderID:         dbOrder.ID,
+	}
+	if errResult := dao.DeskDao.Create(dbDesk); errResult != nil {
+		return nil, errResult
+	}
+	if errResult := dao.ChargeableObjectDao.CreateFavorRecord(dbDesk.GetName(), dbDesk.ID, req.Desk.Favors); errResult != nil {
+		return nil, errResult
+	}
+	res.DeskID = dbDesk.ID
+	res.OrderID = dbOrder.ID
+	return &res, nil
+}
 
 //func (MvpServer) GetOrder(ctx context.Context, req *pb.GetOrderReq) (*pb.GetOrderRes, error) {
 //	logger.Info("GetOrder", zap.Any("ctx", ctx), zap.Any("req", req))
@@ -444,7 +445,7 @@ func (s MvpServer) GetAllDesks(ctx context.Context, req *pb.GetAllDesksReq) (*pb
 		return &res, nil
 	}
 
-	spaces, err := dao.SpaceDao.GetByClassName(spaceClass.ID)
+	spaces, err := dao.SpaceDao.GetByClassID(spaceClass.ID)
 	if err != nil {
 		// todo: log
 		return nil, err

@@ -1,5 +1,7 @@
 package model
 
+import "time"
+
 const (
 	NotCheckedOut = 1
 	HasCheckedOut = 2
@@ -13,3 +15,6 @@ const (
 
 const INF = 1E18
 
+var (
+	NilTime = time.Unix(0, 0)
+)

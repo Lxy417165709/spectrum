@@ -2,7 +2,10 @@
 <template>
   <el-form label-width="80px">
     <el-form-item label="照片">
-      <img style="height:200px;width:200px; border: none;margin-top: 12px">
+      <el-image
+        v-if="good.mainElement!==undefined"
+        :src="'api/file/' + good.mainElement.sizeInfos[good.mainElement.selectedIndex].pictureStorePath"
+        style="height:200px;width:200px; border: none;margin-top: 12px"></el-image>
 
     </el-form-item>
     <el-form-item label="名字">
@@ -35,7 +38,7 @@
     <discount-editor></discount-editor>
 
     <el-form-item label="价格">
-      <span>{{ countPrice }}</span>
+      <span style="font-size: 1.4em;color: red;">{{ cpt_price }} 元</span>
     </el-form-item>
     <el-form-item label="备注">
       <el-input style="width: 70%"></el-input>
@@ -62,7 +65,6 @@ export default {
     return {
       needAttachGood: false,
       good: {},
-      countPrice: 0,
     }
   },
   methods: {
@@ -77,6 +79,15 @@ export default {
         orderID: this.orderID
       }, (res) => {
       })
+    }
+  },
+  computed: {
+    cpt_price() {
+      let price = this.good.mainElement.sizeInfos[this.good.mainElement.selectedIndex].price-0
+      for (let i = 0; i < this.good.attachElements.length; i++) {
+        price += this.good.attachElements[i].sizeInfos[this.good.attachElements[i].selectedIndex].price-0
+      }
+      return price
     }
   }
 }

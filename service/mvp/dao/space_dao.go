@@ -49,7 +49,7 @@ func (spaceDao) GetAll() ([]*model.Space, error) {
 	return result, nil
 }
 
-func (spaceDao) GetByClassName(classID int64) ([]*model.Space, error) {
+func (spaceDao) GetByClassID(classID int64) ([]*model.Space, error) {
 	var result []*model.Space
 	if err := mainDB.Where("class_id = ?", classID).Find(&result).Error; err != nil {
 		logger.Error("Fail to finish mainDB.Find",
@@ -57,6 +57,20 @@ func (spaceDao) GetByClassName(classID int64) ([]*model.Space, error) {
 		return nil, err
 	}
 	return result, nil
+}
+
+func (spaceDao) GetByClassNameAndSpaceName(className, spaceName string) (*model.Space, error) {
+	var result model.Space
+	if err := mainDB.First(&result, "class_name = ? and name = ?", className, spaceName).Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return nil, nil
+		}
+		logger.Error("Fail to finish mainDB.First",
+			zap.Any("id", "id"),
+			zap.Error(err))
+		return nil, ers.MysqlError
+	}
+	return &result, nil
 }
 
 func (spaceDao) Get(id int64) (*model.Space, error) {

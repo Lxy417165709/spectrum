@@ -3,6 +3,7 @@ package dao
 import (
 	"github.com/jinzhu/gorm"
 	"go.uber.org/zap"
+	"spectrum/common/ers"
 	"spectrum/common/logger"
 	"spectrum/service/mvp/model"
 )
@@ -32,7 +33,7 @@ func (orderDao) Create(obj *model.Order) error {
 
 	if err := mainDB.Create(&obj).Error; err != nil {
 		logger.Error("Fail to finish mainDB.Create", zap.Any("obj", obj), zap.Error(err))
-		return err
+		return ers.MysqlError
 	}
 	return nil
 }

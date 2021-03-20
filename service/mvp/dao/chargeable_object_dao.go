@@ -2,6 +2,7 @@ package dao
 
 import (
 	"go.uber.org/zap"
+	"spectrum/common/ers"
 	"spectrum/common/logger"
 	"spectrum/common/pb"
 	"spectrum/service/mvp/model"
@@ -27,10 +28,10 @@ func (chargeableObjectDao) UpdateExpenseInfo(obj model.Chargeable, expenseInfo *
 
 	// todo: 这三个字段名是约定，但这容易出错
 	to := map[string]interface{}{
-		"id":                  obj.GetID(),
-		"check_out_at": expenseInfo.CheckOutAt,
-		"expense":             expenseInfo.Expense,
-		"non_favor_expense":   expenseInfo.NonFavorExpense,
+		"id":                obj.GetID(),
+		"check_out_at":      expenseInfo.CheckOutAt,
+		"expense":           expenseInfo.Expense,
+		"non_favor_expense": expenseInfo.NonFavorExpense,
 	}
 	// todo: 要确定 where 条件，是否是 id == to[id]
 	if err := mainDB.Table(obj.GetName()).Update(to).Error; err != nil {
@@ -73,7 +74,7 @@ func (chargeableObjectDao) CreateFavorRecord(chargeableObjName string, chargeabl
 		}
 		if err := mainDB.Create(obj).Error; err != nil {
 			logger.Error("Fail to finish mainDB.Create", zap.Any("obj", obj), zap.Error(err))
-			return err
+			return ers.MysqlError
 		}
 	}
 	return nil

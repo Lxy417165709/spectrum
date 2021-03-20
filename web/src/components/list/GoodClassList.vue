@@ -69,6 +69,9 @@ export default {
     // 双击事件函数
     handleDbClick(goodClass) {
       clearTimeout(time);  //清除
+      if (!this.props_isAdminView){
+        return
+      }
       this.openGoodClassEditor(goodClass)
     }
   }

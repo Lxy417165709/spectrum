@@ -6,13 +6,13 @@ import (
 )
 
 type Order struct {
-	ID              int64     `gorm:"id"`
-	CreatedAt       time.Time `gorm:"created_at"`
-	UpdatedAt       time.Time `gorm:"updated_at"`
+	ID        int64     `gorm:"id"`
+	CreatedAt time.Time `gorm:"created_at"`
+	UpdatedAt time.Time `gorm:"updated_at"`
 
-	Expense           float64 `json:"expense"`
-	CheckOutAt time.Time   `gorm:"check_out_at"`
-	NonFavorExpense   float64 `json:"non_favor_expense"`
+	Expense         float64   `json:"expense"`
+	CheckOutAt      time.Time `gorm:"check_out_at"`
+	NonFavorExpense float64   `json:"non_favor_expense"`
 }
 
 func (Order) GetName() string {
@@ -29,9 +29,9 @@ func (o *Order) TableName() string {
 func (o *Order) GetExpenseInfo(desk *pb.Desk, goods []*pb.Good, favors []*pb.Favor) *pb.ExpenseInfo {
 	if o.CheckOutAt.Unix() != 0 {
 		return &pb.ExpenseInfo{
-			NonFavorExpense:   o.NonFavorExpense,
-			CheckOutAt: o.CheckOutAt.Unix(),
-			Expense:           o.Expense,
+			NonFavorExpense: o.NonFavorExpense,
+			CheckOutAt:      o.CheckOutAt.Unix(),
+			Expense:         o.Expense,
 		}
 	}
 
@@ -42,8 +42,8 @@ func (o *Order) GetExpenseInfo(desk *pb.Desk, goods []*pb.Good, favors []*pb.Fav
 		goodsExpense += good.GetExpenseInfo().Expense
 	}
 	return &pb.ExpenseInfo{
-		NonFavorExpense:   deskExpense + goodsExpense,
-		CheckOutAt: 0,
-		Expense:           GetFavorExpense(deskExpense+goodsExpense, favors),
+		NonFavorExpense: deskExpense + goodsExpense,
+		CheckOutAt:      0,
+		Expense:         GetFavorExpense(deskExpense+goodsExpense, favors),
 	}
 }
