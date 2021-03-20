@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 	"go.uber.org/zap"
+	"spectrum/common/ers"
 	"spectrum/common/logger"
 	"spectrum/common/pb"
 	"spectrum/service/mvp/dao"
@@ -107,8 +108,17 @@ func (MvpServer) GetAllGoodOptions(ctx context.Context, req *pb.GetAllGoodOption
 
 	var res pb.GetAllGoodOptionsRes
 
+	var classId int64
+	if req.ClassName != "" {
+		elementClass := getDbElementClassByName(req.ClassName)
+		if elementClass == nil {
+			return nil, ers.New("类名不存在。")
+		}
+		classId = elementClass.ID
+	}
+
 	// 1. 从数据库中获取所有附属元素
-	dbElements, err := dao.ElementDao.GetAllAttachElements(0)
+	dbElements, err := dao.ElementDao.GetAllAttachElements(classId)
 	if err != nil {
 		logger.Error("Fail to finish ElementDao.GetAll",
 			zap.Any("req", req),

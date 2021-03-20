@@ -8,8 +8,7 @@
     </el-form-item>
 
     <!-- 2. 规格编辑器 -->
-    <el-tabs type="border-card" @tab-click="tabClick" editable @edit="handleTabsEdit"
-             @tab-add="handleClick" style="margin-bottom: 10px" v-if="good.mainElement!==undefined">
+    <el-tabs type="border-card" @tab-click="tabClick" addable @tab-add="handleClick" style="margin-bottom: 10px" v-if="good.mainElement!==undefined">
       <el-tab-pane v-for="(sizeInfo,index) in good.mainElement.sizeInfos" :label="sizeInfo.size"
                    :name="index.toString()"
                    :key="index">
@@ -143,9 +142,6 @@ export default {
       this.addTabCount++
       let name = "未设定规格" + this.addTabCount
       this.good.mainElement.sizeInfos.push(utils.NewBlankSizeInfo(name))
-    },
-    handleTabsEdit(name, event) {
-      // this.good.mainElement.sizeInfos = utils.removeElementByField(this.good.mainElement.sizeInfos, "name", name)
     },
     handleChangeDefaultSizeInfo(index) {
       this.good.mainElement.selectedIndex = index

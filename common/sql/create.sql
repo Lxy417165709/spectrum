@@ -213,9 +213,9 @@ values ('小吃类', 'static/upload/温热1.jpeg', 0);
 insert into element_class(name, picture_store_path, class_type)
 values ('饮料类', 'static/upload/温热1.jpeg', 0);
 insert into element_class(name, picture_store_path, class_type)
-values ('附属选项类', 'static/upload/温热1.jpeg', 0);
+values ('附属选项类', 'static/upload/温热1.jpeg', 1);
 insert into element_class(name, picture_store_path, class_type)
-values ('附属商品类', 'static/upload/温热1.jpeg', 0);
+values ('附属商品类', 'static/upload/温热1.jpeg', 2);
 
 # 创建商品, 选项记录, 附属记录
 insert into element(name, type, class_id)

@@ -9,16 +9,16 @@
     </el-form-item>
 
     <!-- 2. 规格编辑器 -->
-    <el-tabs type="border-card" @tab-click="tabClick" addable v-model="curSizeInfoIndexString"
+    <el-tabs type="border-card" @tab-click="tabClick" addable v-bind:active-name="curSizeInfoIndex.toString()"
              @tab-add="handleClick" style="margin-bottom: 10px">
       <el-tab-pane v-for="(sizeInfo,index) in option.sizeInfos" :label="sizeInfo.size"
                    :name="index.toString()"
                    :key="index">
 
         <el-form-item label="规格名">
-          <el-input style="width: 70%" v-if="option.selectedIndex !== curSizeInfoIndexInt"
+          <el-input style="width: 70%" v-if="option.selectedIndex !== curSizeInfoIndex"
                     v-model="sizeInfo.size"></el-input>
-          <span v-if="option.selectedIndex === curSizeInfoIndexInt">{{ sizeInfo.size }}</span>
+          <span v-if="option.selectedIndex === curSizeInfoIndex">{{ sizeInfo.size }}</span>
         </el-form-item>
 
 
@@ -81,8 +81,7 @@ export default {
     return {
       option: {},
 
-      addTabCount: 0,
-      curSizeInfoIndexString: '0',
+      curSizeInfoIndex:0,
     }
   },
   methods: {
@@ -96,10 +95,10 @@ export default {
       this.option.selectedIndex = index
     },
     deleteElementSizeInfo(index) {
-      if (this.option.sizeInfos[this.curSizeInfoIndexInt].id === 0) {
+      if (this.option.sizeInfos[this.curSizeInfoIndex].id === 0) {
         this.option.sizeInfos = utils.removeIndex(this.option.sizeInfos, index)
-        if (this.curSizeInfoIndexInt >= this.option.sizeInfos.length) {
-          this.curSizeInfoIndexString = (this.option.sizeInfos.length - 1).toString()
+        if (this.this.curSizeInfoIndex >= this.option.sizeInfos.length) {
+          this.curSizeInfoIndex = (this.curSizeInfoIndex - 1)
         }
         return
       }
@@ -109,11 +108,11 @@ export default {
         sizeInfoSize: this.option.sizeInfos[index].size,
       }, (res) => {
         this.option.sizeInfos = utils.removeIndex(this.option.sizeInfos, index)
-        // if (this.option.selectedIndex > this.curSizeInfoIndexInt) {
-        //   this.option.selectedIndex--
-        // }  // todo: 这个 默认选中应该要调整下，防止删除后默认选中也跟着改变
-        if (this.curSizeInfoIndexInt >= this.option.sizeInfos.length) {
-          this.curSizeInfoIndexString = (this.option.sizeInfos.length - 1).toString()
+        if (this.option.selectedIndex > this.curSizeInfoIndex) {
+          this.option.selectedIndex--
+        }
+        if (this.curSizeInfoIndex >= this.option.sizeInfos.length) {
+          this.curSizeInfoIndex = (this.option.sizeInfos.length - 1)
         }
       })
     },
@@ -133,18 +132,16 @@ export default {
         this.$message.success(res.data.msg)
       })
     },
+    tabClick(tab) {
+      this.curSizeInfoIndex = tab.index
+    },
     cleanSizeInfoPictureStorePath() {
-      this.option.sizeInfos[this.curSizeInfoIndexInt].pictureStorePath = ""
+      this.option.sizeInfos[this.curSizeInfoIndex].pictureStorePath = ""
     },
     imageUploadSuccess(res, file, fileList) {
-      this.option.sizeInfos[this.curSizeInfoIndexInt].pictureStorePath = res.data.fileStorePath;
+      this.option.sizeInfos[this.curSizeInfoIndex].pictureStorePath = res.data.fileStorePath;
     },
   },
-  computed: {
-    curSizeInfoIndexInt() {
-      return this.curSizeInfoIndexString - 0
-    }
-  }
 }
 </script>
 
