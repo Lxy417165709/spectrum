@@ -112,10 +112,11 @@ func (MvpServer) GetAllGoods(ctx context.Context, req *pb.GetAllGoodsReq) (*pb.G
 }
 
 func (MvpServer) GetAllGoodOptions(ctx context.Context, req *pb.GetAllGoodOptionsReq) (*pb.GetAllGoodOptionsRes, error) {
-	logger.Info("GetAllElements", zap.Any("ctx", ctx), zap.Any("req", req))
+	logger.Info("GetAllGoodOptions", zap.Any("ctx", ctx), zap.Any("req", req))
 
 	var res pb.GetAllGoodOptionsRes
 
+	// 1. 从数据库中获取所有附属元素
 	dbElements, err := dao.ElementDao.GetAllAttachElements(req.ClassName)
 	if err != nil {
 		logger.Error("Fail to finish ElementDao.GetAll",
@@ -124,18 +125,22 @@ func (MvpServer) GetAllGoodOptions(ctx context.Context, req *pb.GetAllGoodOption
 		return nil, err
 	}
 
+	// 2. 按元素名分组 (目的只是获取元素名)
 	nameToElements := make(map[string][]*model.Element)
 	for _, dbElement := range dbElements {
 		nameToElements[dbElement.Name] = append(nameToElements[dbElement.Name], dbElement)
 	}
 
+	// 3. 获取 pbElement
 	pbElements := make([]*pb.Element, 0)
 	for name := range nameToElements {
 		pbElements = append(pbElements, getElement(0, name, req.ClassName))
 	}
 
+	// 4. 写入
 	res.Elements = pbElements
 
+	// 5. 返回
 	return &res, nil
 }
 

@@ -10,7 +10,7 @@ type MainElementAttachElementRecord struct {
 	UpdatedAt              time.Time `gorm:"updated_at"`
 	GoodID                 int64     `gorm:"good_id"`
 	AttachElementClassName string    `gorm:"attach_element_class_name"`
-	MainElementClassName string    `gorm:"main_element_class_name"`
+	MainElementClassName   string    `gorm:"main_element_class_name"`
 	MainElementName        string    `gorm:"main_element_name"`
 	AttachElementName      string    `gorm:"attach_element_name"`
 	SelectSize             string    `gorm:"select_size"`
@@ -21,12 +21,13 @@ func (MainElementAttachElementRecord) TableName() string {
 }
 
 type ElementSizeRecord struct {
-	ID          uint      `gorm:"id"`
-	CreatedAt   time.Time `gorm:"created_at"`
-	UpdatedAt   time.Time `gorm:"updated_at"`
-	GoodID      int64     `gorm:"good_id"`
-	ElementName string    `gorm:"element_name"`
-	SelectSize  string    `gorm:"select_size"`
+	ID               uint      `gorm:"id"`
+	CreatedAt        time.Time `gorm:"created_at"`
+	UpdatedAt        time.Time `gorm:"updated_at"`
+	GoodID           int64     `gorm:"good_id"`
+	ElementClassName string    `gorm:"element_class_name"`
+	ElementName      string    `gorm:"element_name"`
+	SelectSize       string    `gorm:"select_size"`
 }
 
 func (ElementSizeRecord) TableName() string {

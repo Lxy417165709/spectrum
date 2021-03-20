@@ -2,6 +2,7 @@ package controller
 
 import (
 	"go.uber.org/zap"
+	"sort"
 	"spectrum/common/logger"
 	"spectrum/common/pb"
 	"spectrum/service/mvp/dao"
@@ -99,27 +100,41 @@ func getPbGood(good *model.Good, goodClassName string) *pb.Good {
 }
 
 func getElement(goodID int64, elementName, className string) *pb.Element {
+	// 1. 根据元素名，获取 dbElements
 	elements, err := dao.ElementDao.GetByName(elementName, className)
 	if err != nil {
 		// todo: log
 		return nil
 	}
-	sizeRecord, err := dao.ElementSizeRecordDao.GetByGoodIdAndElementName(goodID, elementName)
+	logger.Info("Success to get db elements", zap.Any("elements", elements))
+
+	// 2. 形成 pbSizeInfos、并排序
+	sizeInfos := model.GetSizeInfos(elements)
+	sort.Slice(sizeInfos, func(i, j int) bool {
+		return sizeInfos[i].Id < sizeInfos[j].Id
+	})
+
+	// 3. 获取默认选择记录
+	sizeRecord, err := dao.ElementSizeRecordDao.GetByGoodIdAndElementName(goodID, elementName, className)
 	if err != nil {
 		// todo: log
 		return nil
 	}
 	if sizeRecord == nil {
-		logger.Warn("Size record is blank", zap.Any("goodID", goodID), zap.Any("elementName", elementName))
+		logger.Warn("Size record is blank", zap.Any("goodID", goodID),
+			zap.Any("className", className), zap.Any("elementName", elementName))
 		return nil
 	}
-	sizeInfos := model.GetSizeInfos(elements)
+
+	// 4. 获取默认选择索引
 	selectedSizeInfoIndex := int32(GetSelectedIndex(sizeInfos, sizeRecord.SelectSize))
 	logger.Info("GetSelectedIndex",
 		zap.Any("elementName", elementName),
 		zap.Any("selectedSizeInfoIndex", selectedSizeInfoIndex),
 		zap.Any("sizeInfos", sizeInfos),
 		zap.Any("selectSize", sizeRecord.SelectSize))
+
+	// 5. 返回
 	return &pb.Element{
 		Name:          elementName,
 		Type:          elements[0].Type,

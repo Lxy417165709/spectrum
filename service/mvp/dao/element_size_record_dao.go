@@ -15,13 +15,14 @@ type elementSizeRecordDao struct{}
 
 func (elementSizeRecordDao) Create(obj *model.ElementSizeRecord) (int64, error) {
 	values := []interface{}{
-		obj.GoodID, obj.ElementName, obj.SelectSize,
+		obj.GoodID, obj.ElementClassName, obj.ElementName, obj.SelectSize,
 	}
 	sql := fmt.Sprintf(`
-		insert into %s(good_id,element_name,select_size) values(%s)
+		insert into %s(good_id,element_class_name,element_name,select_size) values(%s)
 		on duplicate key update
 			good_id = values(good_id),
 			element_name = values(element_name),
+			element_class_name = values(element_class_name),
 			select_size = values(select_size);
 	`, obj.TableName(), GetPlaceholderClause(len(values)))
 	result, err := mainDB.CommonDB().Exec(sql, values...)
@@ -37,7 +38,7 @@ func (elementSizeRecordDao) Create(obj *model.ElementSizeRecord) (int64, error) 
 	return id, nil
 }
 
-func (elementSizeRecordDao) GetByGoodIdAndElementName(goodID int64, elementName string) (*model.ElementSizeRecord, error) {
+func (elementSizeRecordDao) GetByGoodIdAndElementName(goodID int64, elementName, className string) (*model.ElementSizeRecord, error) {
 	var table model.ElementSizeRecord
 	createTableWhenNotExist(&table)
 
@@ -45,18 +46,18 @@ func (elementSizeRecordDao) GetByGoodIdAndElementName(goodID int64, elementName 
 	var whereClause string
 	var parameters []interface{}
 	if goodID == 0 {
-		whereClause = "good_id = ? and element_name = ?"
-		parameters = []interface{}{goodID, elementName}
+		whereClause = "good_id = ? and element_name = ? and element_class_name = ?"
+		parameters = []interface{}{goodID, elementName, className}
 	} else {
-		whereClause = "good_id = ?"
-		parameters = []interface{}{goodID}
+		whereClause = "good_id = ? and element_class_name = ?"
+		parameters = []interface{}{goodID, className}
 	}
 
 	if err := mainDB.Where(whereClause, parameters...).First(&result).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, nil
 		}
-		logger.Error("Fail to finish mainDB.Find", zap.String("elementName", elementName), zap.Error(err))
+		logger.Error("Fail to finish mainDB.first", zap.String("elementName", elementName), zap.Error(err))
 		return nil, ers.MysqlError
 	}
 	return &result, nil

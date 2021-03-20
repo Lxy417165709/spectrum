@@ -50,7 +50,6 @@ func GetFavor(favor *pb.Favor) Favor {
 
 func GetSizeInfos(sameNameElements []*Element) []*pb.SizeInfo {
 	var sizeInfos []*pb.SizeInfo
-
 	for _, element := range sameNameElements {
 		sizeInfos = append(sizeInfos, &pb.SizeInfo{
 			Size:             element.Size,
