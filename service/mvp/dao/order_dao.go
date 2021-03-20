@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"fmt"
 	"github.com/jinzhu/gorm"
 	"go.uber.org/zap"
 	"spectrum/common/ers"
@@ -13,9 +14,6 @@ var OrderDao orderDao
 type orderDao struct{}
 
 func (orderDao) Get(id int64) (*model.Order, error) {
-	var table model.Order
-	createTableWhenNotExist(&table)
-
 	var result model.Order
 	if err := mainDB.First(&result, "id = ?", id).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
@@ -27,13 +25,26 @@ func (orderDao) Get(id int64) (*model.Order, error) {
 	return &result, nil
 }
 
-func (orderDao) Create(obj *model.Order) error {
-	var table model.Order
-	createTableWhenNotExist(&table)
-
-	if err := mainDB.Create(&obj).Error; err != nil {
-		logger.Error("Fail to finish mainDB.Create", zap.Any("obj", obj), zap.Error(err))
-		return ers.MysqlError
+func (orderDao) Create(obj *model.Order) (int64, error) {
+	values := []interface{}{
+		obj.ID, obj.Expense, obj.CheckOutAt, obj.NonFavorExpense,
 	}
-	return nil
+	sql := fmt.Sprintf(`
+		insert into %s(id, expense, check_out_at, non_favor_expense) values(%s)
+		on duplicate key update
+			expense = values(expense),
+			check_out_at = values(check_out_at),
+			non_favor_expense = values(non_favor_expense);
+	`, fmt.Sprintf("`%s`", obj.TableName()), GetPlaceholderClause(len(values)))
+	result, err := mainDB.CommonDB().Exec(sql, values...)
+	if err != nil {
+		logger.Error("Fail to finish create", zap.Any("obj", obj), zap.Error(err))
+		return 0, ers.MysqlError
+	}
+	id, err := result.LastInsertId()
+	if err != nil {
+		logger.Error("Fail to get id", zap.Any("obj", obj), zap.Error(err))
+		return 0, ers.MysqlError
+	}
+	return id, nil
 }

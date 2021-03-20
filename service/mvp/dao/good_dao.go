@@ -1,8 +1,10 @@
 package dao
 
 import (
+	"fmt"
 	"github.com/jinzhu/gorm"
 	"go.uber.org/zap"
+	"spectrum/common/ers"
 	"spectrum/common/logger"
 	"spectrum/service/mvp/model"
 )
@@ -11,15 +13,30 @@ var GoodDao goodDao
 
 type goodDao struct{}
 
-func (goodDao) Create(obj *model.Good) error {
-	var table model.Good
-	createTableWhenNotExist(&table)
-
-	if err := mainDB.Create(&obj).Error; err != nil {
-		logger.Error("Fail to finish mainDB.Create", zap.Any("obj", obj), zap.Error(err))
-		return err
+func (goodDao) Create(obj *model.Good) (int64, error) {
+	values := []interface{}{
+		obj.ID, obj.Expense, obj.CheckOutAt, obj.NonFavorExpense, obj.MainElementID, obj.OrderID,
 	}
-	return nil
+	sql := fmt.Sprintf(`
+		insert into %s(id,expense,check_out_at,non_favor_expense,main_element_id,order_id) values(%s)
+		on duplicate key update
+			expense = values(expense),
+			check_out_at = values(check_out_at),
+			non_favor_expense = values(non_favor_expense),
+			main_element_id = values(main_element_id),
+			order_id = values(order_id);
+	`, fmt.Sprintf("`%s`", obj.TableName()), GetPlaceholderClause(len(values)))
+	result, err := mainDB.CommonDB().Exec(sql, values...)
+	if err != nil {
+		logger.Error("Fail to finish create", zap.Any("obj", obj), zap.Error(err))
+		return 0, ers.MysqlError
+	}
+	id, err := result.LastInsertId()
+	if err != nil {
+		logger.Error("Fail to get id", zap.Any("obj", obj), zap.Error(err))
+		return 0, ers.MysqlError
+	}
+	return id, nil
 }
 
 func (goodDao) BatchDelete(ids []int64) error {

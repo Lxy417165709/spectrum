@@ -21,7 +21,7 @@ func (spaceClassDao) Create(obj *model.SpaceClass) (int64, error) {
 		on duplicate key update
 			name = values(name),
 			picture_store_path = values(picture_store_path);
-	`, obj.TableName(), GetPlaceholderClause(len(values)))
+	`, fmt.Sprintf("`%s`", obj.TableName()), GetPlaceholderClause(len(values)))
 	result, err := mainDB.CommonDB().Exec(sql, values...)
 	if err != nil {
 		logger.Error("Fail to finish create", zap.Any("obj", obj), zap.Error(err))

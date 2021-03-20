@@ -13,6 +13,7 @@
       <el-button style="margin-left: 20px;margin-top: 10px" type="primary" @click="tryToAddDeskClass">添加桌位
       </el-button>
     </el-aside>
+
     <!--    2. 桌类详情-->
     <el-main>
       <div v-show="cpt_canDeskListShow">

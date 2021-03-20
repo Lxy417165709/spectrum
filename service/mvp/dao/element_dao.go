@@ -24,7 +24,7 @@ func (elementDao) Create(obj *model.Element) (int64, error) {
 			class_id = values(class_id),
 			name = values(name),
 			type = values(type);
-	`, obj.TableName(), GetPlaceholderClause(len(values)))
+	`, fmt.Sprintf("`%s`", obj.TableName()), GetPlaceholderClause(len(values)))
 	result, err := mainDB.CommonDB().Exec(sql, values...)
 	if err != nil {
 		logger.Error("Fail to finish create", zap.Any("obj", obj), zap.Error(err))
@@ -43,7 +43,7 @@ func (elementDao) Create(obj *model.Element) (int64, error) {
 //	values := []interface{}{
 //		name, size,
 //	}
-//	sql := fmt.Sprintf(`delete from %s where name = ? and size = ?;`, obj.TableName())
+//	sql := fmt.Sprintf(`delete from %s where name = ? and size = ?;`, fmt.Sprintf("`%s`", obj.TableName()))
 //	if err := mainDB.Exec(sql, values...).Error; err != nil {
 //		logger.Error("Fail to finish delete", zap.Any("name", name), zap.Any("size", size), zap.Error(err))
 //		return ers.MysqlError

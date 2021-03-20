@@ -25,7 +25,7 @@ func (spaceDao) Create(obj *model.Space) (int64, error) {
 			billing_type = values(billing_type),
 			price = values(price),
 			picture_store_path = values(picture_store_path);
-	`, obj.TableName(), GetPlaceholderClause(len(values)))
+	`, fmt.Sprintf("`%s`", obj.TableName()), GetPlaceholderClause(len(values)))
 	result, err := mainDB.CommonDB().Exec(sql, values...)
 	if err != nil {
 		logger.Error("Fail to finish create", zap.Any("obj", obj), zap.Error(err))

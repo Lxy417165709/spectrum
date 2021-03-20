@@ -24,7 +24,7 @@ func (mainElementAttachElementRecordDao) Create(obj *model.MainElementAttachElem
 			main_element_id = values(main_element_id),
 			attach_element_id = values(attach_element_id),
 			select_size_info_id = values(select_size_info_id);
-	`, obj.TableName(), GetPlaceholderClause(len(values)))
+	`, fmt.Sprintf("`%s`", obj.TableName()), GetPlaceholderClause(len(values)))
 	result, err := mainDB.CommonDB().Exec(sql, values...)
 	if err != nil {
 		logger.Error("Fail to finish create", zap.Any("obj", obj), zap.Error(err))

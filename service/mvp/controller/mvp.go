@@ -189,42 +189,45 @@ func (MvpServer) AddDeskClass(ctx context.Context, req *pb.AddDeskClassReq) (*pb
 	return &res, nil
 }
 
-//func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.OrderGoodRes, error) {
-//	logger.Info("OrderGood", zap.Any("ctx", ctx), zap.Any("req", req))
-//	// todo: 这里可以点单记录
-//	var res pb.OrderGoodRes
-//
-//	// 正常情况能来到这里的，orderID 不为0
-//
-//	for _, good := range req.Goods {
-//		if good.ExpenseInfo == nil {
-//			good.ExpenseInfo = &pb.ExpenseInfo{}
-//		}
-//		dbGood := &model.Good{
-//			Name:            good.MainElement.Name,
-//			Expense:         good.ExpenseInfo.Expense,
-//			CheckOutAt:      time.Unix(good.ExpenseInfo.CheckOutAt, 0),
-//			NonFavorExpense: good.ExpenseInfo.NonFavorExpense,
-//			OrderID:         req.OrderID,
-//		}
-//		if err := dao.GoodDao.Create(dbGood); err != nil {
-//			// todo: log
-//			return nil, err
-//		}
-//		if err := dao.ChargeableObjectDao.CreateFavorRecord(dbGood.GetName(), int64(dbGood.ID), good.Favors); err != nil {
-//			// todo: log
-//			return nil, err
-//		}
-//		good.Id = int64(dbGood.ID)
-//		if err := writePbGoodSizeInfoToDB(good, "todo"); err != nil {
-//			logger.Error("Fail to finish createGood",
-//				zap.Any("req", req),
-//				zap.Error(err))
-//			return nil, err
-//		}
-//	}
-//	return &res, nil
-//}
+func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.OrderGoodRes, error) {
+	logger.Info("OrderGood", zap.Any("ctx", ctx), zap.Any("req", req))
+	// todo: 这里可以点单记录
+	var res pb.OrderGoodRes
+
+	// 正常情况能来到这里的，orderID 不为0
+	for _, good := range req.Goods {
+		if good.ExpenseInfo == nil {
+			good.ExpenseInfo = &pb.ExpenseInfo{}
+		}
+		dbGood := &model.Good{
+			ID:              good.Id,
+			CreatedAt:       time.Time{},
+			UpdatedAt:       time.Time{},
+			OrderID:         req.OrderID,
+			MainElementID:   good.MainElement.Id,
+			Expense:         good.ExpenseInfo.Expense,
+			CheckOutAt:      time.Unix(good.ExpenseInfo.CheckOutAt, 0),
+			NonFavorExpense: good.ExpenseInfo.NonFavorExpense,
+		}
+		goodID, errResult := dao.GoodDao.Create(dbGood)
+		if errResult != nil {
+			return nil, errResult
+		}
+		if err := dao.ChargeableObjectDao.CreateFavorRecord(dbGood.GetName(), dbGood.ID, good.Favors); err != nil {
+			// todo: log
+			return nil, err
+		}
+
+		good.Id = goodID
+		if err := writePbGoodSizeInfoToDB(good); err != nil {
+			logger.Error("Fail to finish createGood",
+				zap.Any("req", req),
+				zap.Error(err))
+			return nil, err
+		}
+	}
+	return &res, nil
+}
 
 func (MvpServer) AddDesk(ctx context.Context, req *pb.AddDeskReq) (*pb.AddDeskRes, error) {
 	logger.Info("AddDesk", zap.Any("ctx", ctx), zap.Any("req", req))
@@ -244,10 +247,10 @@ func (MvpServer) OrderDesk(ctx context.Context, req *pb.OrderDeskReq) (*pb.Order
 
 	var res pb.OrderDeskRes
 
-	dbOrder := &model.Order{
-		CheckOutAt: time.Unix(0, 0),
-	}
-	if errResult := dao.OrderDao.Create(dbOrder); errResult != nil {
+	orderID, errResult := dao.OrderDao.Create(&model.Order{
+		CheckOutAt: model.NilTime,
+	})
+	if errResult != nil {
 		return nil, errResult
 	}
 	if req.Desk.ExpenseInfo == nil {
@@ -256,25 +259,27 @@ func (MvpServer) OrderDesk(ctx context.Context, req *pb.OrderDeskReq) (*pb.Order
 	if req.Desk.Space == nil {
 		req.Desk.Space = &pb.Space{}
 	}
+
 	dbDesk := &model.Desk{
-		ID:      req.Desk.Id,
-		StartAt: time.Now(),
-		EndAt:   model.NilTime,
-		//SessionCount:    0,
+		ID:              req.Desk.Id,
+		StartAt:         time.Now(),
+		EndAt:           model.NilTime,
+		SessionCount:    0,
 		SpaceID:         req.Desk.Space.Id,
 		Expense:         req.Desk.ExpenseInfo.Expense,
 		CheckOutAt:      time.Unix(req.Desk.ExpenseInfo.CheckOutAt, 0),
 		NonFavorExpense: req.Desk.ExpenseInfo.NonFavorExpense,
-		OrderID:         dbOrder.ID,
+		OrderID:         orderID,
 	}
-	if errResult := dao.DeskDao.Create(dbDesk); errResult != nil {
+	deskID, errResult := dao.DeskDao.Create(dbDesk)
+	if errResult != nil {
 		return nil, errResult
 	}
-	if errResult := dao.ChargeableObjectDao.CreateFavorRecord(dbDesk.GetName(), dbDesk.ID, req.Desk.Favors); errResult != nil {
+	if errResult := dao.ChargeableObjectDao.CreateFavorRecord(dbDesk.GetName(), deskID, req.Desk.Favors); errResult != nil {
 		return nil, errResult
 	}
-	res.DeskID = dbDesk.ID
-	res.OrderID = dbOrder.ID
+	res.DeskID = deskID
+	res.OrderID = orderID
 	return &res, nil
 }
 
