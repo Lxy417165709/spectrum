@@ -28,20 +28,20 @@ func getClassGoods(className string) []*pb.Good {
 // 已结账时: 返回结账的金额信息
 // 未结账时: 返回最新的金额信息
 func getPbDesk(desk *model.Desk) *pb.Desk {
-	space, err := dao.SpaceDao.Get(desk.SpaceName, desk.SpaceClassName)
-	if err != nil {
+	space, errResult := dao.SpaceDao.Get(desk.SpaceID)
+	if errResult != nil {
 		// todo: log
 		return nil
 	}
 	favor := getFavors(desk)
 	return &pb.Desk{
-		Id:             int64(desk.ID),
-		Space:          space.ToPb(),
-		StartTimestamp: desk.StartTimestamp,
-		EndTimestamp:   desk.EndTimestamp,
-		Favors:         favor,
-		ExpenseInfo:    desk.GetExpenseInfo(space.BillingType, space.Price, favor),
-		OrderID:        desk.OrderID,
+		Id:          desk.ID,
+		Space:       space.ToPb(),
+		StartAt:     desk.StartAt.Unix(),
+		EndAt:       desk.EndAt.Unix(),
+		Favors:      favor,
+		ExpenseInfo: desk.GetExpenseInfo(space.BillingType, space.Price, favor),
+		OrderID:     desk.OrderID,
 	}
 }
 

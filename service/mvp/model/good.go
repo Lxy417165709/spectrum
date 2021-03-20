@@ -6,14 +6,14 @@ import (
 )
 
 type Good struct {
-	ID            int64     `gorm:"id"`
-	CreatedAt     time.Time `gorm:"created_at"`
-	UpdatedAt     time.Time `gorm:"updated_at"`
-	OrderID       int64     `json:"order_id"`
-
-	Expense         float64   `json:"expense"`
+	ID              int64     `gorm:"id"`
+	CreatedAt       time.Time `gorm:"created_at"`
+	UpdatedAt       time.Time `gorm:"updated_at"`
+	OrderID         int64     `gorm:"order_id"`
+	MainElementID   int64     `gorm:"main_element_id"`
+	Expense         float64   `gorm:"expense"`
 	CheckOutAt      time.Time `gorm:"check_out_at"`
-	NonFavorExpense float64   `json:"non_favor_expense"`
+	NonFavorExpense float64   `gorm:"non_favor_expense"`
 }
 
 func (g *Good) GetID() int64 {

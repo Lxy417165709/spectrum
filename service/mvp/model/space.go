@@ -1,12 +1,14 @@
 package model
 
 import (
-	"github.com/jinzhu/gorm"
 	"spectrum/common/pb"
+	"time"
 )
 
 type Space struct {
-	gorm.Model
+	ID               int64          `gorm:"id"`
+	CreatedAt        time.Time      `gorm:"created_at"`
+	UpdatedAt        time.Time      `gorm:"updated_at"`
 	Name             string         `json:"name"`       // 桌球、麻将...
 	ClassName        string         `json:"class_name"` // 1、2、3...
 	Price            float64        `json:"price"`
@@ -19,10 +21,8 @@ func (*Space) TableName() string {
 }
 
 func (s *Space) ToPb() *pb.Space {
-	if s == nil {
-		return nil
-	}
 	return &pb.Space{
+		Id:               s.ID,
 		Name:             s.Name,
 		ClassName:        s.ClassName,
 		Price:            GetPbPrice(s.Price),

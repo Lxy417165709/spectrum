@@ -62,7 +62,9 @@ type ElementClass struct{
 }
 
 type Element struct {
-	gorm.Model
+	ID              int64     `gorm:"id"`
+	CreatedAt       time.Time `gorm:"created_at"`
+	UpdatedAt       time.Time `gorm:"updated_at"`
 	Name             string  `json:"name"`  
 	Size string
 	Price            string `json:"price"`
@@ -81,8 +83,8 @@ type OrderDeskRecord struct{
     gorm.Model
     OrderID int
     DeskID int
-    StartTimestamp int
-    EndTimestamp int
+    StartAt int
+    EndAt int
     PricePerHour float64
     FavorType int
 }

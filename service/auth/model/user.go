@@ -8,7 +8,9 @@ import (
 type UserType = int
 
 type User struct {
-	gorm.Model
+	ID              int64     `gorm:"id"`
+	CreatedAt       time.Time `gorm:"created_at"`
+	UpdatedAt       time.Time `gorm:"updated_at"`
 	Email             string    `json:"email"`
 	HashSaltyPassword string    `json:"hash_salty_password"`
 	Type              UserType  `json:"type"`

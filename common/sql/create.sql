@@ -8,11 +8,26 @@ drop table if exists `desk`;
 drop table if exists `space`;
 drop table if exists `order`;
 drop table if exists `favor_record`;
-drop table if exists `desk_class`;
+drop table if exists `desk_class`; # 废弃
+drop table if exists `space_class`;
 drop table if exists `element_size_info_record`;
 
 
 ################################ 创建 ################################
+# 桌类表
+CREATE TABLE `space_class`
+(
+    `id`                 int unsigned NOT NULL AUTO_INCREMENT,
+    `created_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `name`               varchar(30)  NOT NULL DEFAULT '',
+    `picture_store_path` varchar(255) NOT NULL DEFAULT '',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY (`name`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
+
 # 商品类表
 CREATE TABLE `element_class`
 (
@@ -67,6 +82,7 @@ CREATE TABLE `good`
     `created_at`        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `order_id`          bigint       NOT NULL DEFAULT 0,
+    `main_element_id`   bigint       NOT NULL DEFAULT 0,
     `expense`           double       NOT NULL DEFAULT 0,
     `check_out_at`      timestamp    NOT NULL,
     `non_favor_expense` double       NOT NULL DEFAULT 0,
@@ -129,8 +145,7 @@ CREATE TABLE `desk`
     `start_at`          timestamp    NOT NULL,
     `end_at`            timestamp    NOT NULL,
     `session_count`     bigint       NOT NULL DEFAULT 0,
-    `space_name`        varchar(30)  NOT NULL DEFAULT '',
-    `space_class_name`  varchar(30)  NOT NULL DEFAULT '',
+    `space_id`          bigint       NOT NULL DEFAULT 0,
     `expense`           double       NOT NULL DEFAULT 0,
     `check_out_at`      timestamp    NOT NULL,
     `non_favor_expense` double       NOT NULL DEFAULT 0,
@@ -146,8 +161,8 @@ CREATE TABLE `space`
     `id`                 int unsigned NOT NULL AUTO_INCREMENT,
     `created_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `name`               varchar(30)  NOT NULL DEFAULT '',
     `class_name`         varchar(30)  NOT NULL DEFAULT '',
+    `name`               varchar(30)  NOT NULL DEFAULT '',
     `price`              double       NOT NULL DEFAULT 0,
     `billing_type`       int          NOT NULL DEFAULT 0,
     `picture_store_path` varchar(255) NOT NULL DEFAULT '',

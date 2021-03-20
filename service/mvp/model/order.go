@@ -1,13 +1,14 @@
 package model
 
 import (
-	"github.com/jinzhu/gorm"
 	"spectrum/common/pb"
 	"time"
 )
 
 type Order struct {
-	gorm.Model
+	ID              int64     `gorm:"id"`
+	CreatedAt       time.Time `gorm:"created_at"`
+	UpdatedAt       time.Time `gorm:"updated_at"`
 
 	Expense           float64 `json:"expense"`
 	CheckOutAt time.Time   `gorm:"check_out_at"`

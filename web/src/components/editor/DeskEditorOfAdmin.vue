@@ -7,14 +7,22 @@
       <el-input style="width: 70%" v-if="desk.space!==undefined" v-model="desk.space.name"></el-input>
     </el-form-item>
 
-
     <el-form-item label="照片">
       <el-upload
+        v-if="desk.space!==undefined && desk.space.pictureStorePath===''"
         action="/api/upload"
+        :on-success="imageUploadSuccess"
         list-type="picture-card">
+
         <i class="el-icon-plus"></i>
       </el-upload>
+      <el-image
+        v-if="desk.space!==undefined && desk.space.pictureStorePath!==''"
+        @dblclick.native="cleanSizeInfoPictureStorePath"
+        :src="'api/file/' + desk.space.pictureStorePath"
+        style="width: 148px; height: 148px;"></el-image>
     </el-form-item>
+
     <el-form-item label="价格">
       <el-input v-if="desk.space!==undefined" v-model="desk.space.price" style="width: 70%"></el-input>
     </el-form-item>
@@ -48,7 +56,13 @@ export default {
       }, (res) => {
 
       })
-    }
+    },
+    cleanSizeInfoPictureStorePath() {
+      this.desk.space.pictureStorePath = ""
+    },
+    imageUploadSuccess(res, file, fileList) {
+      this.desk.space.pictureStorePath = res.data.fileStorePath;
+    },
   }
 }
 </script>

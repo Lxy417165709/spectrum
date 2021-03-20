@@ -1,12 +1,16 @@
 package model
 
-import "github.com/jinzhu/gorm"
+import (
+	"time"
+)
 
 type CheckOutRecord struct {
-	gorm.Model
+	ID              int64     `gorm:"id"`
+	CreatedAt       time.Time `gorm:"created_at"`
+	UpdatedAt       time.Time `gorm:"updated_at"`
 	ChargeableObjectName string `json:"chargeable_object_name"`
 	ChargeableObjectID   int64  `json:"chargeable_object_id"`
-	CheckOutAt    int64  `json:"check_out_timestamp"`
+	CheckOutAt    int64  `json:"check_out_at"`
 }
 
 func (c *CheckOutRecord) TableName() string {

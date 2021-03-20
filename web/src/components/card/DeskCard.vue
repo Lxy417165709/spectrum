@@ -1,7 +1,7 @@
 <!-- eslint-disable -->
 <template>
   <el-card :body-style="{ padding: '0px' }" shadow="hover" style="position:relative;">
-    <img style="height:200px;width:200px; border: none" :src="desk.space.pictureStorePath"
+    <img style="height:200px;width:200px; border: none" :src="'api/file/' + desk.space.pictureStorePath"
          v-if="desk.space!==undefined">
     <div
       style="width: 200px;height: 30px;position:relative;padding: 0;margin: 0; border: none;"

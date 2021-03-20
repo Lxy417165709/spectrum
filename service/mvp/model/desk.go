@@ -1,23 +1,23 @@
 package model
 
 import (
-	"github.com/jinzhu/gorm"
 	"spectrum/common/pb"
 	"time"
 )
 
 type Desk struct {
-	gorm.Model
-	StartTimestamp int64 `json:"start_timestamp"`
-	EndTimestamp   int64 `json:"end_timestamp"`
+	ID        int64     `gorm:"id"`
+	CreatedAt time.Time `gorm:"created_at"`
+	UpdatedAt time.Time `gorm:"updated_at"`
+	StartAt   time.Time `json:"start_at"`
+	EndAt     time.Time `json:"end_at"`
 
-	SessionCount int64  `json:"session_count"`
-	SpaceName    string `json:"space_name"`
-	SpaceClassName   string `json:"space_class_name"`
+	SessionCount int64 `json:"session_count"`
+	SpaceID      int64 `json:"space_id"`
 
-	Expense           float64 `json:"expense"`
-	CheckOutAt time.Time   `gorm:"check_out_at"`
-	NonFavorExpense   float64 `json:"non_favor_expense"`
+	Expense         float64   `json:"expense"`
+	CheckOutAt      time.Time `gorm:"check_out_at"`
+	NonFavorExpense float64   `json:"non_favor_expense"`
 
 	OrderID int64 `json:"order_id"`
 }
@@ -33,9 +33,9 @@ func (*Desk) GetName() string {
 func (d *Desk) GetExpenseInfo(billingType pb.BillingType, price float64, favors []*pb.Favor) *pb.ExpenseInfo {
 	if d.CheckOutAt.Unix() != 0 {
 		return &pb.ExpenseInfo{
-			NonFavorExpense:   d.NonFavorExpense,
-			CheckOutAt: d.CheckOutAt.Unix(),
-			Expense:           d.Expense,
+			NonFavorExpense: d.NonFavorExpense,
+			CheckOutAt:      d.CheckOutAt.Unix(),
+			Expense:         d.Expense,
 		}
 	}
 
@@ -48,9 +48,9 @@ func (d *Desk) GetExpenseInfo(billingType pb.BillingType, price float64, favors 
 	}
 
 	return &pb.ExpenseInfo{
-		NonFavorExpense:   nonFavorExpense,
-		CheckOutAt: 0,
-		Expense:           GetFavorExpense(nonFavorExpense, favors),
+		NonFavorExpense: nonFavorExpense,
+		CheckOutAt:      0,
+		Expense:         GetFavorExpense(nonFavorExpense, favors),
 	}
 }
 
@@ -59,33 +59,16 @@ func (d *Desk) getTimingNonFavorExpense(pricePerHour float64) float64 {
 	if d.IsOpening() {
 		endTimestamp = time.Now().Unix()
 	} else {
-		endTimestamp = d.EndTimestamp
+		endTimestamp = d.EndAt.Unix()
 	}
-	hours := time.Unix(endTimestamp, 0).Sub(time.Unix(d.StartTimestamp, 0)).Hours()
+	hours := time.Unix(endTimestamp, 0).Sub(time.Unix(d.StartAt.Unix(), 0)).Hours()
 	return hours * pricePerHour
 }
 
 func (d *Desk) IsOpening() bool {
-	return d.EndTimestamp == 0
+	return d.EndAt.Unix() == 0
 }
 
 func (d *Desk) GetID() int64 {
 	return int64(d.ID)
-}
-
-type DeskClass struct {
-	gorm.Model
-	Name             string `json:"name"`
-	PictureStorePath string `json:"picture_store_path"`
-}
-
-func (d *DeskClass) TableName() string {
-	return "desk_class"
-}
-
-func (d *DeskClass) ToPb() *pb.DeskClass {
-	return &pb.DeskClass{
-		Name:             d.Name,
-		PictureStorePath: d.PictureStorePath,
-	}
 }

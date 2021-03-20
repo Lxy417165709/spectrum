@@ -58,11 +58,12 @@ message Good{
 }
 
 message Space {
-    string name = 1;
-    string className = 2;
-    string price = 3;
-    BillingType billingType = 4;
-    string  pictureStorePath = 5;
+    int64  id = 1;
+    string name = 2;
+    string className = 3;
+    string price = 4;
+    BillingType billingType = 5;
+    string  pictureStorePath = 6;
 }
 
 message GoodClass {
@@ -72,8 +73,9 @@ message GoodClass {
 }
 
 message DeskClass {
-    string name = 1;
-    string pictureStorePath = 2;
+    int64 id = 1;
+    string name = 2;
+    string pictureStorePath = 3;
 }
 
 message Element {

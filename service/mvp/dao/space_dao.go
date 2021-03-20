@@ -1,8 +1,10 @@
 package dao
 
 import (
+	"fmt"
 	"github.com/jinzhu/gorm"
 	"go.uber.org/zap"
+	"spectrum/common/ers"
 	"spectrum/common/logger"
 	"spectrum/service/mvp/model"
 )
@@ -11,15 +13,30 @@ var SpaceDao spaceDao
 
 type spaceDao struct{}
 
-func (spaceDao) Create(obj *model.Space) error {
-	var table model.Space
-	createTableWhenNotExist(&table)
-
-	if err := mainDB.Create(obj).Error; err != nil {
-		logger.Error("Fail to finish mainDB.Create", zap.Any("obj", obj), zap.Error(err))
-		return err
+func (spaceDao) Create(obj *model.Space) (int64, error) {
+	values := []interface{}{
+		obj.ID, obj.ClassName, obj.Name, obj.BillingType, obj.Price, obj.PictureStorePath,
 	}
-	return nil
+	sql := fmt.Sprintf(`
+		insert into %s(id,class_name,name, billing_type,price,picture_store_path) values(%s)
+		on duplicate key update
+			class_name = values(class_name),
+			name = values(name),
+			billing_type = values(billing_type),
+			price = values(price),
+			picture_store_path = values(picture_store_path);
+	`, obj.TableName(), GetPlaceholderClause(len(values)))
+	result, err := mainDB.CommonDB().Exec(sql, values...)
+	if err != nil {
+		logger.Error("Fail to finish create", zap.Any("obj", obj), zap.Error(err))
+		return 0, ers.MysqlError
+	}
+	id, err := result.LastInsertId()
+	if err != nil {
+		logger.Error("Fail to get id", zap.Any("obj", obj), zap.Error(err))
+		return 0, ers.MysqlError
+	}
+	return id, nil
 }
 
 func (spaceDao) GetAll() ([]*model.Space, error) {
@@ -48,20 +65,16 @@ func (spaceDao) GetByClassName(className string) ([]*model.Space, error) {
 	return result, nil
 }
 
-func (spaceDao) Get(name string, className string) (*model.Space, error) {
-	var table model.Space
-	createTableWhenNotExist(&table)
-
+func (spaceDao) Get(id int64) (*model.Space, error) {
 	var result model.Space
-	if err := mainDB.First(&result, "name = ? and class_name = ?", name, className).Error; err != nil {
+	if err := mainDB.First(&result, "id = ?", id).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, nil
 		}
 		logger.Error("Fail to finish mainDB.First",
-			zap.String("name", name),
-			zap.String("className", className),
+			zap.Any("id", "id"),
 			zap.Error(err))
-		return nil, err
+		return nil, ers.MysqlError
 	}
 	return &result, nil
 }
