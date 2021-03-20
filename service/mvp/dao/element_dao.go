@@ -16,10 +16,10 @@ type elementDao struct{}
 
 func (elementDao) Create(obj *model.Element) (int64, error) {
 	values := []interface{}{
-		obj.ClassName, obj.Name, obj.Type,
+		obj.ID, obj.ClassName, obj.Name, obj.Type,
 	}
 	sql := fmt.Sprintf(`
-		insert into %s(class_name,name, type) values(%s)
+		insert into %s(id,class_name,name, type) values(%s)
 		on duplicate key update
 			class_name = values(class_name),
 			name = values(name),

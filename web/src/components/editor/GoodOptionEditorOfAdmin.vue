@@ -4,9 +4,11 @@
 
     <!-- 1. 选项名编辑器 -->
     <el-form-item label="选项名">
-      <el-input style="width: 70%" v-if="option!==undefined && canModifyName"
+      <el-input style="width: 70%" v-if="option!==undefined"
                 v-model="option.name"></el-input>
-      <span v-if="option!==undefined && !canModifyName">{{ option.name }}</span>
+<!--      <el-input style="width: 70%" v-if="option!==undefined && canModifyName"-->
+<!--                v-model="option.name"></el-input>-->
+<!--      <span v-if="option!==undefined && !canModifyName">{{ option.name }}</span>-->
     </el-form-item>
 
     <!-- 2. 规格编辑器 -->
@@ -17,9 +19,9 @@
                    :key="index">
 
         <el-form-item label="规格名">
-          <el-input style="width: 70%" v-if="sizeInfo.id === 0"
-                    v-model="sizeInfo.size"></el-input>
-          <span v-if="sizeInfo.id !== 0">{{ sizeInfo.size }}</span>
+                    <el-input style="width: 70%" v-if="option.selectedIndex !== curSizeInfoIndexInt"
+                              v-model="sizeInfo.size"></el-input>
+                    <span v-if="option.selectedIndex === curSizeInfoIndexInt">{{ sizeInfo.size }}</span>
         </el-form-item>
 
 

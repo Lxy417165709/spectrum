@@ -171,6 +171,7 @@ func getPbElement(goodID int64, elementName, className string) *pb.Element {
 
 	// 5. 返回
 	return &pb.Element{
+		Id:            int64(element.ID),
 		Name:          element.Name,
 		Type:          element.Type,
 		SelectedIndex: selectedSizeInfoIndex,

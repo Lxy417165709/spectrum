@@ -28,7 +28,7 @@ func (elementSizeInfoRecordDao) Get(goodID int64, elementName, className string)
 
 func (elementSizeInfoRecordDao) Create(obj *model.ElementSizeInfoRecord) (int64, error) {
 	values := []interface{}{
-		obj.GoodID, obj.ClassName, obj.Name, obj.Size, obj.PictureStorePath, obj.Price,
+		obj.ID, obj.ClassName, obj.Name, obj.Size, obj.PictureStorePath, obj.Price,
 	}
 
 	sql := fmt.Sprintf(`
