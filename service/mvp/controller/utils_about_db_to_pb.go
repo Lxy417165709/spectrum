@@ -142,7 +142,7 @@ func getPbElement(goodID int64, mainElementID, dbElementID int64) *pb.Element {
 		return pbSizeInfos[i].Id < pbSizeInfos[j].Id
 	})
 
-	// 2. 获取默认选择记录
+	// 2. 获取默认选择记录(管理页、用户差异处)
 	var selectSizeInfoID int64
 	if goodID == 0 || mainElementID == -1 {
 		selectSizeRecord, errResult := dao.ElementSelectSizeRecordDao.GetOne(goodID, dbElementID)

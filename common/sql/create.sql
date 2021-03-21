@@ -90,19 +90,6 @@ CREATE TABLE `good`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
--- # 元素类表
--- CREATE TABLE `element_class`
--- (
---     `id`         int unsigned NOT NULL AUTO_INCREMENT,
---     `created_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
---     `updated_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
---     `name`       varchar(30) NOT NULL DEFAULT '',
---     PRIMARY KEY (`id`),
---     UNIQUE KEY (`name`)
--- ) ENGINE = InnoDB
---   DEFAULT CHARSET = utf8mb4
---   COLLATE = utf8mb4_0900_ai_ci;
-
 # 元素尺寸选择记录表(如控制奶茶默认是小规格，温度默认是常温)
 CREATE TABLE `element_select_size_record`
 (
