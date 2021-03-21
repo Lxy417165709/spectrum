@@ -33,6 +33,47 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 	return &res, nil
 }
 
+func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.OrderGoodRes, error) {
+	logger.Info("OrderGood", zap.Any("ctx", ctx), zap.Any("req", req))
+	// todo: 这里可以点单记录
+	var res pb.OrderGoodRes
+
+	// 正常情况能来到这里的，orderID 不为0
+	for _, good := range req.Goods {
+		if good.ExpenseInfo == nil {
+			good.ExpenseInfo = &pb.ExpenseInfo{}
+		}
+		dbGood := &model.Good{
+			ID:              good.Id,
+			OrderID:         req.OrderID,
+			MainElementID:   good.MainElement.Id,
+			Expense:         good.ExpenseInfo.Expense,
+			CheckOutAt:      time.Unix(good.ExpenseInfo.CheckOutAt, 0),
+			NonFavorExpense: good.ExpenseInfo.NonFavorExpense,
+		}
+		goodID, errResult := dao.GoodDao.Create(dbGood)
+		if errResult != nil {
+			return nil, errResult
+		}
+		if err := dao.ChargeableObjectDao.CreateFavorRecord(dbGood.GetName(), dbGood.ID, good.Favors); err != nil {
+			// todo: log
+			return nil, err
+		}
+
+		good.Id = goodID
+		if err := writePbGoodSizeInfoToDB(good); err != nil {
+			logger.Error("Fail to finish createGood",
+				zap.Any("req", req),
+				zap.Error(err))
+			return nil, err
+		}
+
+	}
+	return &res, nil
+}
+
+
+
 func (MvpServer) AddElement(ctx context.Context, req *pb.AddElementReq) (*pb.AddElementRes, error) {
 	logger.Info("AddElement", zap.Any("ctx", ctx), zap.Any("req", req))
 
@@ -115,7 +156,7 @@ func (MvpServer) GetAllGoodOptions(ctx context.Context, req *pb.GetAllGoodOption
 	// 2. 获取 pbElement
 	pbElements := make([]*pb.Element, 0)
 	for _, dbElement := range dbElements {
-		pbElements = append(pbElements, getPbElement(0, 0, dbElement.ID))
+		pbElements = append(pbElements, getPbElement(0, dbElement.ID))
 	}
 
 	// 4. 写入
@@ -176,46 +217,6 @@ func (MvpServer) AddDeskClass(ctx context.Context, req *pb.AddDeskClassReq) (*pb
 	return &res, nil
 }
 
-func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.OrderGoodRes, error) {
-	logger.Info("OrderGood", zap.Any("ctx", ctx), zap.Any("req", req))
-	// todo: 这里可以点单记录
-	var res pb.OrderGoodRes
-
-	// 正常情况能来到这里的，orderID 不为0
-	for _, good := range req.Goods {
-		if good.ExpenseInfo == nil {
-			good.ExpenseInfo = &pb.ExpenseInfo{}
-		}
-		dbGood := &model.Good{
-			ID:              good.Id,
-			CreatedAt:       time.Time{},
-			UpdatedAt:       time.Time{},
-			OrderID:         req.OrderID,
-			MainElementID:   good.MainElement.Id,
-			Expense:         good.ExpenseInfo.Expense,
-			CheckOutAt:      time.Unix(good.ExpenseInfo.CheckOutAt, 0),
-			NonFavorExpense: good.ExpenseInfo.NonFavorExpense,
-		}
-		goodID, errResult := dao.GoodDao.Create(dbGood)
-		if errResult != nil {
-			return nil, errResult
-		}
-		if err := dao.ChargeableObjectDao.CreateFavorRecord(dbGood.GetName(), dbGood.ID, good.Favors); err != nil {
-			// todo: log
-			return nil, err
-		}
-
-		good.Id = goodID
-		if err := writePbGoodSizeInfoToDB(good); err != nil {
-			logger.Error("Fail to finish createGood",
-				zap.Any("req", req),
-				zap.Error(err))
-			return nil, err
-		}
-
-	}
-	return &res, nil
-}
 
 func (MvpServer) AddDesk(ctx context.Context, req *pb.AddDeskReq) (*pb.AddDeskRes, error) {
 	logger.Info("AddDesk", zap.Any("ctx", ctx), zap.Any("req", req))

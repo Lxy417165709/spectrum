@@ -2,7 +2,6 @@ package dao
 
 import (
 	"fmt"
-	"github.com/jinzhu/gorm"
 	"go.uber.org/zap"
 	"spectrum/common/ers"
 	"spectrum/common/logger"
@@ -22,8 +21,7 @@ func (mainElementAttachElementRecordDao) Create(obj *model.MainElementAttachElem
 		on duplicate key update
 			good_id = values(good_id),
 			main_element_id = values(main_element_id),
-			attach_element_id = values(attach_element_id),
-			select_size_info_id = values(select_size_info_id);
+			attach_element_id = values(attach_element_id);
 	`, fmt.Sprintf("`%s`", obj.TableName()), GetPlaceholderClause(len(values)))
 	result, err := mainDB.CommonDB().Exec(sql, values...)
 	if err != nil {
@@ -38,19 +36,7 @@ func (mainElementAttachElementRecordDao) Create(obj *model.MainElementAttachElem
 	return id, nil
 }
 
-func (mainElementAttachElementRecordDao) Get(goodID int64, mainElementID, attachElementID int64) (*model.MainElementAttachElementRecord, error) {
-	var result model.MainElementAttachElementRecord
-	if err := mainDB.Where("good_id = ? and main_element_id = ? and attach_element_id = ?", goodID, mainElementID, attachElementID).First(&result).Error; err != nil {
-		logger.Error("Fail to finish mainDB.Find", zap.Any("goodID", goodID),
-			zap.Any("mainElementID", mainElementID),
-			zap.Any("attachElementID", attachElementID),
-			zap.Error(err))
-		return nil, ers.MysqlError
-	}
-	return &result, nil
-}
-
-func (mainElementAttachElementRecordDao) GetByMainElementID(goodID int64, mainElementID int64) ([]*model.MainElementAttachElementRecord, error) {
+func (mainElementAttachElementRecordDao) Get(goodID, mainElementID int64) ([]*model.MainElementAttachElementRecord, error) {
 	var result []*model.MainElementAttachElementRecord
 	if err := mainDB.Where("good_id = ? and main_element_id = ?", goodID, mainElementID).Find(&result).Error; err != nil {
 		logger.Error("Fail to finish mainDB.Find", zap.Any("goodID", goodID),
@@ -60,30 +46,7 @@ func (mainElementAttachElementRecordDao) GetByMainElementID(goodID int64, mainEl
 	}
 	return result, nil
 }
-func (mainElementAttachElementRecordDao) GetByBothName(goodID int64, mainElementName string, attachElementName string) (*model.MainElementAttachElementRecord, error) {
-	var table model.MainElementAttachElementRecord
-	createTableWhenNotExist(&table)
-	var result model.MainElementAttachElementRecord
-	if err := mainDB.First(
-		&result,
-		"good_id = ? and main_element_name = ? and attach_element_name = ?", goodID, mainElementName, attachElementName,
-	).Error; err != nil {
-		if gorm.IsRecordNotFoundError(err) {
-			logger.Warn("Can't find out attach element",
-				zap.Int64("goodID", goodID),
-				zap.String("mainElementName", mainElementName),
-				zap.String("attachElementName", attachElementName))
-			return nil, nil
-		}
-		logger.Error("Fail to finish mainDB.First",
-			zap.Int64("goodID", goodID),
-			zap.String("mainElementName", mainElementName),
-			zap.String("attachElementName", attachElementName),
-			zap.Error(err))
-		return nil, err
-	}
-	return &result, nil
-}
+
 
 func (mainElementAttachElementRecordDao) BatchDelete(goodIDs []int64) error {
 	var table model.MainElementAttachElementRecord

@@ -8,7 +8,6 @@ drop table if exists `desk`;
 drop table if exists `space`;
 drop table if exists `order`;
 drop table if exists `favor_record`;
-drop table if exists `desk_class`; # 废弃
 drop table if exists `space_class`;
 drop table if exists `element_size_info`;
 
@@ -90,33 +89,32 @@ CREATE TABLE `good`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
-# 元素尺寸选择记录表(如控制奶茶默认是小规格，温度默认是常温)
+# 元素尺寸选择记录表
 CREATE TABLE `element_select_size_record`
 (
     `id`                  int unsigned NOT NULL AUTO_INCREMENT,
     `created_at`          timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`          timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `good_id`             bigint       NOT NULL DEFAULT 0,
-    `element_id`          bigint       NOT NULL DEFAULT 0,
-    `select_size_info_id` bigint       NOT NULL DEFAULT 0,
+    `element_id`          bigint       NOT NULL DEFAULT 0, # 可以是主元素、附属元素
+    `select_size_info_id` bigint       NOT NULL DEFAULT 0, # good_id == 0 时表示默认选择(管理页控制), 否则表示实际选择(用户控制)
     PRIMARY KEY (`id`),
     UNIQUE KEY (`good_id`, `element_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
-# 主元素的附属元素记录表(如控制奶茶的温度默认是常温，而水果茶的温度默认是冷饮)
+
+# 主元素的附属元素记录表
 CREATE TABLE `main_element_attach_element_record`
 (
-    `id`                  int unsigned NOT NULL AUTO_INCREMENT,
-    `created_at`          timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`          timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `good_id`             bigint       NOT NULL DEFAULT 0,
-    `main_element_id`     bigint       NOT NULL DEFAULT 0,
-    `attach_element_id`   bigint       NOT NULL DEFAULT 0,
-    `select_size_info_id` bigint       NOT NULL DEFAULT 0,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY (`good_id`, `main_element_id`, `attach_element_id`)
+    `id`                int unsigned NOT NULL AUTO_INCREMENT,
+    `created_at`        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `good_id`           bigint       NOT NULL DEFAULT 0, # 同个订单内可能有多个相同的主元素，所以要用 good_id 区分
+    `main_element_id`   bigint       NOT NULL DEFAULT 0,
+    `attach_element_id` bigint       NOT NULL DEFAULT 0,
+    PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
@@ -212,12 +210,10 @@ insert into element_size_info(element_id, size, price, picture_store_path)
 values (1, '中杯', 15, 'static/upload/奶茶2.jpeg');
 insert into element_size_info(element_id, size, price, picture_store_path)
 values (1, '大杯', 15, 'static/upload/奶茶3.jpeg');
-insert into element_select_size_record(good_id, element_id, select_size_info_id)
+insert into main_element_attach_element_record(good_id, main_element_id, attach_element_id)
 values (0, 1, 2);
-insert into main_element_attach_element_record(good_id, main_element_id, attach_element_id, select_size_info_id)
-values (0, 1, 2, 3);
-insert into main_element_attach_element_record(good_id, main_element_id, attach_element_id, select_size_info_id)
-values (0, 1, 3, 8);
+insert into main_element_attach_element_record(good_id, main_element_id, attach_element_id)
+values (0, 1, 3);
 
 # 创建附属选项元素, 选项记录
 insert into element(name, type, class_id)
@@ -228,8 +224,6 @@ insert into element_size_info(element_id, size, price, picture_store_path)
 values (2, '常温', 0, 'static/upload/温热1.jpeg');
 insert into element_size_info(element_id, size, price, picture_store_path)
 values (2, '热饮', 0, 'static/upload/温热1.jpeg');
-insert into element_select_size_record(element_id, select_size_info_id)
-values (2, 4);
 
 # 创建附属商品元素, 选项记录
 insert into element(name, type, class_id)
@@ -240,5 +234,34 @@ insert into element_size_info(element_id, size, price, picture_store_path)
 values (3, '中量', 2, 'static/upload/珍珠2.jpeg');
 insert into element_size_info(element_id, size, price, picture_store_path)
 values (3, '大量', 2.5, 'static/upload/珍珠3.jpeg');
+
+# 创建默认选择
 insert into element_select_size_record(good_id, element_id, select_size_info_id)
-values (0, 3, 7);
+values (0, 1, 1);
+insert into element_select_size_record(good_id, element_id, select_size_info_id)
+values (0, 2, 4);
+insert into element_select_size_record(good_id, element_id, select_size_info_id)
+values (0, 3, 6);
+
+# 桌类
+insert into space_class(name, picture_store_path)
+values ('台球桌', 'static/upload/台球1.jpeg');
+insert into space_class(name, picture_store_path)
+values ('麻将桌', 'static/upload/麻将图1.jpeg');
+
+# 桌子
+## 台球桌
+insert into space(class_id, name, billing_type, price, picture_store_path)
+values (1, '一号桌', 0, 10, 'static/upload/台球1.jpeg');
+insert into space(class_id, name, billing_type, price, picture_store_path)
+values (1, '二号桌', 0, 20, 'static/upload/台球1.jpeg');
+insert into space(class_id, name, billing_type, price, picture_store_path)
+values (1, '三号桌', 0, 30, 'static/upload/台球1.jpeg');
+
+## 麻将桌
+insert into space(class_id, name, billing_type, price, picture_store_path)
+values (2, '一号桌', 0, 50, 'static/upload/麻将图1.jpeg');
+insert into space(class_id, name, billing_type, price, picture_store_path)
+values (2, '二号桌', 0, 100, 'static/upload/麻将图1.jpeg');
+insert into space(class_id, name, billing_type, price, picture_store_path)
+values (2, '三号桌', 0, 150, 'static/upload/麻将图1.jpeg');

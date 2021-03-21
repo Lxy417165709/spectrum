@@ -43,21 +43,38 @@ func toDbElementSelectSizeRecord(goodID, elementID, elementSizeInfoID int64) *mo
 	}
 }
 
-func writePbGoodSizeInfoToDB(good *pb.Good) error {
-	// 1. 创建主元素、主元素尺寸的对应关系
-	mainElementSelectedSizeInfoID := model.GetPbElementSelectSizeInfo(good.MainElement).Id
-	if _, errResult := dao.ElementSelectSizeRecordDao.Create(toDbElementSelectSizeRecord(good.Id, good.MainElement.Id, mainElementSelectedSizeInfoID));
+func getPbElementSelectSizeInfoID(pbElement *pb.Element) int64 {
+	return model.GetPbElementSelectSizeInfo(pbElement).Id
+}
+
+func writePbElementSelectSizeRecord(goodID int64, pbElement *pb.Element) error {
+	elementSelectedSizeInfoID := getPbElementSelectSizeInfoID(pbElement)
+	if _, errResult := dao.ElementSelectSizeRecordDao.Create(toDbElementSelectSizeRecord(goodID, pbElement.Id, elementSelectedSizeInfoID));
 		errResult != nil {
 		return errResult
 	}
+	return nil
+}
 
-	// 2. 创建主元素、附属元素、附属元素尺寸的对应关系
+func writePbGoodSizeInfoToDB(good *pb.Good) error {
+	// 1. 创建主元素、主元素尺寸的对应关系
+	if errResult := writePbElementSelectSizeRecord(good.Id, good.MainElement); errResult != nil {
+		return errResult
+	}
+
+	// 2. 创建附属元素、附属元素尺寸的对应关系
+	for _, attachElement := range good.AttachElements {
+		if errResult := writePbElementSelectSizeRecord(good.Id, attachElement); errResult != nil {
+			return errResult
+		}
+	}
+
+	// 3. 创建主元素、附属元素、附属元素尺寸的对应关系
 	for _, attachElement := range good.AttachElements {
 		if _, errResult := dao.MainElementAttachElementRecordDao.Create(&model.MainElementAttachElementRecord{
-			GoodID:           good.Id,
-			AttachElementID:  attachElement.Id,
-			MainElementID:    good.MainElement.Id,
-			SelectSizeInfoID: model.GetPbElementSelectSizeInfo(attachElement).Id,
+			GoodID:          good.Id,
+			AttachElementID: attachElement.Id,
+			MainElementID:   good.MainElement.Id,
 		}); errResult != nil {
 			return errResult
 		}
