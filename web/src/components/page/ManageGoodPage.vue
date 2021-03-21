@@ -3,8 +3,9 @@
   <div>
 
     <!--    1. 顶栏-->
+    <el-row style="height: 8px" v-if="props_isAdminView"></el-row>
     <el-row style="height: 16px;">
-      <el-button v-show="cpt_canBackButtonShow" style="position: absolute;left:10px;" size="mini"
+      <el-button v-show="cpt_canBackButtonShow" style="position: absolute;top:-8px;left:10px;" size="mini"
                  @click="turnToParentComponentMode"
                  type="primary" round>
         退回
