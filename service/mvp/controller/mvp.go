@@ -130,7 +130,7 @@ func (MvpServer) GetAllGoodOptions(ctx context.Context, req *pb.GetAllGoodOption
 	// 2. 获取 pbElement
 	pbElements := make([]*pb.Element, 0)
 	for _, dbElement := range dbElements {
-		pbElements = append(pbElements, getPbElement(0, dbElement.ID))
+		pbElements = append(pbElements, getPbElement(0, 0,dbElement.ID))
 	}
 
 	// 4. 写入

@@ -38,15 +38,28 @@ func (mainElementAttachElementRecordDao) Create(obj *model.MainElementAttachElem
 	return id, nil
 }
 
-func (mainElementAttachElementRecordDao) GetByGoodIdAndMainElementName(goodID int64, mainElementID int64) ([]*model.MainElementAttachElementRecord, error) {
+func (mainElementAttachElementRecordDao) Get(goodID int64, mainElementID, attachElementID int64) (*model.MainElementAttachElementRecord, error) {
+	var result model.MainElementAttachElementRecord
+	if err := mainDB.Where("good_id = ? and main_element_id = ? and attach_element_id = ?", goodID, mainElementID, attachElementID).First(&result).Error; err != nil {
+		logger.Error("Fail to finish mainDB.Find", zap.Any("goodID", goodID),
+			zap.Any("mainElementID", mainElementID),
+			zap.Any("attachElementID", attachElementID),
+			zap.Error(err))
+		return nil, ers.MysqlError
+	}
+	return &result, nil
+}
+
+func (mainElementAttachElementRecordDao) GetByMainElementID(goodID int64, mainElementID int64) ([]*model.MainElementAttachElementRecord, error) {
 	var result []*model.MainElementAttachElementRecord
 	if err := mainDB.Where("good_id = ? and main_element_id = ?", goodID, mainElementID).Find(&result).Error; err != nil {
-		logger.Error("Fail to finish mainDB.Find", zap.Any("goodID", goodID), zap.Any("mainElementID ", mainElementID), zap.Error(err))
+		logger.Error("Fail to finish mainDB.Find", zap.Any("goodID", goodID),
+			zap.Any("mainElementID", mainElementID),
+			zap.Error(err))
 		return nil, ers.MysqlError
 	}
 	return result, nil
 }
-
 func (mainElementAttachElementRecordDao) GetByBothName(goodID int64, mainElementName string, attachElementName string) (*model.MainElementAttachElementRecord, error) {
 	var table model.MainElementAttachElementRecord
 	createTableWhenNotExist(&table)

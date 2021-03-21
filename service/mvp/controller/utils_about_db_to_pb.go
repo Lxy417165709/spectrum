@@ -90,7 +90,7 @@ func getOrderPbGoods(orderID int64) []*pb.Good {
 func getPbGood(goodID int64, mainElementID int64) *pb.Good {
 	return &pb.Good{
 		Id:             goodID,
-		MainElement:    getPbElement(goodID, mainElementID),
+		MainElement:    getPbElement(goodID, -1, mainElementID), // -1 表示不会用到...
 		AttachElements: getPbAttachElements(goodID, mainElementID),
 		//Favors:         getFavors(good),
 		//ExpenseInfo:    good.GetExpenseInfo(mainElement, attachElements, favors),	// todo: 之后再说
@@ -98,8 +98,9 @@ func getPbGood(goodID int64, mainElementID int64) *pb.Good {
 }
 
 func getPbAttachElements(goodID, mainElementID int64) []*pb.Element {
+	// 冗余...
 	var attachElements []*pb.Element
-	attachRecords, errResult := dao.MainElementAttachElementRecordDao.GetByGoodIdAndMainElementName(goodID, mainElementID)
+	attachRecords, errResult := dao.MainElementAttachElementRecordDao.GetByMainElementID(goodID, mainElementID)
 	if errResult != nil {
 		logger.Error("Fail to finish MainElementAttachElementRecordDao.GetOne", zap.Error(errResult))
 		return nil
@@ -107,7 +108,7 @@ func getPbAttachElements(goodID, mainElementID int64) []*pb.Element {
 	logger.Info("Success to get attachRecords", zap.Any("attachRecords", attachRecords))
 
 	for _, attachRecord := range attachRecords {
-		attachElements = append(attachElements, getPbElement(goodID, attachRecord.AttachElementID))
+		attachElements = append(attachElements, getPbElement(goodID, mainElementID, attachRecord.AttachElementID))
 	}
 	return attachElements
 }
@@ -125,7 +126,8 @@ func getFavors(chargeableObj model.Chargeable) []*pb.Favor {
 	return result
 }
 
-func getPbElement(goodID int64, dbElementID int64) *pb.Element {
+// todo: 这个函数不太好... goodID、dbElementID、mainElement-dbElementID 其实只选其中一个来用...
+func getPbElement(goodID int64, mainElementID, dbElementID int64) *pb.Element {
 	// 1. 形成 pbSizeInfos、并排序
 	dbSizeInfos, errResult := dao.ElementSizeInfoRecordDao.Get(dbElementID)
 	if errResult != nil {
@@ -141,19 +143,33 @@ func getPbElement(goodID int64, dbElementID int64) *pb.Element {
 	})
 
 	// 2. 获取默认选择记录
-	// todo: ElementSelectSizeRecordDao 这个Dao应该没有必要存在了，因为 MainElementAttachElementDao 已经融合了其功能了。或者废弃 MainElementAttachElementDao 的 SelectIndex 吧！
-	selectSizeRecord, errResult := dao.ElementSelectSizeRecordDao.GetOne(goodID, dbElementID)
-	if errResult != nil {
-		// todo: log
-		return nil
-	}
-	if selectSizeRecord == nil {
-		logger.Warn("Size record is blank", zap.Any("goodID", goodID), zap.Any("elementID", dbElementID))
-		return nil
+	var selectSizeInfoID int64
+	if goodID == 0 || mainElementID == -1 {
+		selectSizeRecord, errResult := dao.ElementSelectSizeRecordDao.GetOne(goodID, dbElementID)
+		if errResult != nil {
+			// todo: log
+			return nil
+		}
+		if selectSizeRecord == nil {
+			logger.Warn("Size record is blank", zap.Any("goodID", goodID), zap.Any("elementID", dbElementID))
+			return nil
+		}
+		selectSizeInfoID = selectSizeRecord.SelectSizeInfoID
+	} else {
+		selectSizeRecord, errResult := dao.MainElementAttachElementRecordDao.Get(goodID, mainElementID, dbElementID)
+		if errResult != nil {
+			// todo: log
+			return nil
+		}
+		if selectSizeRecord == nil {
+			logger.Warn("Size record is blank", zap.Any("goodID", goodID), zap.Any("elementID", dbElementID))
+			return nil
+		}
+		selectSizeInfoID = selectSizeRecord.SelectSizeInfoID
 	}
 
 	// 4. 获取默认选择索引(需要查询数据库)
-	selectedSizeInfoIndex := int32(getSelectedIndex(pbSizeInfos, selectSizeRecord.SelectSizeInfoID))
+	selectedSizeInfoIndex := int32(getSelectedIndex(pbSizeInfos, selectSizeInfoID))
 
 	// 5. 查询数据库
 	element, errResult := dao.ElementDao.Get(dbElementID)
