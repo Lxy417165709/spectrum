@@ -1,7 +1,6 @@
 <!-- eslint-disable -->
 <template>
   <el-row>
-
     <!--    1. 展示 商品类 部分-->
     <el-col v-for="(goodClass,goodClassIndex) in goodClasses" :key="goodClassIndex"
             style="height: 300px; width: 202px; margin-left: 10px; border: none">

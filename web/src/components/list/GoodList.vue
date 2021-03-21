@@ -1,7 +1,7 @@
 <!-- eslint-disable -->
 <template>
   <el-row>
-    <el-divider content-position="left">{{className}}</el-divider>
+    <el-divider content-position="left">{{ className }}</el-divider>
     <!--    1. 展示 商品 部分-->
     <el-col v-for="(good,goodIndex) in goods" :key="goodIndex"
             style="height: 300px; width: 202px; margin-left: 10px; border: none">
@@ -18,7 +18,7 @@
       title="商品点单"
       :visible.sync="GoodEditorOfUserVisible"
       width="30%">
-      <good-editor-of-user ref="GoodEditorOfUser" :orderID="orderID"></good-editor-of-user>
+      <good-editor-of-user ref="GoodEditorOfUser" :orderID="desk.orderID"></good-editor-of-user>
     </el-dialog>
 
     <!--    4. 商品添加、编辑框-->
@@ -45,11 +45,11 @@ export default {
   props: {
     props_isAdminView: Boolean,
     className: String,
+    desk: Object,
   },
   data() {
     return {
       goods: [],
-      orderID: 0,
       GoodEditorOfUserVisible: false,
       GoodEditorOfAdminVisible: false,
     };

@@ -1,16 +1,32 @@
 <!-- eslint-disable -->
 <template>
   <el-row>
-    <!--    1. 展示 桌位 部分-->
-    <el-col v-for="(desk,deskIndex) in desks" :key="deskIndex"
-            style="height: 300px; width: 202px; margin-left: 10px; border: none">
-      <desk-card :desk="desk" @dblclick.native="handleDbClick(desk)" @click.native="handleClick(deskIndex)"></desk-card>
-    </el-col>
+    <!--    1. 桌子列表部分-->
+    <div v-if="isDeskListVisible">
+      <el-row style="height: 40px;margin-left:10px;margin-bottom: 10px">
+      </el-row>
+      <el-divider content-position="left">
+        {{ className }}
+      </el-divider>
+      <!--    1.1 展示 桌位 部分-->
+      <el-col v-for="(desk,deskIndex) in desks" :key="deskIndex"
+              style="height: 300px; width: 202px; margin-left: 10px; border: none">
+        <desk-card :desk="desk" @dblclick.native="handleDbClick(desk)"
+                   @click.native="handleClick(deskIndex)"></desk-card>
+      </el-col>
 
-    <!--    2. 添加 桌位 部分-->
-    <el-col style="height: 300px; width: 202px; margin-left: 10px; border: none">
-      <desk-spacial-card @click.native="tryToAddDesk"></desk-spacial-card>
-    </el-col>
+      <!--    1.2 添加 桌位 部分-->
+      <el-col style="height: 300px; width: 202px; margin-left: 10px; border: none">
+        <desk-spacial-card @click.native="tryToAddDesk"></desk-spacial-card>
+      </el-col>
+    </div>
+
+
+    <!--     2. 商品类列表部分-->
+    <div v-if="!isDeskListVisible">
+      <good-class :desk="curDesk" :props_isAdminView="false" :props_haveParentComponent="true"
+                  ref="ref_goodClass" @turnToParentComponentMode="isDeskListVisible=true"></good-class>
+    </div>
 
     <!--    3. 桌子添加、编辑-->
     <el-dialog
@@ -19,6 +35,8 @@
       width="30%">
       <desk-editor-of-admin ref="DeskEditorOfAdmin" :className="className"></desk-editor-of-admin>
     </el-dialog>
+
+
   </el-row>
 </template>
 
@@ -29,10 +47,12 @@ import DeskSpacialCard from "../card/DeskSpacialCard";
 import test from "../../common/test/test";
 import utils from "../../common/utils"
 import DeskEditorOfAdmin from "../editor/DeskEditorOfAdmin";
+import GoodClass from "./ManageGoodPage";
+import cst from "../../common/cst";
 
 let time = null
 export default {
-  components: {DeskSpacialCard, DeskCard, DeskEditorOfAdmin},
+  components: {DeskSpacialCard, DeskCard, DeskEditorOfAdmin, GoodClass},
   props: {
     className: String,
   },
@@ -46,6 +66,9 @@ export default {
     return {
       desks: [],
       DeskEditorOfAdminVisible: false,
+      isDeskListVisible: true,
+
+      curDesk: {},
     };
   },
   async created() {
@@ -64,7 +87,10 @@ export default {
     async turnToClassListMode(deskIndex) {
       // todo: this.desks[deskIndex].id === undefined 时，此时 this.desks[deskIndex].id !== 0 也成立..
       if (this.desks[deskIndex].id !== 0) {
-        this.$emit("turnToClassListMode", deskIndex, this.desks[deskIndex].id, this.desks[deskIndex].orderID)
+        this.curDeskIndex = deskIndex
+        this.curDesk = this.desks[deskIndex]
+        this.isDeskListVisible = false
+        console.log("curDesk", this.curDesk)
         return
       }
       // 进行点单

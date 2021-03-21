@@ -14,7 +14,7 @@
     <!--    2. 商品类展示-->
     <div v-show="cpt_canClassListShow">
       <!--      普通商品类-->
-      <el-divider content-position="left">普通商品类</el-divider>
+      <el-divider content-position="left" v-if="desk !== undefined && desk.space!==undefined">{{ desk.space.name }} - 普通商品类</el-divider>
       <good-class-list :goodClasses="db_goodClasses" :props_isAdminView="props_isAdminView"
                        @turnToGoodListMode="turnToGoodListMode"></good-class-list>
 
@@ -27,7 +27,7 @@
 
     <!--    3. 商品类内的商品展示-->
     <div v-show="cpt_canGoodListShow">
-      <good-list v-if="cpt_isGoodListExist"
+      <good-list v-if="cpt_isGoodListExist" :desk="desk"
                  ref="GoodList"
                  :props_isAdminView="props_isAdminView"
                  :className="cpt_curGoodClass.name"
@@ -77,6 +77,8 @@ export default {
   props: {
     props_isAdminView: Boolean,
     props_haveParentComponent: Boolean,
+
+    desk: Object,
   },
   async created() {
     this.db_goodOptionClasses = test.goodOptionClasses
@@ -96,8 +98,6 @@ export default {
 
       db_goodClasses: [],
       db_goodOptionClasses: [],
-
-      orderID: 0,
     }
   },
   methods: {

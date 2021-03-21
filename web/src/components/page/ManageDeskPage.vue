@@ -14,23 +14,11 @@
       </el-button>
     </el-aside>
 
-    <!--    2. 桌类详情-->
+    <!--    2. 桌类详情、商品点单-->
     <el-main>
-      <div v-show="cpt_canDeskListShow">
-        <el-row style="height: 40px;margin-left:10px;margin-bottom: 10px">
-        </el-row>
-        <el-divider content-position="left" v-if="cpt_canDeskListShow">
-          {{ cpt_curDeskClass.name }}
-        </el-divider>
-        <desk-list v-if="cpt_canDeskListShow"
-                   :className="cpt_curDeskClass.name"
-                   @turnToClassListMode="turnToClassListMode"
-                   @attachOrderID="attachOrderID"></desk-list>
-      </div>
-      <div v-show="cpt_canClassListShow">
-        <good-class :props_isAdminView="false" :props_haveParentComponent="true" ref="ref_goodClass"
-                    @turnToParentComponentMode="turnToDeskListMode"></good-class>
-      </div>
+      <desk-list
+        v-if="cpt_curDeskClass!==undefined"
+        :className="cpt_curDeskClass.name"></desk-list>
     </el-main>
 
     <!--    4. 桌类添加、编辑-->
@@ -44,7 +32,7 @@
 </template>
 <script>
 /* eslint-disable */
-import DeskList from "../list/DeskList";
+import DeskList from "./DeskList";
 import GoodClass from "./ManageGoodPage";
 import DeskClassEditor from "../editor/DeskClassEditor";
 import test from "../../common/test/test";
