@@ -8,7 +8,6 @@
           订单号:
           <el-input v-model="searchOrderID" style="width: 70px"></el-input>
         </el-col>
-
         <el-col :span="4">
           是否结账:
           <el-select v-model="checkOutValue">
@@ -40,7 +39,13 @@
       <el-collapse v-model="activeName" accordion>
         <el-collapse-item :name="index.toString()" :key="index" v-for="(order,index) in db_orders">
           <template slot="title">
-            <div><span>订单号: {{ order.id }} </span></div>
+            <div>
+              <span>订单号: {{ order.id }} </span>
+              <el-divider direction="vertical"></el-divider>
+              <span>{{order.desk.space.className}}</span>
+              <el-divider direction="vertical"></el-divider>
+              <span> {{order.desk.space.name}}</span>
+            </div>
           </template>
 
           <!--          2.1 桌费-->
