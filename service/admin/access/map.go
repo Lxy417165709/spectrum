@@ -142,6 +142,16 @@ var objectFunctionToRpcUnit = map[string]map[string]*model.RpcUnit{
 			SuccessMsg: "删除成功",
 			FailMsg:    "删除失败",
 		},
+		"GetOrder": {
+			ReqFunc: func() interface{} {
+				return &pb.GetOrderReq{}
+			},
+			ResFunc: func() interface{} {
+				return &pb.GetOrderRes{}
+			},
+			SuccessMsg: "获取成功",
+			FailMsg:    "获取失败",
+		},
 	},
 	//"AddOptionClass": {
 	//	ReqFunc: func() interface{} {

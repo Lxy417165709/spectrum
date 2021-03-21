@@ -65,12 +65,11 @@ CREATE TABLE `element_size_info_record`
     `created_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `element_id`         bigint       NOT NULL DEFAULT 0,
-    `good_id`            bigint       NOT NULL DEFAULT 0,
     `size`               varchar(30)  NOT NULL DEFAULT '小规格',
     `price`              double       NOT NULL DEFAULT 0,
     `picture_store_path` varchar(255) NOT NULL DEFAULT '',
     PRIMARY KEY (`id`),
-    UNIQUE KEY (`good_id`, `element_id`, `size`)
+    UNIQUE KEY (`element_id`, `size`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
@@ -220,12 +219,12 @@ values ('附属商品类', 'static/upload/温热1.jpeg', 2);
 # 创建商品, 选项记录, 附属记录
 insert into element(name, type, class_id)
 values ('波霸奶茶', 0, 1);
-insert into element_size_info_record(good_id, element_id, size, price, picture_store_path)
-values (0, 1, '小杯', 10, 'static/upload/奶茶1.jpeg');
-insert into element_size_info_record(good_id, element_id, size, price, picture_store_path)
-values (0, 1, '中杯', 15, 'static/upload/奶茶2.jpeg');
-insert into element_size_info_record(good_id, element_id, size, price, picture_store_path)
-values (0, 1, '大杯', 15, 'static/upload/奶茶3.jpeg');
+insert into element_size_info_record(element_id, size, price, picture_store_path)
+values (1, '小杯', 10, 'static/upload/奶茶1.jpeg');
+insert into element_size_info_record(element_id, size, price, picture_store_path)
+values (1, '中杯', 15, 'static/upload/奶茶2.jpeg');
+insert into element_size_info_record(element_id, size, price, picture_store_path)
+values (1, '大杯', 15, 'static/upload/奶茶3.jpeg');
 insert into element_select_size_record(good_id, element_id, select_size_info_id)
 values (0, 1, 2);
 insert into main_element_attach_element_record(good_id, main_element_id, attach_element_id, select_size_info_id)
@@ -236,23 +235,23 @@ values (0, 1, 3, 8);
 # 创建附属选项元素, 选项记录
 insert into element(name, type, class_id)
 values ('温度', 1, 5);
-insert into element_size_info_record(good_id, element_id, size, price, picture_store_path)
-values (0, 2, '冷饮', 0, 'static/upload/温热1.jpeg');
-insert into element_size_info_record(good_id, element_id, size, price, picture_store_path)
-values (0, 2, '常温', 0, 'static/upload/温热1.jpeg');
-insert into element_size_info_record(good_id, element_id, size, price, picture_store_path)
-values (0, 2, '热饮', 0, 'static/upload/温热1.jpeg');
-insert into element_select_size_record(good_id, element_id, select_size_info_id)
-values (0, 2, 4);
+insert into element_size_info_record(element_id, size, price, picture_store_path)
+values (2, '冷饮', 0, 'static/upload/温热1.jpeg');
+insert into element_size_info_record(element_id, size, price, picture_store_path)
+values (2, '常温', 0, 'static/upload/温热1.jpeg');
+insert into element_size_info_record(element_id, size, price, picture_store_path)
+values (2, '热饮', 0, 'static/upload/温热1.jpeg');
+insert into element_select_size_record(element_id, select_size_info_id)
+values (2, 4);
 
 # 创建附属商品元素, 选项记录
 insert into element(name, type, class_id)
 values ('珍珠', 2, 6);
-insert into element_size_info_record(good_id, element_id, size, price, picture_store_path)
-values (0, 3, '少量', 1, 'static/upload/珍珠1.jpeg');
-insert into element_size_info_record(good_id, element_id, size, price, picture_store_path)
-values (0, 3, '中量', 2, 'static/upload/珍珠2.jpeg');
-insert into element_size_info_record(good_id, element_id, size, price, picture_store_path)
-values (0, 3, '大量', 2.5, 'static/upload/珍珠3.jpeg');
+insert into element_size_info_record(element_id, size, price, picture_store_path)
+values (3, '少量', 1, 'static/upload/珍珠1.jpeg');
+insert into element_size_info_record(element_id, size, price, picture_store_path)
+values (3, '中量', 2, 'static/upload/珍珠2.jpeg');
+insert into element_size_info_record(element_id, size, price, picture_store_path)
+values (3, '大量', 2.5, 'static/upload/珍珠3.jpeg');
 insert into element_select_size_record(good_id, element_id, select_size_info_id)
 values (0, 3, 7);

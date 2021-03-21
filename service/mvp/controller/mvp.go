@@ -225,6 +225,7 @@ func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.Order
 				zap.Error(err))
 			return nil, err
 		}
+
 	}
 	return &res, nil
 }
@@ -283,13 +284,13 @@ func (MvpServer) OrderDesk(ctx context.Context, req *pb.OrderDeskReq) (*pb.Order
 	return &res, nil
 }
 
-//func (MvpServer) GetOrder(ctx context.Context, req *pb.GetOrderReq) (*pb.GetOrderRes, error) {
-//	logger.Info("GetOrder", zap.Any("ctx", ctx), zap.Any("req", req))
-//	var res pb.GetOrderRes
-//
-//	res.Order = getPbOrder(req.OrderID)
-//	return &res, nil
-//}
+func (MvpServer) GetOrder(ctx context.Context, req *pb.GetOrderReq) (*pb.GetOrderRes, error) {
+	logger.Info("GetOrder", zap.Any("ctx", ctx), zap.Any("req", req))
+	var res pb.GetOrderRes
+
+	res.Order = getPbOrder(req.OrderID)
+	return &res, nil
+}
 
 func (MvpServer) CloseDesk(ctx context.Context, req *pb.CloseDeskReq) (*pb.CloseDeskRes, error) {
 	logger.Info("CloseDesk", zap.Any("ctx", ctx), zap.Any("req", req))

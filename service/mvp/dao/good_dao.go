@@ -85,7 +85,7 @@ func (goodDao) GetByOrderID(orderID int64) ([]*model.Good, error) {
 	var result []*model.Good
 	if err := mainDB.Find(&result, "order_id = ?", orderID).Error; err != nil {
 		logger.Error("Fail to finish mainDB.Find", zap.Int64("orderID", orderID), zap.Error(err))
-		return nil, err
+		return nil, ers.MysqlError
 	}
 	return result, nil
 }

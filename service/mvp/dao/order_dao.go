@@ -20,7 +20,7 @@ func (orderDao) Get(id int64) (*model.Order, error) {
 			return nil, nil
 		}
 		logger.Error("Fail to finish mainDB.First", zap.Int64("id", id), zap.Error(err))
-		return nil, err
+		return nil, ers.MysqlError
 	}
 	return &result, nil
 }

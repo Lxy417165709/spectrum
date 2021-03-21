@@ -139,7 +139,7 @@ export default {
   async AddDesk(obj, par, then) {
     let model = this.getRequestModel("mvp", "AddDesk", par)
     await this.sendRequestModel(model).then((res) => {
-      console.log("AddDesk", res)
+      console.log("AddDesk.res", res)
       if (!this.hasRequestSuccess(res)) {
         obj.$message.error(res.data.err)
         return
@@ -151,7 +151,7 @@ export default {
   async AddGoodClass(obj, par, then) {
     let model = this.getRequestModel("mvp", "AddGoodClass", par)
     await this.sendRequestModel(model).then((res) => {
-      console.log("AddGoodClass", res)
+      console.log("AddGoodClass.res", res)
       if (!this.hasRequestSuccess(res)) {
         obj.$message.error(res.data.err)
         return
@@ -163,7 +163,19 @@ export default {
   async DeleteElementSizeInfo(obj, par, then) {
     let model = this.getRequestModel("mvp", "DeleteElementSizeInfo", par)
     await this.sendRequestModel(model).then((res) => {
-      console.log("DeleteElementSizeInfo", res)
+      console.log("DeleteElementSizeInfo.res", res)
+      if (!this.hasRequestSuccess(res)) {
+        obj.$message.error(res.data.err)
+        return
+      }
+      obj.$message.success(res.data.msg)
+      then(res)
+    })
+  },
+  async GetOrder(obj, par, then) {
+    let model = this.getRequestModel("mvp", "GetOrder", par)
+    await this.sendRequestModel(model).then((res) => {
+      console.log("GetOrder.res", res)
       if (!this.hasRequestSuccess(res)) {
         obj.$message.error(res.data.err)
         return

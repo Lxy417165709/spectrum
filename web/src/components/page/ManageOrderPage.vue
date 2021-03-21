@@ -25,7 +25,7 @@
         </el-col>
         <el-col :span="8">
           <div>
-            <el-button type="primary">确定</el-button>
+            <el-button type="primary" @click="startToGetOrder">确定</el-button>
           </div>
         </el-col>
       </el-row>
@@ -166,6 +166,7 @@
 /* eslint-disable */
 import DiscountEditor from "../editor/DiscountEditor";
 import test from "../../common/test/test";
+import utils from "../../common/utils";
 
 export default {
   name: "ManageOrderPage",
@@ -217,7 +218,17 @@ export default {
       value2: '',
       order: {},
     }
+  },
+  methods:{
+    startToGetOrder(){
+      utils.GetOrder(this,{
+        orderID:13,
+      },(res)=>{
+
+      })
+    }
   }
+
 }
 </script>
 
