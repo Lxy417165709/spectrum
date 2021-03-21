@@ -72,8 +72,6 @@ func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.Order
 	return &res, nil
 }
 
-
-
 func (MvpServer) AddElement(ctx context.Context, req *pb.AddElementReq) (*pb.AddElementRes, error) {
 	logger.Info("AddElement", zap.Any("ctx", ctx), zap.Any("req", req))
 
@@ -217,7 +215,6 @@ func (MvpServer) AddDeskClass(ctx context.Context, req *pb.AddDeskClassReq) (*pb
 	return &res, nil
 }
 
-
 func (MvpServer) AddDesk(ctx context.Context, req *pb.AddDeskReq) (*pb.AddDeskRes, error) {
 	logger.Info("AddDesk", zap.Any("ctx", ctx), zap.Any("req", req))
 	// todo: 这里可以点单记录
@@ -276,7 +273,24 @@ func (MvpServer) GetOrder(ctx context.Context, req *pb.GetOrderReq) (*pb.GetOrde
 	logger.Info("GetOrder", zap.Any("ctx", ctx), zap.Any("req", req))
 	var res pb.GetOrderRes
 
-	res.Order = getPbOrder(req.OrderID)
+	var orderIDs []int64
+
+	if req.OrderID != 0 {
+		orderIDs = append(orderIDs, req.OrderID)
+	} else {
+		orders, errResult := dao.OrderDao.GetByState(req.CheckOutState)
+		if errResult != nil {
+			return nil, errResult
+		}
+		for _, order := range orders {
+			orderIDs = append(orderIDs, order.ID)
+		}
+	}
+
+	for _, orderID := range orderIDs {
+		res.Orders = append(res.Orders, getPbOrder(orderID))
+	}
+
 	return &res, nil
 }
 

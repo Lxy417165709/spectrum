@@ -6,6 +6,7 @@ import (
 	"go.uber.org/zap"
 	"spectrum/common/ers"
 	"spectrum/common/logger"
+	"spectrum/common/pb"
 	"spectrum/service/mvp/model"
 )
 
@@ -23,6 +24,32 @@ func (orderDao) Get(id int64) (*model.Order, error) {
 		return nil, ers.MysqlError
 	}
 	return &result, nil
+}
+
+func (orderDao) GetByState(state pb.CheckOutState) ([]*model.Order, error) {
+	var result []*model.Order
+
+	var whereClause = ""
+	var whereValues []interface{}
+	switch state {
+	case pb.CheckOutState_All:
+	case pb.CheckOutState_HadCheckOut:
+		whereClause = "check_out_at != ?"
+		whereValues = append(whereValues, model.NilTime)
+	case pb.CheckOutState_NotCheckOut:
+		whereClause = "check_out_at = ?"
+		whereValues = append(whereValues, model.NilTime)
+	default:
+		return nil, ers.New("无效的结账状态。")
+	}
+	if err := mainDB.Where(whereClause, whereValues...).Find(&result).Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return nil, nil
+		}
+		logger.Error("Fail to finish mainDB.First", zap.Any("state", state.String()), zap.Error(err))
+		return nil, ers.MysqlError
+	}
+	return result, nil
 }
 
 func (orderDao) Create(obj *model.Order) (int64, error) {

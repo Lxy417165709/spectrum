@@ -23,6 +23,11 @@ enum BillingType {
     Session = 1;
 }
 
+enum CheckOutState {
+    All = 0;
+    NotCheckOut = 1;
+    HadCheckOut = 2;
+}
 // ---------------------- instance 相关 ----------------------
 message ExpenseInfo {
     double nonFavorExpense = 1;  // 未打折费用
@@ -42,8 +47,8 @@ message Order {
 message Desk{
     int64 id = 1;
     Space space = 2;
-    int64 startTimestamp = 3;
-    int64 endTimestamp = 4;
+    int64 startAt = 3;
+    int64 endAt = 4;
     repeated Favor favors = 5;
     ExpenseInfo expenseInfo = 6;
     int64 orderID = 7;
@@ -167,7 +172,7 @@ message OrderRes{
 
 message CloseDeskReq{
     int64 deskID = 1;
-    int64 endTimestamp = 2;
+    int64 endAt = 2;
 }
 message CloseDeskRes{}
 
@@ -187,10 +192,11 @@ message GetAllGoodClassesRes{
 
 message GetOrderReq{
     int64 orderID = 1;
+    CheckOutState checkOutState = 2;
 }
 
 message GetOrderRes{
-    Order order = 1;
+    repeated Order orders = 1;
 }
 
 message CheckOutReq {

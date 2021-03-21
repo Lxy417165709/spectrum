@@ -1,11 +1,12 @@
 <!-- eslint-disable -->
 <template>
   <el-container>
+    <!--    1. 搜索条件-->
     <el-header>
       <el-row>
         <el-col :span="4">
           是否结账
-          <el-select value="全部">
+          <el-select v-model="check_out_value">
             <el-option label="全部" value="全部"></el-option>
             <el-option label="未结账" value="未结账"></el-option>
             <el-option label="已结账" value="已结账"></el-option>
@@ -32,16 +33,15 @@
     </el-header>
     <el-main>
       <el-collapse v-model="activeName" accordion>
-        <el-collapse-item name="1">
+        <el-collapse-item :name="index.toString()" :key="index" v-for="(order,index) in db_orders">
           <template slot="title">
-            <div><span>序号: 1</span></div>
-            <!--            <div><span>桌类: 台球</span></div>-->
-            <!--            <div><span>桌号: 2</span></div>-->
+            <div><span>订单号: {{ order.id }} </span></div>
           </template>
 
+          <!--          2.1 桌费-->
           <el-divider content-position="left">桌费</el-divider>
           <el-table
-            :data="order.deskInfos"
+            :data="[order.desk]"
             border
             style="width: 100%">
             <el-table-column
@@ -49,39 +49,46 @@
               width="50">
             </el-table-column>
             <el-table-column
-              prop="name"
-              label="桌位名"
+              prop="space.className"
+              label="桌类名"
               width="180">
             </el-table-column>
             <el-table-column
-              prop="num"
-              label="桌位号"
+              prop="space.name"
+              label="桌名"
               width="180">
             </el-table-column>
             <el-table-column
-              prop="beginTime"
               label="开桌时间"
               width="180px">
+              <template slot-scope="scope">
+                {{ timestampToTime(scope.row.startAt) }}
+              </template>
             </el-table-column>
             <el-table-column
-              prop="endTime"
               label="关桌时间"
               width="180px">
+              <template slot-scope="scope">
+                {{ scope.row.endAt === 0 ? "-" : timestampToTime(scope.row.endAt) }}
+              </template>
             </el-table-column>
             <el-table-column
               prop="duration"
               label="占用时长">
+              <template slot-scope="scope">
+                {{ getDuration(scope.row.endAt, scope.row.startAt) }}
+              </template>
             </el-table-column>
             <el-table-column
               prop="countWay"
               label="计费方式">
             </el-table-column>
             <el-table-column
-              prop="price"
+              prop="space.price"
               label="计费价格">
             </el-table-column>
             <el-table-column
-              prop="nonFavorExpense"
+              prop="expenseInfo.nonFavorExpense"
               label="原花费">
             </el-table-column>
             <el-table-column
@@ -96,56 +103,72 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="expense"
+              prop="expenseInfo.expense"
               label="折后花费">
             </el-table-column>
 
             <el-table-column
-
               label="结账">
             </el-table-column>
           </el-table>
 
-          <el-divider content-position="left">商品费</el-divider>
-          <el-table
-            :data="order.goodInfos"
-            border
-            style="width: 100%">
-            <el-table-column
-              type="index"
-              width="50">
-            </el-table-column>
-            <el-table-column
-              prop="name"
-              label="商品名"
-              width="180">
-            </el-table-column>
-            <el-table-column
-              prop="nonFavorExpense"
-              label="原花费">
-            </el-table-column>
-            <el-table-column
-              label="优惠"
-              width="180px">
-              <template slot-scope="scope">
-                <!--            todo: 这个可以提出为一个组件 -->
-                <el-tag v-for="(favor,index) in scope.row.favors" :key="index" style="margin-right: 10px">
-                  {{
-                    favor.name
-                  }}
-                </el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="expense"
-              label="折后花费">
-            </el-table-column>
-
-            <el-table-column
-
-              label="结账">
-            </el-table-column>
-          </el-table>
+          <!--          2.1 商品费-->
+          <div v-if="order.goods !== null && order.goods.length!==0">
+            <el-divider content-position="left">商品费</el-divider>
+            <el-table
+              :data="order.goods"
+              border
+              style="width: 100%">
+              <el-table-column
+                type="index"
+                width="50">
+              </el-table-column>
+              <el-table-column
+                prop="mainElement.name"
+                label="商品名"
+                width="180">
+              </el-table-column>
+              <el-table-column
+                label="规格"
+                width="180">
+                <template slot-scope="scope">
+                  {{ scope.row.mainElement.sizeInfos[scope.row.mainElement.selectedIndex].size }}
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="附属品"
+                width="180">
+                <template slot-scope="scope">
+                  <el-tag v-for="(attachElement,index) in scope.row.attachElements" :key="index"
+                          style="margin-right: 10px">
+                    {{ attachElement.name }} ({{ attachElement.sizeInfos[attachElement.selectedIndex].size }})
+                  </el-tag>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="expenseInfo.nonFavorExpense"
+                label="原花费">
+              </el-table-column>
+              <el-table-column
+                label="优惠"
+                width="180px">
+                <template slot-scope="scope">
+                  <el-tag v-for="(favor,index) in scope.row.favors" :key="index" style="margin-right: 10px">
+                    {{
+                      favor.name
+                    }}
+                  </el-tag>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="expenseInfo.expense"
+                label="折后花费">
+              </el-table-column>
+              <el-table-column
+                label="结账">
+              </el-table-column>
+            </el-table>
+          </div>
 
 
           <el-divider>优惠设置</el-divider>
@@ -216,18 +239,40 @@ export default {
       },
       value1: '',
       value2: '',
-      order: {},
+      db_orders: {},
+      check_out_value: "全部",
     }
   },
-  methods:{
-    startToGetOrder(){
-      utils.GetOrder(this,{
-        orderID:1,
-      },(res)=>{
-
+  methods: {
+    startToGetOrder() {
+      utils.GetOrder(this, {
+        // orderID: 2,
+        checkOutState: 0,
+      }, (res) => {
+        this.db_orders = res.data.data.orders
       })
+    },
+    timestampToTime(timestamp) {
+      let date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+      let Y = date.getFullYear() + '-';
+      let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+      let D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' ';
+      let h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+      let m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+      let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+      return Y + M + D + h + m + s;
+    },
+    getDuration(endAt, startAt) {
+      if (endAt === 0) {
+        endAt = Date.parse(new Date()) / 1000;
+      }
+      let timestamp = (endAt - startAt);
+      let h = Math.floor(timestamp / 3600) + "小时 "
+      let m = Math.floor((timestamp % 3600) / 60) + "分 "
+      let s = timestamp % 60 + '秒'
+      return h + m + s;
     }
-  }
+  },
 
 }
 </script>
