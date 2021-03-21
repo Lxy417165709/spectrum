@@ -10,7 +10,7 @@ drop table if exists `order`;
 drop table if exists `favor_record`;
 drop table if exists `desk_class`; # 废弃
 drop table if exists `space_class`;
-drop table if exists `element_size_info_record`;
+drop table if exists `element_size_info`;
 
 
 ################################ 创建 ################################
@@ -59,7 +59,7 @@ CREATE TABLE `element`
   COLLATE = utf8mb4_0900_ai_ci;
 
 # 元素尺寸记录表
-CREATE TABLE `element_size_info_record`
+CREATE TABLE `element_size_info`
 (
     `id`                 int unsigned NOT NULL AUTO_INCREMENT,
     `created_at`         timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -219,11 +219,11 @@ values ('附属商品类', 'static/upload/温热1.jpeg', 2);
 # 创建商品, 选项记录, 附属记录
 insert into element(name, type, class_id)
 values ('波霸奶茶', 0, 1);
-insert into element_size_info_record(element_id, size, price, picture_store_path)
+insert into element_size_info(element_id, size, price, picture_store_path)
 values (1, '小杯', 10, 'static/upload/奶茶1.jpeg');
-insert into element_size_info_record(element_id, size, price, picture_store_path)
+insert into element_size_info(element_id, size, price, picture_store_path)
 values (1, '中杯', 15, 'static/upload/奶茶2.jpeg');
-insert into element_size_info_record(element_id, size, price, picture_store_path)
+insert into element_size_info(element_id, size, price, picture_store_path)
 values (1, '大杯', 15, 'static/upload/奶茶3.jpeg');
 insert into element_select_size_record(good_id, element_id, select_size_info_id)
 values (0, 1, 2);
@@ -235,11 +235,11 @@ values (0, 1, 3, 8);
 # 创建附属选项元素, 选项记录
 insert into element(name, type, class_id)
 values ('温度', 1, 5);
-insert into element_size_info_record(element_id, size, price, picture_store_path)
+insert into element_size_info(element_id, size, price, picture_store_path)
 values (2, '冷饮', 0, 'static/upload/温热1.jpeg');
-insert into element_size_info_record(element_id, size, price, picture_store_path)
+insert into element_size_info(element_id, size, price, picture_store_path)
 values (2, '常温', 0, 'static/upload/温热1.jpeg');
-insert into element_size_info_record(element_id, size, price, picture_store_path)
+insert into element_size_info(element_id, size, price, picture_store_path)
 values (2, '热饮', 0, 'static/upload/温热1.jpeg');
 insert into element_select_size_record(element_id, select_size_info_id)
 values (2, 4);
@@ -247,11 +247,11 @@ values (2, 4);
 # 创建附属商品元素, 选项记录
 insert into element(name, type, class_id)
 values ('珍珠', 2, 6);
-insert into element_size_info_record(element_id, size, price, picture_store_path)
+insert into element_size_info(element_id, size, price, picture_store_path)
 values (3, '少量', 1, 'static/upload/珍珠1.jpeg');
-insert into element_size_info_record(element_id, size, price, picture_store_path)
+insert into element_size_info(element_id, size, price, picture_store_path)
 values (3, '中量', 2, 'static/upload/珍珠2.jpeg');
-insert into element_size_info_record(element_id, size, price, picture_store_path)
+insert into element_size_info(element_id, size, price, picture_store_path)
 values (3, '大量', 2.5, 'static/upload/珍珠3.jpeg');
 insert into element_select_size_record(good_id, element_id, select_size_info_id)
 values (0, 3, 7);

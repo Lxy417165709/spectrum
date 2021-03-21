@@ -15,10 +15,10 @@ type elementSelectSizeRecordDao struct{}
 
 func (elementSelectSizeRecordDao) Create(obj *model.ElementSelectSizeRecord) (int64, error) {
 	values := []interface{}{
-		obj.ID, obj.GoodID, obj.ElementID, obj.SelectSizeInfoID,
+		obj.GoodID, obj.ElementID, obj.SelectSizeInfoID,
 	}
 	sql := fmt.Sprintf(`
-		insert into %s(id,good_id,element_id,select_size_info_id) values(%s)
+		insert into %s(good_id,element_id,select_size_info_id) values(%s)
 		on duplicate key update
 			good_id = values(good_id),
 			element_id = values(element_id),

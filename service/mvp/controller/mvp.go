@@ -19,7 +19,6 @@ type MvpServer struct {
 
 func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRes, error) {
 	logger.Info("AddGood", zap.Any("ctx", ctx), zap.Any("req", req))
-
 	var res pb.AddGoodRes
 	good, goodClassName, errResult := CheckAddGoodParameter(req)
 	if errResult != nil {
@@ -57,20 +56,6 @@ func (MvpServer) DeleteElementSizeInfo(ctx context.Context, req *pb.DeleteElemen
 
 	return &res, nil
 }
-
-//func (MvpServer) AddSpace(ctx context.Context, req *pb.AddSpaceReq) (*pb.AddSpaceRes, error) {
-//	logger.Info("AddDesk", zap.Any("ctx", ctx), zap.Any("req", req))
-//	var res pb.AddSpaceRes
-//
-//	// 1. 创建
-//	if _, err := dao.SpaceDao.Create(toDbSpace(req.Space)); err != nil {
-//		logger.Error("Fail to finish SpaceDao.Create",
-//			zap.Any("req", req),
-//			zap.Error(err))
-//		return nil, err
-//	}
-//	return &res, nil
-//}
 
 func (MvpServer) GetAllGoodClasses(ctx context.Context, req *pb.GetAllGoodClassesReq) (*pb.GetAllGoodClassesRes, error) {
 	logger.Info("GetAllGoodClasses", zap.Any("ctx", ctx), zap.Any("req", req))
@@ -130,7 +115,7 @@ func (MvpServer) GetAllGoodOptions(ctx context.Context, req *pb.GetAllGoodOption
 	// 2. 获取 pbElement
 	pbElements := make([]*pb.Element, 0)
 	for _, dbElement := range dbElements {
-		pbElements = append(pbElements, getPbElement(0, 0,dbElement.ID))
+		pbElements = append(pbElements, getPbElement(0, 0, dbElement.ID))
 	}
 
 	// 4. 写入
@@ -162,7 +147,9 @@ func (MvpServer) AddGoodClass(ctx context.Context, req *pb.AddGoodClassReq) (*pb
 
 	// 3. 写响应
 	var res pb.AddGoodClassRes
-	dbGoodClass.ID = id
+	if dbGoodClass.ID == 0 {
+		dbGoodClass.ID = id
+	}
 	res.GoodClass = dbGoodClass.ToPb()
 
 	// 4. 返回响应

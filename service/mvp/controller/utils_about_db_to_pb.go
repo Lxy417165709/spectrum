@@ -129,7 +129,7 @@ func getFavors(chargeableObj model.Chargeable) []*pb.Favor {
 // todo: 这个函数不太好... goodID、dbElementID、mainElement-dbElementID 其实只选其中一个来用...
 func getPbElement(goodID int64, mainElementID, dbElementID int64) *pb.Element {
 	// 1. 形成 pbSizeInfos、并排序
-	dbSizeInfos, errResult := dao.ElementSizeInfoRecordDao.Get(dbElementID)
+	dbSizeInfos, errResult := dao.ElementSizeInfoDao.Get(dbElementID)
 	if errResult != nil {
 		// todo: log
 		return nil

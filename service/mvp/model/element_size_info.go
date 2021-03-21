@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type ElementSizeInfoRecord struct {
+type ElementSizeInfo struct {
 	ID               int64     `gorm:"id"`
 	CreatedAt        time.Time `gorm:"created_at"`
 	UpdatedAt        time.Time `gorm:"updated_at"`
@@ -15,11 +15,11 @@ type ElementSizeInfoRecord struct {
 	PictureStorePath string    `gorm:"picture_store_path"`
 }
 
-func (ElementSizeInfoRecord) TableName() string {
-	return "element_size_info_record"
+func (ElementSizeInfo) TableName() string {
+	return "element_size_info"
 }
 
-func (r *ElementSizeInfoRecord) ToPb() *pb.SizeInfo {
+func (r *ElementSizeInfo) ToPb() *pb.SizeInfo {
 	return &pb.SizeInfo{
 		Id:               r.ID,
 		Size:             r.Size,

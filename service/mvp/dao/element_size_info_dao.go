@@ -8,12 +8,12 @@ import (
 	"spectrum/service/mvp/model"
 )
 
-var ElementSizeInfoRecordDao elementSizeInfoRecordDao
+var ElementSizeInfoDao elementSizeInfoDao
 
-type elementSizeInfoRecordDao struct{}
+type elementSizeInfoDao struct{}
 
-func (elementSizeInfoRecordDao) Get(elementID int64) ([]*model.ElementSizeInfoRecord, error) {
-	var result []*model.ElementSizeInfoRecord
+func (elementSizeInfoDao) Get(elementID int64) ([]*model.ElementSizeInfo, error) {
+	var result []*model.ElementSizeInfo
 	if err := mainDB.Where("element_id = ?",  elementID).Find(&result).Error; err != nil {
 		logger.Error("Fail to finish mainDB.Find", zap.Any("elementID", elementID), zap.Error(err))
 		return nil, ers.MysqlError
@@ -21,7 +21,7 @@ func (elementSizeInfoRecordDao) Get(elementID int64) ([]*model.ElementSizeInfoRe
 	return result, nil
 }
 
-func (elementSizeInfoRecordDao) Create(obj *model.ElementSizeInfoRecord) (int64, error) {
+func (elementSizeInfoDao) Create(obj *model.ElementSizeInfo) (int64, error) {
 	values := []interface{}{
 		obj.ID, obj.ElementID, obj.Size, obj.PictureStorePath, obj.Price,
 	}

@@ -102,7 +102,7 @@ func writePbElementToDbAndUpdateID(pbElement *pb.Element, classID int64) error {
 
 	// 2. 将元素的尺寸信息写入数据库，如果先前尺寸不存在，则更新元素的尺寸ID
 	for _, pbSizeInfo := range pbElement.SizeInfos {
-		sizeInfoID, errResult := dao.ElementSizeInfoRecordDao.Create(toDbElementSizeInfo(pbSizeInfo, pbElement.Id))
+		sizeInfoID, errResult := dao.ElementSizeInfoDao.Create(toDbElementSizeInfo(pbSizeInfo, pbElement.Id))
 		if errResult != nil {
 			return errResult
 		}
@@ -115,8 +115,8 @@ func writePbElementToDbAndUpdateID(pbElement *pb.Element, classID int64) error {
 	return nil
 }
 
-func toDbElementSizeInfo(pbSizeInfo *pb.SizeInfo, elementID int64) *model.ElementSizeInfoRecord {
-	return &model.ElementSizeInfoRecord{
+func toDbElementSizeInfo(pbSizeInfo *pb.SizeInfo, elementID int64) *model.ElementSizeInfo {
+	return &model.ElementSizeInfo{
 		ID:               pbSizeInfo.Id,
 		ElementID:        elementID,
 		Size:             pbSizeInfo.Size,
