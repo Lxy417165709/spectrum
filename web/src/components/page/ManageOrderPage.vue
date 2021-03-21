@@ -6,7 +6,7 @@
       <el-row>
         <el-col :span="4">
           是否结账
-          <el-select v-model="check_out_value">
+          <el-select v-model="checkOutValue">
             <el-option label="全部" value="全部"></el-option>
             <el-option label="未结账" value="未结账"></el-option>
             <el-option label="已结账" value="已结账"></el-option>
@@ -15,7 +15,7 @@
         <el-col :span="7">
           时间范围
           <el-date-picker
-            v-model="value2"
+            v-model="timeInterval"
             type="datetimerange"
             :picker-options="pickerOptions"
             range-separator="至"
@@ -237,18 +237,21 @@ export default {
             }
           }]
       },
-      value1: '',
-      value2: '',
+      timeInterval: [],
       db_orders: {},
-      check_out_value: "全部",
+      checkOutValue: "全部",
     }
   },
   methods: {
     startToGetOrder() {
-      utils.GetOrder(this, {
+      let par = {
         // orderID: 2,
-        checkOutState: 0,
-      }, (res) => {
+        checkOutState: this.cpt_checkOutState,
+        startAt: Date.parse(this.timeInterval[0]) / 1000,
+        endAt: Date.parse(this.timeInterval[1]) / 1000,
+      }
+      console.log("par", par)
+      utils.GetOrder(this, par, (res) => {
         this.db_orders = res.data.data.orders
       })
     },
@@ -273,6 +276,21 @@ export default {
       return h + m + s;
     }
   },
+  computed: {
+    cpt_checkOutState() {
+      if (this.checkOutValue === "全部") {
+        return 0
+      }
+      if (this.checkOutValue === "未结账") {
+        return 1
+      }
+      if (this.checkOutValue === "已结账") {
+        return 2
+      }
+      return 0
+    }
+  }
+
 
 }
 </script>

@@ -273,24 +273,20 @@ func (MvpServer) GetOrder(ctx context.Context, req *pb.GetOrderReq) (*pb.GetOrde
 	logger.Info("GetOrder", zap.Any("ctx", ctx), zap.Any("req", req))
 	var res pb.GetOrderRes
 
-	var orderIDs []int64
-
-	if req.OrderID != 0 {
-		orderIDs = append(orderIDs, req.OrderID)
-	} else {
-		orders, errResult := dao.OrderDao.GetByState(req.CheckOutState)
-		if errResult != nil {
-			return nil, errResult
-		}
-		for _, order := range orders {
-			orderIDs = append(orderIDs, order.ID)
-		}
+	dbOrders, errResult := dao.OrderDao.Query(&model.QueryOrderParameter{
+		CheckOutState: req.CheckOutState,
+		CreatedTimeInterval: model.TimeInterval{
+			Start: time.Unix(req.StartAt, 0),
+			End:   time.Unix(req.EndAt, 0),
+		},
+		OrderID: req.OrderID,
+	})
+	if errResult != nil {
+		return nil, errResult
 	}
-
-	for _, orderID := range orderIDs {
-		res.Orders = append(res.Orders, getPbOrder(orderID))
+	for _, order := range dbOrders {
+		res.Orders = append(res.Orders, getPbOrder(order.ID))
 	}
-
 	return &res, nil
 }
 

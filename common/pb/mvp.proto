@@ -2,9 +2,7 @@ syntax = "proto3";
 
 package pb;
 
-
 // todo: 折扣修改后，价格需要改变~
-
 enum FavorType {
     NONE = 0;           // 无
     REBATE = 1;         // 打折
@@ -193,6 +191,8 @@ message GetAllGoodClassesRes{
 message GetOrderReq{
     int64 orderID = 1;
     CheckOutState checkOutState = 2;
+    int64 StartAt = 3;
+    int64 EndAt = 4;
 }
 
 message GetOrderRes{
