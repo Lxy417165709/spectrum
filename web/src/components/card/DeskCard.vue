@@ -1,9 +1,8 @@
 <!-- eslint-disable -->
 <template>
-
-
   <el-card :body-style="{ padding: '0px' }" shadow="hover" style="position:relative;">
-    <el-badge class="item" :hidden="desk===undefined || desk.id===0" value="已占用" style="position: absolute;right: 10px;top:5px">
+    <el-badge class="item" :hidden="desk===undefined || desk.id===0" value="已占用"
+              style="position: absolute;right: 10px;top:5px">
     </el-badge>
     <img style="height:200px;width:200px; border: none" :src="'api/file/' + desk.space.pictureStorePath"
          v-if="desk.space!==undefined">
@@ -12,7 +11,6 @@
       <span style="position:absolute; left:5px" v-if="desk.space!==undefined">{{ desk.space.name }}</span>
     </div>
   </el-card>
-
 </template>
 
 <script>

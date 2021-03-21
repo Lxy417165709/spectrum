@@ -18,7 +18,7 @@
       title="商品点单"
       :visible.sync="GoodEditorOfUserVisible"
       width="30%">
-      <good-editor-of-user ref="GoodEditorOfUser" :orderID="desk.orderID"></good-editor-of-user>
+      <good-editor-of-user ref="GoodEditorOfUser" :orderID="orderID"></good-editor-of-user>
     </el-dialog>
 
     <!--    4. 商品添加、编辑框-->
@@ -45,7 +45,7 @@ export default {
   props: {
     props_isAdminView: Boolean,
     className: String,
-    desk: Object,
+    orderID:Number,
   },
   data() {
     return {

@@ -3,10 +3,10 @@
   <div>
 
     <!--    1. 顶栏-->
-    <el-row style="height: 40px;margin-left:10px;margin-bottom: 10px">
-      <el-button v-show="cpt_canBackButtonShow" style="height: 40px"
+    <el-row style="height: 16px;">
+      <el-button v-show="cpt_canBackButtonShow" style="position: absolute;left:10px;" size="mini"
                  @click="turnToParentComponentMode"
-                 type="primary">
+                 type="primary" round>
         退回
       </el-button>
     </el-row>
@@ -14,7 +14,8 @@
     <!--    2. 商品类展示-->
     <div v-show="cpt_canClassListShow">
       <!--      普通商品类-->
-      <el-divider content-position="left" v-if="desk !== undefined && desk.space!==undefined">{{ desk.space.name }} - 普通商品类</el-divider>
+      <el-divider content-position="left">{{ deskSpaceName }} {{ deskSpaceName !== undefined ? "-" : "" }} 普通商品类
+      </el-divider>
       <good-class-list :goodClasses="db_goodClasses" :props_isAdminView="props_isAdminView"
                        @turnToGoodListMode="turnToGoodListMode"></good-class-list>
 
@@ -27,7 +28,7 @@
 
     <!--    3. 商品类内的商品展示-->
     <div v-show="cpt_canGoodListShow">
-      <good-list v-if="cpt_isGoodListExist" :desk="desk"
+      <good-list v-if="cpt_isGoodListExist" :orderID="orderID"
                  ref="GoodList"
                  :props_isAdminView="props_isAdminView"
                  :className="cpt_curGoodClass.name"
@@ -78,7 +79,8 @@ export default {
     props_isAdminView: Boolean,
     props_haveParentComponent: Boolean,
 
-    desk: Object,
+    deskSpaceName: String,
+    orderID: Number,
   },
   async created() {
     this.db_goodOptionClasses = test.goodOptionClasses

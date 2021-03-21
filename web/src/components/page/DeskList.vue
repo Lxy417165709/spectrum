@@ -3,8 +3,7 @@
   <el-row>
     <!--    1. 桌子列表部分-->
     <div v-if="isDeskListVisible">
-      <el-row style="height: 40px;margin-left:10px;margin-bottom: 10px">
-      </el-row>
+      <el-row style="height: 16px;"></el-row>
       <el-divider content-position="left">
         {{ className }}
       </el-divider>
@@ -24,7 +23,8 @@
 
     <!--     2. 商品类列表部分-->
     <div v-if="!isDeskListVisible">
-      <good-class :desk="curDesk" :props_isAdminView="false" :props_haveParentComponent="true"
+      <good-class :orderID="curDesk.orderID" :deskSpaceName="curDesk.space.name" :props_isAdminView="false"
+                  :props_haveParentComponent="true"
                   ref="ref_goodClass" @turnToParentComponentMode="isDeskListVisible=true"></good-class>
     </div>
 

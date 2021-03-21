@@ -5,7 +5,7 @@
       <ManageDeskPage/>
     </el-tab-pane>
     <el-tab-pane label="商品管理" name="2">
-      <ManageGoodPage :props_isAdminView="true" :props_haveParentComponent="false"/>
+      <ManageGoodPage :props_isAdminView="true" :props_haveParentComponent="false" :orderID="0"/>
     </el-tab-pane>
     <el-tab-pane label="订单管理" name="3">
       <ManageOrderPage/>
