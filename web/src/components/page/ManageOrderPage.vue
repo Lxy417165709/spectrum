@@ -4,8 +4,13 @@
     <!--    1. 搜索条件-->
     <el-header>
       <el-row>
+        <el-col :span="2">
+          订单号:
+          <el-input v-model="searchOrderID" style="width: 70px"></el-input>
+        </el-col>
+
         <el-col :span="4">
-          是否结账
+          是否结账:
           <el-select v-model="checkOutValue">
             <el-option label="全部" value="全部"></el-option>
             <el-option label="未结账" value="未结账"></el-option>
@@ -13,7 +18,7 @@
           </el-select>
         </el-col>
         <el-col :span="7">
-          时间范围
+          时间范围:
           <el-date-picker
             v-model="timeInterval"
             type="datetimerange"
@@ -240,12 +245,13 @@ export default {
       timeInterval: [],
       db_orders: {},
       checkOutValue: "全部",
+      searchOrderID: ""
     }
   },
   methods: {
     startToGetOrder() {
       let par = {
-        // orderID: 2,
+        orderID: this.searchOrderID - 0,
         checkOutState: this.cpt_checkOutState,
         startAt: Date.parse(this.timeInterval[0]) / 1000,
         endAt: Date.parse(this.timeInterval[1]) / 1000,
