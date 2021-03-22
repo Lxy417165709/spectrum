@@ -96,7 +96,7 @@ CREATE TABLE `element_select_size_record`
     `created_at`          timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`          timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `good_id`             bigint       NOT NULL DEFAULT 0,
-    `element_id`          bigint       NOT NULL DEFAULT 0, # 可以是主元素、附属元素
+    `element_id`          bigint       NOT NULL DEFAULT 0, # 可以是主元素, 附属元素
     `select_size_info_id` bigint       NOT NULL DEFAULT 0, # good_id == 0 时表示默认选择(管理页控制), 否则表示实际选择(用户控制)
     PRIMARY KEY (`id`),
     UNIQUE KEY (`good_id`, `element_id`)
@@ -111,10 +111,11 @@ CREATE TABLE `main_element_attach_element_record`
     `id`                int unsigned NOT NULL AUTO_INCREMENT,
     `created_at`        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `good_id`           bigint       NOT NULL DEFAULT 0, # 同个订单内可能有多个相同的主元素，所以要用 good_id 区分
+    `good_id`           bigint       NOT NULL DEFAULT 0, # 同个订单内可能有多个相同的主元素, 所以要用 good_id 区分
     `main_element_id`   bigint       NOT NULL DEFAULT 0,
     `attach_element_id` bigint       NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`)
+    UNIQUE KEY(`good_id`,`main_element_id`,`attach_element_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
