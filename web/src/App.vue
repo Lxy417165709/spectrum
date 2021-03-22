@@ -20,5 +20,6 @@ export default {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  font-family:  "微软雅黑", Arial, sans-serif;
 }
 </style>

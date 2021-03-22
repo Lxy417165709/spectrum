@@ -3,12 +3,12 @@
   <el-container>
     <!--    1. 搜索条件-->
     <el-header>
-      <el-row>
-        <el-col :span="2">
+      <el-row >
+        <el-col :span="3">
           订单号:
           <el-input v-model="searchOrderID" style="width: 70px"></el-input>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="6">
           是否结账:
           <el-select v-model="checkOutValue">
             <el-option label="全部" value="全部"></el-option>
@@ -16,7 +16,7 @@
             <el-option label="已结账" value="已结账"></el-option>
           </el-select>
         </el-col>
-        <el-col :span="7">
+        <el-col :span="9">
           时间范围:
           <el-date-picker
             v-model="timeInterval"
@@ -24,11 +24,10 @@
             :picker-options="pickerOptions"
             range-separator="至"
             start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            align="right">
+            end-placeholder="结束日期">
           </el-date-picker>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="3">
           <div>
             <el-button type="primary" @click="startToGetOrder">确定</el-button>
           </div>
