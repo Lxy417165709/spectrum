@@ -26,10 +26,18 @@ export default {
     }
     return result
   },
-  removeElementByField(array, filed, value) {
+  isExist(array, field, value) {
+    for (let i = 0; i < array.length; i++) {
+      if (array[i][field] === value) {
+        return true
+      }
+    }
+    return false
+  },
+  removeElementByField(array, field, value) {
     let result = [];
     for (let i = 0; i < array.length; i++) {
-      if (array[i][filed] !== value) {
+      if (array[i][field] !== value) {
         result.push(array[i])
       }
     }

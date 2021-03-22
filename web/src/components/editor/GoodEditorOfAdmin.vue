@@ -8,7 +8,8 @@
     </el-form-item>
 
     <!-- 2. 规格编辑器 -->
-    <el-tabs type="border-card" @tab-click="tabClick" addable @tab-add="handleClick" style="margin-bottom: 10px" v-if="good.mainElement!==undefined">
+    <el-tabs type="border-card" @tab-click="tabClick" addable @tab-add="handleClick" style="margin-bottom: 10px"
+             v-if="good.mainElement!==undefined">
       <el-tab-pane v-for="(sizeInfo,index) in good.mainElement.sizeInfos" :label="sizeInfo.size"
                    :name="index.toString()"
                    :key="index">
@@ -47,33 +48,32 @@
     <!-- 3. 附属选项编辑器 -->
     <el-form-item label="附属选项">
       <el-select v-model="curGoodOptionName" placeholder="附属选项">
-        <el-option v-for="(element,index) in selectableElements" :key="index" v-if="element.type===1"
+        <el-option v-for="(element,index) in selectableElements" :key="index" v-if="isGoodOption(element)"
                    :label="element.name" :value="element.name"></el-option>
       </el-select>
       <el-button type="primary" @click="addGoodOption()">添加</el-button>
     </el-form-item>
 
-    <el-form-item label="已选">
+    <el-form-item label="已选" v-if="cpt_canSelectedGoodOptionShow">
       <el-tag v-for="(element,index) in good.attachElements" :key="index" closable style="margin-right: 5px"
-              v-if="element.type===1"
+              v-if="isGoodOption(element)"
               type="success">
         {{ element.name }}
-        <!--        @close="delSelectGoodClass(index)"-->
       </el-tag>
     </el-form-item>
 
     <!--     4. 附属配料编辑器 -->
     <el-form-item label="附属配料">
       <el-select v-model="curGoodIngredientName" placeholder="附属配料">
-        <el-option v-for="(element,index) in selectableElements" :key="index" v-if="element.type===2"
+        <el-option v-for="(element,index) in selectableElements" :key="index" v-if="isGoodIngredient(element)"
                    :label="element.name" :value="element.name"></el-option>
       </el-select>
       <el-button type="primary" @click="addGoodIngredient()">添加</el-button>
     </el-form-item>
 
-    <el-form-item label="已选">
+    <el-form-item label="已选" v-if="cpt_canSelectedGoodIngredientShow">
       <el-tag v-for="(element,index) in good.attachElements" :key="index" closable style="margin-right: 5px"
-              v-if="element.type===2"
+              v-if="isGoodIngredient(element)"
               type="success">
         {{ element.name }}
       </el-tag>
@@ -89,6 +89,7 @@
 <script>
 /* eslint-disable */
 import utils from "../../common/utils";
+import cst from "../../common/cst";
 
 export default {
   name: "GoodEditorOfAdmin",
@@ -96,6 +97,14 @@ export default {
   async mounted() {
     await utils.GetAllGoodOptions(this, {}, (res) => {
       this.selectableElements = res.data.data.elements
+      for (let i = 0; i < this.selectableElements.length; i++) {
+        if (this.curGoodOptionName === "" && this.isGoodOption(this.selectableElements[i])) {
+          this.curGoodOptionName = this.selectableElements[i].name;
+        }
+        if (this.curGoodIngredientName === "" && this.isGoodIngredient(this.selectableElements[i])) {
+          this.curGoodIngredientName = this.selectableElements[i].name;
+        }
+      }
     })
   },
   props: {
@@ -117,25 +126,29 @@ export default {
   methods: {
     addGoodOption() {
       for (let i = 0; i < this.selectableElements.length; i++) {
-        if (this.selectableElements[i].name === this.curGoodOptionName) {
-          if (this.good.attachElements === null) {
-            this.good.attachElements = []
-          }
+        if (this.selectableElements[i].name !== this.curGoodOptionName) {
+          continue
+        }
+        if (this.good.attachElements === null) {
+          this.good.attachElements = []
+        }
+        if (!utils.isExist(this.good.attachElements, "name", this.selectableElements[i].name)) {
           this.good.attachElements.push(this.selectableElements[i])
-          break
         }
       }
     },
     addGoodIngredient() {
       for (let i = 0; i < this.selectableElements.length; i++) {
-        if (this.selectableElements[i].name === this.curGoodIngredientName) {
-          if (this.good.attachElements === null) {
-            this.good.attachElements = []
-          }
-          console.log(this.selectableElements[i])
-          this.good.attachElements.push(this.selectableElements[i])
-          break
+        if (this.selectableElements[i].name !== this.curGoodIngredientName) {
+          continue
         }
+        if (this.good.attachElements === null) {
+          this.good.attachElements = []
+        }
+        if (!utils.isExist(this.good.attachElements, "name", this.selectableElements[i].name)) {
+          this.good.attachElements.push(this.selectableElements[i])
+        }
+        break
       }
     },
     handleClick(tab, event) {
@@ -168,7 +181,26 @@ export default {
     imageUploadSuccess(res, file, fileList) {
       this.good.mainElement.sizeInfos[this.curSizeInfoIndex].pictureStorePath = res.data.fileStorePath;
     },
-
+    isGoodOption(element) {
+      return element.type === cst.ELEMENT_TYPE.OPTION
+    },
+    isGoodIngredient(element) {
+      return element.type === cst.ELEMENT_TYPE.INGREDIENT
+    }
+  },
+  computed: {
+    cpt_canSelectedGoodOptionShow() {
+      if (this.good === undefined || this.good.attachElements === null || this.good.attachElements === undefined || this.good.attachElements.length === 0) {
+        return false
+      }
+      return utils.isExist(this.good.attachElements, "type", cst.ELEMENT_TYPE.OPTION)
+    },
+    cpt_canSelectedGoodIngredientShow() {
+      if (this.good === undefined || this.good.attachElements === null || this.good.attachElements === undefined || this.good.attachElements.length === 0) {
+        return false
+      }
+      return utils.isExist(this.good.attachElements, "type", cst.ELEMENT_TYPE.INGREDIENT)
+    }
   }
 }
 </script>

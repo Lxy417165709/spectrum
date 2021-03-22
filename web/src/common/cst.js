@@ -27,5 +27,9 @@ export default {
   },
   TIMESTAMP: {
     NIL: 10086
+  },
+  URL: {
+    DEFAULT_PICTURE_URL: "static/唯美1.jpeg",
   }
+
 }

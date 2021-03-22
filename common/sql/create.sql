@@ -120,7 +120,6 @@ CREATE TABLE `main_element_attach_element_record`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
-
 # 桌子表
 CREATE TABLE `desk`
 (
