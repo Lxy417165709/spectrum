@@ -1,15 +1,19 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"spectrum/common/env"
 	"spectrum/common/utils"
 	"spectrum/service/mvp/controller"
 	"spectrum/service/mvp/dao"
 )
 
-const confFilePath = "configure/alpha.json"
+var confEnv = flag.String("env", "local", "")
 
 func main() {
+	flag.Parse()
+	confFilePath := fmt.Sprintf("configure/%s.json", *confEnv)
 	utils.InitLogger()
 	utils.InitConfigure(confFilePath)
 	dao.InitMainDB()
