@@ -3,19 +3,21 @@ package access
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/mitchellh/mapstructure"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/status"
 	"io"
+	"math/rand"
 	"net/http"
 	"os"
 	"reflect"
 	"spectrum/common/ers"
 	"spectrum/common/logger"
 	"spectrum/service/admin/model"
+	"time"
 )
-
 
 func DistributeRequest(c *gin.Context) {
 
@@ -116,8 +118,9 @@ func Test(c *gin.Context) {
 	})
 }
 
+// 图片上传接口
 func Upload(c *gin.Context) {
-	var staticDirectory = "static/upload/"
+	const staticDirectory = "static/upload/"
 
 	// 1. 从请求中获取图片
 	file, header, err := c.Request.FormFile("file")
@@ -130,7 +133,7 @@ func Upload(c *gin.Context) {
 	}
 
 	// 2. 存储图片
-	fileStorePath := staticDirectory + header.Filename
+	fileStorePath := staticDirectory + getRandPrefix() + header.Filename
 	out, err := os.Create(fileStorePath)
 	if err != nil {
 		logger.Error("Fail to create file",
@@ -141,7 +144,7 @@ func Upload(c *gin.Context) {
 		})
 		return
 	}
-	if _,err = io.Copy(out, file); err != nil {
+	if _, err = io.Copy(out, file); err != nil {
 		logger.Error("Fail to copy file",
 			zap.Any("fileStorePath", fileStorePath),
 			zap.Error(err))
@@ -158,4 +161,8 @@ func Upload(c *gin.Context) {
 			"fileStorePath": fileStorePath,
 		},
 	})
+}
+
+func getRandPrefix() string {
+	return fmt.Sprintf("%d_%d_", time.Now().Unix(), rand.Uint32())
 }
