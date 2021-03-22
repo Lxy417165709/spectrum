@@ -29,7 +29,7 @@ func (*Good) GetName() string {
 }
 
 func (g *Good) GetExpenseInfo(mainElement *pb.Element, attachElement []*pb.Element, favors []*pb.Favor) *pb.ExpenseInfo {
-	if g.CheckOutAt.Unix() != 0 {
+	if g.CheckOutAt != NilTime {
 		return &pb.ExpenseInfo{
 			NonFavorExpense: g.NonFavorExpense,
 			CheckOutAt:      g.CheckOutAt.Unix(),

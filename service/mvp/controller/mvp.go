@@ -43,12 +43,13 @@ func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.Order
 		if good.ExpenseInfo == nil {
 			good.ExpenseInfo = &pb.ExpenseInfo{}
 		}
+
 		dbGood := &model.Good{
 			ID:              good.Id,
 			OrderID:         req.OrderID,
 			MainElementID:   good.MainElement.Id,
 			Expense:         good.ExpenseInfo.Expense,
-			CheckOutAt:      time.Unix(good.ExpenseInfo.CheckOutAt, 0),
+			CheckOutAt:      model.ToTime(good.ExpenseInfo.CheckOutAt),
 			NonFavorExpense: good.ExpenseInfo.NonFavorExpense,
 		}
 		goodID, errResult := dao.GoodDao.Create(dbGood)
@@ -253,7 +254,7 @@ func (MvpServer) OrderDesk(ctx context.Context, req *pb.OrderDeskReq) (*pb.Order
 		SessionCount:    0,
 		SpaceID:         req.Desk.Space.Id,
 		Expense:         req.Desk.ExpenseInfo.Expense,
-		CheckOutAt:      time.Unix(req.Desk.ExpenseInfo.CheckOutAt, 0),
+		CheckOutAt:      model.ToTime(req.Desk.ExpenseInfo.CheckOutAt),
 		NonFavorExpense: req.Desk.ExpenseInfo.NonFavorExpense,
 		OrderID:         orderID,
 	}

@@ -31,7 +31,8 @@ func (*Desk) GetName() string {
 }
 
 func (d *Desk) GetExpenseInfo(billingType pb.BillingType, price float64, favors []*pb.Favor) *pb.ExpenseInfo {
-	if d.CheckOutAt.Unix() != 0 {
+	// 1. 已结账时
+	if d.CheckOutAt != NilTime {
 		return &pb.ExpenseInfo{
 			NonFavorExpense: d.NonFavorExpense,
 			CheckOutAt:      d.CheckOutAt.Unix(),
@@ -39,6 +40,7 @@ func (d *Desk) GetExpenseInfo(billingType pb.BillingType, price float64, favors 
 		}
 	}
 
+	// 2. 未结账时
 	var nonFavorExpense float64
 	switch billingType {
 	case pb.BillingType_Timing:
@@ -46,7 +48,6 @@ func (d *Desk) GetExpenseInfo(billingType pb.BillingType, price float64, favors 
 	case pb.BillingType_Session:
 		nonFavorExpense = float64(d.SessionCount) * price
 	}
-
 	return &pb.ExpenseInfo{
 		NonFavorExpense: nonFavorExpense,
 		CheckOutAt:      0,
@@ -66,9 +67,9 @@ func (d *Desk) getTimingNonFavorExpense(pricePerHour float64) float64 {
 }
 
 func (d *Desk) IsOpening() bool {
-	return d.EndAt.Unix() == 0
+	return d.EndAt == NilTime
 }
 
 func (d *Desk) GetID() int64 {
-	return int64(d.ID)
+	return d.ID
 }

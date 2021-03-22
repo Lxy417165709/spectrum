@@ -16,5 +16,5 @@ const (
 const INF = 1E18
 
 var (
-	NilTime = time.Unix(0, 0)
+	NilTime = time.Unix(10086, 0)
 )

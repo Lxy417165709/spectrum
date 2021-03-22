@@ -27,7 +27,8 @@ func (o *Order) TableName() string {
 }
 
 func (o *Order) GetExpenseInfo(desk *pb.Desk, goods []*pb.Good, favors []*pb.Favor) *pb.ExpenseInfo {
-	if o.CheckOutAt.Unix() != 0 {
+	// 1. 已结账时
+	if o.CheckOutAt != NilTime {
 		return &pb.ExpenseInfo{
 			NonFavorExpense: o.NonFavorExpense,
 			CheckOutAt:      o.CheckOutAt.Unix(),
@@ -35,7 +36,7 @@ func (o *Order) GetExpenseInfo(desk *pb.Desk, goods []*pb.Good, favors []*pb.Fav
 		}
 	}
 
-	// todo: 如果已结账，则不应该算入
+	// 2. 未结账时
 	deskExpense := desk.GetExpenseInfo().Expense
 	goodsExpense := 0.0
 	for _, good := range goods {

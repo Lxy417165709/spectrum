@@ -42,9 +42,9 @@
             <div>
               <span>订单号: {{ order.id }} </span>
               <el-divider direction="vertical"></el-divider>
-              <span>{{order.desk.space.className}}</span>
+              <span>{{ order.desk.space.className }}</span>
               <el-divider direction="vertical"></el-divider>
-              <span> {{order.desk.space.name}}</span>
+              <span> {{ order.desk.space.name }}</span>
             </div>
           </template>
 
@@ -79,7 +79,7 @@
               label="关桌时间"
               width="180px">
               <template slot-scope="scope">
-                {{ scope.row.endAt === 0 ? "-" : timestampToTime(scope.row.endAt) }}
+                {{ getTimeShow(scope.row.endAt) }}
               </template>
             </el-table-column>
             <el-table-column
@@ -200,6 +200,7 @@
 import DiscountEditor from "../editor/DiscountEditor";
 import test from "../../common/test/test";
 import utils from "../../common/utils";
+import cst from "../../common/cst";
 
 export default {
   name: "ManageOrderPage",
@@ -283,7 +284,7 @@ export default {
       return Y + M + D + h + m + s;
     },
     getDuration(endAt, startAt) {
-      if (endAt === 0) {
+      if (endAt === cst.TIMESTAMP.NIL) {
         endAt = Date.parse(new Date()) / 1000;
       }
       let timestamp = (endAt - startAt);
@@ -291,6 +292,12 @@ export default {
       let m = Math.floor((timestamp % 3600) / 60) + "分 "
       let s = timestamp % 60 + '秒'
       return h + m + s;
+    },
+    getTimeShow(timestamp) {
+      if (timestamp === cst.TIMESTAMP.NIL) {
+        return "-"
+      }
+      return this.timestampToTime(scope.row.endAt)
     }
   },
   computed: {

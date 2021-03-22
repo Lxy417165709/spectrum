@@ -21,8 +21,11 @@ export default {
     OPTION: 1,
     INGREDIENT: 2,
   },
-  ATTACH_CLASS_NAME:{
+  ATTACH_CLASS_NAME: {
     GOOD_OPTION_CLASS_NAME: "附属选项类",
     GOOD_INGREDIENT_CLASS_NAME: "附属商品类"
+  },
+  TIMESTAMP: {
+    NIL: 10086
   }
 }

@@ -7,6 +7,7 @@ import (
 	"spectrum/common/logger"
 	"spectrum/common/pb"
 	"strconv"
+	"time"
 )
 
 func GetPbElementSelectSizeInfo(element *pb.Element) *pb.SizeInfo {
@@ -58,4 +59,11 @@ func GetDbPrice(priceString string) float64 {
 
 func GetPbPrice(price float64) string {
 	return fmt.Sprintf("%0.2f", price)
+}
+
+func ToTime(timestamp int64) time.Time {
+	if timestamp != 0 {
+		return time.Unix(timestamp, 0)
+	}
+	return NilTime
 }
