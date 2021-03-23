@@ -11,39 +11,45 @@ import (
 	"time"
 )
 
-// todo: GetOrder 可以设置为一个查询接口，可以以 ID 为条件 查询，以 是否已结账 为条件查询
-
 type MvpServer struct {
 	pb.UnimplementedMvpServer
 }
 
+// 管理员添加商品接口
 func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRes, error) {
 	logger.Info("AddGood", zap.Any("ctx", ctx), zap.Any("req", req))
-	var res pb.AddGoodRes
+
+	// 1. 参数校验
 	good, goodClassName, errResult := CheckAddGoodParameter(req)
 	if errResult != nil {
 		return nil, errResult
 	}
-	if errResult := writePbElementToDbAndUpdateID(good.MainElement, getDbElementClassByName(goodClassName).ID); errResult != nil {
+
+	// 2. 将商品的信息记录到数据库
+	if errResult := writePbElementMetaObjectToDbAndUpdateID(good.MainElement, getDbElementClassByName(goodClassName).ID); errResult != nil {
 		return nil, errResult
 	}
-	if errResult := writePbGoodSizeInfoToDB(good); errResult != nil {
+	if errResult := writePbGoodSelectedSizeInfoIndexRecordAndMainAttachElementRecordToDB(good); errResult != nil {
 		return nil, errResult
 	}
+
+	// 3. 创建并返回响应
+	var res pb.AddGoodRes
 	return &res, nil
 }
 
+// 用户点单商品接口
 func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.OrderGoodRes, error) {
 	logger.Info("OrderGood", zap.Any("ctx", ctx), zap.Any("req", req))
-	// todo: 这里可以点单记录
 	var res pb.OrderGoodRes
+	// 1. 参数校验
+	orderID, goods, errResult := CheckOrderGoodParameter(req)
+	if errResult != nil {
+		return nil, errResult
+	}
 
-	// 正常情况能来到这里的，orderID 不为0
-	for _, good := range req.Goods {
-		if good.ExpenseInfo == nil {
-			good.ExpenseInfo = &pb.ExpenseInfo{}
-		}
-
+	for _, good := range goods {
+		// 1. 创建商品记录，获取商品ID
 		dbGood := &model.Good{
 			ID:              good.Id,
 			OrderID:         req.OrderID,
@@ -56,29 +62,31 @@ func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.Order
 		if errResult != nil {
 			return nil, errResult
 		}
-		if err := dao.ChargeableObjectDao.CreateFavorRecord(dbGood.GetName(), dbGood.ID, good.Favors); err != nil {
-			// todo: log
-			return nil, err
+
+		// 2. 添加/更新商品尺寸选择、商品主元素附属元素关联关系
+		good.Id = goodID
+		if errResult := writePbGoodSelectedSizeInfoIndexRecordAndMainAttachElementRecordToDB(good); errResult != nil {
+			return nil, errResult
 		}
 
-		good.Id = goodID
-		if err := writePbGoodSizeInfoToDB(good); err != nil {
-			logger.Error("Fail to finish createGood",
-				zap.Any("req", req),
-				zap.Error(err))
-			return nil, err
+		// 3. 记录商品优惠记录
+		if errResult := dao.FavorRecordDao.CreateFavorRecord(dbGood.GetName(), dbGood.ID, good.Favors); errResult != nil {
+			return nil, errResult
 		}
+
+		// 4. todo: 更新商品花费
 
 	}
 	return &res, nil
 }
 
+// 管理员添加元素接口，如商品附属选项、商品附属配料。
 func (MvpServer) AddElement(ctx context.Context, req *pb.AddElementReq) (*pb.AddElementRes, error) {
 	logger.Info("AddElement", zap.Any("ctx", ctx), zap.Any("req", req))
 
 	var res pb.AddElementRes
 
-	if errResult := writePbElementToDbAndUpdateID(req.Element, getDbElementClassByName(req.ClassName).ID); errResult != nil {
+	if errResult := writePbElementMetaObjectToDbAndUpdateID(req.Element, getDbElementClassByName(req.ClassName).ID); errResult != nil {
 		return nil, errResult
 	}
 	if _, errResult := dao.ElementSelectSizeRecordDao.Create(toDbElementSelectSizeRecord(0, req.Element.Id, model.GetPbElementSelectSizeInfo(req.Element).Id));
@@ -122,10 +130,17 @@ func (MvpServer) GetAllGoodClasses(ctx context.Context, req *pb.GetAllGoodClasse
 func (MvpServer) GetAllGoods(ctx context.Context, req *pb.GetAllGoodsReq) (*pb.GetAllGoodsRes, error) {
 	logger.Info("GetAllGoods", zap.Any("ctx", ctx), zap.Any("req", req))
 
+	// 1. 获取类下的所有商品
+	goods, errResult := getClassGoods(getDbElementClassByName(req.ClassName).ID)
+	if errResult != nil {
+		return nil, errResult
+	}
+
+	// 2. 写入响应
 	var res pb.GetAllGoodsRes
+	res.Goods = goods
 
-	res.Goods = getClassGoods(getDbElementClassByName(req.ClassName).ID)
-
+	// 3. 返回
 	return &res, nil
 }
 
@@ -262,7 +277,7 @@ func (MvpServer) OrderDesk(ctx context.Context, req *pb.OrderDeskReq) (*pb.Order
 	if errResult != nil {
 		return nil, errResult
 	}
-	if errResult := dao.ChargeableObjectDao.CreateFavorRecord(dbDesk.GetName(), deskID, req.Desk.Favors); errResult != nil {
+	if errResult := dao.FavorRecordDao.CreateFavorRecord(dbDesk.GetName(), deskID, req.Desk.Favors); errResult != nil {
 		return nil, errResult
 	}
 	res.DeskID = deskID
@@ -376,7 +391,7 @@ func (s MvpServer) CancelGood(ctx context.Context, req *pb.CancelGoodReq) (*pb.C
 		// todo: log
 		return nil, err
 	}
-	if err := dao.ChargeableObjectDao.BatchDeleteFavorRecord(model.ChargeableObjectNameOfGood, req.GoodIDs); err != nil {
+	if err := dao.FavorRecordDao.BatchDeleteFavorRecord(model.ChargeableObjectNameOfGood, req.GoodIDs); err != nil {
 		// todo: log
 		return nil, err
 	}
@@ -388,7 +403,7 @@ func (s MvpServer) AddFavorForGood(ctx context.Context, req *pb.AddFavorForGoodR
 	logger.Info("AddFavorForGood", zap.Any("ctx", ctx), zap.Any("req", req))
 
 	var res pb.AddFavorForGoodRes
-	if err := dao.ChargeableObjectDao.CreateFavorRecord(model.ChargeableObjectNameOfGood, req.GoodID, req.Favors); err != nil {
+	if err := dao.FavorRecordDao.CreateFavorRecord(model.ChargeableObjectNameOfGood, req.GoodID, req.Favors); err != nil {
 		// todo: log
 		return nil, err
 	}
@@ -400,7 +415,7 @@ func (s MvpServer) DeleteFavorForGood(ctx context.Context, req *pb.DeleteFavorFo
 	logger.Info("DeleteFavorForGood", zap.Any("ctx", ctx), zap.Any("req", req))
 
 	var res pb.DeleteFavorForGoodRes
-	if err := dao.ChargeableObjectDao.DeleteFavorRecord(model.ChargeableObjectNameOfGood, req.GoodID, req.Favor); err != nil {
+	if err := dao.FavorRecordDao.DeleteFavorRecord(model.ChargeableObjectNameOfGood, req.GoodID, req.Favor); err != nil {
 		// todo: log
 		return nil, err
 	}
@@ -415,6 +430,7 @@ func getDbSpaceClassByID(classID int64) *model.SpaceClass {
 	}
 	return spaceClass
 }
+
 func getDbElementClassByID(classID int64) *model.ElementClass {
 	elementClass, errResult := dao.ElementClassDao.Get(classID)
 	if errResult != nil {
@@ -423,6 +439,7 @@ func getDbElementClassByID(classID int64) *model.ElementClass {
 	}
 	return elementClass
 }
+
 func getDbSpaceClassByName(className string) *model.SpaceClass {
 	spaceClass, errResult := dao.SpaceClassDao.GetByName(className)
 	if errResult != nil {
@@ -431,6 +448,7 @@ func getDbSpaceClassByName(className string) *model.SpaceClass {
 	}
 	return spaceClass
 }
+
 func getDbElementClassByName(className string) *model.ElementClass {
 	elementClass, errResult := dao.ElementClassDao.GetByName(className)
 	if errResult != nil {

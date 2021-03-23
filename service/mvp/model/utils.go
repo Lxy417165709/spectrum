@@ -17,25 +17,21 @@ func GetPbElementSelectSizeInfo(element *pb.Element) *pb.SizeInfo {
 func GetFavorExpense(nonFavorExpense float64, pbFavors []*pb.Favor) float64 {
 	favors := make([]Favor, 0)
 	for _, pbFavor := range pbFavors {
-		favors = append(favors, GetFavor(pbFavor))
+		favor, _ := GetFavor(pbFavor)
+		favors = append(favors, favor)
 	}
 	sort.Slice(favors, func(i, j int) bool {
 		return favors[i].GetPriority() <= favors[j].GetPriority()
 	})
 
 	expense := nonFavorExpense
-
 	for _, favor := range favors {
 		expense = favor.GetExpense(expense)
 	}
 	return expense
 }
 
-func GetFavor(favor *pb.Favor) Favor {
-	// todo: 要确认优惠参数是合法的
-	if favor == nil {
-		return &None{}
-	}
+func GetFavor(favor *pb.Favor) (Favor, error) {
 	switch favor.FavorType {
 	case pb.FavorType_NONE:
 		return (&None{}).ParseParameters(favor.Parameters)
@@ -46,7 +42,7 @@ func GetFavor(favor *pb.Favor) Favor {
 	case pb.FavorType_FREE:
 		return (&Free{}).ParseParameters(favor.Parameters)
 	}
-	return &None{}
+	return &None{}, nil // 兜底
 }
 
 func GetDbPrice(priceString string) float64 {

@@ -6,7 +6,7 @@ import (
 )
 
 type ElementClass struct {
-	ID               int64           `gorm:"id"`
+	ID               int64          `gorm:"id"`
 	CreatedAt        time.Time      `gorm:"created_at"`
 	UpdatedAt        time.Time      `gorm:"updated_at"`
 	Name             string         `gorm:"name"`
@@ -20,7 +20,7 @@ func (ElementClass) TableName() string {
 
 func (g *ElementClass) ToPb() *pb.GoodClass {
 	return &pb.GoodClass{
-		Id:               int64(g.ID),
+		Id:               g.ID,
 		Name:             g.Name,
 		PictureStorePath: g.PictureStorePath,
 	}

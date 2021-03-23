@@ -50,7 +50,7 @@ func (d *Desk) GetExpenseInfo(billingType pb.BillingType, price float64, favors 
 	}
 	return &pb.ExpenseInfo{
 		NonFavorExpense: nonFavorExpense,
-		CheckOutAt:      0,
+		CheckOutAt:      NilTime.Unix(),
 		Expense:         GetFavorExpense(nonFavorExpense, favors),
 	}
 }

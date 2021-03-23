@@ -9,19 +9,17 @@ import (
 	"spectrum/service/mvp/model"
 )
 
-func getClassGoods(classID int64) []*pb.Good {
+func getClassGoods(classID int64) ([]*pb.Good, error) {
 	var goods []*pb.Good
 	elements, errResult := dao.ElementDao.GetByClassID(classID)
 	if errResult != nil {
-		// todo:log
-		return nil
+		return nil, errResult
 	}
 	for _, element := range elements {
 		pbGood := getPbGood(0, element.ID)
 		goods = append(goods, pbGood)
-		logger.Info("Get pb good", zap.Any("pbGood", pbGood))
 	}
-	return goods
+	return goods, nil
 }
 
 // 返回的 desk:
@@ -122,7 +120,7 @@ func getPbAttachElements(goodID, mainElementID int64) []*pb.Element {
 }
 
 func getFavors(chargeableObj model.Chargeable) []*pb.Favor {
-	records, err := dao.ChargeableObjectDao.GetFavorRecords(chargeableObj)
+	records, err := dao.FavorRecordDao.GetFavorRecords(chargeableObj)
 	if err != nil {
 		// todo: log
 		return nil

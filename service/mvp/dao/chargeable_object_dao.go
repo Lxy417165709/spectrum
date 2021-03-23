@@ -9,13 +9,11 @@ import (
 	"strings"
 )
 
-var ChargeableObjectDao chargeableObjectDao
+var FavorRecordDao favorRecordDao
 
-type chargeableObjectDao struct{}
+type favorRecordDao struct{}
 
-func (chargeableObjectDao) Create(obj model.Chargeable) error {
-	createTableWhenNotExist(obj)
-
+func (favorRecordDao) Create(obj model.Chargeable) error {
 	if err := mainDB.Table(obj.GetName()).Create(&obj).Error; err != nil {
 		logger.Error("Fail to finish mainDB.Create", zap.Any("obj", obj), zap.Error(err))
 		return err
@@ -23,25 +21,25 @@ func (chargeableObjectDao) Create(obj model.Chargeable) error {
 	return nil
 }
 
-func (chargeableObjectDao) UpdateExpenseInfo(obj model.Chargeable, expenseInfo *pb.ExpenseInfo) error {
-	createTableWhenNotExist(obj)
+//func (favorRecordDao) UpdateExpenseInfo(obj model.Chargeable, expenseInfo *pb.ExpenseInfo) error {
+//	createTableWhenNotExist(obj)
+//
+//	// todo: 这三个字段名是约定，但这容易出错
+//	to := map[string]interface{}{
+//		"id":                obj.GetID(),
+//		"check_out_at":      expenseInfo.CheckOutAt,
+//		"expense":           expenseInfo.Expense,
+//		"non_favor_expense": expenseInfo.NonFavorExpense,
+//	}
+//	// todo: 要确定 where 条件，是否是 id == to[id]
+//	if err := mainDB.Table(obj.GetName()).Update(to).Error; err != nil {
+//		logger.Error("Fail to finish mainDB.Update", zap.Any("to", to), zap.Error(err))
+//		return err
+//	}
+//	return nil
+//}
 
-	// todo: 这三个字段名是约定，但这容易出错
-	to := map[string]interface{}{
-		"id":                obj.GetID(),
-		"check_out_at":      expenseInfo.CheckOutAt,
-		"expense":           expenseInfo.Expense,
-		"non_favor_expense": expenseInfo.NonFavorExpense,
-	}
-	// todo: 要确定 where 条件，是否是 id == to[id]
-	if err := mainDB.Table(obj.GetName()).Update(to).Error; err != nil {
-		logger.Error("Fail to finish mainDB.Update", zap.Any("to", to), zap.Error(err))
-		return err
-	}
-	return nil
-}
-
-func (chargeableObjectDao) GetFavorRecords(obj model.Chargeable) ([]*model.FavorRecord, error) {
+func (favorRecordDao) GetFavorRecords(obj model.Chargeable) ([]*model.FavorRecord, error) {
 	var table model.FavorRecord
 	createTableWhenNotExist(&table)
 
@@ -61,10 +59,7 @@ func (chargeableObjectDao) GetFavorRecords(obj model.Chargeable) ([]*model.Favor
 	return result, nil
 }
 
-func (chargeableObjectDao) CreateFavorRecord(chargeableObjName string, chargeableObjID int64, favors []*pb.Favor) error {
-	var table model.FavorRecord
-	createTableWhenNotExist(&table)
-
+func (favorRecordDao) CreateFavorRecord(chargeableObjName string, chargeableObjID int64, favors []*pb.Favor) error {
 	for _, favor := range favors {
 		obj := &model.FavorRecord{
 			ChargeableObjectName: chargeableObjName,
@@ -80,7 +75,7 @@ func (chargeableObjectDao) CreateFavorRecord(chargeableObjName string, chargeabl
 	return nil
 }
 
-func (chargeableObjectDao) DeleteFavorRecord(chargeableObjName string, chargeableObjID int64, favor *pb.Favor) error {
+func (favorRecordDao) DeleteFavorRecord(chargeableObjName string, chargeableObjID int64, favor *pb.Favor) error {
 	var table model.FavorRecord
 	createTableWhenNotExist(&table)
 
@@ -100,7 +95,7 @@ func (chargeableObjectDao) DeleteFavorRecord(chargeableObjName string, chargeabl
 	return nil
 }
 
-func (chargeableObjectDao) BatchDeleteFavorRecord(chargeableObjName string, chargeableObjIDs []int64) error {
+func (favorRecordDao) BatchDeleteFavorRecord(chargeableObjName string, chargeableObjIDs []int64) error {
 	var table model.FavorRecord
 	createTableWhenNotExist(&table)
 	if err := mainDB.Where(

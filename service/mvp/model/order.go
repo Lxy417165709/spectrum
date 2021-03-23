@@ -20,7 +20,7 @@ func (Order) GetName() string {
 }
 
 func (o *Order) GetID() int64 {
-	return int64(o.ID)
+	return o.ID
 }
 func (o *Order) TableName() string {
 	return o.GetName()
@@ -44,7 +44,7 @@ func (o *Order) GetExpenseInfo(desk *pb.Desk, goods []*pb.Good, favors []*pb.Fav
 	}
 	return &pb.ExpenseInfo{
 		NonFavorExpense: deskExpense + goodsExpense,
-		CheckOutAt:      0,
+		CheckOutAt:      NilTime.Unix(),
 		Expense:         GetFavorExpense(deskExpense+goodsExpense, favors),
 	}
 }

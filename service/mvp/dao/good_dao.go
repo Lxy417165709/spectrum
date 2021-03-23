@@ -31,6 +31,11 @@ func (goodDao) Create(obj *model.Good) (int64, error) {
 		logger.Error("Fail to finish create", zap.Any("obj", obj), zap.Error(err))
 		return 0, ers.MysqlError
 	}
+
+	if obj.ID != 0 {
+		return obj.ID, nil
+	}
+
 	id, err := result.LastInsertId()
 	if err != nil {
 		logger.Error("Fail to get id", zap.Any("obj", obj), zap.Error(err))

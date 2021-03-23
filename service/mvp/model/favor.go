@@ -1,12 +1,13 @@
 package model
 
 import (
+	"spectrum/common/ers"
 	"strconv"
 )
 
 type Favor interface {
 	GetExpense(nonFavorExpense float64) float64
-	ParseParameters(parameters []string) Favor
+	ParseParameters(parameters []string) (Favor, error)
 	GetPriority() int // 获取优先级，优先级越小，越先计算
 }
 
@@ -16,8 +17,8 @@ func (n *None) GetPriority() int {
 	return 0
 }
 
-func (n *None) ParseParameters(parameters []string) Favor {
-	return &None{}
+func (n *None) ParseParameters(parameters []string) (Favor, error) {
+	return &None{}, nil
 }
 
 func (n *None) GetExpense(nonFavorExpense float64) float64 {
@@ -32,21 +33,23 @@ func (r *Rebate) GetPriority() int {
 	return 2
 }
 
-func (r *Rebate) ParseParameters(parameters []string) Favor {
-	if len(parameters) <= 0 {
-		return &Rebate{
-			Granularity: 1,
-		}
+func (r *Rebate) ParseParameters(parameters []string) (Favor, error) {
+	if len(parameters) == 0 {
+		return nil, ers.New("折扣参数数目 不能为 0。")
 	}
-	granularity, _ := strconv.ParseFloat(parameters[0], 64)
+	granularity, err := strconv.ParseFloat(parameters[0], 64)
+	if err != nil {
+		return nil, ers.New("折扣粒度 不是合法小数。")
+	}
 	if granularity <= 0 {
-		return &Rebate{
-			Granularity: 1,
-		}
+		return nil, ers.New("折扣粒度 不能小于 0, 只能在 (0, 1] 区间内。")
+	}
+	if granularity > 1 {
+		return nil, ers.New("折扣粒度 不能大于 1, 只能在 (0, 1] 区间内。")
 	}
 	return &Rebate{
 		Granularity: granularity,
-	}
+	}, nil
 }
 
 func (r *Rebate) GetExpense(nonFavorExpense float64) float64 {
@@ -62,25 +65,29 @@ func (f *FullReduction) GetPriority() int {
 	return 1
 }
 
-func (f *FullReduction) ParseParameters(parameters []string) Favor {
+func (f *FullReduction) ParseParameters(parameters []string) (Favor, error) {
 	if len(parameters) <= 1 {
-		return &FullReduction{
-			Full:      INF,
-			Reduction: 0,
-		}
+		return nil, ers.New("满减参数数目 不能小于 2。")
 	}
-	full, _ := strconv.ParseFloat(parameters[0], 64)
-	reduction, _ := strconv.ParseFloat(parameters[1], 64)
-	if full <= 0 || reduction <= 0 {
-		return &FullReduction{
-			Full:      INF,
-			Reduction: 0,
-		}
+	full, err := strconv.ParseFloat(parameters[0], 64)
+	if err != nil {
+		return nil, ers.New("满减参数 满花费 不是合法小数。")
+	}
+	if full <= 0 {
+		return nil, ers.New("满减参数 满花费 必须大于 0。")
+	}
+
+	reduction, err := strconv.ParseFloat(parameters[1], 64)
+	if err != nil {
+		return nil, ers.New("满减参数 减花费 不是合法小数。")
+	}
+	if reduction <= 0 {
+		return nil, ers.New("满减参数 减花费 必须大于 0。")
 	}
 	return &FullReduction{
 		Full:      full,
 		Reduction: reduction,
-	}
+	}, nil
 }
 
 func (f *FullReduction) GetExpense(nonFavorExpense float64) float64 {
@@ -93,8 +100,8 @@ func (f *Free) GetPriority() int {
 	return 0
 }
 
-func (f *Free) ParseParameters(parameters []string) Favor {
-	return &Free{}
+func (f *Free) ParseParameters(parameters []string) (Favor, error) {
+	return &Free{}, nil
 }
 
 func (f *Free) GetExpense(nonFavorExpense float64) float64 {
