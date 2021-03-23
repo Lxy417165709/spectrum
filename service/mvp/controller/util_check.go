@@ -41,7 +41,7 @@ func CheckOrderGoodParameter(req *pb.OrderGoodReq) (int64, []*pb.Good, error) {
 	}
 	for index, good := range req.Goods {
 		if errResult := CheckIsValidGood(good); errResult != nil {
-			return 0, nil, ers.New("第 %d 个商品非法，%s", index+1, errResult.Error())
+			return 0, nil, ers.New("第 %d 个商品非法。%s", index+1, errResult.Error())
 		}
 	}
 	return req.OrderID, req.Goods, nil
@@ -67,7 +67,7 @@ func CheckIsValidGood(good *pb.Good) error {
 	// 4. 判断商品附属元素
 	for _, attachElement := range good.AttachElements {
 		if errResult := CheckIsValidElement(attachElement); errResult != nil {
-			return ers.New("商品第 %d 个附属元素非法，%s", errResult.Error())
+			return ers.New("商品第 %d 个附属元素非法。%s", errResult.Error())
 		}
 	}
 
@@ -79,7 +79,7 @@ func CheckIsValidGood(good *pb.Good) error {
 	// 6. 判断商品优惠
 	for _, favor := range good.Favors {
 		if errResult := CheckIsValidFavor(favor); errResult != nil {
-			return ers.New("商品第 %d 个优惠非法，%s", errResult.Error())
+			return ers.New("商品第 %d 个优惠非法。%s", errResult.Error())
 		}
 	}
 
@@ -143,7 +143,7 @@ func CheckIsValidElement(element *pb.Element) error {
 	}
 	for index, sizeInfo := range element.SizeInfos {
 		if errResult := CheckIsValidSizeInfo(sizeInfo); errResult != nil {
-			return ers.New("第 %d 个尺寸非法，%s", index+1, errResult.Error())
+			return ers.New("第 %d 个尺寸非法。%s", index+1, errResult.Error())
 		}
 	}
 	return nil

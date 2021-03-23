@@ -1025,6 +1025,11 @@ export default {
       }],
     },
     attachElements: [],
+    expenseInfo: {
+      nonFavorExpense: 0.0,
+      Expense: 0,
+      CheckOutAt: 0,
+    }
   },
   blankGoodClass: {
     name: "请输入",

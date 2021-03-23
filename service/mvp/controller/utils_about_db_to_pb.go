@@ -99,8 +99,14 @@ func getPbGood(goodID int64, mainElementID int64) *pb.Good {
 		Id:             goodID,
 		MainElement:    getPbElement(goodID, mainElementID),
 		AttachElements: getPbAttachElements(goodID, mainElementID),
-		//Favors:         getFavors(good),
+		//Favors:         getFavors(good),// todo: 之后再说
 		//ExpenseInfo:    good.GetExpenseInfo(mainElement, attachElements, favors),	// todo: 之后再说
+		Favors: []*pb.Favor{},
+		ExpenseInfo: &pb.ExpenseInfo{
+			NonFavorExpense: 0,
+			CheckOutAt:      model.NilTime.Unix(),
+			Expense:         0,
+		},
 	}
 }
 

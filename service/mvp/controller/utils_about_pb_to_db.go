@@ -67,7 +67,7 @@ func writePbGoodSelectedSizeInfoIndexRecordAndMainAttachElementRecordToDB(good *
 	// 2. 创建附属元素、附属元素尺寸的对应关系
 	for index, attachElement := range good.AttachElements {
 		if errResult := writePbElementSelectSizeRecord(good.Id, attachElement); errResult != nil {
-			return ers.New("创建第 %d 个附属元素与其尺寸的对应关系时出错，%s", index+1, errResult.Error())
+			return ers.New("创建第 %d 个附属元素与其尺寸的对应关系时出错。%s", index+1, errResult.Error())
 		}
 	}
 
@@ -78,7 +78,7 @@ func writePbGoodSelectedSizeInfoIndexRecordAndMainAttachElementRecordToDB(good *
 			AttachElementID: attachElement.Id,
 			MainElementID:   good.MainElement.Id,
 		}); errResult != nil {
-			return ers.New("创建第 %d 个主元素与其附属元素的对应关系时出错，%s", index+1, errResult.Error())
+			return ers.New("创建第 %d 个主元素与其附属元素的对应关系时出错。%s", index+1, errResult.Error())
 		}
 	}
 
@@ -123,7 +123,7 @@ func writePbElementMetaObjectToDbAndUpdateID(pbElement *pb.Element, classID int6
 	for index, pbSizeInfo := range pbElement.SizeInfos {
 		sizeInfoID, errResult := dao.ElementSizeInfoDao.Create(toDbElementSizeInfo(pbSizeInfo, pbElement.Id))
 		if errResult != nil {
-			return ers.New("存储第 %d 个尺寸时出错，%s", index+1, errResult.Error())
+			return ers.New("存储第 %d 个尺寸时出错。%s", index+1, errResult.Error())
 		}
 		if pbSizeInfo.Id == 0 {
 			pbSizeInfo.Id = sizeInfoID
