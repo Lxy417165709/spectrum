@@ -42,6 +42,7 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.OrderGoodRes, error) {
 	logger.Info("OrderGood", zap.Any("ctx", ctx), zap.Any("req", req))
 	var res pb.OrderGoodRes
+
 	// 1. 参数校验
 	orderID, goods, errResult := CheckOrderGoodParameter(req)
 	if errResult != nil {
@@ -52,7 +53,7 @@ func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.Order
 		// 1. 创建商品记录，获取商品ID
 		dbGood := &model.Good{
 			ID:              good.Id,
-			OrderID:         req.OrderID,
+			OrderID:         orderID,
 			MainElementID:   good.MainElement.Id,
 			Expense:         good.ExpenseInfo.Expense,
 			CheckOutAt:      model.ToTime(good.ExpenseInfo.CheckOutAt),
