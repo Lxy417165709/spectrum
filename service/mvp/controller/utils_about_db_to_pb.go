@@ -81,7 +81,12 @@ func getPbGood(goodID int64, mainElementID int64) *pb.Good {
 		AttachElements: getPbAttachElements(goodID, mainElementID),
 		//Favors:         getFavors(good),// todo: 之后再说
 		//ExpenseInfo:    good.GetExpenseInfo(mainElement, attachElements, favors),	// todo: 之后再说
-		Favors: []*pb.Favor{},
+		Favors: []*pb.Favor{
+			{
+				FavorType:  pb.FavorType_NONE,
+				Parameters: nil,
+			},
+		},
 		ExpenseInfo: &pb.ExpenseInfo{
 			NonFavorExpense: 0,
 			CheckOutAt:      model.NilTime.Unix(),

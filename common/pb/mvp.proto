@@ -97,7 +97,7 @@ message SizeInfo {
 }
 
 message Favor {
-    FavorType FavorType = 1;
+    FavorType favorType = 1;
     repeated string parameters = 2;
 }
 
