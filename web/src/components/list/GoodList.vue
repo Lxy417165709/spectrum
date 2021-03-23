@@ -36,7 +36,7 @@
 /* eslint-disable */
 import GoodCard from "../card/GoodCard";
 import GoodSpacialCard from "../card/GoodSpacialCard";
-import test from "../../common/test/test"
+import test from "../../common/test"
 import GoodEditorOfUser from "../editor/GoodEditorOfUser";
 import GoodEditorOfAdmin from "../editor/GoodEditorOfAdmin";
 

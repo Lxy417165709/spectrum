@@ -197,7 +197,7 @@
 <script>
 /* eslint-disable */
 import DiscountEditor from "../editor/DiscountEditor";
-import test from "../../common/test/test";
+import test from "../../common/test";
 import utils from "../../common/utils";
 import cst from "../../common/cst";
 

@@ -30,7 +30,7 @@
 /* eslint-disable */
 import GoodCard from "../card/GoodCard";
 import GoodSpacialCard from "../card/GoodSpacialCard";
-import test from "../../common/test/test"
+import test from "../../common/test"
 import GoodOptionCard from "../card/GoodOptionCard";
 import GoodOptionSpecialCard from "../card/GoodOptionSpecialCard";
 import cst from "../../common/cst";

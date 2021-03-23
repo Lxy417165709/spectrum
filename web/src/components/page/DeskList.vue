@@ -44,7 +44,7 @@
 /* eslint-disable */
 import DeskCard from "../card/DeskCard";
 import DeskSpacialCard from "../card/DeskSpacialCard";
-import test from "../../common/test/test";
+import test from "../../common/test";
 import utils from "../../common/utils"
 import DeskEditorOfAdmin from "../editor/DeskEditorOfAdmin";
 import GoodClass from "./ManageGoodPage";

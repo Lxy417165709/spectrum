@@ -9,6 +9,7 @@ import (
 	"spectrum/service/mvp/model"
 )
 
+// --------------------------------------------- ID ---------------------------------------------
 func getClassGoods(classID int64) ([]*pb.Good, error) {
 	var goods []*pb.Good
 	elements, errResult := dao.ElementDao.GetByClassID(classID)
@@ -20,32 +21,6 @@ func getClassGoods(classID int64) ([]*pb.Good, error) {
 		goods = append(goods, pbGood)
 	}
 	return goods, nil
-}
-
-// 返回的 desk:
-// 已结账时: 返回结账的金额信息
-// 未结账时: 返回最新的金额信息
-func getPbDesk(desk *model.Desk) *pb.Desk {
-	space, errResult := dao.SpaceDao.Get(desk.SpaceID)
-	if errResult != nil {
-		// todo: log
-		return nil
-	}
-	favor := getFavors(desk)
-
-	spaceClass, errResult := dao.SpaceClassDao.Get(space.ClassID)
-	if errResult != nil {
-		return nil
-	}
-	return &pb.Desk{
-		Id:          desk.ID,
-		Space:       space.ToPb(spaceClass.Name),
-		StartAt:     desk.StartAt.Unix(),
-		EndAt:       desk.EndAt.Unix(),
-		Favors:      favor,
-		ExpenseInfo: desk.GetExpenseInfo(space.BillingType, space.Price, favor),
-		OrderID:     desk.OrderID,
-	}
 }
 
 func getPbOrder(orderID int64) *pb.Order {
@@ -75,6 +50,11 @@ func getPbOrder(orderID int64) *pb.Order {
 		Desk:   pbDesk,
 		Goods:  pbGoods,
 		Favors: favors,
+		ExpenseInfo: &pb.ExpenseInfo{
+			NonFavorExpense: 0,
+			CheckOutAt:      model.NilTime.Unix(),
+			Expense:         0,
+		},
 		//ExpenseInfo: order.GetExpenseInfo(pbDesk, pbGoods, favors),	// todo:
 	}
 }
@@ -125,19 +105,6 @@ func getPbAttachElements(goodID, mainElementID int64) []*pb.Element {
 	return attachElements
 }
 
-func getFavors(chargeableObj model.Chargeable) []*pb.Favor {
-	records, err := dao.FavorRecordDao.GetFavorRecords(chargeableObj)
-	if err != nil {
-		// todo: log
-		return nil
-	}
-	result := make([]*pb.Favor, 0)
-	for _, record := range records {
-		result = append(result, record.ToPb())
-	}
-	return result
-}
-
 func getPbElement(goodID, elementID int64) *pb.Element {
 	// 1. 形成 pbSizeInfos、并排序
 	dbSizeInfos, errResult := dao.ElementSizeInfoDao.Get(elementID)
@@ -182,4 +149,43 @@ func getPbElement(goodID, elementID int64) *pb.Element {
 		SelectedIndex: selectedSizeInfoIndex,
 		SizeInfos:     pbSizeInfos,
 	}
+}
+
+
+// 返回的 desk:
+// 已结账时: 返回结账的金额信息
+// 未结账时: 返回最新的金额信息
+func getPbDesk(desk *model.Desk) *pb.Desk {
+	space, errResult := dao.SpaceDao.Get(desk.SpaceID)
+	if errResult != nil {
+		// todo: log
+		return nil
+	}
+	favor := getFavors(desk)
+
+	spaceClass, errResult := dao.SpaceClassDao.Get(space.ClassID)
+	if errResult != nil {
+		return nil
+	}
+	return &pb.Desk{
+		Id:          desk.ID,
+		Space:       space.ToPb(spaceClass.Name),
+		StartAt:     desk.StartAt.Unix(),
+		EndAt:       desk.EndAt.Unix(),
+		Favors:      favor,
+		ExpenseInfo: desk.GetExpenseInfo(space.BillingType, space.Price, favor),
+		OrderID:     desk.OrderID,
+	}
+}
+
+func getFavors(chargeableObj model.Chargeable) []*pb.Favor {
+	records, err := dao.FavorRecordDao.GetFavorRecords(chargeableObj)
+	if err != nil {
+		return nil
+	}
+	result := make([]*pb.Favor, 0)
+	for _, record := range records {
+		result = append(result, record.ToPb())
+	}
+	return result
 }

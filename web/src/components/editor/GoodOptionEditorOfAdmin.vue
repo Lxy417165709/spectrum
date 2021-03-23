@@ -65,7 +65,7 @@
 
 <script>
 /* eslint-disable */
-import test from "../../common/test/test";
+import test from "../../common/test";
 import utils from "../../common/utils";
 
 export default {

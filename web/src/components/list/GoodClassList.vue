@@ -30,7 +30,7 @@
 /* eslint-disable */
 import GoodClassCard from "../card/GoodClassCard";
 import GoodClassSpacialCard from "../card/GoodClassSpacialCard";
-import test from "../../common/test/test";
+import test from "../../common/test";
 import GoodClassEditor from "../editor/GoodClassEditor";
 
 let time = null;

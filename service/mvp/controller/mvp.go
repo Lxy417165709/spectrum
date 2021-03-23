@@ -20,7 +20,7 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 	logger.Info("AddGood", zap.Any("ctx", ctx), zap.Any("req", req))
 
 	// 1. 参数校验
-	good, goodClassName, errResult := CheckAddGoodParameter(req)
+	good, goodClassName, errResult := checkAddGoodParameter(req)
 	if errResult != nil {
 		return nil, errResult
 	}
@@ -44,7 +44,7 @@ func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.Order
 	var res pb.OrderGoodRes
 
 	// 1. 参数校验
-	orderID, goods, errResult := CheckOrderGoodParameter(req)
+	orderID, goods, errResult := checkOrderGoodParameter(req)
 	if errResult != nil {
 		return nil, errResult
 	}
@@ -185,7 +185,7 @@ func (MvpServer) AddGoodClass(ctx context.Context, req *pb.AddGoodClassReq) (*pb
 	logger.Info("AddGoodClass", zap.Any("ctx", ctx), zap.Any("req", req))
 
 	// 1. 参数校验、获取
-	goodClass, errResult := CheckAddGoodClassParameter(req)
+	goodClass, errResult := checkAddGoodClassParameter(req)
 	if errResult != nil {
 		return nil, errResult
 	}
@@ -421,42 +421,6 @@ func (s MvpServer) DeleteFavorForGood(ctx context.Context, req *pb.DeleteFavorFo
 		return nil, err
 	}
 	return &res, nil
-}
-
-func getDbSpaceClassByID(classID int64) *model.SpaceClass {
-	spaceClass, errResult := dao.SpaceClassDao.Get(classID)
-	if errResult != nil {
-		// todo: log
-		return nil
-	}
-	return spaceClass
-}
-
-func getDbElementClassByID(classID int64) *model.ElementClass {
-	elementClass, errResult := dao.ElementClassDao.Get(classID)
-	if errResult != nil {
-		// todo: log
-		return nil
-	}
-	return elementClass
-}
-
-func getDbSpaceClassByName(className string) *model.SpaceClass {
-	spaceClass, errResult := dao.SpaceClassDao.GetByName(className)
-	if errResult != nil {
-		// todo: log
-		return nil
-	}
-	return spaceClass
-}
-
-func getDbElementClassByName(className string) *model.ElementClass {
-	elementClass, errResult := dao.ElementClassDao.GetByName(className)
-	if errResult != nil {
-		// todo: log
-		return nil
-	}
-	return elementClass
 }
 
 func (s MvpServer) GetAllDesks(ctx context.Context, req *pb.GetAllDesksReq) (*pb.GetAllDesksRes, error) {

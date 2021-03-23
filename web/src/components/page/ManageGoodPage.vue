@@ -57,7 +57,7 @@ import GoodList from "../list/GoodList";
 import GoodEditorOfAdmin from "../editor/GoodEditorOfAdmin";
 import GoodEditorOfUser from "../editor/GoodEditorOfUser";
 import GoodClassEditor from "../editor/GoodClassEditor";
-import test from "../../common/test/test";
+import test from "../../common/test";
 import utils from "../../common/utils";
 import GoodOptionClassList from "../list/GoodOptionClassList";
 import GoodOptionList from "../list/GoodOptionList";

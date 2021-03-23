@@ -35,26 +35,18 @@
 
 <script>
 /* eslint-disable */
-import global from "../../common/global_object/global";
+import cst from "../../common/cst";
 
 export default {
   name: "Discounter",
   data() {
     return {
-      FavorTypeName: global.FavorType.NONE,
+      FavorTypeName: cst.FAVOR_TYPE.NONE.NAME,
       FavorOptions: [
-        {
-          name: global.FavorType.NONE
-        },
-        {
-          name: global.FavorType.REBATE
-        },
-        {
-          name: global.FavorType.FULL_REDUCTION
-        },
-        {
-          name: global.FavorType.FREE
-        }
+        cst.FAVOR_TYPE.NONE.NAME,
+        cst.FAVOR_TYPE.REBATE.NAME,
+        cst.FAVOR_TYPE.FULL_REDUCTION.NAME,
+        cst.FAVOR_TYPE.FREE.NAME,
       ],
       rebate: 10,
       full: 10000,

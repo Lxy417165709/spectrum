@@ -86,28 +86,6 @@ func writePbGoodSelectedSizeInfoIndexRecordAndMainAttachElementRecordToDB(good *
 	return nil
 }
 
-func closeDeskIfOpening(deskID int64, endTimestamp int64) error {
-	desk, err := dao.DeskDao.Get(deskID)
-	if err != nil {
-		logger.Error("Fail to finish DeskDao.Get",
-			zap.Error(err))
-		return err
-	}
-	if !desk.IsOpening() {
-		logger.Warn("Desk had been closed", zap.Int64("deskID", deskID))
-		return nil
-	}
-	if err := dao.DeskDao.Update(map[string]interface{}{
-		"id":            deskID,
-		"end_timestamp": endTimestamp,
-	}); err != nil {
-		logger.Error("Fail to finish DeskDao.Update",
-			zap.Error(err))
-		return err
-	}
-	return nil
-}
-
 // 将元素的元信息记录到数据库，元信息包括: 元素信息、元素拥有的尺寸信息
 func writePbElementMetaObjectToDbAndUpdateID(pbElement *pb.Element, classID int64) error {
 	// 1. 将元素写入数据库，如果先前该元素不存在，则更新元素ID
@@ -134,6 +112,15 @@ func writePbElementMetaObjectToDbAndUpdateID(pbElement *pb.Element, classID int6
 	return nil
 }
 
+func toDbElement(pbElement *pb.Element, classID int64) *model.Element {
+	return &model.Element{
+		ID:      pbElement.Id,
+		Name:    pbElement.Name,
+		Type:    pbElement.Type,
+		ClassID: classID,
+	}
+}
+
 func toDbElementSizeInfo(pbSizeInfo *pb.SizeInfo, elementID int64) *model.ElementSizeInfo {
 	return &model.ElementSizeInfo{
 		ID:               pbSizeInfo.Id,
@@ -141,15 +128,6 @@ func toDbElementSizeInfo(pbSizeInfo *pb.SizeInfo, elementID int64) *model.Elemen
 		Size:             pbSizeInfo.Size,
 		Price:            model.GetDbPrice(pbSizeInfo.Price),
 		PictureStorePath: pbSizeInfo.PictureStorePath,
-	}
-}
-
-func toDbElement(pbElement *pb.Element, classID int64) *model.Element {
-	return &model.Element{
-		ID:      pbElement.Id,
-		Name:    pbElement.Name,
-		Type:    pbElement.Type,
-		ClassID: classID,
 	}
 }
 
@@ -163,3 +141,26 @@ func toDbSpace(pbSpace *pb.Space, classID int64) *model.Space {
 		PictureStorePath: pbSpace.PictureStorePath,
 	}
 }
+
+func closeDeskIfOpening(deskID int64, endTimestamp int64) error {
+	desk, err := dao.DeskDao.Get(deskID)
+	if err != nil {
+		logger.Error("Fail to finish DeskDao.Get",
+			zap.Error(err))
+		return err
+	}
+	if !desk.IsOpening() {
+		logger.Warn("Desk had been closed", zap.Int64("deskID", deskID))
+		return nil
+	}
+	if err := dao.DeskDao.Update(map[string]interface{}{
+		"id":            deskID,
+		"end_timestamp": endTimestamp,
+	}); err != nil {
+		logger.Error("Fail to finish DeskDao.Update",
+			zap.Error(err))
+		return err
+	}
+	return nil
+}
+
