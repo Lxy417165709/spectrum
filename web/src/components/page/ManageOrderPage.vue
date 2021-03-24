@@ -115,7 +115,6 @@
               prop="expenseInfo.expense"
               label="折后花费">
             </el-table-column>
-
             <el-table-column
               label="结账">
               <template slot-scope="scope">
@@ -304,7 +303,7 @@ export default {
       if (timestamp === cst.TIMESTAMP.NIL) {
         return "-"
       }
-      return this.timestampToTime(scope.row.endAt)
+      return this.timestampToTime(timestamp)
     },
     getFavorString(favor) {
       if (favor.favorType === cst.FAVOR_TYPE.NONE.VALUE) {

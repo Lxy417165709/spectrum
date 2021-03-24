@@ -67,9 +67,6 @@ func (deskDao) GetNonCheckOutDesk(spaceID int64) (*model.Desk, error) {
 }
 
 func (deskDao) Get(id int64) (*model.Desk, error) {
-	var table model.Desk
-	createTableWhenNotExist(&table)
-
 	var result model.Desk
 	if err := mainDB.First(&result, "id = ?", id).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
@@ -82,9 +79,6 @@ func (deskDao) Get(id int64) (*model.Desk, error) {
 }
 
 func (deskDao) GetByOrderID(orderID int64) (*model.Desk, error) {
-	var table model.Desk
-	createTableWhenNotExist(&table)
-
 	var result model.Desk
 	if err := mainDB.First(&result, "order_id = ?", orderID).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
@@ -95,7 +89,3 @@ func (deskDao) GetByOrderID(orderID int64) (*model.Desk, error) {
 	}
 	return &result, nil
 }
-
-//func (deskDao) GetName() string {
-//	return model.ChargeableObjectNameOfDesk
-//}

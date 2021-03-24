@@ -75,9 +75,6 @@ func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.Order
 		if errResult := dao.FavorRecordDao.CreateFavorRecord(dbGood.GetName(), dbGood.ID, good.Favors); errResult != nil {
 			return nil, errResult
 		}
-
-		// 4. todo: 更新商品花费
-
 	}
 	return &res, nil
 }
