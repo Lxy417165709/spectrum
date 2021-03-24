@@ -85,7 +85,6 @@ export default {
     cpt_price() {
       let price = 0
       price += this.good.mainElement.sizeInfos[this.good.mainElement.selectedIndex].price - 0
-
       for (let i = 0; i < this.good.attachElements.length; i++) {
         price += this.good.attachElements[i].sizeInfos[this.good.attachElements[i].selectedIndex].price - 0
       }

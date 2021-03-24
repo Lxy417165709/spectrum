@@ -118,6 +118,9 @@
 
             <el-table-column
               label="结账">
+              <template slot-scope="scope">
+                <el-button type="primary" @click="checkOutDesk(scope.row)">结账</el-button>
+              </template>
             </el-table-column>
           </el-table>
 
@@ -175,16 +178,18 @@
               </el-table-column>
               <el-table-column
                 label="结账">
+                <template slot-scope="scope">
+                  <el-button type="primary" @click="checkOutGood(scope.row)">结账</el-button>
+                </template>
               </el-table-column>
             </el-table>
           </div>
-
 
           <el-divider>优惠设置</el-divider>
           <el-form label-width="80px">
             <discount-editor></discount-editor>
             <el-form-item>
-              <el-button type="primary">结账</el-button>
+              <el-button type="primary" @click="checkOutOrder(order)">结账</el-button>
             </el-form-item>
           </el-form>
 
@@ -312,6 +317,15 @@ export default {
         return cst.FAVOR_TYPE.FREE.NAME
       }
       return ""
+    },
+    checkOutGood(good){
+      console.log("checkOutGood",good)
+    },
+    checkOutDesk(desk){
+      console.log("checkOutDesk",desk)
+    },
+    checkOutOrder(order){
+      console.log("checkOutOrder",order)
     }
   },
   computed: {
