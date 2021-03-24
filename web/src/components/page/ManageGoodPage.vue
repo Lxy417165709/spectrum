@@ -17,12 +17,13 @@
       <!--      普通商品类-->
       <el-divider content-position="left">{{ deskSpaceName }} {{ deskSpaceName !== undefined ? "-" : "" }} 普通商品类
       </el-divider>
-      <good-class-list :goodClasses="db_goodClasses" :props_isAdminView="props_isAdminView"
-                       @turnToGoodListMode="turnToGoodListMode"></good-class-list>
+      <good-class-list :goodClasses="goodClasses" :props_isAdminView="props_isAdminView"
+                       @turnToGoodListMode="turnToGoodListMode"
+                       @successToAddGoodClass="successToAddGoodClass"></good-class-list>
 
       <!--      附属类-->
       <el-divider content-position="left" v-if="props_isAdminView">附属类</el-divider>
-      <good-option-class-list :goodOptionClasses="db_goodOptionClasses" :props_isAdminView="props_isAdminView"
+      <good-option-class-list :goodOptionClasses="goodOptionClasses" :props_isAdminView="props_isAdminView"
                               @turnToGoodOptionListMode="turnToGoodOptionListMode"
                               v-if="props_isAdminView"></good-option-class-list>
     </div>
@@ -84,9 +85,9 @@ export default {
     orderID: Number,
   },
   async created() {
-    this.db_goodOptionClasses = test.goodOptionClasses
+    this.goodOptionClasses = test.goodOptionClasses
     await utils.GetAllGoodClasses(this, {}, (res) => {
-      this.db_goodClasses = res.data.data.goodClasses
+      this.goodClasses = res.data.data.goodClasses
     })
   },
   data() {
@@ -99,8 +100,8 @@ export default {
       curGoodClassIndex: cst.INDEX.INVALID_INDEX,
       curGoodOptionClassIndex: cst.INDEX.INVALID_INDEX,
 
-      db_goodClasses: [],
-      db_goodOptionClasses: [],
+      goodClasses: [],
+      goodOptionClasses: [],
     }
   },
   methods: {
@@ -110,7 +111,7 @@ export default {
     },
     async turnToGoodOptionListMode(goodOptionClassIndex) {
       await utils.GetAllGoodOptions(this, {
-        className: this.db_goodOptionClasses[goodOptionClassIndex].name,
+        className: this.goodOptionClasses[goodOptionClassIndex].name,
       }, (res) => {
         this.viewMode = cst.VIEW_MODE.GOOD_OPTION_LIST_MODE
         this.curGoodOptionClassIndex = goodOptionClassIndex
@@ -121,7 +122,7 @@ export default {
     },
     async turnToGoodListMode(goodClassIndex) {
       await utils.GetAllGoods(this, {
-        className: this.db_goodClasses[goodClassIndex].name,
+        className: this.goodClasses[goodClassIndex].name,
       }, (res) => {
         this.viewMode = cst.VIEW_MODE.GOOD_LIST_MODE
         this.curGoodClassIndex = goodClassIndex
@@ -138,6 +139,9 @@ export default {
       if (this.viewMode === cst.VIEW_MODE.GOOD_OPTION_LIST_MODE || this.viewMode === cst.VIEW_MODE.GOOD_LIST_MODE) {
         this.viewMode = cst.VIEW_MODE.CLASS_LIST_MODE
       }
+    },
+    successToAddGoodClass(goodClass) {
+      this.goodClasses.push(goodClass)
     },
   },
   computed: {
@@ -162,10 +166,10 @@ export default {
       return this.curGoodOptionClassIndex !== cst.INDEX.INVALID_INDEX
     },
     cpt_curGoodClass() {
-      return this.db_goodClasses[this.curGoodClassIndex]
+      return this.goodClasses[this.curGoodClassIndex]
     },
     cpt_curGoodOptionClass() {
-      return this.db_goodOptionClasses[this.curGoodOptionClassIndex]
+      return this.goodOptionClasses[this.curGoodOptionClassIndex]
     }
   },
 

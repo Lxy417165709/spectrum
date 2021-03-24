@@ -19,9 +19,9 @@
     <!--    3. 商品类添加、编辑-->
     <el-dialog
       title="商品添加/编辑"
-      :visible.sync="GoodClassEditorVisible"
+      :visible.sync="goodClassEditorVisible"
       width="30%">
-      <good-class-editor ref="GoodClassEditor"></good-class-editor>
+      <good-class-editor ref="GoodClassEditor" @successToAddGoodClass="successToAddGoodClass"></good-class-editor>
     </el-dialog>
   </el-row>
 </template>
@@ -42,10 +42,14 @@ export default {
   },
   data() {
     return {
-      GoodClassEditorVisible: false
+      goodClassEditorVisible: false
     };
   },
   methods: {
+    successToAddGoodClass(goodClass) {
+      this.$emit("successToAddGoodClass", goodClass)
+      this.goodClassEditorVisible = false
+    },
     handleGoodClassCardClick(goodClassIndex) {
       this.$emit("turnToGoodListMode", goodClassIndex)
     },
@@ -53,7 +57,7 @@ export default {
       this.openGoodClassEditor(test.blankGoodClass)
     },
     openGoodClassEditor(goodClass) {
-      this.GoodClassEditorVisible = true
+      this.goodClassEditorVisible = true
       this.$nextTick(() => {
         this.$refs.GoodClassEditor.goodClass = goodClass
       })
@@ -68,7 +72,7 @@ export default {
     // 双击事件函数
     handleDbClick(goodClass) {
       clearTimeout(time);  //清除
-      if (!this.props_isAdminView){
+      if (!this.props_isAdminView) {
         return
       }
       this.openGoodClassEditor(goodClass)

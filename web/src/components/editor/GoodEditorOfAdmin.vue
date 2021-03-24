@@ -170,8 +170,11 @@ export default {
           return
         }
         this.$message.success(res.data.msg)
+        this.$emit("successToAddGood",res.data.data.good)
       })
     },
+
+
     tabClick(tab) {
       this.curSizeInfoIndex = tab.index
     },

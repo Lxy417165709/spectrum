@@ -35,6 +35,7 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 
 	// 3. 创建并返回响应
 	var res pb.AddGoodRes
+	res.Good = getPbGood(good.Id, good.MainElement.Id)
 	return &res, nil
 }
 
@@ -287,8 +288,7 @@ func (MvpServer) OrderDesk(ctx context.Context, req *pb.OrderDeskReq) (*pb.Order
 	if errResult := dao.FavorRecordDao.CreateFavorRecord(dbDesk.GetName(), deskID, req.Desk.Favors); errResult != nil {
 		return nil, errResult
 	}
-	res.DeskID = deskID
-	res.OrderID = orderID
+	res.Order = getPbOrder(orderID)
 	return &res, nil
 }
 

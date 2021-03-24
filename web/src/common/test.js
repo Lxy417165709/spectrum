@@ -18,8 +18,9 @@ export default {
     expenseInfo: {
       nonFavorExpense: 0.0,
       Expense: 0,
-      CheckOutAt: 0,
-    }
+      CheckOutAt: cst.TIMESTAMP.NIL,
+    },
+    favors:[]
   },
   blankGoodClass: {
     name: "请输入",

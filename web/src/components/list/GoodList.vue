@@ -26,7 +26,8 @@
       title="商品添加/编辑"
       :visible.sync="GoodEditorOfAdminVisible"
       width="30%">
-      <good-editor-of-admin ref="GoodEditorOfAdmin" :className="className"></good-editor-of-admin>
+      <good-editor-of-admin ref="GoodEditorOfAdmin" :className="className"
+                            @successToAddGood="successToAddGood"></good-editor-of-admin>
     </el-dialog>
 
   </el-row>
@@ -45,7 +46,7 @@ export default {
   props: {
     props_isAdminView: Boolean,
     className: String,
-    orderID:Number,
+    orderID: Number,
   },
   data() {
     return {
@@ -55,6 +56,10 @@ export default {
     };
   },
   methods: {
+    successToAddGood(good) {
+      this.goods.push(good)
+      this.GoodEditorOfAdminVisible = false
+    },
     openGoodEditor(good) {
       if (this.props_isAdminView) {
         this.openGoodEditorOfAdmin(good, false)
@@ -63,14 +68,13 @@ export default {
       }
     },
     tryToAddGood() {
-      this.openGoodEditorOfAdmin(test.blankGood, true)
+      this.openGoodEditorOfAdmin(test.blankGood)
     },
-    openGoodEditorOfAdmin(good, canModifyGoodName) {
+    openGoodEditorOfAdmin(good) {
       // 商品信息编辑(管理人员视图)
       this.GoodEditorOfAdminVisible = true
       this.$nextTick(() => {
         this.$refs.GoodEditorOfAdmin.good = good
-        this.$refs.GoodEditorOfAdmin.canModifyGoodName = canModifyGoodName
       })
     },
     openGoodEditorOfUser(good) {

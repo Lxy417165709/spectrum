@@ -119,7 +119,10 @@
             <el-table-column
               label="结账">
               <template slot-scope="scope">
-                <el-button type="primary" @click="checkOutDesk(scope.row)">结账</el-button>
+                <el-tag v-if="scope.row.expenseInfo.checkOutAt!==10086" style="margin-right: 10px">
+                  已结账
+                </el-tag>
+                <el-button v-if="scope.row.expenseInfo.checkOutAt===10086" type="primary" @click="checkOutDesk(scope.row)">结账</el-button>
               </template>
             </el-table-column>
           </el-table>

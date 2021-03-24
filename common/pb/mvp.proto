@@ -114,7 +114,9 @@ message AddGoodReq {
     string className = 2;
 }
 
-message AddGoodRes {}
+message AddGoodRes {
+    Good good = 1;
+}
 
 message AddGoodClassReq{
     GoodClass goodClass = 1;
@@ -159,15 +161,14 @@ message OrderDeskReq{
 }
 
 message OrderDeskRes{
-    int64 deskID = 1;
-    int64 orderID = 2;
+    Order order = 1;
 }
 
 message OrderReq{
     Order order = 1;
 }
 message OrderRes{
-    int64 orderID = 1;
+    Order order = 1;
 }
 
 message CloseDeskReq{

@@ -46,7 +46,7 @@ export default {
       await utils.AddGoodClass(this, {
         goodClass: goodClass,
       }, (res) => {
-        this.goodClass = res.data.data.goodClass
+        this.$emit("successToAddGoodClass", res.data.data.goodClass)
       })
     },
     cleanSizeInfoPictureStorePath() {
