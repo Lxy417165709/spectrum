@@ -79,16 +79,6 @@ export default {
         this.$refs.DeskClassEditor.deskClass = deskClass
       })
     },
-    attachOrderID(orderID) {
-      this.viewMode = cst.VIEW_MODE.CLASS_LIST_MODE
-      this.$nextTick(() => {
-        this.$refs.ref_goodClass.orderID = orderID
-        console.log("attachOrderID", this.$refs.ref_goodClass.orderID)
-      })
-    },
-    turnToDeskListMode() {
-      this.viewMode = cst.VIEW_MODE.DESK_LIST_MODE
-    },
     // 单击事件函数
     handleDeskClassItemClick(deskClassIndex) {
       clearTimeout(time);
@@ -108,9 +98,6 @@ export default {
   computed: {
     cpt_canClassListShow() {
       return this.viewMode === cst.VIEW_MODE.CLASS_LIST_MODE
-    },
-    cpt_canDeskListShow() {
-      return this.viewMode === cst.VIEW_MODE.DESK_LIST_MODE && this.curDeskClassIndex !== cst.INDEX.INVALID_INDEX
     },
     cpt_curDeskClass() {
       return this.db_deskClasses[this.curDeskClassIndex]

@@ -234,14 +234,20 @@ func (MvpServer) AddDeskClass(ctx context.Context, req *pb.AddDeskClassReq) (*pb
 
 func (MvpServer) AddDesk(ctx context.Context, req *pb.AddDeskReq) (*pb.AddDeskRes, error) {
 	logger.Info("AddDesk", zap.Any("ctx", ctx), zap.Any("req", req))
-	// todo: 这里可以点单记录
 	var res pb.AddDeskRes
-	if _, err := dao.SpaceDao.Create(toDbSpace(req.Desk.Space, getDbSpaceClassByName(req.ClassName).ID)); err != nil {
+
+	id, err := dao.SpaceDao.Create(toDbSpace(req.Desk.Space, getDbSpaceClassByName(req.ClassName).ID))
+	if req.Desk.Space.Id == 0 {
+		req.Desk.Space.Id = id
+	}
+	if err != nil {
 		logger.Error("Fail to finish SpaceDao.Create",
 			zap.Any("req", req),
 			zap.Error(err))
 		return nil, err
 	}
+
+	res.Desk = req.Desk
 	return &res, nil
 }
 

@@ -139,7 +139,9 @@ message AddDeskReq{
     string className = 2;
 }
 
-message AddDeskRes{}
+message AddDeskRes{
+    Desk desk = 1;
+}
 
 message AddSpaceRes{}
 

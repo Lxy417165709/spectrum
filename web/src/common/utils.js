@@ -192,4 +192,7 @@ export default {
       then(res)
     })
   },
+  IsNil(obj) {
+    return obj === undefined || obj === null || isNaN(obj)
+  }
 }

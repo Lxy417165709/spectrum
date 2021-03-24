@@ -33,7 +33,8 @@
       title="桌子添加/编辑"
       :visible.sync="DeskEditorOfAdminVisible"
       width="30%">
-      <desk-editor-of-admin ref="DeskEditorOfAdmin" :className="className"></desk-editor-of-admin>
+      <desk-editor-of-admin ref="DeskEditorOfAdmin" :className="className"
+                            @successToAddDesk="successToAddDesk"></desk-editor-of-admin>
     </el-dialog>
 
 
@@ -81,6 +82,10 @@ export default {
       }, (res) => {
         this.desks = res.data.data.desks
       })
+    },
+    successToAddDesk(desk) {
+      this.desks.push(desk)
+      this.DeskEditorOfAdminVisible = false
     },
 
 

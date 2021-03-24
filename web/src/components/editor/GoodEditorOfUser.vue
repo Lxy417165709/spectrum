@@ -84,10 +84,9 @@ export default {
   computed: {
     cpt_price() {
       let price = 0
-      if (!!this.good && !!this.good.mainElement && !!this.good.mainElement.sizeInfos && !!this.good.mainElement.selectedIndex) {
-        price += this.good.mainElement.sizeInfos[this.good.mainElement.selectedIndex].price - 0
-      }
-      for (let i = 0; !!this.good.attachElements && i < this.good.attachElements.length; i++) {
+      price += this.good.mainElement.sizeInfos[this.good.mainElement.selectedIndex].price - 0
+
+      for (let i = 0; i < this.good.attachElements.length; i++) {
         price += this.good.attachElements[i].sizeInfos[this.good.attachElements[i].selectedIndex].price - 0
       }
       return price
