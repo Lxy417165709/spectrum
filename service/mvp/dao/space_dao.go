@@ -25,7 +25,7 @@ func (spaceDao) Create(obj *model.Space) (int64, error) {
 			billing_type = values(billing_type),
 			price = values(price),
 			picture_store_path = values(picture_store_path);
-	`, fmt.Sprintf("`%s`", obj.TableName()), GetPlaceholderClause(len(values)))
+	`, fmt.Sprintf("`%s`", obj.TableName()), getPlaceholderClause(len(values)))
 	result, err := mainDB.CommonDB().Exec(sql, values...)
 	if err != nil {
 		logger.Error("Fail to finish create", zap.Any("obj", obj), zap.Error(err))
@@ -54,7 +54,7 @@ func (spaceDao) GetByClassID(classID int64) ([]*model.Space, error) {
 	if err := mainDB.Where("class_id = ?", classID).Find(&result).Error; err != nil {
 		logger.Error("Fail to finish mainDB.Find",
 			zap.Error(err))
-		return nil, err
+		return nil, ers.MysqlError
 	}
 	return result, nil
 }

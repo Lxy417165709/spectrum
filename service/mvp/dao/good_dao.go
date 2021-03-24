@@ -25,13 +25,13 @@ func (goodDao) Create(obj *model.Good) (int64, error) {
 			non_favor_expense = values(non_favor_expense),
 			main_element_id = values(main_element_id),
 			order_id = values(order_id);
-	`, fmt.Sprintf("`%s`", obj.TableName()), GetPlaceholderClause(len(values)))
+	`, fmt.Sprintf("`%s`", obj.TableName()), getPlaceholderClause(len(values)))
+
 	result, err := mainDB.CommonDB().Exec(sql, values...)
 	if err != nil {
 		logger.Error("Fail to finish create", zap.Any("obj", obj), zap.Error(err))
 		return 0, ers.MysqlError
 	}
-
 	if obj.ID != 0 {
 		return obj.ID, nil
 	}

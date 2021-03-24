@@ -23,7 +23,7 @@ func (r *ElementSizeInfo) ToPb() *pb.SizeInfo {
 	return &pb.SizeInfo{
 		Id:               r.ID,
 		Size:             r.Size,
-		Price:            GetPbPrice(r.Price),
+		Price:            getPbPrice(r.Price),
 		PictureStorePath: r.PictureStorePath,
 	}
 }

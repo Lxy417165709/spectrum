@@ -27,7 +27,7 @@ func (deskDao) Create(obj *model.Desk) (int64, error) {
 			end_at = values(end_at),
 			space_id = values(space_id),
 			order_id = values(order_id);
-	`, fmt.Sprintf("`%s`", obj.TableName()), GetPlaceholderClause(len(values)))
+	`, fmt.Sprintf("`%s`", obj.TableName()), getPlaceholderClause(len(values)))
 	result, err := mainDB.CommonDB().Exec(sql, values...)
 	if err != nil {
 		logger.Error("Fail to finish create", zap.Any("obj", obj), zap.Error(err))

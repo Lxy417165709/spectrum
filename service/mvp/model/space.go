@@ -25,7 +25,7 @@ func (s *Space) ToPb(className string) *pb.Space {
 		Id:               s.ID,
 		Name:             s.Name,
 		ClassName:        className,
-		Price:            GetPbPrice(s.Price),
+		Price:            getPbPrice(s.Price),
 		BillingType:      s.BillingType,
 		PictureStorePath: s.PictureStorePath,
 	}

@@ -6,8 +6,9 @@ import (
 	"spectrum/common/pb"
 	"spectrum/service/mvp/dao"
 	"spectrum/service/mvp/model"
+	"strconv"
+	"time"
 )
-
 
 //func getExpenseInfo(chargeableObj model.Chargeable) *pb.ExpenseInfo {
 //	switch chargeableObj.(type) {
@@ -64,4 +65,19 @@ func getDbElementClassByName(className string) *model.ElementClass {
 		return nil
 	}
 	return elementClass
+}
+
+func getDbPrice(priceString string) float64 {
+	price, err := strconv.ParseFloat(priceString, 64)
+	if err != nil {
+		logger.Error("Fail to finish strconv.ParseFloat", zap.String("priceString", priceString))
+	}
+	return price
+}
+
+func toTime(timestamp int64) time.Time {
+	if timestamp != 0 {
+		return time.Unix(timestamp, 0)
+	}
+	return model.NilTime
 }

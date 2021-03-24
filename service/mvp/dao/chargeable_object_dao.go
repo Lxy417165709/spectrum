@@ -39,10 +39,8 @@ func (favorRecordDao) Create(obj model.Chargeable) error {
 //	return nil
 //}
 
+// todo: 这个结构可以简化为2个参数
 func (favorRecordDao) GetFavorRecords(obj model.Chargeable) ([]*model.FavorRecord, error) {
-	var table model.FavorRecord
-	createTableWhenNotExist(&table)
-
 	var result []*model.FavorRecord
 	if err := mainDB.Find(
 		&result,

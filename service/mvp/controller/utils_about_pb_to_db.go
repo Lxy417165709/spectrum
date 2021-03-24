@@ -9,80 +9,42 @@ import (
 	"spectrum/service/mvp/model"
 )
 
-//func checkOutIfNot(chargeableObj model.Chargeable) error {
-//
-//	expenseInfo := getExpenseInfo(chargeableObj)
-//	if expenseInfo.CheckOutAt != 0 {
-//		// todo: 警告
-//		// 这里表示商品已结账过了
-//		return nil
-//	}
-//	expenseInfo.CheckOutAt = time.Now().Unix()
-//	if err := dao.FavorRecordDao.UpdateExpenseInfo(chargeableObj, expenseInfo); err != nil {
-//		logger.Error("Fail to finish chargeableDao.Update", zap.Error(err))
-//		return err
-//	}
-//
-//	// 添加结账记录
-//	if err := dao.CheckOutRecordDao.Create(&model.CheckOutRecord{
-//		ChargeableObjectName: chargeableObj.GetName(),
-//		ChargeableObjectID:   chargeableObj.GetID(),
-//		CheckOutAt:           expenseInfo.CheckOutAt,
-//	}); err != nil {
-//		logger.Error("Fail to finish CheckOutRecordDao.Create", zap.Error(err))
-//		return err
-//	}
-//
-//	return nil
-//}
-
-func toDbElementSelectSizeRecord(goodID, elementID, elementSizeInfoID int64) *model.ElementSelectSizeRecord {
-	return &model.ElementSelectSizeRecord{
-		GoodID:           goodID,
-		ElementID:        elementID,
-		SelectSizeInfoID: elementSizeInfoID,
+func writePbGoodToDB(good *pb.Good, orderID int64) error {
+	// 1. 创建商品记录，获取商品ID
+	dbGood := &model.Good{
+		ID:              good.Id,
+		OrderID:         orderID,
+		MainElementID:   good.MainElement.Id,
+		Expense:         good.ExpenseInfo.Expense,
+		CheckOutAt:      toTime(good.ExpenseInfo.CheckOutAt),
+		NonFavorExpense: good.ExpenseInfo.NonFavorExpense,
 	}
+	goodID, errResult := dao.GoodDao.Create(dbGood)
+	if errResult != nil {
+		return errResult
+	}
+
+	// 2. 添加/更新商品尺寸选择、商品主元素附属元素关联关系
+	good.Id = goodID
+	if errResult := writePbGoodSelectedSizeInfoIndexRecordAndMainAttachElementRecordToDB(good); errResult != nil {
+		return errResult
+	}
+
+	// 3. 记录商品优惠记录
+	if errResult := dao.FavorRecordDao.CreateFavorRecord(dbGood.GetName(), dbGood.ID, good.Favors); errResult != nil {
+		return errResult
+	}
+
+	// 4. 返回
+	return nil
 }
 
-func getPbElementSelectSizeInfoID(pbElement *pb.Element) int64 {
-	return model.GetPbElementSelectSizeInfo(pbElement).Id
-}
-
-func writePbElementSelectSizeRecord(goodID int64, pbElement *pb.Element) error {
+func writePbElementSelectSizeRecord(pbElement *pb.Element, goodID int64) error {
 	elementSelectedSizeInfoID := getPbElementSelectSizeInfoID(pbElement)
 	if _, errResult := dao.ElementSelectSizeRecordDao.Create(toDbElementSelectSizeRecord(goodID, pbElement.Id, elementSelectedSizeInfoID));
 		errResult != nil {
 		return errResult
 	}
-	return nil
-}
-
-// 将商品的主元素尺寸选择信息、附属元素尺寸选择信息、主元素与附属元素的对应记录写入数据库
-func writePbGoodSelectedSizeInfoIndexRecordAndMainAttachElementRecordToDB(good *pb.Good) error {
-	// 1. 创建主元素、主元素尺寸的对应关系
-	if errResult := writePbElementSelectSizeRecord(good.Id, good.MainElement); errResult != nil {
-		return errResult
-	}
-
-	// 2. 创建附属元素、附属元素尺寸的对应关系
-	for index, attachElement := range good.AttachElements {
-		if errResult := writePbElementSelectSizeRecord(good.Id, attachElement); errResult != nil {
-			return ers.New("创建第 %d 个附属元素与其尺寸的对应关系时出错。%s", index+1, errResult.Error())
-		}
-	}
-
-	// 3. 创建主元素、附属元素的对应关系
-	for index, attachElement := range good.AttachElements {
-		if _, errResult := dao.MainElementAttachElementRecordDao.Create(&model.MainElementAttachElementRecord{
-			GoodID:          good.Id,
-			AttachElementID: attachElement.Id,
-			MainElementID:   good.MainElement.Id,
-		}); errResult != nil {
-			return ers.New("创建第 %d 个主元素与其附属元素的对应关系时出错。%s", index+1, errResult.Error())
-		}
-	}
-
-	// 4. 返回
 	return nil
 }
 
@@ -112,34 +74,37 @@ func writePbElementMetaObjectToDbAndUpdateID(pbElement *pb.Element, classID int6
 	return nil
 }
 
-func toDbElement(pbElement *pb.Element, classID int64) *model.Element {
-	return &model.Element{
-		ID:      pbElement.Id,
-		Name:    pbElement.Name,
-		Type:    pbElement.Type,
-		ClassID: classID,
+// 将商品的主元素尺寸选择信息、附属元素尺寸选择信息、主元素与附属元素的对应记录写入数据库
+func writePbGoodSelectedSizeInfoIndexRecordAndMainAttachElementRecordToDB(good *pb.Good) error {
+	// 1. 创建主元素、主元素尺寸的对应关系
+	if errResult := writePbElementSelectSizeRecord(good.MainElement, good.Id); errResult != nil {
+		return errResult
 	}
+
+	// 2. 创建附属元素、附属元素尺寸的对应关系
+	for index, attachElement := range good.AttachElements {
+		if errResult := writePbElementSelectSizeRecord(attachElement, good.Id); errResult != nil {
+			return ers.New("创建第 %d 个附属元素与其尺寸的对应关系时出错。%s", index+1, errResult.Error())
+		}
+	}
+
+	// 3. 创建主元素、附属元素的对应关系
+	for index, attachElement := range good.AttachElements {
+		if _, errResult := dao.MainElementAttachElementRecordDao.Create(&model.MainElementAttachElementRecord{
+			GoodID:          good.Id,
+			AttachElementID: attachElement.Id,
+			MainElementID:   good.MainElement.Id,
+		}); errResult != nil {
+			return ers.New("创建第 %d 个主元素与其附属元素的对应关系时出错。%s", index+1, errResult.Error())
+		}
+	}
+
+	// 4. 返回
+	return nil
 }
 
-func toDbElementSizeInfo(pbSizeInfo *pb.SizeInfo, elementID int64) *model.ElementSizeInfo {
-	return &model.ElementSizeInfo{
-		ID:               pbSizeInfo.Id,
-		ElementID:        elementID,
-		Size:             pbSizeInfo.Size,
-		Price:            model.GetDbPrice(pbSizeInfo.Price),
-		PictureStorePath: pbSizeInfo.PictureStorePath,
-	}
-}
-
-func toDbSpace(pbSpace *pb.Space, classID int64) *model.Space {
-	return &model.Space{
-		ID:               pbSpace.Id,
-		Name:             pbSpace.Name,
-		ClassID:          classID,
-		Price:            model.GetDbPrice(pbSpace.Price),
-		BillingType:      pbSpace.BillingType,
-		PictureStorePath: pbSpace.PictureStorePath,
-	}
+func getPbElementSelectSizeInfoID(pbElement *pb.Element) int64 {
+	return model.GetPbElementSelectSizeInfo(pbElement).Id
 }
 
 func closeDeskIfOpening(deskID int64, endTimestamp int64) error {
@@ -164,3 +129,67 @@ func closeDeskIfOpening(deskID int64, endTimestamp int64) error {
 	return nil
 }
 
+//func checkOutIfNot(chargeableObj model.Chargeable) error {
+//
+//	expenseInfo := getExpenseInfo(chargeableObj)
+//	if expenseInfo.CheckOutAt != 0 {
+//		// todo: 警告
+//		// 这里表示商品已结账过了
+//		return nil
+//	}
+//	expenseInfo.CheckOutAt = time.Now().Unix()
+//	if err := dao.FavorRecordDao.UpdateExpenseInfo(chargeableObj, expenseInfo); err != nil {
+//		logger.Error("Fail to finish chargeableDao.Update", zap.Error(err))
+//		return err
+//	}
+//
+//	// 添加结账记录
+//	if err := dao.CheckOutRecordDao.Create(&model.CheckOutRecord{
+//		ChargeableObjectName: chargeableObj.GetName(),
+//		ChargeableObjectID:   chargeableObj.GetID(),
+//		CheckOutAt:           expenseInfo.CheckOutAt,
+//	}); err != nil {
+//		logger.Error("Fail to finish CheckOutRecordDao.Create", zap.Error(err))
+//		return err
+//	}
+//
+//	return nil
+//}
+
+func toDbElement(pbElement *pb.Element, classID int64) *model.Element {
+	return &model.Element{
+		ID:      pbElement.Id,
+		Name:    pbElement.Name,
+		Type:    pbElement.Type,
+		ClassID: classID,
+	}
+}
+
+func toDbElementSizeInfo(pbSizeInfo *pb.SizeInfo, elementID int64) *model.ElementSizeInfo {
+	return &model.ElementSizeInfo{
+		ID:               pbSizeInfo.Id,
+		ElementID:        elementID,
+		Size:             pbSizeInfo.Size,
+		Price:            getDbPrice(pbSizeInfo.Price),
+		PictureStorePath: pbSizeInfo.PictureStorePath,
+	}
+}
+
+func toDbElementSelectSizeRecord(goodID, elementID, elementSizeInfoID int64) *model.ElementSelectSizeRecord {
+	return &model.ElementSelectSizeRecord{
+		GoodID:           goodID,
+		ElementID:        elementID,
+		SelectSizeInfoID: elementSizeInfoID,
+	}
+}
+
+func toDbSpace(pbSpace *pb.Space, classID int64) *model.Space {
+	return &model.Space{
+		ID:               pbSpace.Id,
+		Name:             pbSpace.Name,
+		ClassID:          classID,
+		Price:            getDbPrice(pbSpace.Price),
+		BillingType:      pbSpace.BillingType,
+		PictureStorePath: pbSpace.PictureStorePath,
+	}
+}

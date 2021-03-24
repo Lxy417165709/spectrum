@@ -45,7 +45,7 @@ func (orderDao) Create(obj *model.Order) (int64, error) {
 			expense = values(expense),
 			check_out_at = values(check_out_at),
 			non_favor_expense = values(non_favor_expense);
-	`, fmt.Sprintf("`%s`", obj.TableName()), GetPlaceholderClause(len(values)))
+	`, fmt.Sprintf("`%s`", obj.TableName()), getPlaceholderClause(len(values)))
 	result, err := mainDB.CommonDB().Exec(sql, values...)
 	if err != nil {
 		logger.Error("Fail to finish create", zap.Any("obj", obj), zap.Error(err))

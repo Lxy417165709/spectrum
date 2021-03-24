@@ -50,32 +50,14 @@ func (MvpServer) OrderGood(ctx context.Context, req *pb.OrderGoodReq) (*pb.Order
 		return nil, errResult
 	}
 
+	// 2. 点单商品集
 	for _, good := range goods {
-		// 1. 创建商品记录，获取商品ID
-		dbGood := &model.Good{
-			ID:              good.Id,
-			OrderID:         orderID,
-			MainElementID:   good.MainElement.Id,
-			Expense:         good.ExpenseInfo.Expense,
-			CheckOutAt:      model.ToTime(good.ExpenseInfo.CheckOutAt),
-			NonFavorExpense: good.ExpenseInfo.NonFavorExpense,
-		}
-		goodID, errResult := dao.GoodDao.Create(dbGood)
-		if errResult != nil {
-			return nil, errResult
-		}
-
-		// 2. 添加/更新商品尺寸选择、商品主元素附属元素关联关系
-		good.Id = goodID
-		if errResult := writePbGoodSelectedSizeInfoIndexRecordAndMainAttachElementRecordToDB(good); errResult != nil {
-			return nil, errResult
-		}
-
-		// 3. 记录商品优惠记录
-		if errResult := dao.FavorRecordDao.CreateFavorRecord(dbGood.GetName(), dbGood.ID, good.Favors); errResult != nil {
+		if errResult := writePbGoodToDB(good, orderID); errResult != nil {
 			return nil, errResult
 		}
 	}
+
+	// 3. 返回
 	return &res, nil
 }
 
@@ -274,7 +256,7 @@ func (MvpServer) OrderDesk(ctx context.Context, req *pb.OrderDeskReq) (*pb.Order
 		SessionCount:    0,
 		SpaceID:         req.Desk.Space.Id,
 		Expense:         req.Desk.ExpenseInfo.Expense,
-		CheckOutAt:      model.ToTime(req.Desk.ExpenseInfo.CheckOutAt),
+		CheckOutAt:      toTime(req.Desk.ExpenseInfo.CheckOutAt),
 		NonFavorExpense: req.Desk.ExpenseInfo.NonFavorExpense,
 		OrderID:         orderID,
 	}
@@ -436,19 +418,16 @@ func (s MvpServer) GetAllDesks(ctx context.Context, req *pb.GetAllDesksReq) (*pb
 		return &res, nil
 	}
 
-	spaces, err := dao.SpaceDao.GetByClassID(spaceClass.ID)
-	if err != nil {
-		// todo: log
-		return nil, err
+	spaces, errResult := dao.SpaceDao.GetByClassID(spaceClass.ID)
+	if errResult != nil {
+		return nil, errResult
 	}
 	desks := make([]*pb.Desk, 0)
 	for _, space := range spaces {
-		desk, err := dao.DeskDao.GetNonCheckOutDesk(space.ID)
-		if err != nil {
-			// todo:log
-			return nil, err
+		desk, errResult := dao.DeskDao.GetNonCheckOutDesk(space.ID)
+		if errResult != nil {
+			return nil, errResult
 		}
-
 		if desk == nil {
 			desks = append(desks, &pb.Desk{
 				Id:          0,

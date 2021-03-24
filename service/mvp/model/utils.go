@@ -2,12 +2,8 @@ package model
 
 import (
 	"fmt"
-	"go.uber.org/zap"
 	"sort"
-	"spectrum/common/logger"
 	"spectrum/common/pb"
-	"strconv"
-	"time"
 )
 
 func GetPbElementSelectSizeInfo(element *pb.Element) *pb.SizeInfo {
@@ -45,21 +41,6 @@ func GetFavor(favor *pb.Favor) (Favor, error) {
 	return &None{}, nil // 兜底
 }
 
-func GetDbPrice(priceString string) float64 {
-	price, err := strconv.ParseFloat(priceString, 64)
-	if err != nil {
-		logger.Error("Fail to finish strconv.ParseFloat", zap.String("priceString", priceString))
-	}
-	return price
-}
-
-func GetPbPrice(price float64) string {
+func getPbPrice(price float64) string {
 	return fmt.Sprintf("%0.2f", price)
-}
-
-func ToTime(timestamp int64) time.Time {
-	if timestamp != 0 {
-		return time.Unix(timestamp, 0)
-	}
-	return NilTime
 }

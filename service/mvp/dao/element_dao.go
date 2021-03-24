@@ -24,7 +24,7 @@ func (elementDao) Create(obj *model.Element) (int64, error) {
 			class_id = values(class_id),
 			name = values(name),
 			type = values(type);
-	`, fmt.Sprintf("`%s`", obj.TableName()), GetPlaceholderClause(len(values)))
+	`, fmt.Sprintf("`%s`", obj.TableName()), getPlaceholderClause(len(values)))
 	result, err := mainDB.CommonDB().Exec(sql, values...)
 	if err != nil {
 		logger.Error("Fail to finish create", zap.Any("obj", obj), zap.Error(err))

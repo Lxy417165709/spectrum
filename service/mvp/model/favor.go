@@ -5,12 +5,14 @@ import (
 	"strconv"
 )
 
+// -------------------------------------- Favor 接口 --------------------------------------
 type Favor interface {
 	GetExpense(nonFavorExpense float64) float64
 	ParseParameters(parameters []string) (Favor, error)
 	GetPriority() int // 获取优先级，优先级越小，越先计算
 }
 
+// -------------------------------------- None 类 --------------------------------------
 type None struct{}
 
 func (n *None) GetPriority() int {
@@ -25,6 +27,7 @@ func (n *None) GetExpense(nonFavorExpense float64) float64 {
 	return nonFavorExpense
 }
 
+// -------------------------------------- Rebate 类 --------------------------------------
 type Rebate struct {
 	Granularity float64 // 取值为 (0, 1]
 }
@@ -56,6 +59,7 @@ func (r *Rebate) GetExpense(nonFavorExpense float64) float64 {
 	return nonFavorExpense * r.Granularity
 }
 
+// -------------------------------------- FullReduction 类 --------------------------------------
 type FullReduction struct {
 	Full      float64
 	Reduction float64
@@ -94,6 +98,7 @@ func (f *FullReduction) GetExpense(nonFavorExpense float64) float64 {
 	return nonFavorExpense - float64(int(nonFavorExpense/f.Full))*f.Reduction
 }
 
+// -------------------------------------- Free 类 --------------------------------------
 type Free struct{}
 
 func (f *Free) GetPriority() int {

@@ -22,12 +22,14 @@ func (mainElementAttachElementRecordDao) Create(obj *model.MainElementAttachElem
 			good_id = values(good_id),
 			main_element_id = values(main_element_id),
 			attach_element_id = values(attach_element_id);
-	`, fmt.Sprintf("`%s`", obj.TableName()), GetPlaceholderClause(len(values)))
+	`, fmt.Sprintf("`%s`", obj.TableName()), getPlaceholderClause(len(values)))
+
 	result, err := mainDB.CommonDB().Exec(sql, values...)
 	if err != nil {
 		logger.Error("Fail to finish create", zap.Any("obj", obj), zap.Error(err))
 		return 0, ers.MysqlError
 	}
+
 	id, err := result.LastInsertId()
 	if err != nil {
 		logger.Error("Fail to get id", zap.Any("obj", obj), zap.Error(err))

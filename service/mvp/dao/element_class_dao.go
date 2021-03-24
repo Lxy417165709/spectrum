@@ -22,7 +22,7 @@ func (elementClassDao) Create(obj *model.ElementClass) (int64, error) {
 		on duplicate key update
 			name = values(name),
 			picture_store_path = values(picture_store_path);
-	`, fmt.Sprintf("`%s`", obj.TableName()), GetPlaceholderClause(len(values)))
+	`, fmt.Sprintf("`%s`", obj.TableName()), getPlaceholderClause(len(values)))
 
 	result, err := mainDB.CommonDB().Exec(sql, values...)
 	if err != nil {

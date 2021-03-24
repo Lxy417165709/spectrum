@@ -4,10 +4,10 @@ import (
 	"strings"
 )
 
-func GetPlaceholderClause(count int) string {
+func getPlaceholderClause(count int) string {
 	var placeholders []string
 	for i := 0; i < count; i++ {
 		placeholders = append(placeholders, "?")
 	}
-	return  strings.Join(placeholders, ",")
+	return strings.Join(placeholders, ",")
 }

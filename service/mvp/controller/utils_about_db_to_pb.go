@@ -71,15 +71,34 @@ func getOrderPbGoods(orderID int64) []*pb.Good {
 	return goods
 }
 
-// 返回的 good:
-// 已结账时: 返回结账的金额信息
-// 未结账时: 返回最新的金额信息
+func getPbDesk(desk *model.Desk) *pb.Desk {
+	space, errResult := dao.SpaceDao.Get(desk.SpaceID)
+	if errResult != nil {
+		// todo: log
+		return nil
+	}
+	favor := getFavors(desk)
+	spaceClass, errResult := dao.SpaceClassDao.Get(space.ClassID)
+	if errResult != nil {
+		return nil
+	}
+	return &pb.Desk{
+		Id:          desk.ID,
+		Space:       space.ToPb(spaceClass.Name),
+		StartAt:     desk.StartAt.Unix(),
+		EndAt:       desk.EndAt.Unix(),
+		Favors:      getFavors(desk),
+		ExpenseInfo: desk.GetExpenseInfo(space.BillingType, space.Price, favor),
+		OrderID:     desk.OrderID,
+	}
+}
+
 func getPbGood(goodID int64, mainElementID int64) *pb.Good {
 	return &pb.Good{
 		Id:             goodID,
 		MainElement:    getPbElement(goodID, mainElementID),
 		AttachElements: getPbAttachElements(goodID, mainElementID),
-		//Favors:         getFavors(good),// todo: 之后再说
+		//Favors:         getFavors(good), // todo: 之后再说
 		//ExpenseInfo:    good.GetExpenseInfo(mainElement, attachElements, favors),	// todo: 之后再说
 		Favors: []*pb.Favor{
 			{
@@ -153,33 +172,6 @@ func getPbElement(goodID, elementID int64) *pb.Element {
 		Type:          element.Type,
 		SelectedIndex: selectedSizeInfoIndex,
 		SizeInfos:     pbSizeInfos,
-	}
-}
-
-
-// 返回的 desk:
-// 已结账时: 返回结账的金额信息
-// 未结账时: 返回最新的金额信息
-func getPbDesk(desk *model.Desk) *pb.Desk {
-	space, errResult := dao.SpaceDao.Get(desk.SpaceID)
-	if errResult != nil {
-		// todo: log
-		return nil
-	}
-	favor := getFavors(desk)
-
-	spaceClass, errResult := dao.SpaceClassDao.Get(space.ClassID)
-	if errResult != nil {
-		return nil
-	}
-	return &pb.Desk{
-		Id:          desk.ID,
-		Space:       space.ToPb(spaceClass.Name),
-		StartAt:     desk.StartAt.Unix(),
-		EndAt:       desk.EndAt.Unix(),
-		Favors:      favor,
-		ExpenseInfo: desk.GetExpenseInfo(space.BillingType, space.Price, favor),
-		OrderID:     desk.OrderID,
 	}
 }
 
