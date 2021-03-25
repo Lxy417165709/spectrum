@@ -6,7 +6,6 @@ import (
 	"spectrum/common/logger"
 	"spectrum/common/pb"
 	"spectrum/service/mvp/dao"
-	"spectrum/service/mvp/model"
 )
 
 // --------------------------------------------- ID ---------------------------------------------
@@ -33,6 +32,7 @@ func getPbOrder(orderID int64) *pb.Order {
 		return nil
 	}
 
+	// 优化: 这里只需要获得 deskID，spaceID 就可以了
 	desk, errResult := dao.DeskDao.GetByOrderID(orderID)
 	if errResult != nil {
 		return nil
@@ -42,20 +42,18 @@ func getPbOrder(orderID int64) *pb.Order {
 		return nil
 	}
 
-	pbDesk := getPbDesk(desk)
+	pbDesk := getPbDesk(desk.ID, desk.SpaceID)
 	pbGoods := getOrderPbGoods(orderID)
-	favors := getFavors(order)
+	favors, errResult := getFavors(order.GetChargeableObjectName(), order.GetID())
+	if errResult != nil {
+		return nil
+	}
 	return &pb.Order{
-		Id:     orderID,
-		Desk:   pbDesk,
-		Goods:  pbGoods,
-		Favors: favors,
-		ExpenseInfo: &pb.ExpenseInfo{
-			NonFavorExpense: 0,
-			CheckOutAt:      model.NilTime.Unix(),
-			Expense:         0,
-		},
-		//ExpenseInfo: order.GetExpenseInfo(pbDesk, pbGoods, favors),	// todo:
+		Id:          orderID,
+		Desk:        pbDesk,
+		Goods:       pbGoods,
+		Favors:      favors,
+		ExpenseInfo: order.GetExpenseInfo(pbDesk, pbGoods, favors), // todo:
 	}
 }
 
@@ -71,13 +69,22 @@ func getOrderPbGoods(orderID int64) []*pb.Good {
 	return goods
 }
 
-func getPbDesk(desk *model.Desk) *pb.Desk {
-	space, errResult := dao.SpaceDao.Get(desk.SpaceID)
+func getPbDesk(deskID int64, spaceID int64) *pb.Desk {
+	desk, errResult := dao.DeskDao.Get(deskID, spaceID)
 	if errResult != nil {
-		// todo: log
 		return nil
 	}
-	favor := getFavors(desk)
+
+	favors, errResult := getFavors(desk.GetChargeableObjectName(), desk.GetID())
+	if errResult != nil {
+		return nil
+	}
+
+	space, errResult := dao.SpaceDao.Get(spaceID)
+	if errResult != nil {
+		return nil
+	}
+
 	spaceClass, errResult := dao.SpaceClassDao.Get(space.ClassID)
 	if errResult != nil {
 		return nil
@@ -87,30 +94,31 @@ func getPbDesk(desk *model.Desk) *pb.Desk {
 		Space:       space.ToPb(spaceClass.Name),
 		StartAt:     desk.StartAt.Unix(),
 		EndAt:       desk.EndAt.Unix(),
-		Favors:      getFavors(desk),
-		ExpenseInfo: desk.GetExpenseInfo(space.BillingType, space.Price, favor),
+		Favors:      favors,
+		ExpenseInfo: desk.GetExpenseInfo(space.BillingType, space.Price, favors),
 		OrderID:     desk.OrderID,
 	}
 }
 
 func getPbGood(goodID int64, mainElementID int64) *pb.Good {
+	good, errResult := dao.GoodDao.Get(goodID, mainElementID)
+	if errResult != nil {
+		return nil
+	}
+
+	mainElement := getPbElement(goodID, mainElementID)
+	attachElements := getPbAttachElements(goodID, mainElementID)
+
+	favors, errResult := getFavors(good.GetChargeableObjectName(), good.GetID())
+	if errResult != nil {
+		return nil
+	}
 	return &pb.Good{
 		Id:             goodID,
-		MainElement:    getPbElement(goodID, mainElementID),
-		AttachElements: getPbAttachElements(goodID, mainElementID),
-		//Favors:         getFavors(good), // todo: 之后再说
-		//ExpenseInfo:    good.GetExpenseInfo(mainElement, attachElements, favors),	// todo: 之后再说
-		Favors: []*pb.Favor{
-			{
-				FavorType:  pb.FavorType_NONE,
-				Parameters: nil,
-			},
-		},
-		ExpenseInfo: &pb.ExpenseInfo{
-			NonFavorExpense: 0,
-			CheckOutAt:      model.NilTime.Unix(),
-			Expense:         0,
-		},
+		MainElement:    mainElement,
+		AttachElements: attachElements,
+		Favors:         favors,
+		ExpenseInfo:    good.GetExpenseInfo(mainElement, attachElements, favors), // todo: 之后再说
 	}
 }
 
@@ -175,14 +183,19 @@ func getPbElement(goodID, elementID int64) *pb.Element {
 	}
 }
 
-func getFavors(chargeableObj model.Chargeable) []*pb.Favor {
-	records, err := dao.FavorRecordDao.GetFavorRecords(chargeableObj)
-	if err != nil {
-		return nil
+func getFavors(chargeableObjName string, chargeableObjID int64) ([]*pb.Favor, error) {
+	// 1. 查询
+	records, errResult := dao.FavorRecordDao.GetFavorRecords(chargeableObjName, chargeableObjID)
+	if errResult != nil {
+		return nil, errResult
 	}
+
+	// 2. 转换
 	result := make([]*pb.Favor, 0)
 	for _, record := range records {
 		result = append(result, record.ToPb())
 	}
-	return result
+
+	// 3. 返回
+	return result, nil
 }

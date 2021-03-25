@@ -8,6 +8,7 @@ import (
 	"spectrum/common/pb"
 	"spectrum/service/mvp/dao"
 	"spectrum/service/mvp/model"
+	"spectrum/service/mvp/utils"
 	"time"
 )
 
@@ -35,7 +36,7 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 
 	// 3. 创建并返回响应
 	var res pb.AddGoodRes
-	res.Good = getPbGood(good.Id, good.MainElement.Id)
+	res.Good = good
 	return &res, nil
 }
 
@@ -70,7 +71,8 @@ func (MvpServer) AddElement(ctx context.Context, req *pb.AddElementReq) (*pb.Add
 	if errResult := writePbElementMetaObjectToDbAndUpdateID(req.Element, getDbElementClassByName(req.ClassName).ID); errResult != nil {
 		return nil, errResult
 	}
-	if _, errResult := dao.ElementSelectSizeRecordDao.Create(toDbElementSelectSizeRecord(0, req.Element.Id, model.GetPbElementSelectSizeInfo(req.Element).Id));
+	if _, errResult := dao.ElementSelectSizeRecordDao.Create(toDbElementSelectSizeRecord(0, req.Element.Id,
+		model.GetPbElementSelectSizeInfo(req.Element).Id));
 		errResult != nil {
 		return nil, errResult
 	}
@@ -237,7 +239,7 @@ func (MvpServer) OrderDesk(ctx context.Context, req *pb.OrderDeskReq) (*pb.Order
 	var res pb.OrderDeskRes
 
 	orderID, errResult := dao.OrderDao.Create(&model.Order{
-		CheckOutAt: model.NilTime,
+		CheckOutAt: utils.NilTime,
 	})
 	if errResult != nil {
 		return nil, errResult
@@ -252,11 +254,11 @@ func (MvpServer) OrderDesk(ctx context.Context, req *pb.OrderDeskReq) (*pb.Order
 	dbDesk := &model.Desk{
 		ID:              req.Desk.Id,
 		StartAt:         time.Now(),
-		EndAt:           model.NilTime,
+		EndAt:           utils.NilTime,
 		SessionCount:    0,
 		SpaceID:         req.Desk.Space.Id,
 		Expense:         req.Desk.ExpenseInfo.Expense,
-		CheckOutAt:      toTime(req.Desk.ExpenseInfo.CheckOutAt),
+		CheckOutAt:      utils.ToTime(req.Desk.ExpenseInfo.CheckOutAt),
 		NonFavorExpense: req.Desk.ExpenseInfo.NonFavorExpense,
 		OrderID:         orderID,
 	}
@@ -264,7 +266,7 @@ func (MvpServer) OrderDesk(ctx context.Context, req *pb.OrderDeskReq) (*pb.Order
 	if errResult != nil {
 		return nil, errResult
 	}
-	if errResult := dao.FavorRecordDao.CreateFavorRecord(dbDesk.GetName(), deskID, req.Desk.Favors); errResult != nil {
+	if errResult := dao.FavorRecordDao.CreateFavorRecord(dbDesk.GetChargeableObjectName(), deskID, req.Desk.Favors); errResult != nil {
 		return nil, errResult
 	}
 	res.Order = getPbOrder(orderID)
@@ -377,7 +379,7 @@ func (s MvpServer) CancelGood(ctx context.Context, req *pb.CancelGoodReq) (*pb.C
 		// todo: log
 		return nil, err
 	}
-	if err := dao.FavorRecordDao.BatchDeleteFavorRecord(model.ChargeableObjectNameOfGood, req.GoodIDs); err != nil {
+	if err := dao.FavorRecordDao.BatchDeleteFavorRecord(utils.ChargeableObjectNameOfGood, req.GoodIDs); err != nil {
 		// todo: log
 		return nil, err
 	}
@@ -389,7 +391,7 @@ func (s MvpServer) AddFavorForGood(ctx context.Context, req *pb.AddFavorForGoodR
 	logger.Info("AddFavorForGood", zap.Any("ctx", ctx), zap.Any("req", req))
 
 	var res pb.AddFavorForGoodRes
-	if err := dao.FavorRecordDao.CreateFavorRecord(model.ChargeableObjectNameOfGood, req.GoodID, req.Favors); err != nil {
+	if err := dao.FavorRecordDao.CreateFavorRecord(utils.ChargeableObjectNameOfGood, req.GoodID, req.Favors); err != nil {
 		// todo: log
 		return nil, err
 	}
@@ -401,7 +403,7 @@ func (s MvpServer) DeleteFavorForGood(ctx context.Context, req *pb.DeleteFavorFo
 	logger.Info("DeleteFavorForGood", zap.Any("ctx", ctx), zap.Any("req", req))
 
 	var res pb.DeleteFavorForGoodRes
-	if err := dao.FavorRecordDao.DeleteFavorRecord(model.ChargeableObjectNameOfGood, req.GoodID, req.Favor); err != nil {
+	if err := dao.FavorRecordDao.DeleteFavorRecord(utils.ChargeableObjectNameOfGood, req.GoodID, req.Favor); err != nil {
 		// todo: log
 		return nil, err
 	}
@@ -431,15 +433,15 @@ func (s MvpServer) GetAllDesks(ctx context.Context, req *pb.GetAllDesksReq) (*pb
 		if desk == nil {
 			desks = append(desks, &pb.Desk{
 				Id:          0,
+				OrderID:     0,
 				Space:       space.ToPb(getDbSpaceClassByID(space.ClassID).Name),
-				StartAt:     0,
-				EndAt:       0,
+				StartAt:     utils.NilTime.Unix(),
+				EndAt:       utils.NilTime.Unix(),
 				Favors:      nil,
 				ExpenseInfo: nil,
-				OrderID:     0,
 			})
 		} else {
-			desks = append(desks, getPbDesk(desk))
+			desks = append(desks, getPbDesk(desk.ID, space.ID))
 		}
 	}
 

@@ -1,20 +1,16 @@
 package dao
 
 import (
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"reflect"
-	"spectrum/common/env"
-	"spectrum/common/utils"
+	"strings"
 )
 
-var mainDB *gorm.DB
-
-func InitMainDB() {
-	mainDB = utils.NewDB(
-		utils.GenDSN(env.Conf.MainDB.Link, env.Conf.MainDB.Name),
-		env.Conf.MainDB.MaxConn,
-	)
+func getPlaceholderClause(count int) string {
+	var placeholders []string
+	for i := 0; i < count; i++ {
+		placeholders = append(placeholders, "?")
+	}
+	return strings.Join(placeholders, ",")
 }
 
 func createTableWhenNotExist(table interface{}) {

@@ -2,6 +2,7 @@ package model
 
 import (
 	"spectrum/common/pb"
+	"spectrum/service/mvp/utils"
 	"time"
 )
 
@@ -23,16 +24,20 @@ type Desk struct {
 }
 
 func (d *Desk) TableName() string {
-	return d.GetName()
+	return d.GetChargeableObjectName()
 }
 
-func (*Desk) GetName() string {
-	return ChargeableObjectNameOfDesk
+func (*Desk) GetChargeableObjectName() string {
+	return utils.ChargeableObjectNameOfDesk
+}
+
+func (d *Desk) GetID() int64 {
+	return d.ID
 }
 
 func (d *Desk) GetExpenseInfo(billingType pb.BillingType, price float64, favors []*pb.Favor) *pb.ExpenseInfo {
 	// 1. 已结账时
-	if d.CheckOutAt != NilTime {
+	if d.CheckOutAt != utils.NilTime {
 		return &pb.ExpenseInfo{
 			NonFavorExpense: d.NonFavorExpense,
 			CheckOutAt:      d.CheckOutAt.Unix(),
@@ -50,8 +55,8 @@ func (d *Desk) GetExpenseInfo(billingType pb.BillingType, price float64, favors 
 	}
 	return &pb.ExpenseInfo{
 		NonFavorExpense: nonFavorExpense,
-		CheckOutAt:      NilTime.Unix(),
-		Expense:         GetFavorExpense(nonFavorExpense, favors),
+		CheckOutAt:      utils.NilTime.Unix(),
+		Expense:         getFavorExpense(nonFavorExpense, favors),
 	}
 }
 
@@ -67,9 +72,5 @@ func (d *Desk) getTimingNonFavorExpense(pricePerHour float64) float64 {
 }
 
 func (d *Desk) IsOpening() bool {
-	return d.EndAt == NilTime
-}
-
-func (d *Desk) GetID() int64 {
-	return d.ID
+	return d.EndAt == utils.NilTime
 }

@@ -7,6 +7,7 @@ import (
 	"spectrum/common/pb"
 	"spectrum/service/mvp/dao"
 	"spectrum/service/mvp/model"
+	"spectrum/service/mvp/utils"
 )
 
 func writePbGoodToDB(good *pb.Good, orderID int64) error {
@@ -16,7 +17,7 @@ func writePbGoodToDB(good *pb.Good, orderID int64) error {
 		OrderID:         orderID,
 		MainElementID:   good.MainElement.Id,
 		Expense:         good.ExpenseInfo.Expense,
-		CheckOutAt:      toTime(good.ExpenseInfo.CheckOutAt),
+		CheckOutAt:      utils.ToTime(good.ExpenseInfo.CheckOutAt),
 		NonFavorExpense: good.ExpenseInfo.NonFavorExpense,
 	}
 	goodID, errResult := dao.GoodDao.Create(dbGood)
@@ -31,7 +32,7 @@ func writePbGoodToDB(good *pb.Good, orderID int64) error {
 	}
 
 	// 3. 记录商品优惠记录
-	if errResult := dao.FavorRecordDao.CreateFavorRecord(dbGood.GetName(), dbGood.ID, good.Favors); errResult != nil {
+	if errResult := dao.FavorRecordDao.CreateFavorRecord(dbGood.GetChargeableObjectName(), dbGood.ID, good.Favors); errResult != nil {
 		return errResult
 	}
 
@@ -108,7 +109,7 @@ func getPbElementSelectSizeInfoID(pbElement *pb.Element) int64 {
 }
 
 func closeDeskIfOpening(deskID int64, endTimestamp int64) error {
-	desk, err := dao.DeskDao.Get(deskID)
+	desk, err := dao.DeskDao.GetByID(deskID)
 	if err != nil {
 		logger.Error("Fail to finish DeskDao.Get",
 			zap.Error(err))
@@ -145,7 +146,7 @@ func closeDeskIfOpening(deskID int64, endTimestamp int64) error {
 //
 //	// 添加结账记录
 //	if err := dao.CheckOutRecordDao.Create(&model.CheckOutRecord{
-//		ChargeableObjectName: chargeableObj.GetName(),
+//		ChargeableObjectName: chargeableObj.GetChargeableObjectName(),
 //		ChargeableObjectID:   chargeableObj.GetID(),
 //		CheckOutAt:           expenseInfo.CheckOutAt,
 //	}); err != nil {
@@ -155,6 +156,17 @@ func closeDeskIfOpening(deskID int64, endTimestamp int64) error {
 //
 //	return nil
 //}
+
+func toDbSpace(pbSpace *pb.Space, classID int64) *model.Space {
+	return &model.Space{
+		ID:               pbSpace.Id,
+		Name:             pbSpace.Name,
+		ClassID:          classID,
+		Price:            utils.GetDbPrice(pbSpace.Price),
+		BillingType:      pbSpace.BillingType,
+		PictureStorePath: pbSpace.PictureStorePath,
+	}
+}
 
 func toDbElement(pbElement *pb.Element, classID int64) *model.Element {
 	return &model.Element{
@@ -170,7 +182,7 @@ func toDbElementSizeInfo(pbSizeInfo *pb.SizeInfo, elementID int64) *model.Elemen
 		ID:               pbSizeInfo.Id,
 		ElementID:        elementID,
 		Size:             pbSizeInfo.Size,
-		Price:            getDbPrice(pbSizeInfo.Price),
+		Price:            utils.GetDbPrice(pbSizeInfo.Price),
 		PictureStorePath: pbSizeInfo.PictureStorePath,
 	}
 }
@@ -180,16 +192,5 @@ func toDbElementSelectSizeRecord(goodID, elementID, elementSizeInfoID int64) *mo
 		GoodID:           goodID,
 		ElementID:        elementID,
 		SelectSizeInfoID: elementSizeInfoID,
-	}
-}
-
-func toDbSpace(pbSpace *pb.Space, classID int64) *model.Space {
-	return &model.Space{
-		ID:               pbSpace.Id,
-		Name:             pbSpace.Name,
-		ClassID:          classID,
-		Price:            getDbPrice(pbSpace.Price),
-		BillingType:      pbSpace.BillingType,
-		PictureStorePath: pbSpace.PictureStorePath,
 	}
 }

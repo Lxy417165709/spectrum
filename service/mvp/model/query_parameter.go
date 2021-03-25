@@ -2,6 +2,7 @@ package model
 
 import (
 	"spectrum/common/pb"
+	"spectrum/service/mvp/utils"
 	"time"
 )
 
@@ -21,18 +22,18 @@ func (q *QueryOrderParameter) GetWhereClauseAndValues() (string, []interface{}) 
 	case pb.CheckOutState_All:
 	case pb.CheckOutState_HadCheckOut:
 		whereClause += " and check_out_at != ? "
-		whereValues = append(whereValues, NilTime)
+		whereValues = append(whereValues, utils.NilTime)
 	case pb.CheckOutState_NotCheckOut:
 		whereClause += " and check_out_at = ? "
-		whereValues = append(whereValues, NilTime)
+		whereValues = append(whereValues, utils.NilTime)
 	}
 
 	// 2. 处理创建时间区间
-	if q.CreatedTimeInterval.Start != NilTime {
+	if q.CreatedTimeInterval.Start != utils.NilTime {
 		whereClause += " and created_at >= ? "
 		whereValues = append(whereValues, q.CreatedTimeInterval.Start)
 	}
-	if q.CreatedTimeInterval.End != NilTime {
+	if q.CreatedTimeInterval.End != utils.NilTime {
 		whereClause += " and created_at <= ? "
 		whereValues = append(whereValues, q.CreatedTimeInterval.End)
 	}

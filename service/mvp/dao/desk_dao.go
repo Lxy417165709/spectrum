@@ -7,6 +7,7 @@ import (
 	"spectrum/common/ers"
 	"spectrum/common/logger"
 	"spectrum/service/mvp/model"
+	"spectrum/service/mvp/utils"
 )
 
 var DeskDao deskDao
@@ -54,7 +55,7 @@ func (deskDao) Update(to map[string]interface{}) error {
 
 func (deskDao) GetNonCheckOutDesk(spaceID int64) (*model.Desk, error) {
 	var result model.Desk
-	if err := mainDB.First(&result, "space_id = ? and check_out_at = ?", spaceID, model.NilTime).Error; err != nil {
+	if err := mainDB.First(&result, "space_id = ? and check_out_at = ?", spaceID, utils.NilTime).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, nil
 		}
@@ -66,7 +67,20 @@ func (deskDao) GetNonCheckOutDesk(spaceID int64) (*model.Desk, error) {
 	return &result, nil
 }
 
-func (deskDao) Get(id int64) (*model.Desk, error) {
+func (deskDao) Get(id, spaceID int64) (*model.Desk, error) {
+	var result model.Desk
+	if err := mainDB.First(&result, "id = ? ans space_id = ?", id, spaceID).Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return nil, nil
+		}
+		logger.Error("Fail to finish mainDB.First", zap.Int64("id", id),
+			zap.Int64("spaceID", spaceID), zap.Error(err))
+		return nil, ers.MysqlError
+	}
+	return &result, nil
+}
+
+func (deskDao) GetByID(id int64) (*model.Desk, error) {
 	var result model.Desk
 	if err := mainDB.First(&result, "id = ?", id).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {

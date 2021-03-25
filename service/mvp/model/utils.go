@@ -1,31 +1,10 @@
 package model
 
 import (
-	"fmt"
 	"sort"
 	"spectrum/common/pb"
 )
 
-func GetPbElementSelectSizeInfo(element *pb.Element) *pb.SizeInfo {
-	return element.SizeInfos[element.SelectedIndex]
-}
-
-func GetFavorExpense(nonFavorExpense float64, pbFavors []*pb.Favor) float64 {
-	favors := make([]Favor, 0)
-	for _, pbFavor := range pbFavors {
-		favor, _ := GetFavor(pbFavor)
-		favors = append(favors, favor)
-	}
-	sort.Slice(favors, func(i, j int) bool {
-		return favors[i].GetPriority() <= favors[j].GetPriority()
-	})
-
-	expense := nonFavorExpense
-	for _, favor := range favors {
-		expense = favor.GetExpense(expense)
-	}
-	return expense
-}
 
 func GetFavor(favor *pb.Favor) (Favor, error) {
 	switch favor.FavorType {
@@ -41,6 +20,23 @@ func GetFavor(favor *pb.Favor) (Favor, error) {
 	return &None{}, nil // 兜底
 }
 
-func getPbPrice(price float64) string {
-	return fmt.Sprintf("%0.2f", price)
+func GetPbElementSelectSizeInfo(element *pb.Element) *pb.SizeInfo {
+	return element.SizeInfos[element.SelectedIndex]
+}
+
+func getFavorExpense(nonFavorExpense float64, pbFavors []*pb.Favor) float64 {
+	favors := make([]Favor, 0)
+	for _, pbFavor := range pbFavors {
+		favor, _ := GetFavor(pbFavor)
+		favors = append(favors, favor)
+	}
+	sort.Slice(favors, func(i, j int) bool {
+		return favors[i].GetPriority() <= favors[j].GetPriority()
+	})
+
+	expense := nonFavorExpense
+	for _, favor := range favors {
+		expense = favor.GetExpense(expense)
+	}
+	return expense
 }

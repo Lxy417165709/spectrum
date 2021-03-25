@@ -4,6 +4,7 @@ import (
 	"spectrum/common/ers"
 	"spectrum/common/pb"
 	"spectrum/service/mvp/model"
+	"spectrum/service/mvp/utils"
 	"strconv"
 	"time"
 )
@@ -25,6 +26,7 @@ func checkAddGoodParameter(req *pb.AddGoodReq) (*pb.Good, string, error) {
 	// 3. 返回
 	return good, req.ClassName, nil
 }
+
 func checkAddGoodClassParameter(req *pb.AddGoodClassReq) (*pb.GoodClass, error) {
 	goodClass := req.GoodClass
 	if errResult := checkIsValidGoodClassName(goodClass.Name); errResult != nil {
@@ -35,6 +37,7 @@ func checkAddGoodClassParameter(req *pb.AddGoodClassReq) (*pb.GoodClass, error) 
 	}
 	return goodClass, nil
 }
+
 func checkOrderGoodParameter(req *pb.OrderGoodReq) (int64, []*pb.Good, error) {
 	if req.OrderID <= 0 {
 		return 0, nil, ers.New("订单ID 必须大于 0。", req.OrderID)
@@ -92,7 +95,7 @@ func checkIsValidFavor(favor *pb.Favor) error {
 		return ers.New("优惠结构 不能为空。")
 	}
 	if !isValidFavorType(favor.FavorType) {
-		return ers.New("优惠类型 只能为 %s。", model.GetValidFavorTypesString())
+		return ers.New("优惠类型 只能为 %s。", utils.GetValidFavorTypesString())
 	}
 	if _, errResult := model.GetFavor(favor); errResult != nil {
 		return errResult
@@ -133,7 +136,7 @@ func checkIsValidElement(element *pb.Element) error {
 		return ers.New("元素名 不能为空。")
 	}
 	if !isValidElementType(element.Type) {
-		return ers.New("元素类型 只能为 %s。", model.GetValidElementTypesString())
+		return ers.New("元素类型 只能为 %s。", utils.GetValidElementTypesString())
 	}
 	if errResult := checkIsValidSelectedIndex(int(element.SelectedIndex), len(element.SizeInfos)); errResult != nil {
 		return ers.New("元素尺寸选择索引非法，%s", errResult.Error())
@@ -200,7 +203,7 @@ func checkIsValidGoodClassName(goodClassName string) error {
 }
 
 func isValidElementType(elementType pb.ElementType) bool {
-	for _, validElementType := range model.ValidElementTypes {
+	for _, validElementType := range utils.ValidElementTypes {
 		if elementType == validElementType {
 			return true
 		}
@@ -209,7 +212,7 @@ func isValidElementType(elementType pb.ElementType) bool {
 }
 
 func isValidFavorType(favorType pb.FavorType) bool {
-	for _, validFavorType := range model.ValidFavorTypes {
+	for _, validFavorType := range utils.ValidFavorTypes {
 		if validFavorType == favorType {
 			return true
 		}

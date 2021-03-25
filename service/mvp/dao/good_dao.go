@@ -56,17 +56,14 @@ func (goodDao) BatchDelete(ids []int64) error {
 	return nil
 }
 
-func (goodDao) Get(id int64) (*model.Good, error) {
-	var table model.Good
-	createTableWhenNotExist(&table)
-
+func (goodDao) Get(id int64, mainElement int64) (*model.Good, error) {
 	var result model.Good
-	if err := mainDB.First(&result, "id = ?", id).Error; err != nil {
+	if err := mainDB.First(&result, "id = ? and main_element_id = ?", id, mainElement).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, nil
 		}
 		logger.Error("Fail to finish mainDB.First", zap.Int64("id", id), zap.Error(err))
-		return nil, err
+		return nil, ers.MysqlError
 	}
 	return &result, nil
 }

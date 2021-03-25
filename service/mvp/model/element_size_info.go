@@ -2,6 +2,7 @@ package model
 
 import (
 	"spectrum/common/pb"
+	"spectrum/service/mvp/utils"
 	"time"
 )
 
@@ -23,7 +24,7 @@ func (r *ElementSizeInfo) ToPb() *pb.SizeInfo {
 	return &pb.SizeInfo{
 		Id:               r.ID,
 		Size:             r.Size,
-		Price:            getPbPrice(r.Price),
+		Price:            utils.GetPbPrice(r.Price),
 		PictureStorePath: r.PictureStorePath,
 	}
 }

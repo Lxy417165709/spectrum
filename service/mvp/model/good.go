@@ -2,6 +2,7 @@ package model
 
 import (
 	"spectrum/common/pb"
+	"spectrum/service/mvp/utils"
 	"time"
 )
 
@@ -21,15 +22,15 @@ func (g *Good) GetID() int64 {
 }
 
 func (g *Good) TableName() string {
-	return g.GetName()
+	return g.GetChargeableObjectName()
 }
 
-func (*Good) GetName() string {
-	return ChargeableObjectNameOfGood
+func (*Good) GetChargeableObjectName() string {
+	return utils.ChargeableObjectNameOfGood
 }
 
 func (g *Good) GetExpenseInfo(mainElement *pb.Element, attachElement []*pb.Element, favors []*pb.Favor) *pb.ExpenseInfo {
-	if g.CheckOutAt != NilTime {
+	if g.CheckOutAt != utils.NilTime {
 		return &pb.ExpenseInfo{
 			NonFavorExpense: g.NonFavorExpense,
 			CheckOutAt:      g.CheckOutAt.Unix(),
@@ -39,8 +40,8 @@ func (g *Good) GetExpenseInfo(mainElement *pb.Element, attachElement []*pb.Eleme
 	nonFavorExpense := g.getNonFavorExpense(append(attachElement, mainElement))
 	return &pb.ExpenseInfo{
 		NonFavorExpense: nonFavorExpense,
-		CheckOutAt:      NilTime.Unix(),
-		Expense:         GetFavorExpense(nonFavorExpense, favors),
+		CheckOutAt:      utils.NilTime.Unix(),
+		Expense:         getFavorExpense(nonFavorExpense, favors),
 	}
 }
 
@@ -48,7 +49,7 @@ func (g *Good) getNonFavorExpense(elements []*pb.Element) float64 {
 	expense := 0.0
 	for _, element := range elements {
 		priceString := GetPbElementSelectSizeInfo(element).Price
-		expense += GetDbPrice(priceString)
+		expense += utils.GetDbPrice(priceString)
 	}
 	return expense
 }
