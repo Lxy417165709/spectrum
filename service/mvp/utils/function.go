@@ -5,6 +5,7 @@ import (
 	"go.uber.org/zap"
 	"spectrum/common/logger"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -25,4 +26,20 @@ func ToTime(timestamp int64) time.Time {
 		return time.Unix(timestamp, 0)
 	}
 	return NilTime
+}
+
+func GetValidElementTypesString() string {
+	var elementTypeStrings []string
+	for _, elementType := range ValidElementTypes {
+		elementTypeStrings = append(elementTypeStrings, elementType.String())
+	}
+	return strings.Join(elementTypeStrings, "、")
+}
+
+func GetValidFavorTypesString() string {
+	var favorTypeStrings []string
+	for _, favorType := range ValidFavorTypes {
+		favorTypeStrings = append(favorTypeStrings, favorType.String())
+	}
+	return strings.Join(favorTypeStrings, "、")
 }
