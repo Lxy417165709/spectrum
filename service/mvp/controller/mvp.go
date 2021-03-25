@@ -30,7 +30,8 @@ func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRe
 	if errResult := writePbElementMetaObjectToDbAndUpdateID(good.MainElement, getDbElementClassByName(goodClassName).ID); errResult != nil {
 		return nil, errResult
 	}
-	if errResult := writePbGoodSelectedSizeInfoIndexRecordAndMainAttachElementRecordToDB(good); errResult != nil {
+	if errResult := writePbGoodSelectedSizeInfoIndexRecordAndMainAttachElementRecordToDB(
+		good.MainElement, good.AttachElements, good.Id); errResult != nil {
 		return nil, errResult
 	}
 

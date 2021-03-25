@@ -26,8 +26,8 @@ func writePbGoodToDB(good *pb.Good, orderID int64) error {
 	}
 
 	// 2. 添加/更新商品尺寸选择、商品主元素附属元素关联关系
-	good.Id = goodID
-	if errResult := writePbGoodSelectedSizeInfoIndexRecordAndMainAttachElementRecordToDB(good); errResult != nil {
+	if errResult := writePbGoodSelectedSizeInfoIndexRecordAndMainAttachElementRecordToDB(
+		good.MainElement, good.AttachElements, goodID); errResult != nil {
 		return errResult
 	}
 
@@ -76,25 +76,25 @@ func writePbElementMetaObjectToDbAndUpdateID(pbElement *pb.Element, classID int6
 }
 
 // 将商品的主元素尺寸选择信息、附属元素尺寸选择信息、主元素与附属元素的对应记录写入数据库
-func writePbGoodSelectedSizeInfoIndexRecordAndMainAttachElementRecordToDB(good *pb.Good) error {
+func writePbGoodSelectedSizeInfoIndexRecordAndMainAttachElementRecordToDB(mainElement *pb.Element, attachElements []*pb.Element, goodID int64) error {
 	// 1. 创建主元素、主元素尺寸的对应关系
-	if errResult := writePbElementSelectSizeRecord(good.MainElement, good.Id); errResult != nil {
+	if errResult := writePbElementSelectSizeRecord(mainElement, goodID); errResult != nil {
 		return errResult
 	}
 
 	// 2. 创建附属元素、附属元素尺寸的对应关系
-	for index, attachElement := range good.AttachElements {
-		if errResult := writePbElementSelectSizeRecord(attachElement, good.Id); errResult != nil {
+	for index, attachElement := range attachElements {
+		if errResult := writePbElementSelectSizeRecord(attachElement, goodID); errResult != nil {
 			return ers.New("创建第 %d 个附属元素与其尺寸的对应关系时出错。%s", index+1, errResult.Error())
 		}
 	}
 
 	// 3. 创建主元素、附属元素的对应关系
-	for index, attachElement := range good.AttachElements {
+	for index, attachElement := range attachElements {
 		if _, errResult := dao.MainElementAttachElementRecordDao.Create(&model.MainElementAttachElementRecord{
-			GoodID:          good.Id,
+			GoodID:          goodID,
 			AttachElementID: attachElement.Id,
-			MainElementID:   good.MainElement.Id,
+			MainElementID:   mainElement.Id,
 		}); errResult != nil {
 			return ers.New("创建第 %d 个主元素与其附属元素的对应关系时出错。%s", index+1, errResult.Error())
 		}
