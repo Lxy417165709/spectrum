@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 )
 
-
 var Conf = &conf{}
 
 type conf struct {
