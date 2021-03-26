@@ -6,6 +6,10 @@ import (
 )
 
 func getPlaceholderClause(count int) string {
+	if count == 0 {
+		return "null"
+	}
+
 	var placeholders []string
 	for i := 0; i < count; i++ {
 		placeholders = append(placeholders, "?")

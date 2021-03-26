@@ -7,6 +7,7 @@ import (
 	"spectrum/common/ers"
 	"spectrum/common/logger"
 	"spectrum/service/mvp/model"
+	"time"
 )
 
 var GoodDao goodDao
@@ -42,6 +43,16 @@ func (goodDao) Create(obj *model.Good) (int64, error) {
 		return 0, ers.MysqlError
 	}
 	return id, nil
+}
+
+func (goodDao) CheckOut(id int64, nonFavorExpense float64, checkOutAt time.Time, expense float64) error {
+	sql := fmt.Sprintf("update %s set non_favor_expense = ?,check_out_at = ?,expense = ? where id = ?",
+		(&model.Good{}).TableName())
+	if _, err := mainDB.CommonDB().Exec(sql, nonFavorExpense, checkOutAt, expense, id); err != nil {
+		logger.Error("Fail to finish check out", zap.Any("id", id), zap.Error(err))
+		return ers.MysqlError
+	}
+	return nil
 }
 
 func (goodDao) BatchDelete(ids []int64) error {

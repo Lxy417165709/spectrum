@@ -7,6 +7,7 @@ import (
 	"spectrum/common/ers"
 	"spectrum/common/logger"
 	"spectrum/service/mvp/model"
+	"time"
 )
 
 var OrderDao orderDao
@@ -57,4 +58,19 @@ func (orderDao) Create(obj *model.Order) (int64, error) {
 		return 0, ers.MysqlError
 	}
 	return id, nil
+}
+
+func (orderDao) CheckOut(id int64, nonFavorExpense float64, checkOutAt time.Time, expense float64) error {
+	sql := fmt.Sprintf("update %s set non_favor_expense = ?,check_out_at = ?,expense = ? where id = ?",
+		fmt.Sprintf("`%s`",(&model.Order{}).TableName()))
+	if _, err := mainDB.CommonDB().Exec(sql, nonFavorExpense, checkOutAt, expense, id); err != nil {
+		logger.Error("Fail to finish check out",
+			zap.Any("id", id),
+			zap.Any("nonFavorExpense", nonFavorExpense),
+			zap.Any("checkOutAt", checkOutAt),
+			zap.Any("expense", expense),
+			zap.Error(err))
+		return ers.MysqlError
+	}
+	return nil
 }

@@ -307,44 +307,85 @@ func (MvpServer) CloseDesk(ctx context.Context, req *pb.CloseDeskReq) (*pb.Close
 	return &res, nil
 }
 
-//func (MvpServer) CheckOut(ctx context.Context, req *pb.CheckOutReq) (*pb.CheckOutRes, error) {
-//	logger.Info("CheckOut", zap.Any("ctx", ctx), zap.Any("req", req))
-//	var res pb.CheckOutRes
-//
-//	for _, id := range req.GoodIDs {
-//		good, err := dao.GoodDao.Get(id)
-//		if err != nil {
-//			// todo: log
-//			return nil, err
-//		}
-//		if good == nil {
-//			// todo: warning
-//			continue
-//		}
-//		if err := checkOutIfNot(good); err != nil {
-//			// todo: log
-//			return nil, err
-//		}
-//	}
-//
-//	for _, id := range req.DeskIDs {
-//		desk, err := dao.DeskDao.Get(id)
-//		if err != nil {
-//			// todo: log
-//			return nil, err
-//		}
-//		if desk == nil {
-//			// todo: warning
-//			continue
-//		}
-//		if err := checkOutIfNot(desk); err != nil {
-//			// todo: log
-//			return nil, err
-//		}
-//	}
-//
-//	return &res, nil
-//}
+func checkOutPbGood(pbGood *pb.Good) error {
+	if pbGood.ExpenseInfo.CheckOutAt != utils.NilTime.Unix() {
+		logger.Warn("Good had been check out", zap.Any("pbGood", pbGood))
+		return nil
+	}
+	if errResult := dao.GoodDao.CheckOut(pbGood.Id, pbGood.ExpenseInfo.NonFavorExpense, time.Now(),
+		pbGood.ExpenseInfo.Expense); errResult != nil {
+		return errResult
+	}
+	return nil
+}
+
+func checkOutPbOrder(pbOrder *pb.Order) error {
+	if pbOrder.ExpenseInfo.CheckOutAt != utils.NilTime.Unix() {
+		logger.Warn("Good had been check out", zap.Any("pbOrder", pbOrder))
+		return nil
+	}
+	if errResult := dao.OrderDao.CheckOut(pbOrder.Id, pbOrder.ExpenseInfo.NonFavorExpense, time.Now(),
+		pbOrder.ExpenseInfo.Expense); errResult != nil {
+		return errResult
+	}
+	for _, good := range pbOrder.Goods {
+		if errResult := checkOutPbGood(good); errResult != nil {
+			return errResult
+		}
+	}
+
+	if errResult := checkOutPbDesk(pbOrder.Desk); errResult != nil {
+		return errResult
+	}
+	return nil
+}
+func checkOutPbDesk(pbDesk *pb.Desk) error {
+	// 未结账时，则进行结账
+	if pbDesk.ExpenseInfo.CheckOutAt != utils.NilTime.Unix() {
+		logger.Warn("Desk had been check out", zap.Any("pbDesk", pbDesk))
+		return nil
+	}
+
+	var endAt time.Time
+	if pbDesk.EndAt == utils.NilTime.Unix() {
+		endAt = time.Now()
+	} else {
+		endAt = time.Unix(pbDesk.EndAt, 0)
+	}
+
+	if errResult := dao.DeskDao.CheckOut(pbDesk.Id, pbDesk.ExpenseInfo.NonFavorExpense, time.Now(),
+		pbDesk.ExpenseInfo.Expense, endAt); errResult != nil {
+		return errResult
+	}
+	return nil
+}
+
+func (MvpServer) CheckOut(ctx context.Context, req *pb.CheckOutReq) (*pb.CheckOutRes, error) {
+	logger.Info("CheckOut", zap.Any("ctx", ctx), zap.Any("req", req))
+	var res pb.CheckOutRes
+
+	for _, good := range req.Goods {
+		pbGood := getPbGood(good.Id, good.MainElement.Id)
+		if errResult := checkOutPbGood(pbGood); errResult != nil {
+			return nil, errResult
+		}
+	}
+
+	for _, desk := range req.Desks {
+		pbDesk := getPbDesk(desk.Id, desk.Space.Id)
+		if errResult := checkOutPbDesk(pbDesk); errResult != nil {
+			return nil, errResult
+		}
+	}
+
+	for _, order := range req.Orders {
+		pbOrder := getPbOrder(order.Id)
+		if errResult := checkOutPbOrder(pbOrder); errResult != nil {
+			return nil, errResult
+		}
+	}
+	return &res, nil
+}
 
 func (s MvpServer) ChangeDesk(ctx context.Context, req *pb.ChangeDeskReq) (*pb.ChangeDeskRes, error) {
 	logger.Info("ChangeDesk", zap.Any("ctx", ctx), zap.Any("req", req))
@@ -431,19 +472,11 @@ func (s MvpServer) GetAllDesks(ctx context.Context, req *pb.GetAllDesksReq) (*pb
 		if errResult != nil {
 			return nil, errResult
 		}
-		if desk == nil {
-			desks = append(desks, &pb.Desk{
-				Id:          0,
-				OrderID:     0,
-				Space:       space.ToPb(getDbSpaceClassByID(space.ClassID).Name),
-				StartAt:     utils.NilTime.Unix(),
-				EndAt:       utils.NilTime.Unix(),
-				Favors:      nil,
-				ExpenseInfo: nil,
-			})
-		} else {
-			desks = append(desks, getPbDesk(desk.ID, space.ID))
+		var deskID int64
+		if desk!=nil{
+			deskID = desk.ID
 		}
+		desks = append(desks, getPbDesk(deskID, space.ID))
 	}
 
 	res.Desks = desks

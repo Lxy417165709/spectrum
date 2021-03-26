@@ -121,7 +121,9 @@
                 <el-tag v-if="scope.row.expenseInfo.checkOutAt!==10086" style="margin-right: 10px">
                   已结账
                 </el-tag>
-                <el-button v-if="scope.row.expenseInfo.checkOutAt===10086" type="primary" @click="checkOutDesk(scope.row)">结账</el-button>
+                <el-button v-if="scope.row.expenseInfo.checkOutAt===10086" type="primary"
+                           @click="checkOutDesk(scope.row)">结账
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -181,7 +183,12 @@
               <el-table-column
                 label="结账">
                 <template slot-scope="scope">
-                  <el-button type="primary" @click="checkOutGood(scope.row)">结账</el-button>
+                  <el-tag v-if="scope.row.expenseInfo.checkOutAt!==10086" style="margin-right: 10px">
+                    已结账
+                  </el-tag>
+                  <el-button v-if="scope.row.expenseInfo.checkOutAt===10086" type="primary"
+                             @click="checkOutGood(scope.row)">结账
+                  </el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -191,7 +198,11 @@
           <el-form label-width="80px">
             <discount-editor></discount-editor>
             <el-form-item>
-              <el-button type="primary" @click="checkOutOrder(order)">结账</el-button>
+              <el-tag v-if="order.expenseInfo.checkOutAt!==10086" style="margin-right: 10px">
+                已结账
+              </el-tag>
+              <el-button v-if="order.expenseInfo.checkOutAt===10086" type="primary" @click="checkOutOrder(order)">结账
+              </el-button>
             </el-form-item>
           </el-form>
 
@@ -320,14 +331,33 @@ export default {
       }
       return ""
     },
-    checkOutGood(good){
-      console.log("checkOutGood",good)
+    checkOutGood(good) {
+      utils.CheckOut(this, {
+        goods: [good]
+      }, (res) => {
+        good.expenseInfo.checkOutAt = this.getNow()
+      })
     },
-    checkOutDesk(desk){
-      console.log("checkOutDesk",desk)
+    checkOutDesk(desk) {
+      utils.CheckOut(this, {
+        desks: [desk]
+      }, (res) => {
+        desk.expenseInfo.checkOutAt = this.getNow()
+      })
     },
-    checkOutOrder(order){
-      console.log("checkOutOrder",order)
+    checkOutOrder(order) {
+      utils.CheckOut(this, {
+        orders: [order]
+      }, (res) => {
+        order.expenseInfo.checkOutAt = this.getNow()
+        order.desk.expenseInfo.checkOutAt = this.getNow()
+        for (let i = 0; i < order.goods.length; i++) {
+          order.goods[i].expenseInfo.checkOutAt = this.getNow()
+        }
+      })
+    },
+    getNow() {
+      return Date.parse(new Date()) / 1000
     }
   },
   computed: {

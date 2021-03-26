@@ -192,6 +192,18 @@ export default {
       then(res)
     })
   },
+  async CheckOut(obj, par, then) {
+    let model = this.getRequestModel("mvp", "CheckOut", par)
+    await this.sendRequestModel(model).then((res) => {
+      console.log("CheckOut.res", res)
+      if (!this.hasRequestSuccess(res)) {
+        obj.$message.error(res.data.err)
+        return
+      }
+      obj.$message.success(res.data.msg)
+      then(res)
+    })
+  },
   IsNil(obj) {
     return obj === undefined || obj === null || isNaN(obj)
   }

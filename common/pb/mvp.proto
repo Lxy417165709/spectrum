@@ -33,7 +33,6 @@ message ExpenseInfo {
     double expense = 3; // 打折后费用
 }
 
-
 message Order {
     int64 id = 1;
     Desk desk = 2;
@@ -203,8 +202,9 @@ message GetOrderRes{
 }
 
 message CheckOutReq {
-    repeated  int64 GoodIDs = 1;
-    repeated  int64 DeskIDs = 2;
+    repeated Good goods = 1;
+    repeated Order orders = 2;
+    repeated Desk desks = 3;
 }
 
 message CheckOutRes {}

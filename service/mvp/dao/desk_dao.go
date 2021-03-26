@@ -8,6 +8,7 @@ import (
 	"spectrum/common/logger"
 	"spectrum/service/mvp/model"
 	"spectrum/service/mvp/utils"
+	"time"
 )
 
 var DeskDao deskDao
@@ -69,7 +70,7 @@ func (deskDao) GetNonCheckOutDesk(spaceID int64) (*model.Desk, error) {
 
 func (deskDao) Get(id, spaceID int64) (*model.Desk, error) {
 	var result model.Desk
-	if err := mainDB.First(&result, "id = ? ans space_id = ?", id, spaceID).Error; err != nil {
+	if err := mainDB.First(&result, "id = ? and space_id = ?", id, spaceID).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, nil
 		}
@@ -102,4 +103,15 @@ func (deskDao) GetByOrderID(orderID int64) (*model.Desk, error) {
 		return nil, ers.MysqlError
 	}
 	return &result, nil
+}
+
+func (deskDao) CheckOut(id int64, nonFavorExpense float64, checkOutAt time.Time, expense float64,
+	endAt time.Time) error {
+	sql := fmt.Sprintf("update %s set non_favor_expense = ?,check_out_at = ?,expense = ?,end_at = ? where id = ?",
+		(&model.Desk{}).TableName())
+	if _, err := mainDB.CommonDB().Exec(sql, nonFavorExpense, checkOutAt, expense, endAt, id); err != nil {
+		logger.Error("Fail to finish check out", zap.Any("id", id), zap.Error(err))
+		return ers.MysqlError
+	}
+	return nil
 }

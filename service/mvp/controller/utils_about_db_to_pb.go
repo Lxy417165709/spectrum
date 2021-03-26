@@ -6,6 +6,7 @@ import (
 	"spectrum/common/logger"
 	"spectrum/common/pb"
 	"spectrum/service/mvp/dao"
+	"spectrum/service/mvp/utils"
 )
 
 // --------------------------------------------- ID ---------------------------------------------
@@ -70,22 +71,37 @@ func getOrderPbGoods(orderID int64) []*pb.Good {
 }
 
 func getPbDesk(deskID int64, spaceID int64) *pb.Desk {
-	desk, errResult := dao.DeskDao.Get(deskID, spaceID)
-	if errResult != nil {
-		return nil
-	}
-
-	favors, errResult := getFavors(desk.GetChargeableObjectName(), desk.GetID())
-	if errResult != nil {
-		return nil
-	}
-
 	space, errResult := dao.SpaceDao.Get(spaceID)
 	if errResult != nil {
 		return nil
 	}
 
 	spaceClass, errResult := dao.SpaceClassDao.Get(space.ClassID)
+	if errResult != nil {
+		return nil
+	}
+	if deskID == 0 {
+		return &pb.Desk{
+			Id:      0,
+			OrderID: 0,
+			Space:   space.ToPb(getDbSpaceClassByID(space.ClassID).Name),
+			StartAt: utils.NilTime.Unix(),
+			EndAt:   utils.NilTime.Unix(),
+			Favors:  []*pb.Favor{},
+			ExpenseInfo: &pb.ExpenseInfo{
+				NonFavorExpense: 0,
+				CheckOutAt:      utils.NilTime.Unix(),
+				Expense:         0,
+			},
+		}
+	}
+
+	desk, errResult := dao.DeskDao.Get(deskID, spaceID)
+	if errResult != nil {
+		return nil
+	}
+
+	favors, errResult := getFavors(desk.GetChargeableObjectName(), desk.GetID())
 	if errResult != nil {
 		return nil
 	}
@@ -101,14 +117,26 @@ func getPbDesk(deskID int64, spaceID int64) *pb.Desk {
 }
 
 func getPbGood(goodID int64, mainElementID int64) *pb.Good {
+	mainElement := getPbElement(goodID, mainElementID)
+	attachElements := getPbAttachElements(goodID, mainElementID)
+	if goodID == 0 {
+		return &pb.Good{
+			Id:             0,
+			MainElement:    mainElement,
+			AttachElements: attachElements,
+			Favors:         []*pb.Favor{},
+			ExpenseInfo: &pb.ExpenseInfo{
+				NonFavorExpense: 0,
+				CheckOutAt:      utils.NilTime.Unix(),
+				Expense:         0,
+			},
+		}
+	}
+
 	good, errResult := dao.GoodDao.Get(goodID, mainElementID)
 	if errResult != nil {
 		return nil
 	}
-
-	mainElement := getPbElement(goodID, mainElementID)
-	attachElements := getPbAttachElements(goodID, mainElementID)
-
 	favors, errResult := getFavors(good.GetChargeableObjectName(), good.GetID())
 	if errResult != nil {
 		return nil

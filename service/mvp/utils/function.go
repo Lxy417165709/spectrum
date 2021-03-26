@@ -43,3 +43,11 @@ func GetValidFavorTypesString() string {
 	}
 	return strings.Join(favorTypeStrings, "、")
 }
+
+func Int64sToInterfaces(elements []int64) []interface{} {
+	var interfaces []interface{}
+	for _, element := range elements {
+		interfaces = append(interfaces, element)
+	}
+	return interfaces
+}
