@@ -1,6 +1,7 @@
 /* eslint-disable */
 
 import axios from "axios";
+import cst from "./cst";
 
 export default {
   getRequestModel(obj, fun, par) {
@@ -206,5 +207,20 @@ export default {
   },
   IsNil(obj) {
     return obj === undefined || obj === null || isNaN(obj)
-  }
+  },
+  GetFavorTagName(favor) {
+    console.log(favor, (parseFloat(favor.parameters[0])) * 10 + '折')
+    if (favor.favorType === cst.FAVOR_TYPE.REBATE.VALUE) {
+      return (parseFloat(favor.parameters[0])) * 10 + '折'
+    }
+    if (favor.favorType === cst.FAVOR_TYPE.NONE.VALUE) {
+      return "无"
+    }
+    if (favor.favorType === cst.FAVOR_TYPE.FREE.VALUE) {
+      return "免费"
+    }
+    if (favor.favorType === cst.FAVOR_TYPE.FULL_REDUCTION.VALUE) {
+      return "满" + favor.parameters[0] + "减" + favor.parameters[1]
+    }
+  },
 }

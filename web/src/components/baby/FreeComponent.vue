@@ -9,12 +9,15 @@
 
 <script>
 /* eslint-disable */
+import cst from "../../common/cst";
+
 export default {
   name: "FreeComponent",
   methods: {
     handleClick() {
       this.$emit("confirmFavor", {
-        name: "免单"
+		  favorType: cst.FAVOR_TYPE.FREE.VALUE,
+		  parameters: []
       })
     }
   }

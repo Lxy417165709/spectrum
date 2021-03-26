@@ -35,7 +35,7 @@
         {{ sizeInfo.size }}
       </el-radio>
     </el-form-item>
-    <discount-editor></discount-editor>
+    <discount-editor ref="DiscountEditor"></discount-editor>
 
     <el-form-item label="价格" v-if="good.mainElement!==undefined">
       <span style="font-size: 1.4em;color: red;">{{ cpt_price }} 元</span>
@@ -72,6 +72,7 @@ export default {
       this.needAttachGood = true
     },
     orderGood() {
+      this.good.favors = this.$refs.DiscountEditor.selectedFavors
       utils.OrderGood(this, {
         goods: [
           this.good,

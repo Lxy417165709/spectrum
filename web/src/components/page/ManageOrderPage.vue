@@ -106,7 +106,7 @@
               <template slot-scope="scope">
                 <el-tag v-for="(favor,index) in scope.row.favors" :key="index" style="margin-right: 10px">
                   {{
-                    getFavorString(favor)
+                    getFavorTagName(favor)
                   }}
                 </el-tag>
               </template>
@@ -171,7 +171,7 @@
                 <template slot-scope="scope">
                   <el-tag v-for="(favor,index) in scope.row.favors" :key="index" style="margin-right: 10px">
                     {{
-                      getFavorString(favor)
+                      getFavorTagName(favor)
                     }}
                   </el-tag>
                 </template>
@@ -316,21 +316,10 @@ export default {
       }
       return this.timestampToTime(timestamp)
     },
-    getFavorString(favor) {
-      if (favor.favorType === cst.FAVOR_TYPE.NONE.VALUE) {
-        return cst.FAVOR_TYPE.NONE.NAME
-      }
-      if (favor.favorType === cst.FAVOR_TYPE.REBATE.VALUE) {
-        return cst.FAVOR_TYPE.REBATE.NAME
-      }
-      if (favor.favorType === cst.FAVOR_TYPE.FULL_REDUCTION.VALUE) {
-        return cst.FAVOR_TYPE.FULL_REDUCTION.NAME
-      }
-      if (favor.favorType === cst.FAVOR_TYPE.FREE.VALUE) {
-        return cst.FAVOR_TYPE.FREE.NAME
-      }
-      return ""
+    getFavorTagName(favor) {
+      return utils.GetFavorTagName(favor)
     },
+
     checkOutGood(good) {
       utils.CheckOut(this, {
         goods: [good]

@@ -32,7 +32,7 @@ func writePbGoodToDB(good *pb.Good, orderID int64) error {
 	}
 
 	// 3. 记录商品优惠记录
-	if errResult := dao.FavorRecordDao.CreateFavorRecord(dbGood.GetChargeableObjectName(), dbGood.ID, good.Favors); errResult != nil {
+	if errResult := dao.FavorRecordDao.CreateFavorRecord(dbGood.GetChargeableObjectName(), goodID, good.Favors); errResult != nil {
 		return errResult
 	}
 

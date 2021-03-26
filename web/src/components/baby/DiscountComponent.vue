@@ -10,6 +10,8 @@
 
 <script>
 /* eslint-disable */
+import cst from "../../common/cst";
+
 export default {
   name: "DiscountComponent",
   data() {
@@ -20,7 +22,8 @@ export default {
   methods: {
     handleClick() {
       this.$emit("confirmFavor", {
-        name: "打 " + this.curDiscount + " 折"
+        favorType: cst.FAVOR_TYPE.REBATE.VALUE,
+        parameters: [this.curDiscount / 10.0 + '']
       })
     }
   }

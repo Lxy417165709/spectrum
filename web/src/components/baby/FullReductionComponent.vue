@@ -2,9 +2,9 @@
 <template>
   <el-form label-width="80px">
     <el-form-item label="满">
-      <el-input v-model="curFull" style="width: 5%"></el-input>
-       减
-      <el-input v-model="curReduction" style="width: 5%"></el-input>
+      <el-input v-model="curFull" style="width: 30%"></el-input>
+      减
+      <el-input v-model="curReduction" style="width: 30%"></el-input>
       <el-button @click="handleClick"> 确定</el-button>
     </el-form-item>
   </el-form>
@@ -12,6 +12,8 @@
 
 <script>
 /* eslint-disable */
+import cst from "../../common/cst";
+
 export default {
   name: "DiscountComponent",
   data() {
@@ -23,7 +25,8 @@ export default {
   methods: {
     handleClick() {
       this.$emit("confirmFavor", {
-        name: "满 " + this.curFull + " 减 " + this.curReduction
+        favorType: cst.FAVOR_TYPE.FULL_REDUCTION.VALUE,
+        parameters: [this.curFull+ '', this.curReduction+ '']
       })
     }
   }
