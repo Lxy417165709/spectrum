@@ -196,7 +196,12 @@
 
           <el-divider>优惠设置</el-divider>
           <el-form label-width="80px">
-            <discount-editor></discount-editor>
+            <discount-editor :index="index" @updateFavors="updateFavors"></discount-editor>
+            <el-form-item label="价格">
+              {{ order.expenseInfo.expense }}
+            </el-form-item>
+
+
             <el-form-item>
               <el-tag v-if="order.expenseInfo.checkOutAt!==10086" style="margin-right: 10px">
                 已结账
@@ -347,7 +352,17 @@ export default {
     },
     getNow() {
       return Date.parse(new Date()) / 1000
+    },
+    updateFavors(favors, index) {
+      this.db_orders[index].favors = favors
+      this.getOrderExpense(index)
+    },
+    getOrderExpense(index) {
+      utils.GetOrderExpense(this, {order: this.db_orders[index]}, (res) => {
+        this.db_orders[index].expenseInfo = res.data.data.expenseInfo
+      })
     }
+
   },
   computed: {
     cpt_checkOutState() {

@@ -272,7 +272,20 @@ message DeleteElementSizeInfoReq{
 }
 message DeleteElementSizeInfoRes{}
 
+
+
+message GetOrderExpenseReq {
+    Order order = 1;
+}
+
+message GetOrderExpenseRes{
+    ExpenseInfo expenseInfo = 1;
+}
+
+
 service Mvp {
+    rpc GetOrderExpense(GetOrderExpenseReq) returns(GetOrderExpenseRes);
+
     rpc DeleteElementSizeInfo(DeleteElementSizeInfoReq) returns(DeleteElementSizeInfoRes);
 
     rpc GetAllGoodClasses(GetAllGoodClassesReq) returns (GetAllGoodClassesRes); // 获得所有商品类

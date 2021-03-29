@@ -49,12 +49,23 @@ func getPbOrder(orderID int64) *pb.Order {
 	if errResult != nil {
 		return nil
 	}
+
+	if pbDesk == nil {
+		pbDesk = utils.NewBlankDesk()
+	}
+	if pbGoods == nil {
+		pbGoods = utils.NewBlankGoods()
+	}
+	if favors == nil {
+		favors = utils.NewBlankFavors()
+	}
+
 	return &pb.Order{
 		Id:          orderID,
 		Desk:        pbDesk,
 		Goods:       pbGoods,
 		Favors:      favors,
-		ExpenseInfo: order.GetExpenseInfo(pbDesk, pbGoods, favors), // todo:
+		ExpenseInfo: order.GetExpenseInfo(pbDesk, pbGoods, favors),
 	}
 }
 

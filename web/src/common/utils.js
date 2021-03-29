@@ -205,11 +205,22 @@ export default {
       then(res)
     })
   },
+  async GetOrderExpense(obj, par, then) {
+    let model = this.getRequestModel("mvp", "GetOrderExpense", par)
+    await this.sendRequestModel(model).then((res) => {
+      console.log("GetOrderExpense.res", res)
+      if (!this.hasRequestSuccess(res)) {
+        obj.$message.error(res.data.err)
+        return
+      }
+      // obj.$message.success(res.data.msg)
+      then(res)
+    })
+  },
   IsNil(obj) {
     return obj === undefined || obj === null || isNaN(obj)
   },
   GetFavorTagName(favor) {
-    console.log(favor, (parseFloat(favor.parameters[0])) * 10 + '折')
     if (favor.favorType === cst.FAVOR_TYPE.REBATE.VALUE) {
       return (parseFloat(favor.parameters[0])) * 10 + '折'
     }

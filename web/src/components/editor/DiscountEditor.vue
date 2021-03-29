@@ -27,6 +27,9 @@ import utils from "../../common/utils";
 
 export default {
   name: "DiscountEditor",
+  props: {
+    index: Number,
+  },
   data() {
     return {
       selectedFavors: [],
@@ -56,6 +59,7 @@ export default {
     },
     confirmFavor(favor) {
       this.selectedFavors.push(favor)
+      this.$emit("updateFavors", this.selectedFavors, this.index)
     }
   }
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go.uber.org/zap"
 	"spectrum/common/logger"
+	"spectrum/common/pb"
 	"strconv"
 	"strings"
 	"time"
@@ -50,4 +51,70 @@ func Int64sToInterfaces(elements []int64) []interface{} {
 		interfaces = append(interfaces, element)
 	}
 	return interfaces
+}
+
+func NewBlankGoods() []*pb.Good {
+	return []*pb.Good{}
+}
+
+func NewBlankGood() *pb.Good {
+	return &pb.Good{
+		Id:             0,
+		MainElement:    NewBlankElement(),
+		AttachElements: NewBlankElements(),
+		Favors:         NewBlankFavors(),
+		ExpenseInfo:    NewBlankExpenseInfo(),
+	}
+}
+
+func NewBlankElements() []*pb.Element {
+	return []*pb.Element{}
+}
+func NewBlankElement() *pb.Element {
+	return &pb.Element{
+		Id:            0,
+		Name:          "",
+		Type:          0,
+		SizeInfos:     NewSizeInfos(),
+		SelectedIndex: 0,
+	}
+}
+
+func NewSizeInfos() []*pb.SizeInfo {
+	return []*pb.SizeInfo{}
+}
+
+func NewBlankDesk() *pb.Desk {
+	return &pb.Desk{
+		Id:          0,
+		Space:       NewBlankSpace(),
+		StartAt:     0,
+		EndAt:       0,
+		Favors:      NewBlankFavors(),
+		ExpenseInfo: NewBlankExpenseInfo(),
+		OrderID:     0,
+	}
+}
+
+func NewBlankFavors() []*pb.Favor {
+	return []*pb.Favor{}
+}
+
+func NewBlankExpenseInfo() *pb.ExpenseInfo {
+	return &pb.ExpenseInfo{
+		NonFavorExpense: 0,
+		CheckOutAt:      NilTime.Unix(),
+		Expense:         0,
+	}
+}
+
+func NewBlankSpace() *pb.Space {
+	return &pb.Space{
+		Id:               0,
+		Name:             "",
+		ClassName:        "",
+		Price:            "",
+		BillingType:      0,
+		PictureStorePath: "",
+	}
 }

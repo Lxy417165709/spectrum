@@ -40,12 +40,12 @@ func (o *Order) GetExpenseInfo(desk *pb.Desk, goods []*pb.Good, favors []*pb.Fav
 
 	// 2. 未结账时
 	deskExpense := 0.0
-	if desk.GetExpenseInfo() != nil {
+	if desk.GetExpenseInfo() != nil && desk.GetExpenseInfo().CheckOutAt == utils.NilTime.Unix(){
 		deskExpense += desk.GetExpenseInfo().Expense
 	}
 	goodsExpense := 0.0
 	for _, good := range goods {
-		if desk.GetExpenseInfo() != nil {
+		if desk.GetExpenseInfo() != nil  && good.GetExpenseInfo().CheckOutAt == utils.NilTime.Unix(){
 			goodsExpense += good.GetExpenseInfo().Expense
 		}
 	}

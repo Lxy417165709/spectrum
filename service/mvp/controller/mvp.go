@@ -16,6 +16,18 @@ type MvpServer struct {
 	pb.UnimplementedMvpServer
 }
 
+// 获取订单价格
+func (MvpServer) GetOrderExpense(ctx context.Context, req *pb.GetOrderExpenseReq) (*pb.GetOrderExpenseRes, error) {
+	logger.Info("GetOrderExpense", zap.Any("ctx", ctx), zap.Any("req", req))
+
+	var res pb.GetOrderExpenseRes
+	res.ExpenseInfo = (&model.Order{
+		CheckOutAt: utils.NilTime,
+	}).GetExpenseInfo(req.Order.Desk, req.Order.Goods, req.Order.Favors)
+
+	return &res, nil
+}
+
 // 管理员添加商品接口
 func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRes, error) {
 	logger.Info("AddGood", zap.Any("ctx", ctx), zap.Any("req", req))
@@ -473,7 +485,7 @@ func (s MvpServer) GetAllDesks(ctx context.Context, req *pb.GetAllDesksReq) (*pb
 			return nil, errResult
 		}
 		var deskID int64
-		if desk!=nil{
+		if desk != nil {
 			deskID = desk.ID
 		}
 		desks = append(desks, getPbDesk(deskID, space.ID))

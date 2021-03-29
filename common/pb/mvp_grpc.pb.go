@@ -17,6 +17,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MvpClient interface {
+	GetOrderExpense(ctx context.Context, in *GetOrderExpenseReq, opts ...grpc.CallOption) (*GetOrderExpenseRes, error)
 	DeleteElementSizeInfo(ctx context.Context, in *DeleteElementSizeInfoReq, opts ...grpc.CallOption) (*DeleteElementSizeInfoRes, error)
 	GetAllGoodClasses(ctx context.Context, in *GetAllGoodClassesReq, opts ...grpc.CallOption) (*GetAllGoodClassesRes, error)
 	GetAllDesks(ctx context.Context, in *GetAllDesksReq, opts ...grpc.CallOption) (*GetAllDesksRes, error)
@@ -46,6 +47,15 @@ type mvpClient struct {
 
 func NewMvpClient(cc grpc.ClientConnInterface) MvpClient {
 	return &mvpClient{cc}
+}
+
+func (c *mvpClient) GetOrderExpense(ctx context.Context, in *GetOrderExpenseReq, opts ...grpc.CallOption) (*GetOrderExpenseRes, error) {
+	out := new(GetOrderExpenseRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/GetOrderExpense", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *mvpClient) DeleteElementSizeInfo(ctx context.Context, in *DeleteElementSizeInfoReq, opts ...grpc.CallOption) (*DeleteElementSizeInfoRes, error) {
@@ -241,6 +251,7 @@ func (c *mvpClient) GetAllDeskClasses(ctx context.Context, in *GetAllDeskClasses
 // All implementations must embed UnimplementedMvpServer
 // for forward compatibility
 type MvpServer interface {
+	GetOrderExpense(context.Context, *GetOrderExpenseReq) (*GetOrderExpenseRes, error)
 	DeleteElementSizeInfo(context.Context, *DeleteElementSizeInfoReq) (*DeleteElementSizeInfoRes, error)
 	GetAllGoodClasses(context.Context, *GetAllGoodClassesReq) (*GetAllGoodClassesRes, error)
 	GetAllDesks(context.Context, *GetAllDesksReq) (*GetAllDesksRes, error)
@@ -269,6 +280,9 @@ type MvpServer interface {
 type UnimplementedMvpServer struct {
 }
 
+func (UnimplementedMvpServer) GetOrderExpense(context.Context, *GetOrderExpenseReq) (*GetOrderExpenseRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOrderExpense not implemented")
+}
 func (UnimplementedMvpServer) DeleteElementSizeInfo(context.Context, *DeleteElementSizeInfoReq) (*DeleteElementSizeInfoRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteElementSizeInfo not implemented")
 }
@@ -343,6 +357,24 @@ type UnsafeMvpServer interface {
 
 func RegisterMvpServer(s grpc.ServiceRegistrar, srv MvpServer) {
 	s.RegisterService(&_Mvp_serviceDesc, srv)
+}
+
+func _Mvp_GetOrderExpense_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrderExpenseReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).GetOrderExpense(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/GetOrderExpense",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).GetOrderExpense(ctx, req.(*GetOrderExpenseReq))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Mvp_DeleteElementSizeInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -727,6 +759,10 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.Mvp",
 	HandlerType: (*MvpServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetOrderExpense",
+			Handler:    _Mvp_GetOrderExpense_Handler,
+		},
 		{
 			MethodName: "DeleteElementSizeInfo",
 			Handler:    _Mvp_DeleteElementSizeInfo_Handler,
