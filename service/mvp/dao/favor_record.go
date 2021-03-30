@@ -49,20 +49,27 @@ func (favorRecordDao) GetFavorRecords(chargeableObjectName string, chargeableObj
 	return result, nil
 }
 
-func (favorRecordDao) CreateFavorRecord(chargeableObjName string, chargeableObjID int64, favors []*pb.Favor) error {
+func (f favorRecordDao) CreateFavorRecords(chargeableObjName string, chargeableObjID int64, favors []*pb.Favor) error {
 	for _, favor := range favors {
-		obj := &model.FavorRecord{
-			ChargeableObjectName: chargeableObjName,
-			ChargeableObjectID:   chargeableObjID,
-			FavorType:            favor.FavorType,
-			FavorParameters:      strings.Join(favor.Parameters, "|"),
-		}
-		if err := mainDB.Create(obj).Error; err != nil {
-			logger.Error("Fail to finish mainDB.Create", zap.Any("obj", obj), zap.Error(err))
-			return ers.MysqlError
+		if _, errResult := f.CreateFavorRecord(chargeableObjName, chargeableObjID, favor); errResult != nil {
+			return errResult
 		}
 	}
 	return nil
+}
+
+func (favorRecordDao) CreateFavorRecord(chargeableObjName string, chargeableObjID int64, favor *pb.Favor) (*model.FavorRecord, error) {
+	obj := &model.FavorRecord{
+		ChargeableObjectName: chargeableObjName,
+		ChargeableObjectID:   chargeableObjID,
+		FavorType:            favor.FavorType,
+		FavorParameters:      strings.Join(favor.Parameters, "|"),
+	}
+	if err := mainDB.Create(obj).Error; err != nil {
+		logger.Error("Fail to finish mainDB.Create", zap.Any("obj", obj), zap.Error(err))
+		return nil, ers.MysqlError
+	}
+	return obj, nil
 }
 
 func (favorRecordDao) DeleteFavorRecord(chargeableObjName string, chargeableObjID int64, favor *pb.Favor) error {
@@ -85,13 +92,23 @@ func (favorRecordDao) DeleteFavorRecord(chargeableObjName string, chargeableObjI
 	return nil
 }
 
+func (favorRecordDao) Del(ids ...int64) error {
+	if err := mainDB.Where(
+		"id in (?)", ids,
+	).Delete(&model.FavorRecord{}).Error; err != nil {
+		logger.Error("Fail to finish mainDB.Delete",
+			zap.Any("ids", ids),
+			zap.Error(err))
+		return ers.MysqlError
+	}
+	return nil
+}
+
 func (favorRecordDao) BatchDeleteFavorRecord(chargeableObjName string, chargeableObjIDs []int64) error {
-	var table model.FavorRecord
-	createTableWhenNotExist(&table)
 	if err := mainDB.Where(
 		"chargeable_object_name = ? and chargeable_object_id in (?)",
 		chargeableObjName, chargeableObjIDs,
-	).Delete(&table).Error; err != nil {
+	).Delete(&model.FavorRecord{}).Error; err != nil {
 		logger.Error("Fail to finish mainDB.Delete",
 			zap.String("chargeableObjName", chargeableObjName),
 			zap.Any("chargeableObjIDs", chargeableObjIDs),

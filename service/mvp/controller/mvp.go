@@ -279,7 +279,7 @@ func (MvpServer) OrderDesk(ctx context.Context, req *pb.OrderDeskReq) (*pb.Order
 	if errResult != nil {
 		return nil, errResult
 	}
-	if errResult := dao.FavorRecordDao.CreateFavorRecord(dbDesk.GetChargeableObjectName(), deskID, req.Desk.Favors); errResult != nil {
+	if errResult := dao.FavorRecordDao.CreateFavorRecords(dbDesk.GetChargeableObjectName(), deskID, req.Desk.Favors); errResult != nil {
 		return nil, errResult
 	}
 	res.Order = getPbOrder(orderID)
@@ -441,13 +441,28 @@ func (s MvpServer) CancelGood(ctx context.Context, req *pb.CancelGoodReq) (*pb.C
 	return &res, nil
 }
 
-func (s MvpServer) AddFavorForGood(ctx context.Context, req *pb.AddFavorForGoodReq) (*pb.AddFavorForGoodRes, error) {
-	logger.Info("AddFavorForGood", zap.Any("ctx", ctx), zap.Any("req", req))
+func (s MvpServer) AddFavor(ctx context.Context, req *pb.AddFavorReq) (*pb.AddFavorRes, error) {
+	logger.Info("AddFavor", zap.Any("ctx", ctx), zap.Any("req", req))
 
-	var res pb.AddFavorForGoodRes
-	if err := dao.FavorRecordDao.CreateFavorRecord(utils.ChargeableObjectNameOfGood, req.GoodID, req.Favors); err != nil {
-		// todo: log
-		return nil, err
+	var res pb.AddFavorRes
+
+	dbFavor, errResult := dao.FavorRecordDao.CreateFavorRecord(req.ChargeableObjName, req.Id, req.Favor)
+	if errResult != nil {
+		return nil, errResult
+	}
+
+	res.FavorID = int64(dbFavor.ID)
+
+	return &res, nil
+}
+
+func (s MvpServer) DelFavor(ctx context.Context, req *pb.DelFavorReq) (*pb.DelFavorRes, error) {
+	logger.Info("DelFavor", zap.Any("ctx", ctx), zap.Any("req", req))
+
+	var res pb.DelFavorRes
+
+	if errResult := dao.FavorRecordDao.Del(req.FavorID); errResult != nil {
+		return nil, errResult
 	}
 
 	return &res, nil

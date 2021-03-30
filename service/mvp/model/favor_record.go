@@ -22,6 +22,7 @@ func (f *FavorRecord) TableName() string {
 
 func (f *FavorRecord) ToPb() *pb.Favor {
 	return &pb.Favor{
+		Id:         int64(f.ID),
 		FavorType:  f.FavorType,
 		Parameters: strings.Split(f.FavorParameters, "|"),
 	}

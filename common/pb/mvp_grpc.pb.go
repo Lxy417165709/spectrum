@@ -36,7 +36,8 @@ type MvpClient interface {
 	CloseDesk(ctx context.Context, in *CloseDeskReq, opts ...grpc.CallOption) (*CloseDeskRes, error)
 	GetOrder(ctx context.Context, in *GetOrderReq, opts ...grpc.CallOption) (*GetOrderRes, error)
 	CheckOut(ctx context.Context, in *CheckOutReq, opts ...grpc.CallOption) (*CheckOutRes, error)
-	AddFavorForGood(ctx context.Context, in *AddFavorForGoodReq, opts ...grpc.CallOption) (*AddFavorForGoodRes, error)
+	AddFavor(ctx context.Context, in *AddFavorReq, opts ...grpc.CallOption) (*AddFavorRes, error)
+	DelFavor(ctx context.Context, in *DelFavorReq, opts ...grpc.CallOption) (*DelFavorRes, error)
 	DeleteFavorForGood(ctx context.Context, in *DeleteFavorForGoodReq, opts ...grpc.CallOption) (*DeleteFavorForGoodRes, error)
 	GetAllDeskClasses(ctx context.Context, in *GetAllDeskClassesReq, opts ...grpc.CallOption) (*GetAllDeskClassesRes, error)
 }
@@ -220,9 +221,18 @@ func (c *mvpClient) CheckOut(ctx context.Context, in *CheckOutReq, opts ...grpc.
 	return out, nil
 }
 
-func (c *mvpClient) AddFavorForGood(ctx context.Context, in *AddFavorForGoodReq, opts ...grpc.CallOption) (*AddFavorForGoodRes, error) {
-	out := new(AddFavorForGoodRes)
-	err := c.cc.Invoke(ctx, "/pb.Mvp/AddFavorForGood", in, out, opts...)
+func (c *mvpClient) AddFavor(ctx context.Context, in *AddFavorReq, opts ...grpc.CallOption) (*AddFavorRes, error) {
+	out := new(AddFavorRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/AddFavor", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *mvpClient) DelFavor(ctx context.Context, in *DelFavorReq, opts ...grpc.CallOption) (*DelFavorRes, error) {
+	out := new(DelFavorRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/DelFavor", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -270,7 +280,8 @@ type MvpServer interface {
 	CloseDesk(context.Context, *CloseDeskReq) (*CloseDeskRes, error)
 	GetOrder(context.Context, *GetOrderReq) (*GetOrderRes, error)
 	CheckOut(context.Context, *CheckOutReq) (*CheckOutRes, error)
-	AddFavorForGood(context.Context, *AddFavorForGoodReq) (*AddFavorForGoodRes, error)
+	AddFavor(context.Context, *AddFavorReq) (*AddFavorRes, error)
+	DelFavor(context.Context, *DelFavorReq) (*DelFavorRes, error)
 	DeleteFavorForGood(context.Context, *DeleteFavorForGoodReq) (*DeleteFavorForGoodRes, error)
 	GetAllDeskClasses(context.Context, *GetAllDeskClassesReq) (*GetAllDeskClassesRes, error)
 	mustEmbedUnimplementedMvpServer()
@@ -337,8 +348,11 @@ func (UnimplementedMvpServer) GetOrder(context.Context, *GetOrderReq) (*GetOrder
 func (UnimplementedMvpServer) CheckOut(context.Context, *CheckOutReq) (*CheckOutRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckOut not implemented")
 }
-func (UnimplementedMvpServer) AddFavorForGood(context.Context, *AddFavorForGoodReq) (*AddFavorForGoodRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddFavorForGood not implemented")
+func (UnimplementedMvpServer) AddFavor(context.Context, *AddFavorReq) (*AddFavorRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddFavor not implemented")
+}
+func (UnimplementedMvpServer) DelFavor(context.Context, *DelFavorReq) (*DelFavorRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DelFavor not implemented")
 }
 func (UnimplementedMvpServer) DeleteFavorForGood(context.Context, *DeleteFavorForGoodReq) (*DeleteFavorForGoodRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteFavorForGood not implemented")
@@ -701,20 +715,38 @@ func _Mvp_CheckOut_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Mvp_AddFavorForGood_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddFavorForGoodReq)
+func _Mvp_AddFavor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddFavorReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MvpServer).AddFavorForGood(ctx, in)
+		return srv.(MvpServer).AddFavor(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.Mvp/AddFavorForGood",
+		FullMethod: "/pb.Mvp/AddFavor",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MvpServer).AddFavorForGood(ctx, req.(*AddFavorForGoodReq))
+		return srv.(MvpServer).AddFavor(ctx, req.(*AddFavorReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Mvp_DelFavor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DelFavorReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).DelFavor(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/DelFavor",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).DelFavor(ctx, req.(*DelFavorReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -836,8 +868,12 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Mvp_CheckOut_Handler,
 		},
 		{
-			MethodName: "AddFavorForGood",
-			Handler:    _Mvp_AddFavorForGood_Handler,
+			MethodName: "AddFavor",
+			Handler:    _Mvp_AddFavor_Handler,
+		},
+		{
+			MethodName: "DelFavor",
+			Handler:    _Mvp_DelFavor_Handler,
 		},
 		{
 			MethodName: "DeleteFavorForGood",

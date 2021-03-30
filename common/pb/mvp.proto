@@ -96,16 +96,27 @@ message SizeInfo {
 }
 
 message Favor {
-    FavorType favorType = 1;
-    repeated string parameters = 2;
+    int64 id = 1;
+    FavorType favorType = 2;
+    repeated string parameters = 3;
 }
 
-message  AddFavorForGoodReq {
-    int64 goodID = 1;
-    repeated Favor favors = 2;
+message  AddFavorReq {
+    string chargeableObjName = 1;
+    int64 id = 2;
+    Favor favor = 3;
 }
 
-message AddFavorForGoodRes{}
+message AddFavorRes{
+    int64 favorID = 1;
+}
+
+message  DelFavorReq {
+    int64 favorID = 1;
+}
+
+message DelFavorRes{
+}
 
 // 添加货物
 message AddGoodReq {
@@ -311,7 +322,8 @@ service Mvp {
     rpc GetOrder(GetOrderReq) returns(GetOrderRes);            // 获得订单信息 （如开桌时长、点单货物...）
     rpc CheckOut(CheckOutReq) returns(CheckOutRes);         // 结账
 
-    rpc AddFavorForGood(AddFavorForGoodReq) returns(AddFavorForGoodRes);    // 为货物添加优惠
+    rpc AddFavor(AddFavorReq) returns(AddFavorRes);    // 为货物添加优惠
+    rpc DelFavor(DelFavorReq) returns(DelFavorRes);    // 为货物添加优惠
     rpc DeleteFavorForGood(DeleteFavorForGoodReq) returns(DeleteFavorForGoodRes);   // 删除货物的优惠
 
     rpc GetAllDeskClasses(GetAllDeskClassesReq) returns(GetAllDeskClassesRes);   // 获得所有桌、桌位

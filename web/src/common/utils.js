@@ -217,8 +217,32 @@ export default {
       then(res)
     })
   },
+  async AddFavor(obj, par, then) {
+    let model = this.getRequestModel("mvp", "AddFavor", par)
+    await this.sendRequestModel(model).then((res) => {
+      console.log("AddFavor.res", res)
+      if (!this.hasRequestSuccess(res)) {
+        obj.$message.error(res.data.err)
+        return
+      }
+      obj.$message.success(res.data.msg)
+      then(res)
+    })
+  },
+  async DelFavor(obj, par, then) {
+    let model = this.getRequestModel("mvp", "DelFavor", par)
+    await this.sendRequestModel(model).then((res) => {
+      console.log("DelFavor.res", res)
+      if (!this.hasRequestSuccess(res)) {
+        obj.$message.error(res.data.err)
+        return
+      }
+      obj.$message.success(res.data.msg)
+      then(res)
+    })
+  },
   IsNil(obj) {
-    return obj === undefined || obj === null || isNaN(obj)
+    return obj === undefined || obj === null
   },
   GetFavorTagName(favor) {
     if (favor.favorType === cst.FAVOR_TYPE.REBATE.VALUE) {

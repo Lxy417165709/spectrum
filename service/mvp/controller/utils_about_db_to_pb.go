@@ -53,10 +53,10 @@ func getPbOrder(orderID int64) *pb.Order {
 	if pbDesk == nil {
 		pbDesk = utils.NewBlankDesk()
 	}
-	if pbGoods == nil {
+	if len(pbGoods) == 0{
 		pbGoods = utils.NewBlankGoods()
 	}
-	if favors == nil {
+	if len(favors) == 0 {
 		favors = utils.NewBlankFavors()
 	}
 

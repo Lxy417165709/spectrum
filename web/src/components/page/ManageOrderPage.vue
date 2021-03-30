@@ -196,7 +196,9 @@
 
           <el-divider>优惠设置</el-divider>
           <el-form label-width="80px">
-            <discount-editor :index="index" @updateFavors="updateFavors"></discount-editor>
+            <discount-editor :orderIndex="index" chargeableObjName="order"
+                             @delFavorForOrder="delFavorForOrder"
+                             @addFavorForOrder="addFavorForOrder" :favors="order.favors"></discount-editor>
             <el-form-item label="价格">
               {{ order.expenseInfo.expense }}
             </el-form-item>
@@ -353,9 +355,30 @@ export default {
     getNow() {
       return Date.parse(new Date()) / 1000
     },
-    updateFavors(favors, index) {
-      this.db_orders[index].favors = favors
-      this.getOrderExpense(index)
+    addFavorForOrder(favor, index) {
+      utils.AddFavor(this, {
+        chargeableObjName: "order",
+        id: this.db_orders[index].id,
+        favor: favor,
+      }, (res) => {
+        if (utils.IsNil(this.db_orders[index].favors)){
+          this.db_orders[index].favors = []
+        }
+        favor.id = res.data.data.favorID
+        this.db_orders[index].favors.push(favor)
+        this.getOrderExpense(index)
+      })
+    },
+    delFavorForOrder(favor, index) {
+      utils.DelFavor(this, {
+        favorId: favor.id,
+      }, (res) => {
+        if (utils.IsNil(this.db_orders[index].favors)){
+          this.db_orders[index].favors = []
+        }
+        this.db_orders[index].favors = utils.removeElementByField(this.db_orders[index].favors, "id", favor.id)
+        this.getOrderExpense(index)
+      })
     },
     getOrderExpense(index) {
       utils.GetOrderExpense(this, {order: this.db_orders[index]}, (res) => {

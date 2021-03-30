@@ -172,6 +172,26 @@ var objectFunctionToRpcUnit = map[string]map[string]*model.RpcUnit{
 			SuccessMsg: "计算成功",
 			FailMsg:    "计算失败",
 		},
+		"AddFavor": {
+			ReqFunc: func() interface{} {
+				return &pb.AddFavorReq{}
+			},
+			ResFunc: func() interface{} {
+				return &pb.AddFavorRes{}
+			},
+			SuccessMsg: "添加优惠成功",
+			FailMsg:    "添加优惠失败",
+		},
+		"DelFavor": {
+			ReqFunc: func() interface{} {
+				return &pb.DelFavorReq{}
+			},
+			ResFunc: func() interface{} {
+				return &pb.DelFavorRes{}
+			},
+			SuccessMsg: "删除优惠成功",
+			FailMsg:    "删除优惠失败",
+		},
 	},
 	//"AddOptionClass": {
 	//	ReqFunc: func() interface{} {
