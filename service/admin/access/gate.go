@@ -70,6 +70,7 @@ func DistributeRequest(c *gin.Context) {
 		reflect.ValueOf(req),
 	})
 	// 3. 解析返回值
+	logger.Info("Get Ret[0]", zap.Any("Ret[0]", returnValues[0].Interface()))
 	if err := mapstructure.Decode(returnValues[0].Interface(), res); err != nil {
 		logger.Error("Fail to decode returnValues[0]",
 			zap.Any("returnValues[0]", returnValues[0]),

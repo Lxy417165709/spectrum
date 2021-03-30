@@ -22,7 +22,9 @@ func (MvpServer) GetOrderExpense(ctx context.Context, req *pb.GetOrderExpenseReq
 
 	var res pb.GetOrderExpenseRes
 	res.ExpenseInfo = (&model.Order{
-		CheckOutAt: utils.NilTime,
+		Expense:         req.Order.ExpenseInfo.Expense,
+		NonFavorExpense: req.Order.ExpenseInfo.NonFavorExpense,
+		CheckOutAt:      time.Unix(req.Order.ExpenseInfo.CheckOutAt, 0),
 	}).GetExpenseInfo(req.Order.Desk, req.Order.Goods, req.Order.Favors)
 
 	return &res, nil
@@ -304,6 +306,8 @@ func (MvpServer) GetOrder(ctx context.Context, req *pb.GetOrderReq) (*pb.GetOrde
 	for _, order := range dbOrders {
 		res.Orders = append(res.Orders, getPbOrder(order.ID))
 	}
+	logger.Info("Success to get res.Orders", zap.Any("res.Orders", res.Orders))
+
 	return &res, nil
 }
 
