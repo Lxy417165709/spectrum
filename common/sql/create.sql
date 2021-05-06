@@ -114,7 +114,7 @@ CREATE TABLE `main_element_attach_element_record`
     `good_id`           bigint       NOT NULL DEFAULT 0, # 同个订单内可能有多个相同的主元素, 所以要用 good_id 区分
     `main_element_id`   bigint       NOT NULL DEFAULT 0,
     `attach_element_id` bigint       NOT NULL DEFAULT 0,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
     UNIQUE KEY(`good_id`,`main_element_id`,`attach_element_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4

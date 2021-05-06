@@ -7,7 +7,7 @@ type Response struct {
 }
 
 type Request struct {
-	Object     string                 `json:"object"`
-	Function   string                 `json:"function"`
-	Parameters map[string]interface{} `json:"parameters"`
+	Object     string                 `json:"object"`		// 请求RPC对象
+	Function   string                 `json:"function"`		// 请求RPC对象的函数
+	Parameters map[string]interface{} `json:"parameters"`	// 参数
 }

@@ -40,7 +40,7 @@ func checkAddGoodClassParameter(req *pb.AddGoodClassReq) (*pb.GoodClass, error) 
 
 func checkOrderGoodParameter(req *pb.OrderGoodReq) (int64, []*pb.Good, error) {
 	if req.OrderID <= 0 {
-		return 0, nil, ers.New("订单ID 必须大于 0。", req.OrderID)
+		return 0, nil, ers.New("订单ID 必须大于 0。当前订单ID为 %d。",req.OrderID)
 	}
 	for index, good := range req.Goods {
 		if errResult := checkIsValidGood(good); errResult != nil {

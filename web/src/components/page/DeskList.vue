@@ -95,15 +95,15 @@ export default {
         this.curDeskIndex = deskIndex
         this.curDesk = this.desks[deskIndex]
         this.isDeskListVisible = false
-        console.log("curDesk", this.curDesk)
+        console.log("curDesk", this.desks[deskIndex])
         return
       }
       // 进行点单
       await utils.OrderDesk(this, {
         desk: this.desks[deskIndex],
       }, (res) => {
-        this.desks[deskIndex].id = res.data.data.deskID;
-        this.desks[deskIndex].orderID = res.data.data.orderID;
+        this.desks[deskIndex].id = res.data.data.order.desk.id;
+        this.desks[deskIndex].orderID = res.data.data.order.id;
       })
     },
     tryToAddDesk() {
