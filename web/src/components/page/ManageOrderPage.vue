@@ -97,8 +97,10 @@
               label="计费价格">
             </el-table-column>
             <el-table-column
-              prop="expenseInfo.nonFavorExpense"
               label="原花费">
+              <template slot-scope="scope">
+                {{scope.row.expenseInfo.nonFavorExpense.toFixed(2)}}
+              </template>
             </el-table-column>
             <el-table-column
               label="优惠"
@@ -112,8 +114,10 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="expenseInfo.expense"
               label="折后花费">
+              <template slot-scope="scope">
+                {{scope.row.expenseInfo.expense.toFixed(2)}}
+              </template>
             </el-table-column>
             <el-table-column
               label="结账">
@@ -162,8 +166,10 @@
                 </template>
               </el-table-column>
               <el-table-column
-                prop="expenseInfo.nonFavorExpense"
                 label="原花费">
+                <template slot-scope="scope">
+                  {{scope.row.expenseInfo.nonFavorExpense.toFixed(2)}}
+                </template>
               </el-table-column>
               <el-table-column
                 label="优惠"
@@ -177,8 +183,10 @@
                 </template>
               </el-table-column>
               <el-table-column
-                prop="expenseInfo.expense"
                 label="折后花费">
+                <template slot-scope="scope">
+                  {{scope.row.expenseInfo.expense.toFixed(2)}}
+                </template>
               </el-table-column>
               <el-table-column
                 label="结账">
@@ -200,7 +208,7 @@
                              @delFavorForOrder="delFavorForOrder"
                              @addFavorForOrder="addFavorForOrder" :favors="order.favors"></discount-editor>
             <el-form-item label="价格">
-              {{ order.expenseInfo.expense }}
+              {{ order.expenseInfo.expense.toFixed(2) }}
             </el-form-item>
 
 

@@ -38,11 +38,11 @@
     <discount-editor ref="DiscountEditor"></discount-editor>
 
     <el-form-item label="价格" v-if="good.mainElement!==undefined">
-      <span style="font-size: 1.4em;color: red;">{{ cpt_price }} 元</span>
+      <span style="font-size: 1.4em;color: red;">{{ cpt_price.toFixed(2) }} 元</span>
     </el-form-item>
-    <el-form-item label="备注">
-      <el-input style="width: 70%"></el-input>
-    </el-form-item>
+<!--    <el-form-item label="备注">-->
+<!--      <el-input style="width: 70%"></el-input>-->
+<!--    </el-form-item>-->
     <el-form-item>
       <el-button type="primary" @click="orderGood">确定</el-button>
     </el-form-item>
