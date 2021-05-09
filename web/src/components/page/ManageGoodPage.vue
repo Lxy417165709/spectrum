@@ -86,9 +86,7 @@ export default {
   },
   async created() {
     this.goodOptionClasses = test.goodOptionClasses
-    await utils.GetAllGoodClasses(this, {}, (res) => {
-      this.goodClasses = res.data.data.goodClasses
-    })
+    await this.flashAllGoodClasses()
   },
   data() {
     return {
@@ -105,33 +103,29 @@ export default {
     }
   },
   methods: {
+    flashAllGoodClasses(){
+      utils.GetAllGoodClasses(this, {}, (res) => {
+        this.goodClasses = res.data.data.goodClasses
+      })
+    },
     turnToClassListMode(deskIndex) {
       this.curDeskIndex = deskIndex
       this.viewMode = cst.VIEW_MODE.CLASS_LIST_MODE
     },
     async turnToGoodOptionListMode(goodOptionClassIndex) {
-      await utils.GetAllGoodOptions(this, {
-        className: this.goodOptionClasses[goodOptionClassIndex].name,
-      }, (res) => {
-        this.viewMode = cst.VIEW_MODE.GOOD_OPTION_LIST_MODE
-        this.curGoodOptionClassIndex = goodOptionClassIndex
-        this.$nextTick(() => {
-          this.$refs.GoodOptionList.goodOptions = res.data.data.elements
-        })
+      this.viewMode = cst.VIEW_MODE.GOOD_OPTION_LIST_MODE
+      this.curGoodOptionClassIndex = goodOptionClassIndex
+      await this.$nextTick(() => {
+        this.$refs.GoodOptionList.flashAllGoodOptions()
       })
     },
     async turnToGoodListMode(goodClassIndex) {
-      await utils.GetAllGoods(this, {
-        className: this.goodClasses[goodClassIndex].name,
-      }, (res) => {
-        this.viewMode = cst.VIEW_MODE.GOOD_LIST_MODE
-        this.curGoodClassIndex = goodClassIndex
-        this.$nextTick(() => {
-          this.$refs.GoodList.goods = res.data.data.goods
-        })
+      this.viewMode = cst.VIEW_MODE.GOOD_LIST_MODE
+      this.curGoodClassIndex = goodClassIndex
+      await this.$nextTick(() => {
+        this.$refs.GoodList.flashAllGoods()
       })
     },
-
     turnToParentComponentMode() {
       if (this.viewMode === cst.VIEW_MODE.CLASS_LIST_MODE) {
         this.$emit("turnToParentComponentMode")
@@ -140,8 +134,8 @@ export default {
         this.viewMode = cst.VIEW_MODE.CLASS_LIST_MODE
       }
     },
-    successToAddGoodClass(goodClass) {
-      this.goodClasses.push(goodClass)
+    successToAddGoodClass() {
+      this.flashAllGoodClasses()
     },
   },
   computed: {

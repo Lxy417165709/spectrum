@@ -26,7 +26,7 @@
       title="桌类添加/编辑"
       :visible.sync="deskClassEditorVisible"
       width="30%">
-      <desk-class-editor ref="DeskClassEditor"></desk-class-editor>
+      <desk-class-editor ref="DeskClassEditor" @successToAddDeskClass="successToAddDeskClass"></desk-class-editor>
     </el-dialog>
   </el-container>
 </template>
@@ -45,9 +45,7 @@ export default {
   name: 'ManageDeskPage',
   components: {DeskEditorOfAdmin, DeskClassEditor, GoodClass, DeskList},
   async created() {
-    await utils.GetAllDeskClasses(this, {}, (res) => {
-      this.db_deskClasses = res.data.data.deskClasses
-    })
+    await this.flashAllDeskClasses()
   },
   data() {
     return {
@@ -63,6 +61,12 @@ export default {
     }
   },
   methods: {
+    async flashAllDeskClasses() {
+      await utils.GetAllDeskClasses(this, {}, (res) => {
+        this.db_deskClasses = res.data.data.deskClasses
+      })
+    },
+
     async showDeskClassDetail(deskClassIndex) {
       this.curDeskClassIndex = deskClassIndex
       this.curDeskIndex = cst.INDEX.INVALID_INDEX
@@ -93,6 +97,10 @@ export default {
     },
     tryToAddDeskClass() {
       this.openDeskClassEditor(test.blankDeskClass)
+    },
+    successToAddDeskClass() {
+      this.deskClassEditorVisible = false
+      this.flashAllDeskClasses()
     }
   },
   computed: {

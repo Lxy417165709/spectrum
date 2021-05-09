@@ -241,6 +241,31 @@ export default {
       then(res)
     })
   },
+  async AddGood(obj,par,then) {
+    let model = this.getRequestModel("mvp", "AddGood", par)
+    await this.sendRequestModel(model).then(res => {
+      console.log("AddGood.res",res)
+      if (!this.hasRequestSuccess(res)) {
+        obj.$message.error(res.data.err)
+        return
+      }
+      obj.$message.success(res.data.msg)
+      then(res)
+    })
+  },
+  async AddElement(obj,par,then) {
+    let model = this.getRequestModel("mvp", "AddElement", par)
+    await this.sendRequestModel(model).then(res => {
+      console.log("AddElement.res",res)
+      if (!this.hasRequestSuccess(res)) {
+        obj.$message.error(res.data.err)
+        return
+      }
+      obj.$message.success(res.data.msg)
+      then(res)
+    })
+  },
+
   IsNil(obj) {
     return obj === undefined || obj === null
   },

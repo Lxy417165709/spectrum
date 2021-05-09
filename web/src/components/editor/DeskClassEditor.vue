@@ -77,6 +77,7 @@ export default {
           return
         }
         this.$message.success(res.data.msg)
+        this.$emit("successToAddDeskClass")
       })
     },
     cleanSizeInfoPictureStorePath() {

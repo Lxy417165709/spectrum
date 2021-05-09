@@ -46,8 +46,8 @@ export default {
     };
   },
   methods: {
-    successToAddGoodClass(goodClass) {
-      this.$emit("successToAddGoodClass", goodClass)
+    successToAddGoodClass() {
+      this.$emit("successToAddGoodClass")
       this.goodClassEditorVisible = false
     },
     handleGoodClassCardClick(goodClassIndex) {

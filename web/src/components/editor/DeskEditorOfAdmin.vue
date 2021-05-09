@@ -54,7 +54,7 @@ export default {
         desk: this.desk,
         className: this.className,
       }, (res) => {
-        this.$emit("successToAddDesk", res.data.data.desk)
+        this.$emit("successToAddDesk")
       })
     },
     cleanSizeInfoPictureStorePath() {

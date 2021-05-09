@@ -160,21 +160,13 @@ export default {
       this.good.mainElement.selectedIndex = index
     },
     async addGood(good) {
-      let model = utils.getRequestModel("mvp", "AddGood", {
+      await utils.AddGood(this, {
         good: good,
         className: this.className,
-      })
-      await utils.sendRequestModel(model).then(res => {
-        if (!utils.hasRequestSuccess(res)) {
-          this.$message.error(res.data.err)
-          return
-        }
-        this.$message.success(res.data.msg)
-        this.$emit("successToAddGood",res.data.data.good)
+      }, (res) => {
+        this.$emit("successToAddGood")
       })
     },
-
-
     tabClick(tab) {
       this.curSizeInfoIndex = tab.index
     },

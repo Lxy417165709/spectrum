@@ -60,7 +60,7 @@ export default {
   watch: {
     async className(n, o) {
       console.log(n, o)
-      await this.getAllDesks()
+      await this.flashAllDesks()
     }
   },
   data() {
@@ -73,29 +73,26 @@ export default {
     };
   },
   async created() {
-    await this.getAllDesks()
+    await this.flashAllDesks()
   },
   methods: {
-    async getAllDesks() {
+    async flashAllDesks() {
       await utils.GetAllDesks(this, {
         className: this.className
       }, (res) => {
         this.desks = res.data.data.desks
       })
     },
-    successToAddDesk(desk) {
-      this.desks.push(desk)
+    successToAddDesk() {
       this.DeskEditorOfAdminVisible = false
+      this.flashAllDesks()
     },
-
-
     async turnToClassListMode(deskIndex) {
       // todo: this.desks[deskIndex].id === undefined 时，此时 this.desks[deskIndex].id !== 0 也成立..
       if (this.desks[deskIndex].id !== 0) {
         this.curDeskIndex = deskIndex
         this.curDesk = this.desks[deskIndex]
         this.isDeskListVisible = false
-        console.log("curDesk", this.desks[deskIndex])
         return
       }
       // 进行点单

@@ -20,7 +20,8 @@
       title="商品选项添加/编辑"
       :visible.sync="GoodOptionEditorOfAdminVisible"
       width="30%">
-      <good-option-editor-of-admin ref="GoodOptionEditorOfAdmin" :className="className"></good-option-editor-of-admin>
+      <good-option-editor-of-admin ref="GoodOptionEditorOfAdmin" :className="className"
+                                   @successToAddGoodOption="successToAddGoodOption"></good-option-editor-of-admin>
     </el-dialog>
 
   </el-row>
@@ -35,6 +36,7 @@ import GoodOptionCard from "../card/GoodOptionCard";
 import GoodOptionSpecialCard from "../card/GoodOptionSpecialCard";
 import cst from "../../common/cst";
 import GoodOptionEditorOfAdmin from "../editor/GoodOptionEditorOfAdmin";
+import utils from "../../common/utils";
 
 export default {
   components: {GoodOptionSpecialCard, GoodOptionCard, GoodSpacialCard, GoodCard, GoodOptionEditorOfAdmin},
@@ -49,6 +51,17 @@ export default {
     };
   },
   methods: {
+    async flashAllGoodOptions() {
+      await utils.GetAllGoodOptions(this, {
+        className: this.className,
+      }, (res) => {
+        this.goodOptions = res.data.data.elements
+      })
+    },
+    successToAddGoodOption(){
+      this.GoodOptionEditorOfAdminVisible=false
+      this.flashAllGoodOptions()
+    },
     tryToAddGoodOption() {
       if (this.className === cst.ATTACH_CLASS_NAME.GOOD_OPTION_CLASS_NAME) {
         this.openGoodOptionEditorOfAdmin(test.blankGoodOption)

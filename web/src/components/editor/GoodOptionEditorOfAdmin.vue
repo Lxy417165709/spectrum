@@ -46,10 +46,10 @@
           <el-form-item label="默认选中" v-if="option.selectedIndex !== index && sizeInfo.id !== 0">
             <el-button @click="handleChangeDefaultSizeInfo(index)" type="primary">选中</el-button>
           </el-form-item>
-          <el-form-item label="是否删除"
-                        v-if="option.selectedIndex !== index && option.sizeInfos.length>1">
-            <el-button @click="deleteElementSizeInfo(index)" type="danger">删除</el-button>
-          </el-form-item>
+<!--          <el-form-item label="是否删除"-->
+<!--                        v-if="option.selectedIndex !== index && option.sizeInfos.length>1">-->
+<!--            <el-button @click="deleteElementSizeInfo(index)" type="danger">删除</el-button>-->
+<!--          </el-form-item>-->
         </el-form>
 
 
@@ -119,17 +119,11 @@ export default {
 
 
     async addGoodOption(option) {
-      let model = utils.getRequestModel("mvp", "AddElement", {
+      await utils.AddElement(this,{
         element: option,
         className: this.className,
-      })
-      await utils.sendRequestModel(model).then(res => {
-        console.log("addGoodOption.res", res)
-        if (!utils.hasRequestSuccess(res)) {
-          this.$message.error(res.data.err)
-          return
-        }
-        this.$message.success(res.data.msg)
+      },(res)=>{
+        this.$emit("successToAddGoodOption")
       })
     },
     tabClick(tab) {

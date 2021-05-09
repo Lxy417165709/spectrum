@@ -40,6 +40,8 @@ import GoodSpacialCard from "../card/GoodSpacialCard";
 import test from "../../common/test"
 import GoodEditorOfUser from "../editor/GoodEditorOfUser";
 import GoodEditorOfAdmin from "../editor/GoodEditorOfAdmin";
+import utils from "../../common/utils";
+import cst from "../../common/cst";
 
 export default {
   components: {GoodEditorOfAdmin, GoodEditorOfUser, GoodSpacialCard, GoodCard},
@@ -55,10 +57,20 @@ export default {
       GoodEditorOfAdminVisible: false,
     };
   },
+  // async mounted() {
+  //   await this.flashAllGoods()
+  // },
   methods: {
-    successToAddGood(good) {
-      this.goods.push(good)
+    async flashAllGoods(){
+      await utils.GetAllGoods(this, {
+        className: this.className
+      }, (res) => {
+        this.goods = res.data.data.goods
+      })
+    },
+    successToAddGood() {
       this.GoodEditorOfAdminVisible = false
+      this.flashAllGoods()
     },
     openGoodEditor(good) {
       if (this.props_isAdminView) {
