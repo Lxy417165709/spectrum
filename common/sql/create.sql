@@ -189,13 +189,13 @@ CREATE TABLE `favor_record`
 ################################ 数据 ################################
 # 创建商品类
 insert into element_class(name, picture_store_path, class_type)
-values ('奶茶类', 'static/upload/温热1.jpeg', 0);
+values ('奶茶类', 'static/upload/奶茶类1.jpeg', 0);
 insert into element_class(name, picture_store_path, class_type)
-values ('水果茶类', 'static/upload/温热1.jpeg', 0);
+values ('水果茶类', 'static/upload/水果茶类1.jpeg', 0);
 insert into element_class(name, picture_store_path, class_type)
-values ('小吃类', 'static/upload/温热1.jpeg', 0);
+values ('小吃类', 'static/upload/小吃类1.jpeg', 0);
 insert into element_class(name, picture_store_path, class_type)
-values ('饮料类', 'static/upload/温热1.jpeg', 0);
+values ('饮料类', 'static/upload/饮料类1.jpeg', 0);
 insert into element_class(name, picture_store_path, class_type)
 values ('附属选项类', 'static/upload/温热1.jpeg', 1);
 insert into element_class(name, picture_store_path, class_type)
@@ -205,11 +205,11 @@ values ('附属商品类', 'static/upload/温热1.jpeg', 2);
 insert into element(name, type, class_id)
 values ('波霸奶茶', 0, 1);
 insert into element_size_info(element_id, size, price, picture_store_path)
-values (1, '小杯', 10, 'static/upload/奶茶1.jpeg');
+values (1, '小杯', 10, 'static/upload/波霸奶茶_小.jpeg');
 insert into element_size_info(element_id, size, price, picture_store_path)
-values (1, '中杯', 15, 'static/upload/奶茶2.jpeg');
+values (1, '中杯', 15, 'static/upload/波霸奶茶_中.jpeg');
 insert into element_size_info(element_id, size, price, picture_store_path)
-values (1, '大杯', 15, 'static/upload/奶茶3.jpeg');
+values (1, '大杯', 15, 'static/upload/波霸奶茶_大.jpeg');
 insert into main_element_attach_element_record(good_id, main_element_id, attach_element_id)
 values (0, 1, 2);
 insert into main_element_attach_element_record(good_id, main_element_id, attach_element_id)
@@ -219,11 +219,11 @@ values (0, 1, 3);
 insert into element(name, type, class_id)
 values ('温度', 1, 5);
 insert into element_size_info(element_id, size, price, picture_store_path)
-values (2, '冷饮', 0, 'static/upload/温热1.jpeg');
+values (2, '冷饮', 0, 'static/upload/冷饮1.jpeg');
 insert into element_size_info(element_id, size, price, picture_store_path)
-values (2, '常温', 0, 'static/upload/温热1.jpeg');
+values (2, '常温', 0, 'static/upload/常温1.jpeg');
 insert into element_size_info(element_id, size, price, picture_store_path)
-values (2, '热饮', 0, 'static/upload/温热1.jpeg');
+values (2, '热饮', 0, 'static/upload/热饮1.jpeg');
 
 # 创建附属商品元素, 选项记录
 insert into element(name, type, class_id)

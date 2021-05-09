@@ -51,11 +51,13 @@ export default {
   goodOptionClasses: [
     {
       name: cst.ATTACH_CLASS_NAME.GOOD_OPTION_CLASS_NAME,
-      pictureStorePath: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2186952895,3925242332&fm=26&gp=0.jpg",
+      // pictureStorePath: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2186952895,3925242332&fm=26&gp=0.jpg",
+      pictureStorePath: "api/file/" + "static/upload/温热1.jpeg",
     },
     {
       name: cst.ATTACH_CLASS_NAME.GOOD_INGREDIENT_CLASS_NAME,
-      pictureStorePath: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2186952895,3925242332&fm=26&gp=0.jpg",
+      pictureStorePath: "api/file/" + "static/upload/小红1.jpeg",
+      // pictureStorePath: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2186952895,3925242332&fm=26&gp=0.jpg",
     }
   ],
   blankDesk: {
