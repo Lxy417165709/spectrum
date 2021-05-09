@@ -35,10 +35,17 @@
         {{ sizeInfo.size }}
       </el-radio>
     </el-form-item>
-    <discount-editor ref="DiscountEditor"></discount-editor>
+    <discount-editor ref="DiscountEditor" :index="-1" chargeableObjName="good"
+                    @addFavorForGood="addFavorForGood"
+                    @delFavorForGood="delFavorForGood"
+                     :favors="good.favors"
+    ></discount-editor>
 
-    <el-form-item label="价格" v-if="good.mainElement!==undefined">
+    <el-form-item label="原价格" v-if="good.mainElement!==undefined">
       <span style="font-size: 1.4em;color: red;">{{ cpt_price.toFixed(2) }} 元</span>
+    </el-form-item>
+    <el-form-item label="折后价格" v-if="good.mainElement!==undefined && this.good.favors!== null && this.good.favors.length>0">
+      <span style="font-size: 1.4em;color: red;">{{ expense.toFixed(2) }} 元</span>
     </el-form-item>
 <!--    <el-form-item label="备注">-->
 <!--      <el-input style="width: 70%"></el-input>-->
@@ -65,6 +72,7 @@ export default {
     return {
       needAttachGood: false,
       good: {},
+      expense : 0,
     }
   },
   methods: {
@@ -72,7 +80,6 @@ export default {
       this.needAttachGood = true
     },
     orderGood() {
-      this.good.favors = this.$refs.DiscountEditor.selectedFavors
       utils.OrderGood(this, {
         goods: [
           this.good,
@@ -80,7 +87,27 @@ export default {
         orderID: this.orderID
       }, (res) => {
       })
-    }
+    },
+    addFavorForGood(favor, index) {
+      if (utils.IsNil(this.good.favors)){
+        this.good.favors = []
+      }
+      this.good.favors.push(favor)
+      this.flashExpense()
+    },
+    delFavorForGood(favorIndex) {
+      this.good.favors = utils.removeIndex(this.good.favors,favorIndex)
+      this.flashExpense()
+    },
+    async flashExpense() {
+      let price = this.cpt_price;
+      await utils.GetExpense(this,{
+        notFavorExpense:price,
+        favors:this.good.favors
+      },(res)=>{
+       this.expense =  res.data.data.expense
+      })
+    },
   },
   computed: {
     cpt_price() {

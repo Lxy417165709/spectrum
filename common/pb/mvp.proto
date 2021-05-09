@@ -293,6 +293,14 @@ message GetOrderExpenseRes{
     ExpenseInfo expenseInfo = 1;
 }
 
+message GetExpenseReq{
+    float notFavorExpense = 1;
+    repeated Favor favors = 2;
+}
+
+message GetExpenseRes{
+    float expense = 1;
+}
 
 service Mvp {
     rpc GetOrderExpense(GetOrderExpenseReq) returns(GetOrderExpenseRes);
@@ -327,6 +335,8 @@ service Mvp {
     rpc DeleteFavorForGood(DeleteFavorForGoodReq) returns(DeleteFavorForGoodRes);   // 删除货物的优惠
 
     rpc GetAllDeskClasses(GetAllDeskClassesReq) returns(GetAllDeskClassesRes);   // 获得所有桌、桌位
+
+    rpc GetExpense(GetExpenseReq) returns(GetExpenseRes);
 }
 
 // todo: 增加桌位删除接口

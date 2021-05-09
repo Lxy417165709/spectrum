@@ -41,7 +41,7 @@ func (g *Good) GetExpenseInfo(mainElement *pb.Element, attachElement []*pb.Eleme
 	return &pb.ExpenseInfo{
 		NonFavorExpense: nonFavorExpense,
 		CheckOutAt:      utils.NilTime.Unix(),
-		Expense:         getFavorExpense(nonFavorExpense, favors),
+		Expense:         GetFavorExpense(nonFavorExpense, favors),
 	}
 }
 

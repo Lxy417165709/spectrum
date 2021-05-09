@@ -52,6 +52,6 @@ func (o *Order) GetExpenseInfo(desk *pb.Desk, goods []*pb.Good, favors []*pb.Fav
 	return &pb.ExpenseInfo{
 		NonFavorExpense: deskExpense + goodsExpense,
 		CheckOutAt:      utils.NilTime.Unix(),
-		Expense:         getFavorExpense(deskExpense+goodsExpense, favors),
+		Expense:         GetFavorExpense(deskExpense+goodsExpense, favors),
 	}
 }

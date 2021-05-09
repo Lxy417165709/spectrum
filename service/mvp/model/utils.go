@@ -24,7 +24,7 @@ func GetPbElementSelectSizeInfo(element *pb.Element) *pb.SizeInfo {
 	return element.SizeInfos[element.SelectedIndex]
 }
 
-func getFavorExpense(nonFavorExpense float64, pbFavors []*pb.Favor) float64 {
+func GetFavorExpense(nonFavorExpense float64, pbFavors []*pb.Favor) float64 {
 	favors := make([]Favor, 0)
 	for _, pbFavor := range pbFavors {
 		favor, _ := GetFavor(pbFavor)

@@ -9,7 +9,7 @@
 		</el-form-item>
 		<component :is="selectableFavors[curFavorIndex].component" @confirmFavor="addFavor"></component>
 		<el-form-item label="已选折扣">
-			<el-tag v-for="(favor,index) in favors" @close="delFavor(favor)"  :key="index" closable style="margin-right: 10px">
+			<el-tag v-for="(favor,index) in favors" @close="delFavor(index,favor)"  :key="index" closable style="margin-right: 10px">
 				{{ getFavorTagName(favor) }}
 			</el-tag>
 		</el-form-item>
@@ -27,13 +27,12 @@ import utils from "../../common/utils";
 export default {
 	name: "DiscountEditor",
 	props: {
-		orderIndex: Number,
+		index: Number,
 		chargeableObjName: String,
 		favors: Array
 	},
 	data() {
 		return {
-			// selectedFavors: [],
 			curFavorIndex: 0,
 			selectableFavors: [
 				{
@@ -60,17 +59,18 @@ export default {
 		},
 		addFavor(favor) {
 			if (this.chargeableObjName === "order") {
-				this.$emit("addFavorForOrder", favor, this.orderIndex)
+				this.$emit("addFavorForOrder", favor, this.index)
+			}
+			if (this.chargeableObjName === "good") {
+				this.$emit("addFavorForGood", favor, this.index)
 			}
 		},
-		handleClose(tag) {
-			this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
-		},
-
-		delFavor(favor) {
-			console.log(favor)
+		delFavor(favorIndex,favor) {
 			if (this.chargeableObjName === "order") {
-				this.$emit("delFavorForOrder", favor, this.orderIndex)
+				this.$emit("delFavorForOrder", favor, this.index)
+			}
+			if (this.chargeableObjName === "good") {
+				this.$emit("delFavorForGood", favorIndex)
 			}
 		}
 	}

@@ -40,6 +40,7 @@ type MvpClient interface {
 	DelFavor(ctx context.Context, in *DelFavorReq, opts ...grpc.CallOption) (*DelFavorRes, error)
 	DeleteFavorForGood(ctx context.Context, in *DeleteFavorForGoodReq, opts ...grpc.CallOption) (*DeleteFavorForGoodRes, error)
 	GetAllDeskClasses(ctx context.Context, in *GetAllDeskClassesReq, opts ...grpc.CallOption) (*GetAllDeskClassesRes, error)
+	GetExpense(ctx context.Context, in *GetExpenseReq, opts ...grpc.CallOption) (*GetExpenseRes, error)
 }
 
 type mvpClient struct {
@@ -257,6 +258,15 @@ func (c *mvpClient) GetAllDeskClasses(ctx context.Context, in *GetAllDeskClasses
 	return out, nil
 }
 
+func (c *mvpClient) GetExpense(ctx context.Context, in *GetExpenseReq, opts ...grpc.CallOption) (*GetExpenseRes, error) {
+	out := new(GetExpenseRes)
+	err := c.cc.Invoke(ctx, "/pb.Mvp/GetExpense", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MvpServer is the server API for Mvp service.
 // All implementations must embed UnimplementedMvpServer
 // for forward compatibility
@@ -284,6 +294,7 @@ type MvpServer interface {
 	DelFavor(context.Context, *DelFavorReq) (*DelFavorRes, error)
 	DeleteFavorForGood(context.Context, *DeleteFavorForGoodReq) (*DeleteFavorForGoodRes, error)
 	GetAllDeskClasses(context.Context, *GetAllDeskClassesReq) (*GetAllDeskClassesRes, error)
+	GetExpense(context.Context, *GetExpenseReq) (*GetExpenseRes, error)
 	mustEmbedUnimplementedMvpServer()
 }
 
@@ -359,6 +370,9 @@ func (UnimplementedMvpServer) DeleteFavorForGood(context.Context, *DeleteFavorFo
 }
 func (UnimplementedMvpServer) GetAllDeskClasses(context.Context, *GetAllDeskClassesReq) (*GetAllDeskClassesRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllDeskClasses not implemented")
+}
+func (UnimplementedMvpServer) GetExpense(context.Context, *GetExpenseReq) (*GetExpenseRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetExpense not implemented")
 }
 func (UnimplementedMvpServer) mustEmbedUnimplementedMvpServer() {}
 
@@ -787,6 +801,24 @@ func _Mvp_GetAllDeskClasses_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Mvp_GetExpense_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetExpenseReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MvpServer).GetExpense(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Mvp/GetExpense",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MvpServer).GetExpense(ctx, req.(*GetExpenseReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Mvp_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.Mvp",
 	HandlerType: (*MvpServer)(nil),
@@ -882,6 +914,10 @@ var _Mvp_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAllDeskClasses",
 			Handler:    _Mvp_GetAllDeskClasses_Handler,
+		},
+		{
+			MethodName: "GetExpense",
+			Handler:    _Mvp_GetExpense_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

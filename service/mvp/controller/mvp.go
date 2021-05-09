@@ -30,6 +30,16 @@ func (MvpServer) GetOrderExpense(ctx context.Context, req *pb.GetOrderExpenseReq
 	return &res, nil
 }
 
+// 获取价格
+func (MvpServer) GetExpense(ctx context.Context, req *pb.GetExpenseReq) (*pb.GetExpenseRes, error) {
+	logger.Info("GetExpense", zap.Any("ctx", ctx), zap.Any("req", req))
+
+	var res pb.GetExpenseRes
+	res.Expense = float32(model.GetFavorExpense(float64(req.NotFavorExpense),req.Favors))
+	return &res, nil
+}
+
+
 // 管理员添加商品接口
 func (MvpServer) AddGood(ctx context.Context, req *pb.AddGoodReq) (*pb.AddGoodRes, error) {
 	logger.Info("AddGood", zap.Any("ctx", ctx), zap.Any("req", req))

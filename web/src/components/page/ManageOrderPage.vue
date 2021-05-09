@@ -204,7 +204,7 @@
 
           <el-divider>优惠设置</el-divider>
           <el-form label-width="80px">
-            <discount-editor :orderIndex="index" chargeableObjName="order"
+            <discount-editor :index="index" chargeableObjName="order"
                              @delFavorForOrder="delFavorForOrder"
                              @addFavorForOrder="addFavorForOrder" :favors="order.favors"></discount-editor>
             <el-form-item label="价格">
@@ -300,7 +300,6 @@ export default {
         startAt: Date.parse(this.timeInterval[0]) / 1000,
         endAt: Date.parse(this.timeInterval[1]) / 1000,
       }
-      console.log("par", par)
       utils.GetOrder(this, par, (res) => {
         this.db_orders = res.data.data.orders
       })
@@ -334,7 +333,6 @@ export default {
     getFavorTagName(favor) {
       return utils.GetFavorTagName(favor)
     },
-
     checkOutGood(good) {
       utils.CheckOut(this, {
         goods: [good]
@@ -393,7 +391,6 @@ export default {
         this.db_orders[index].expenseInfo = res.data.data.expenseInfo
       })
     }
-
   },
   computed: {
     cpt_checkOutState() {
@@ -409,8 +406,6 @@ export default {
       return 0
     },
   }
-
-
 }
 </script>
 
