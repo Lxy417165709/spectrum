@@ -1,14 +1,15 @@
 <!-- eslint-disable -->
 <template>
   <el-card :body-style="{ padding: '0px' }" shadow="hover" style="position:relative;">
-<!--    todo: el-badge 可以显示同个商品被点了多少个-->
-    <el-badge :value="1" class="item" style="z-index: 100; position: absolute;right:10px;top:5px;">
-    </el-badge>
+
+<!--    这是一个小标签~-->
+<!--    <el-badge :value="1" class="item" style="z-index: 100; position: absolute;right:10px;top:5px;">-->
+
+<!--    </el-badge>-->
       <el-carousel trigger="click" height="200px" @change="change">
         <el-carousel-item v-for="(sizeInfo,index) in good.mainElement.sizeInfos" :key="index">
           <img style="height:200px;width:200px; border: none"
                :src="getPictureUrl(sizeInfo)">
-          <!--        <h3 class="small">{{ item }}</h3>-->
         </el-carousel-item>
       </el-carousel>
     <div style="width: 200px;height: 30px;position:relative;padding: 0;margin: 0; border: none">
