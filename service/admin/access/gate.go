@@ -16,9 +16,7 @@ import (
 	"spectrum/service/admin/model"
 )
 
-
 func DistributeRequest(c *gin.Context) {
-
 	// 1. 解析请求
 	var request model.Request
 	logger.Info("Success to get request")
@@ -141,7 +139,7 @@ func Upload(c *gin.Context) {
 		})
 		return
 	}
-	if _,err = io.Copy(out, file); err != nil {
+	if _, err = io.Copy(out, file); err != nil {
 		logger.Error("Fail to copy file",
 			zap.Any("fileStorePath", fileStorePath),
 			zap.Error(err))
