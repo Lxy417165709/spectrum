@@ -116,6 +116,7 @@ export default {
       for (let i = 0; i < this.good.attachElements.length; i++) {
         price += this.good.attachElements[i].sizeInfos[this.good.attachElements[i].selectedIndex].price - 0
       }
+      this.flashExpense()
       return price
     }
   }
